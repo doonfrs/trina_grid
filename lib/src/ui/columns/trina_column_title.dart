@@ -510,6 +510,7 @@ class CheckboxAllSelectionWidgetState
       unselectedColor: stateManager.configuration.style.columnUnselectedColor,
       activeColor: stateManager.configuration.style.columnActiveColor,
       checkColor: stateManager.configuration.style.columnCheckedColor,
+      side: stateManager.configuration.style.columnCheckedSide,
     );
   }
 }

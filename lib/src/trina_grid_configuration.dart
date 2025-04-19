@@ -226,7 +226,9 @@ class TrinaGridStyleConfig {
     this.evenRowColor,
     this.activatedColor = const Color(0xFFDCF5FF),
     Color? columnCheckedColor,
+    this.columnCheckedSide,
     Color? cellCheckedColor,
+    this.cellCheckedSide,
     this.rowCheckedColor = const Color(0x11757575),
     this.rowHoveredColor = const Color(0xFFB1B3B7),
     this.cellColorInEditState = Colors.white,
@@ -300,7 +302,9 @@ class TrinaGridStyleConfig {
     this.evenRowColor,
     this.activatedColor = const Color(0xFF313131),
     Color? columnCheckedColor,
+    this.columnCheckedSide,
     Color? cellCheckedColor,
+    this.cellCheckedSide,
     this.rowCheckedColor = const Color(0x11202020),
     this.rowHoveredColor = const Color(0xFF3D3D3D),
     this.cellColorInEditState = const Color(0xFF666666),
@@ -415,8 +419,14 @@ class TrinaGridStyleConfig {
   /// Checked Color for the column title. (Checked rows)
   final Color columnCheckedColor;
 
+  /// Checked side for the column title.
+  final BorderSide? columnCheckedSide;
+
   /// Checked Color for the cell. (Checked rows)
   final Color cellCheckedColor;
+
+  /// Checked side for the cell.
+  final BorderSide? cellCheckedSide;
 
   /// Checked Color for the row. (Checked rows)
   final Color rowCheckedColor;
@@ -572,7 +582,9 @@ class TrinaGridStyleConfig {
     TrinaOptional<Color?>? evenRowColor,
     Color? activatedColor,
     Color? columnCheckedColor,
+    BorderSide? columnCheckedSide,
     Color? cellCheckedColor,
+    BorderSide? cellCheckedSide,
     Color? cellColorInEditState,
     Color? cellColorInReadOnlyState,
     TrinaOptional<Color?>? cellColorGroupedRow,
@@ -632,7 +644,9 @@ class TrinaGridStyleConfig {
           evenRowColor == null ? this.evenRowColor : evenRowColor.value,
       activatedColor: activatedColor ?? this.activatedColor,
       columnCheckedColor: columnCheckedColor ?? this.columnCheckedColor,
+      columnCheckedSide: columnCheckedSide ?? this.columnCheckedSide,
       cellCheckedColor: cellCheckedColor ?? this.cellCheckedColor,
+      cellCheckedSide: cellCheckedSide ?? this.cellCheckedSide,
       cellColorInEditState: cellColorInEditState ?? this.cellColorInEditState,
       cellColorInReadOnlyState:
           cellColorInReadOnlyState ?? this.cellColorInReadOnlyState,
@@ -707,7 +721,9 @@ class TrinaGridStyleConfig {
             evenRowColor == other.evenRowColor &&
             activatedColor == other.activatedColor &&
             columnCheckedColor == other.columnCheckedColor &&
+            columnCheckedSide == other.columnCheckedSide &&
             cellCheckedColor == other.cellCheckedColor &&
+            cellCheckedSide == other.cellCheckedSide &&
             cellColorInEditState == other.cellColorInEditState &&
             cellColorInReadOnlyState == other.cellColorInReadOnlyState &&
             cellColorGroupedRow == other.cellColorGroupedRow &&
@@ -760,7 +776,9 @@ class TrinaGridStyleConfig {
         evenRowColor,
         activatedColor,
         columnCheckedColor,
+        columnCheckedSide,
         cellCheckedColor,
+        cellCheckedSide,
         cellColorInEditState,
         cellColorInReadOnlyState,
         cellColorGroupedRow,
@@ -831,6 +849,7 @@ class TrinaGridScrollbarConfig {
     this.trackColor,
     this.thumbHoverColor,
     this.trackHoverColor,
+    this.columnShowScrollWidth = true,
   });
 
   /// Whether the scrollbar is always visible
@@ -875,6 +894,9 @@ class TrinaGridScrollbarConfig {
   /// Color of the scrollbar track when hovered
   final Color? trackHoverColor;
 
+  /// Whether to show the scrollbar width in the column header
+  final bool columnShowScrollWidth;
+
   /// Get effective thumb color
   Color get effectiveThumbColor =>
       thumbColor ?? Colors.grey.withAlpha((153).toInt());
@@ -911,7 +933,8 @@ class TrinaGridScrollbarConfig {
             thumbColor == other.thumbColor &&
             trackColor == other.trackColor &&
             thumbHoverColor == other.thumbHoverColor &&
-            trackHoverColor == other.trackHoverColor;
+            trackHoverColor == other.trackHoverColor &&
+            columnShowScrollWidth == other.columnShowScrollWidth;
   }
 
   @override
@@ -930,6 +953,7 @@ class TrinaGridScrollbarConfig {
         trackColor,
         thumbHoverColor,
         trackHoverColor,
+        columnShowScrollWidth,
       ]);
 }
 

@@ -56,7 +56,7 @@ class TrinaBodyColumnsState extends TrinaStateWithChange<TrinaBodyColumns> {
   void _updateVerticalScrollbarWidth() {
     final scrollConfig = stateManager.configuration.scrollbar;
     // Only account for vertical scrollbar width if it's shown
-    if (scrollConfig.showVertical) {
+    if (scrollConfig.showVertical && scrollConfig.columnShowScrollWidth) {
       _verticalScrollbarWidth = scrollConfig.thickness +
           4; // Add padding as in TrinaVerticalScrollBar
     } else {
