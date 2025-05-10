@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:trina_grid/trina_grid.dart';
 import 'package:trina_grid/src/helper/platform_helper.dart';
+import 'package:trina_grid/trina_grid.dart';
 
 abstract class TextCell extends StatefulWidget {
   final TrinaGridStateManager stateManager;
@@ -45,14 +45,19 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
   @override
   List<TextInputFormatter>? get inputFormatters => [];
 
-  String get formattedValue =>
-      widget.column.formattedValueForDisplayInEditing(widget.cell.value);
+  String get formattedValue => widget.column.formattedValueForDisplayInEditing(widget.cell.value);
 
   @override
   void initState() {
     super.initState();
 
     cellFocus = FocusNode(onKeyEvent: _handleOnKey);
+
+    cellFocus.addListener(() {
+      if (!cellFocus.hasFocus) {
+        _handleOnComplete();
+      }
+    });
 
     widget.stateManager.setTextEditingController(_textController);
 
@@ -77,8 +82,7 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
       _changeValue();
     }
 
-    if (!widget.stateManager.isEditing ||
-        widget.stateManager.currentColumn?.enableEditingMode != true) {
+    if (!widget.stateManager.isEditing || widget.stateManager.currentColumn?.enableEditingMode != true) {
       widget.stateManager.setTextEditingController(null);
     }
 
