@@ -4,6 +4,9 @@ import 'package:trina_grid/trina_grid.dart';
 typedef TrinaCellRenderer = Widget Function(
     TrinaCellRendererContext rendererContext);
 
+/// A unique value to indicate that the cell value is `null`.
+final _nullValue = UniqueKey();
+
 class TrinaCellRendererContext {
   final TrinaColumn column;
 
@@ -103,12 +106,12 @@ class TrinaCell {
 
   /// Returns the old value before the change
   dynamic get oldValue {
-    return _oldValue;
+    return _oldValue == _nullValue ? null : _oldValue;
   }
 
   /// Returns true if the cell has uncommitted changes
   bool get isDirty {
-    return _oldValue != null;
+    return _oldValue != null && _value != _oldValue;
   }
 
   /// Commit changes by clearing the old value
@@ -119,7 +122,7 @@ class TrinaCell {
   /// Revert changes by restoring the old value
   void revertChanges() {
     if (_oldValue != null) {
-      _value = _oldValue;
+      _value = _oldValue == _nullValue ? null : _oldValue;
       _oldValue = null;
     }
   }
@@ -128,13 +131,16 @@ class TrinaCell {
     if (_value == changed) {
       return;
     }
+    if (changed == _oldValue) {
+      _oldValue = null;
+    }
 
     _value = changed;
   }
 
   /// Helper method to store the old value when change tracking is enabled
   void trackChange() {
-    _oldValue ??= _value;
+    _oldValue ??= _value ?? _nullValue;
   }
 
   dynamic get valueForSorting {

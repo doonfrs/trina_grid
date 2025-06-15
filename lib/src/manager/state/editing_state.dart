@@ -428,6 +428,14 @@ mixin EditingState implements ITrinaGridState {
           continue;
         }
 
+        // Store the old value if change tracking is enabled
+        if (this case final TrinaGridStateManager stateManager
+            when stateManager.enableChangeTracking) {
+          if (!currentCell.isDirty) {
+            currentCell.trackChange();
+          }
+        }
+
         refRows[rowIdx].setState(TrinaRowState.updated);
 
         currentCell.value = newValue;
