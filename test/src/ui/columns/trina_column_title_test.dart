@@ -743,4 +743,78 @@ void main() {
       },
     );
   });
+  group('with titleRenderer', () {
+    final customTitleWidget = Text('Custom Title');
+    final originalTitleText = 'original title';
+
+    aColumnWithTitleRenderer({
+      bool enableSorting = true,
+      bool enableColumnDrag = true,
+    }) =>
+        TrinaWidgetTestHelper(
+          'a column with titleRenderer ',
+          (widgetTester) async {
+            final TrinaColumn column = TrinaColumn(
+              title: originalTitleText,
+              field: 'column_field_name',
+              type: TrinaColumnType.text(),
+              enableColumnDrag: enableColumnDrag,
+              enableSorting: enableSorting,
+              titleRenderer: (context) => customTitleWidget,
+            );
+            await widgetTester.pumpWidget(buildApp(column: column));
+          },
+        );
+
+    aColumnWithTitleRenderer().test(
+      'Custom title renderer should be used when provided',
+      (WidgetTester tester) async {
+        // then
+        expect(find.byWidget(customTitleWidget), findsOneWidget);
+        expect(find.text(originalTitleText), findsNothing);
+      },
+    );
+    aColumnWithTitleRenderer(enableSorting: true).test(
+      'When enableSorting is true and titleRenderer is provided, '
+      'tapping title should call toggleSortColumn function',
+      (WidgetTester tester) async {
+        // act
+        await tester.tap(find.byKey(sortableGestureKey));
+        // assert
+        verify(stateManager.toggleSortColumn(captureAny)).called(1);
+      },
+    );
+
+    aColumnWithTitleRenderer(enableSorting: false).test(
+        'When enableSorting is false and titleRender is provided, '
+        'GestureDetector widget should not exist', (WidgetTester tester) async {
+      // given
+      Finder gestureDetector = find.byKey(sortableGestureKey);
+
+      // then
+      expect(gestureDetector, findsNothing);
+
+      verifyNever(stateManager.toggleSortColumn(captureAny));
+    });
+
+    aColumnWithTitleRenderer(enableColumnDrag: false).test(
+        'WHEN enableColumnDrag is false '
+        'THEN Draggable should not be visible', (WidgetTester tester) async {
+      // then
+      final draggable = find.byType(Draggable);
+
+      expect(draggable, findsNothing);
+    });
+
+    aColumnWithTitleRenderer(enableColumnDrag: true).test(
+        'WHEN enableDraggable is true '
+        'THEN Draggable should be visible', (WidgetTester tester) async {
+      // then
+      final draggable = find.byType(
+        TestHelperUtil.typeOf<Draggable<TrinaColumn>>(),
+      );
+
+      expect(draggable, findsOneWidget);
+    });
+  });
 }
