@@ -68,48 +68,6 @@ void main() {
       expect(stateManager.selectingMode, TrinaGridSelectingMode.row);
     });
 
-    test('should override selectingMode when grid mode is select', () {
-      final columns = ColumnHelper.textColumn('test', count: 1);
-      final rows = RowHelper.count(1, columns);
-
-      final stateManager = TrinaGridStateManager(
-        columns: columns,
-        rows: rows,
-        gridFocusNode: MockFocusNode(),
-        scroll: MockTrinaGridScrollController(),
-        configuration: const TrinaGridConfiguration(
-          selectingMode: TrinaGridSelectingMode.row,
-        ),
-        mode: TrinaGridMode.select,
-      );
-
-      stateManager.setEventManager(MockTrinaGridEventManager());
-
-      // Should be forced to none in select mode
-      expect(stateManager.selectingMode, TrinaGridSelectingMode.none);
-    });
-
-    test('should override selectingMode when grid mode is multiSelect', () {
-      final columns = ColumnHelper.textColumn('test', count: 1);
-      final rows = RowHelper.count(1, columns);
-
-      final stateManager = TrinaGridStateManager(
-        columns: columns,
-        rows: rows,
-        gridFocusNode: MockFocusNode(),
-        scroll: MockTrinaGridScrollController(),
-        configuration: const TrinaGridConfiguration(
-          selectingMode: TrinaGridSelectingMode.cell,
-        ),
-        mode: TrinaGridMode.multiSelect,
-      );
-
-      stateManager.setEventManager(MockTrinaGridEventManager());
-
-      // Should be forced to row in multiSelect mode
-      expect(stateManager.selectingMode, TrinaGridSelectingMode.row);
-    });
-
     test('should use configuration selectingMode in normal mode', () {
       final columns = ColumnHelper.textColumn('test', count: 1);
       final rows = RowHelper.count(1, columns);

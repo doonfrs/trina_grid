@@ -192,11 +192,6 @@ mixin SelectingState implements ITrinaGridState {
     TrinaGridSelectingMode selectingMode, {
     bool notify = true,
   }) {
-    if (mode.isSingleSelectMode) {
-      selectingMode = TrinaGridSelectingMode.none;
-    } else if (mode.isMultiSelectMode) {
-      selectingMode = TrinaGridSelectingMode.row;
-    }
 
     if (_state._selectingMode == selectingMode) {
       return;

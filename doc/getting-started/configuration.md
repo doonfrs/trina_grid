@@ -141,10 +141,6 @@ The available selection modes are:
 - `TrinaGridSelectingMode.row`: Selects entire rows when clicking on any cell  
 - `TrinaGridSelectingMode.none`: Disables selection functionality
 
-Note: This setting may be overridden by the grid mode:
-
-- In `TrinaGridMode.select` or `TrinaGridMode.selectWithOneTap`, it's forced to `TrinaGridSelectingMode.none`
-- In `TrinaGridMode.multiSelect`, it's forced to `TrinaGridSelectingMode.row`
 
 ### Editing Configuration
 

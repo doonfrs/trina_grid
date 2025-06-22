@@ -83,13 +83,6 @@ void main() {
     },
   );
 
-  buildGrid().test(
-    'When select mode is executed, the selectingMode should be none',
-    (tester) async {
-      expect(stateManager.selectingMode.isNone, true);
-    },
-  );
-
   buildGrid(onSelected: mock.oneParamReturnVoid<TrinaGridOnSelectedEvent>).test(
     'When the first cell is selected, '
     'the first cell should be selected',
