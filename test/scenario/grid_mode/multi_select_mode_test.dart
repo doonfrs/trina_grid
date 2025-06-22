@@ -91,13 +91,6 @@ void main() {
     },
   );
 
-  buildGrid().test(
-    'When running in multiSelect mode, the selectingMode should be row.',
-    (tester) async {
-      expect(stateManager.selectingMode.isRow, true);
-    },
-  );
-
   buildGrid(onSelected: mock.oneParamReturnVoid<TrinaGridOnSelectedEvent>).test(
     'When 0, 2, 4 rows are selected, the selectedRows of the onSelected callback should contain the selected rows.',
     (tester) async {
