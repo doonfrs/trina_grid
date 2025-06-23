@@ -136,7 +136,7 @@ void main() {
         }))),
       ).called(1);
 
-      expect(stateManager.currentSelectingRows.length, 3);
+      expect(stateManager.selectedRows.length, 3);
     },
   );
 
@@ -169,7 +169,7 @@ void main() {
         }))),
       ).called(1);
 
-      expect(stateManager.currentSelectingRows.length, 4);
+      expect(stateManager.selectedRows.length, 4);
     },
   );
 
@@ -194,7 +194,7 @@ void main() {
         }))),
       ).called(1);
 
-      expect(stateManager.currentSelectingRows.length, 3);
+      expect(stateManager.selectedRows.length, 3);
     },
   );
 

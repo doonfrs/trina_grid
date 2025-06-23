@@ -21,7 +21,7 @@ void main() {
           'When the drag icon of an unselected row is dragged, '
           'the existing selection should be invalidated and the dragged row should be selected, '
           'and dragging should not occur.', (WidgetTester tester) async {
-    final existsSelectingRows = [...grid.stateManager.currentSelectingRows];
+    final existsSelectingRows = [...grid.stateManager.selectedRows];
 
     final dragRowCellValue =
         grid.stateManager.refRows[0].cells['column1']!.value;
@@ -50,25 +50,25 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    expect(grid.stateManager.currentSelectingRows.length, 2);
+    expect(grid.stateManager.selectedRows.length, 2);
 
     expect(
-      existsSelectingRows.contains(grid.stateManager.currentSelectingRows[0]),
+      existsSelectingRows.contains(grid.stateManager.selectedRows[0]),
       false,
     );
 
     expect(
-      existsSelectingRows.contains(grid.stateManager.currentSelectingRows[1]),
+      existsSelectingRows.contains(grid.stateManager.selectedRows[1]),
       false,
     );
 
     expect(
-      grid.stateManager.currentSelectingRows[0].cells['column1']!.value,
+      grid.stateManager.selectedRows[0].cells['column1']!.value,
       dragRowCellValue,
     );
 
     expect(
-      grid.stateManager.currentSelectingRows[1].cells['column1']!.value,
+      grid.stateManager.selectedRows[1].cells['column1']!.value,
       targetRowCellValue,
     );
   });

@@ -37,7 +37,7 @@ class _RowSelectionScreenState extends State<RowSelectionScreen> {
   void handleSelected() async {
     String value = '';
 
-    for (var element in stateManager!.currentSelectingRows) {
+    for (var element in stateManager!.selectedRows) {
       final cellValue = element.cells.entries.first.value.value.toString();
 
       value += 'first cell value of row: $cellValue\n';

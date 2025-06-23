@@ -1392,8 +1392,8 @@ class MockTrinaGridStateManager extends _i1.Mock
       ) as bool);
 
   @override
-  List<_i2.TrinaRow<dynamic>> get currentSelectingRows => (super.noSuchMethod(
-        Invocation.getter(#currentSelectingRows),
+  List<_i2.TrinaRow<dynamic>> get selectedRows => (super.noSuchMethod(
+        Invocation.getter(#selectedRows),
         returnValue: <_i2.TrinaRow<dynamic>>[],
         returnValueForMissingStub: <_i2.TrinaRow<dynamic>>[],
       ) as List<_i2.TrinaRow<dynamic>>);

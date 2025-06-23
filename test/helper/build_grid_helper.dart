@@ -121,7 +121,7 @@ class BuildGridHelper {
 
         final length = (startRowIdx - endRowIdx).abs() + 1;
 
-        expect(stateManager.currentSelectingRows.length, length);
+        expect(stateManager.selectedRows.length, length);
       },
     );
   }

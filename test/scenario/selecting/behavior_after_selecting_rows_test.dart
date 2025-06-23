@@ -41,7 +41,7 @@ void main() {
           ),
         );
 
-        final selectingRows = stateManager!.currentSelectingRows;
+        final selectingRows = stateManager!.selectedRows;
 
         final int length = (from - to).abs() + 1;
 
@@ -74,7 +74,7 @@ void main() {
 
           stateManager!.removeRows([rowToRemove]);
 
-          final selectedRows = stateManager!.currentSelectingRows;
+          final selectedRows = stateManager!.selectedRows;
           final selectedRowKeys = selectedRows.map((e) => e.key);
 
           expect(selectedRows.length, countSelectedRows);
@@ -94,7 +94,7 @@ void main() {
 
           expect(stateManager!.rows.length, countTotalRows + 1);
 
-          final selectedRows = stateManager!.currentSelectingRows;
+          final selectedRows = stateManager!.selectedRows;
           final selectedRowKeys = selectedRows.map((e) => e.key);
 
           expect(selectedRows.length, countSelectedRows);

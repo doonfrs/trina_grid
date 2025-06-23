@@ -43,7 +43,7 @@ void main() {
         'WHEN'
         'currentCellPosition != null'
         'selectingMode.rowWithSingleTap'
-        'currentSelectingRows.length > 0'
+        'selectedRows.length > 0'
         'THEN'
         'Values should be filled in the selected rows by _pasteCellValueIntoSelectingRows.',
         (WidgetTester tester) async {
@@ -105,7 +105,7 @@ void main() {
         'WHEN'
         'currentCellPosition != null'
         'selectingMode.cellWithSingleTap'
-        'currentSelectingRows.length < 1'
+        'selectedRows.length < 1'
         '_currentSelectingPosition != null'
         'THEN'
         'Values should be filled in the selected rows by _pasteCellValueInOrder.',

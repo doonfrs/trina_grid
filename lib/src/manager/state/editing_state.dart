@@ -157,7 +157,7 @@ mixin EditingState implements ITrinaGridState {
       return;
     }
 
-    if (selectingMode.isRow && currentSelectingRows.isNotEmpty) {
+    if (selectingMode.isRow && selectedRows.isNotEmpty) {
       _pasteCellValueIntoSelectingRows(textList: textList);
     } else {
       int? columnStartIdx;
@@ -343,7 +343,7 @@ mixin EditingState implements ITrinaGridState {
     int columnEndIdx = refColumns.length - 1;
 
     final Set<Key> selectingRowKeys = Set.from(
-      currentSelectingRows.map((e) => e.key),
+      selectedRows.map((e) => e.key),
     );
 
     List<int> rowIdxList = [];

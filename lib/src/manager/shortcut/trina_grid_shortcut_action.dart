@@ -356,7 +356,7 @@ class TrinaGridActionDefaultEnterKey extends TrinaGridShortcutAction {
         rowIdx: stateManager.currentRowIdx,
         cell: stateManager.currentCell,
         selectedRows: stateManager.mode.isMultiSelectMode
-            ? stateManager.currentSelectingRows
+            ? stateManager.selectedRows
             : null,
       ));
       return;

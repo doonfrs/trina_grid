@@ -271,7 +271,7 @@ class _HeaderState extends State<_Header> {
   }
 
   void handleRemoveSelectedRowsButton() {
-    widget.stateManager.removeRows(widget.stateManager.currentSelectingRows);
+    widget.stateManager.removeRows(widget.stateManager.selectedRows);
   }
 
   void handleFiltering() {

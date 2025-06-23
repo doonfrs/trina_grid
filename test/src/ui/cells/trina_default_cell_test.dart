@@ -41,7 +41,7 @@ void main() {
     when(stateManager.hasFocus).thenReturn(true);
     when(stateManager.canRowDrag).thenReturn(true);
     when(stateManager.rowHeight).thenReturn(0);
-    when(stateManager.currentSelectingRows).thenReturn([]);
+    when(stateManager.selectedRows).thenReturn([]);
     when(stateManager.scroll).thenReturn(scroll);
     when(scroll.maxScrollHorizontal).thenReturn(0);
     when(scroll.horizontal).thenReturn(horizontalScroll);

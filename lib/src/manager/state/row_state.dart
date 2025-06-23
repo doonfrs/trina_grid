@@ -385,7 +385,7 @@ mixin RowState implements ITrinaGridState {
 
     setCurrentSelectingPositionByCellKey(selectingCellKey, notify: false);
 
-    currentSelectingRows.removeWhere((row) => removeKeys.contains(row.key));
+    selectedRows.removeWhere((row) => removeKeys.contains(row.key));
 
     notifyListeners(notify, removeRows.hashCode);
   }

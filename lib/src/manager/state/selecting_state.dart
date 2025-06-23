@@ -62,7 +62,7 @@ abstract class ISelectingState {
   /// Sets the position of a multi-selected cell.
   void setCurrentSelectingPositionWithOffset(Offset offset);
 
-  /// Sets the currentSelectingRows by range.
+  /// Sets the selectedRows by range.
   /// [from] rowIdx of rows.
   /// [to] rowIdx of rows.
   /// If [from] or [to] is null, it is set to [currentRowIdx].
@@ -92,7 +92,7 @@ class _State {
   TrinaGridSelectingMode _selectingMode =
       TrinaGridSelectingMode.cellWithSingleTap;
 
-  List<TrinaRow> _currentSelectingRows = [];
+  List<TrinaRow> _selectedRows = [];
 
   TrinaGridCellPosition? _currentSelectingPosition;
 }
@@ -133,12 +133,12 @@ mixin SelectingState implements ITrinaGridState {
   bool get hasCurrentSelectingPosition => currentSelectingPosition != null;
 
   @override
-  List<TrinaRow> get currentSelectingRows => _state._currentSelectingRows;
+  List<TrinaRow> get selectedRows => _state._selectedRows;
 
   @override
   String get currentSelectingText {
     final bool fromSelectingRows =
-        selectingMode.isRow && currentSelectingRows.isNotEmpty;
+        selectingMode.isRow && selectedRows.isNotEmpty;
 
     final bool fromSelectingPosition =
         currentCellPosition != null && currentSelectingPosition != null;
@@ -189,7 +189,7 @@ mixin SelectingState implements ITrinaGridState {
       return;
     }
 
-    _state._currentSelectingRows = [];
+    _state._selectedRows = [];
 
     _state._currentSelectingPosition = null;
 
@@ -360,10 +360,9 @@ mixin SelectingState implements ITrinaGridState {
       return;
     }
 
-    _state._currentSelectingRows =
-        refRows.getRange(maxFrom, maxTo + 1).toList();
+    _state._selectedRows = refRows.getRange(maxFrom, maxTo + 1).toList();
 
-    _state._currentSelectingRows.sort((a, b) => a.sortIdx.compareTo(b.sortIdx));
+    _state._selectedRows.sort((a, b) => a.sortIdx.compareTo(b.sortIdx));
 
     notifyListeners(notify, selectRowsInRange.hashCode);
   }
@@ -372,7 +371,7 @@ mixin SelectingState implements ITrinaGridState {
   void clearCurrentSelecting({bool notify = true}) {
     _clearCurrentSelectingPosition(notify: false);
 
-    _clearCurrentSelectingRows(notify: false);
+    _clearSelectedRows(notify: false);
 
     notifyListeners(notify, clearCurrentSelecting.hashCode);
   }
@@ -389,15 +388,13 @@ mixin SelectingState implements ITrinaGridState {
 
     final TrinaRow row = refRows[rowIdx];
 
-    final int index =
-        _state._currentSelectingRows.indexWhere((e) => e.key == row.key);
+    final int index = _state._selectedRows.indexWhere((e) => e.key == row.key);
 
     if (index != -1) {
-      _state._currentSelectingRows.removeAt(index);
+      _state._selectedRows.removeAt(index);
     } else {
-      _state._currentSelectingRows.add(row);
-      _state._currentSelectingRows
-          .sort((a, b) => a.sortIdx.compareTo(b.sortIdx));
+      _state._selectedRows.add(row);
+      _state._selectedRows.sort((a, b) => a.sortIdx.compareTo(b.sortIdx));
     }
 
     notifyListeners(notify, toggleSelectingRow.hashCode);
@@ -412,13 +409,11 @@ mixin SelectingState implements ITrinaGridState {
 
   @override
   bool isSelectedRow(Key? rowKey) {
-    if (rowKey == null ||
-        !selectingMode.isRow ||
-        currentSelectingRows.isEmpty) {
+    if (rowKey == null || !selectingMode.isRow || selectedRows.isEmpty) {
       return false;
     }
 
-    return currentSelectingRows.firstWhereOrNull(
+    return selectedRows.firstWhereOrNull(
           (element) => element.key == rowKey,
         ) !=
         null;
@@ -636,7 +631,7 @@ mixin SelectingState implements ITrinaGridState {
 
     List<String> rowText = [];
 
-    for (final row in currentSelectingRows) {
+    for (final row in selectedRows) {
       List<String> columnText = [];
 
       for (int i = 0; i < columnIndexes.length; i += 1) {
@@ -715,12 +710,12 @@ mixin SelectingState implements ITrinaGridState {
     }
   }
 
-  void _clearCurrentSelectingRows({bool notify = true}) {
-    if (_state._currentSelectingRows.isEmpty) {
+  void _clearSelectedRows({bool notify = true}) {
+    if (_state._selectedRows.isEmpty) {
       return;
     }
 
-    _state._currentSelectingRows.clear();
+    _state._selectedRows.clear();
 
     if (notify) {
       notifyListeners();

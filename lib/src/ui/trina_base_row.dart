@@ -26,8 +26,8 @@ class TrinaBaseRow extends StatelessWidget {
 
   bool _checkSameDragRows(DragTargetDetails<TrinaRow> draggingRow) {
     final List<TrinaRow> selectedRows =
-        stateManager.currentSelectingRows.isNotEmpty
-            ? stateManager.currentSelectingRows
+        stateManager.selectedRows.isNotEmpty
+            ? stateManager.selectedRows
             : [draggingRow.data];
 
     final end = rowIdx + selectedRows.length;
@@ -357,7 +357,7 @@ class _RowContainerWidgetState extends TrinaStateWithChange<_RowContainerWidget>
     final isCurrentRow = stateManager.currentRowIdx == widget.rowIdx;
     final isCheckedRow = widget.row.checked == true;
     final isHoveredRow = stateManager.isRowIdxHovered(widget.rowIdx);
-    final isSelectedRow = stateManager.currentSelectingRows.contains(
+    final isSelectedRow = stateManager.selectedRows.contains(
       widget.row,
     );
     final isTopDragTarget = stateManager.isRowIdxTopDragTarget(widget.rowIdx);

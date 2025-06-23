@@ -74,7 +74,7 @@ You can access the currently selected rows through the state manager:
 
 ```dart
 // Get all currently selected rows
-List<TrinaRow> selectedRows = stateManager.currentSelectingRows;
+List<TrinaRow> selectedRows = stateManager.selectedRows;
 
 // Process selected rows
 for (var row in selectedRows) {
@@ -197,7 +197,7 @@ class _RowSelectionExampleState extends State<RowSelectionExample> {
   }
 
   void showSelectedRows() {
-    if (stateManager.currentSelectingRows.isEmpty) {
+    if (stateManager.selectedRows.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('No rows selected')),
       );
@@ -206,7 +206,7 @@ class _RowSelectionExampleState extends State<RowSelectionExample> {
 
     // Build a string with information about selected rows
     String message = 'Selected rows:\n';
-    for (var row in stateManager.currentSelectingRows) {
+    for (var row in stateManager.selectedRows) {
       message += 'ID: ${row.cells['id'].value}, Name: ${row.cells['name'].value}\n';
     }
 

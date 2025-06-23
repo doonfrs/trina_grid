@@ -103,8 +103,8 @@ void main() {
         }))),
       ).called(1);
 
-      // select mode does not add to currentSelectingRows
-      expect(stateManager.currentSelectingRows.length, 0);
+      // select mode does not add to selectedRows
+      expect(stateManager.selectedRows.length, 0);
     },
   );
 
@@ -131,8 +131,8 @@ void main() {
         }))),
       ).called(1);
 
-      // In select mode, currentSelectingRows is not added.
-      expect(stateManager.currentSelectingRows.length, 0);
+      // In select mode, selectedRows is not added.
+      expect(stateManager.selectedRows.length, 0);
     },
   );
 
@@ -164,8 +164,8 @@ void main() {
         }))),
       ).called(1);
 
-      // select mode does not add to currentSelectingRows
-      expect(stateManager.currentSelectingRows.length, 0);
+      // select mode does not add to selectedRows
+      expect(stateManager.selectedRows.length, 0);
     },
   );
 
@@ -197,8 +197,8 @@ void main() {
         }))),
       ).called(1);
 
-      // select mode does not add to currentSelectingRows
-      expect(stateManager.currentSelectingRows.length, 0);
+      // select mode does not add to selectedRows
+      expect(stateManager.selectedRows.length, 0);
     },
   );
 
@@ -226,8 +226,8 @@ void main() {
         }))),
       ).called(1);
 
-      // select mode does not add to currentSelectingRows
-      expect(stateManager.currentSelectingRows.length, 0);
+      // select mode does not add to selectedRows
+      expect(stateManager.selectedRows.length, 0);
     },
   );
 
@@ -259,8 +259,8 @@ void main() {
         }))),
       ).called(1);
 
-      // select mode does not add to currentSelectingRows
-      expect(stateManager.currentSelectingRows.length, 0);
+      // select mode does not add to selectedRows
+      expect(stateManager.selectedRows.length, 0);
     },
   );
 
@@ -285,8 +285,8 @@ void main() {
         }))),
       ).called(1);
 
-      // select mode does not add to currentSelectingRows
-      expect(stateManager.currentSelectingRows.length, 0);
+      // select mode does not add to selectedRows
+      expect(stateManager.selectedRows.length, 0);
     },
   );
 }

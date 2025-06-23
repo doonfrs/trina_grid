@@ -547,10 +547,10 @@ class TrinaGridFilterPopupHeader extends StatelessWidget {
   }
 
   void handleRemoveButton() {
-    if (stateManager!.currentSelectingRows.isEmpty) {
+    if (stateManager!.selectedRows.isEmpty) {
       stateManager!.removeCurrentRow();
     } else {
-      stateManager!.removeRows(stateManager!.currentSelectingRows);
+      stateManager!.removeRows(stateManager!.selectedRows);
     }
   }
 
