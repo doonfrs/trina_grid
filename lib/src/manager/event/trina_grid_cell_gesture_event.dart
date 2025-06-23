@@ -48,8 +48,8 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
 
     if (stateManager.isSelectingInteraction()) {
       _handleSelectingInteraction(stateManager);
-    } else if (stateManager.mode.isSelectMode) {
-      _selectMode(stateManager);
+    } else if (stateManager.selectingMode.isSingleTapSelection) {
+      _handleSingleTapSelection(stateManager);
     } else {
       _handleNormalTap(stateManager);
     }
@@ -159,28 +159,19 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
     return stateManager.isCurrentCell(cell);
   }
 
-  void _selectMode(TrinaGridStateManager stateManager) {
-    switch (stateManager.mode) {
-      case TrinaGridMode.normal:
-      case TrinaGridMode.readOnly:
-      case TrinaGridMode.popup:
-        return;
-      case TrinaGridMode.select:
-      case TrinaGridMode.selectWithOneTap:
-        if (stateManager.isCurrentCell(cell) == false) {
-          stateManager.setCurrentCell(cell, rowIdx);
-
-          if (!stateManager.mode.isSelectWithOneTap) {
-            return;
-          }
-        }
-        break;
-      case TrinaGridMode.multiSelect:
-        stateManager.toggleSelectingRow(rowIdx);
-        break;
+  /// Handle selection based on selecting mode
+  void _handleSingleTapSelection(TrinaGridStateManager stateManager) {
+    if (stateManager.selectingMode == TrinaGridSelectingMode.rowWithSingleTap) {
+      stateManager.toggleSelectingRow(rowIdx);
+      stateManager.handleOnSelected();
     }
-
-    stateManager.handleOnSelected();
+    if (stateManager.selectingMode ==
+        TrinaGridSelectingMode.cellWithSingleTap) {
+      if (stateManager.isCurrentCell(cell) == false) {
+        stateManager.setCurrentCell(cell, rowIdx);
+      }
+      stateManager.handleOnSelected();
+    }
   }
 
   void _setCurrentCell(

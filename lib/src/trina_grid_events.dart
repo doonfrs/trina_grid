@@ -48,15 +48,7 @@ class TrinaGridOnChangedEvent {
 }
 
 /// This is the argument value of the [TrinaGrid.onSelected] callback
-/// that is called when the [TrinaGrid.mode] value is in select mode.
-///
-/// If [row], [rowIdx], [cell] is [TrinaGridMode.select] or [TrinaGridMode.selectWithOneTap],
-/// Information of the row selected with the tab or enter key.
-/// If the Escape key is pressed, these values are null.
-///
-/// [selectedRows] is valid only in case of [TrinaGridMode.multiSelect].
-/// If rows are selected by tab or keyboard, the selected rows are included.
-/// If the Escape key is pressed, this value is null.
+
 class TrinaGridOnSelectedEvent {
   final TrinaRow? row;
   final int? rowIdx;
