@@ -3627,14 +3627,14 @@ class MockTrinaGridStateManager extends _i1.Mock
       );
 
   @override
-  void setCurrentSelectingRowsByRange(
+  void selectRowsInRange(
     int? from,
     int? to, {
     bool? notify = true,
   }) =>
       super.noSuchMethod(
         Invocation.method(
-          #setCurrentSelectingRowsByRange,
+          #selectRowsInRange,
           [
             from,
             to,

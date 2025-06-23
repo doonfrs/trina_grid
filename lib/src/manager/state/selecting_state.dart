@@ -66,7 +66,7 @@ abstract class ISelectingState {
   /// [from] rowIdx of rows.
   /// [to] rowIdx of rows.
   /// If [from] or [to] is null, it is set to [currentRowIdx].
-  void setCurrentSelectingRowsByRange(int? from, int? to, {bool notify = true});
+  void selectRowsInRange(int? from, int? to, {bool notify = true});
 
   /// Resets currently selected rows and cells.
   void clearCurrentSelecting({bool notify = true});
@@ -228,7 +228,7 @@ mixin SelectingState implements ITrinaGridState {
           rowIdx: refRows.length - 1,
         );
 
-        setCurrentSelectingRowsByRange(0, refRows.length - 1);
+        selectRowsInRange(0, refRows.length - 1);
         break;
       case TrinaGridSelectingMode.disabled:
         break;
@@ -252,7 +252,7 @@ mixin SelectingState implements ITrinaGridState {
         isInvalidCellPosition(cellPosition) ? null : cellPosition;
 
     if (currentSelectingPosition != null && selectingMode.isRow) {
-      setCurrentSelectingRowsByRange(
+      selectRowsInRange(
         currentRowIdx,
         currentSelectingPosition!.rowIdx,
         notify: false,
@@ -337,7 +337,7 @@ mixin SelectingState implements ITrinaGridState {
   }
 
   @override
-  void setCurrentSelectingRowsByRange(
+  void selectRowsInRange(
     int? from,
     int? to, {
     bool notify = true,
@@ -365,7 +365,7 @@ mixin SelectingState implements ITrinaGridState {
 
     _state._currentSelectingRows.sort((a, b) => a.sortIdx.compareTo(b.sortIdx));
 
-    notifyListeners(notify, setCurrentSelectingRowsByRange.hashCode);
+    notifyListeners(notify, selectRowsInRange.hashCode);
   }
 
   @override

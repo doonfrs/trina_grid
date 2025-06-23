@@ -34,7 +34,7 @@ void main() {
                 onLoaded: (TrinaGridOnLoadedEvent event) {
                   stateManager = event.stateManager;
                   stateManager!.setSelectingMode(selectingMode);
-                  stateManager!.setCurrentSelectingRowsByRange(from, to);
+                  stateManager!.selectRowsInRange(from, to);
                 },
               ),
             ),

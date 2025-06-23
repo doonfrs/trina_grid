@@ -74,7 +74,7 @@ void main() {
 
       stateManager.setCurrentCell(currentCell, 2);
 
-      stateManager.setCurrentSelectingRowsByRange(2, 4);
+      stateManager.selectRowsInRange(2, 4);
 
       // when
       stateManager.pasteCellValue([

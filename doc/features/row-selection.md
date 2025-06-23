@@ -51,7 +51,7 @@ You can programmatically select rows using the TrinaGrid state manager:
 
 ```dart
 // Select rows from index 2 to index 5
-stateManager.setCurrentSelectingRowsByRange(2, 5);
+stateManager.selectRowsInRange(2, 5);
 ```
 
 ### Toggling Row Selection
