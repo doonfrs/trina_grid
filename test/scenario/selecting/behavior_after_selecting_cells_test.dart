@@ -87,7 +87,8 @@ void main() {
     );
   }
 
-  const TrinaGridSelectingMode selectingMode = TrinaGridSelectingMode.cell;
+  const TrinaGridSelectingMode selectingMode =
+      TrinaGridSelectingMode.cellWithSingleTap;
 
   final buildRowsWithSelectingCells = buildRowsWithSelectingCellsFunction(
     selectingMode: selectingMode,

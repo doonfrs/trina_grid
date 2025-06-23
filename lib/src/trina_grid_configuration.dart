@@ -56,14 +56,6 @@ class TrinaGridConfiguration {
 
   /// Set the mode to select cells or rows.
   ///
-  /// [TrinaGridSelectingMode.cell] selects each cell.
-  /// [TrinaGridSelectingMode.row] selects row by row.
-  /// [TrinaGridSelectingMode.none] does nothing.
-  ///
-  /// Note: This setting may be overridden by the grid mode:
-  /// - In [TrinaGridMode.select] or [TrinaGridMode.selectWithOneTap],
-  ///   it's forced to [TrinaGridSelectingMode.none]
-  /// - In [TrinaGridMode.multiSelect], it's forced to [TrinaGridSelectingMode.row]
   final TrinaGridSelectingMode selectingMode;
 
   /// Set custom shortcut keys.
@@ -114,7 +106,7 @@ class TrinaGridConfiguration {
         TrinaGridRowSelectionCheckBoxBehavior.none,
     this.enterKeyAction = TrinaGridEnterKeyAction.editingAndMoveDown,
     this.tabKeyAction = TrinaGridTabKeyAction.normal,
-    this.selectingMode = TrinaGridSelectingMode.cell,
+    this.selectingMode = TrinaGridSelectingMode.cellWithSingleTap,
     this.shortcut = const TrinaGridShortcut(),
     this.style = const TrinaGridStyleConfig(),
     this.scrollbar = const TrinaGridScrollbarConfig(),
@@ -131,7 +123,7 @@ class TrinaGridConfiguration {
         TrinaGridRowSelectionCheckBoxBehavior.none,
     this.enterKeyAction = TrinaGridEnterKeyAction.editingAndMoveDown,
     this.tabKeyAction = TrinaGridTabKeyAction.normal,
-    this.selectingMode = TrinaGridSelectingMode.cell,
+    this.selectingMode = TrinaGridSelectingMode.cellWithSingleTap,
     this.shortcut = const TrinaGridShortcut(),
     this.style = const TrinaGridStyleConfig.dark(),
     this.scrollbar = const TrinaGridScrollbarConfig(),

@@ -78,7 +78,7 @@ class _EditingStateScreenState extends State<EditingStateScreen> {
               },
               onLoaded: (TrinaGridOnLoadedEvent event) {
                 event.stateManager
-                    .setSelectingMode(TrinaGridSelectingMode.cell);
+                    .setSelectingMode(TrinaGridSelectingMode.cellWithCtrl);
 
                 stateManager = event.stateManager;
               },

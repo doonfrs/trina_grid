@@ -8,7 +8,7 @@ abstract class ISelectingState {
   /// Multi-selection state.
   bool get isSelecting;
 
-  /// [selectingMode]
+  /// The selecting mode of the grid.
   TrinaGridSelectingMode get selectingMode;
 
   /// Current position of multi-select cell.
@@ -27,9 +27,8 @@ abstract class ISelectingState {
 
   bool get hasCurrentSelectingPosition;
 
-  /// Rows of currently selected.
-  /// Only valid in [TrinaGridSelectingMode.row].
-  List<TrinaRow> get currentSelectingRows;
+  /// Currently selected rows.
+  List<TrinaRow> get selectedRows;
 
   /// String of multi-selected cells.
   /// Preserves the structure of the cells selected by the tabs and the enter key.
@@ -41,7 +40,7 @@ abstract class ISelectingState {
   /// Set the mode to select cells or rows.
   ///
   /// If [TrinaGrid.mode] is [TrinaGridMode.select] or [TrinaGridMode.selectWithOneTap]
-  /// Coerced to [TrinaGridSelectingMode.none] regardless of [selectingMode] value.
+  /// Coerced to [TrinaGridSelectingMode.disabled] regardless of [selectingMode] value.
   ///
   /// When [TrinaGrid.mode] is [TrinaGridMode.multiSelect]
   /// Coerced to [TrinaGridSelectingMode.row] regardless of [selectingMode] value.
@@ -89,7 +88,8 @@ abstract class ISelectingState {
 class _State {
   bool _isSelecting = false;
 
-  TrinaGridSelectingMode _selectingMode = TrinaGridSelectingMode.cell;
+  TrinaGridSelectingMode _selectingMode =
+      TrinaGridSelectingMode.cellWithSingleTap;
 
   List<TrinaRow> _currentSelectingRows = [];
 
@@ -116,12 +116,14 @@ mixin SelectingState implements ITrinaGridState {
     }
 
     switch (selectingMode) {
-      case TrinaGridSelectingMode.cell:
+      case TrinaGridSelectingMode.cellWithCtrl:
+      case TrinaGridSelectingMode.cellWithSingleTap:
         return _selectingCells();
       case TrinaGridSelectingMode.horizontal:
         return _selectingCellsHorizontally();
-      case TrinaGridSelectingMode.row:
-      case TrinaGridSelectingMode.none:
+      case TrinaGridSelectingMode.rowWithCtrl:
+      case TrinaGridSelectingMode.rowWithSingleTap:
+      case TrinaGridSelectingMode.disabled:
         return [];
     }
   }
@@ -165,7 +167,7 @@ mixin SelectingState implements ITrinaGridState {
 
   @override
   void setSelecting(bool flag, {bool notify = true}) {
-    if (selectingMode.isNone) {
+    if (selectingMode.isDisabled) {
       return;
     }
 
@@ -192,7 +194,6 @@ mixin SelectingState implements ITrinaGridState {
     TrinaGridSelectingMode selectingMode, {
     bool notify = true,
   }) {
-
     if (_state._selectingMode == selectingMode) {
       return;
     }
@@ -213,7 +214,8 @@ mixin SelectingState implements ITrinaGridState {
     }
 
     switch (selectingMode) {
-      case TrinaGridSelectingMode.cell:
+      case TrinaGridSelectingMode.cellWithCtrl:
+      case TrinaGridSelectingMode.cellWithSingleTap:
       case TrinaGridSelectingMode.horizontal:
         _setFistCellAsCurrent();
 
@@ -224,7 +226,8 @@ mixin SelectingState implements ITrinaGridState {
           ),
         );
         break;
-      case TrinaGridSelectingMode.row:
+      case TrinaGridSelectingMode.rowWithCtrl:
+      case TrinaGridSelectingMode.rowWithSingleTap:
         if (currentCell == null) {
           _setFistCellAsCurrent();
         }
@@ -236,7 +239,7 @@ mixin SelectingState implements ITrinaGridState {
 
         setCurrentSelectingRowsByRange(0, refRows.length - 1);
         break;
-      case TrinaGridSelectingMode.none:
+      case TrinaGridSelectingMode.disabled:
         break;
     }
   }
@@ -246,7 +249,7 @@ mixin SelectingState implements ITrinaGridState {
     TrinaGridCellPosition? cellPosition,
     bool notify = true,
   }) {
-    if (selectingMode.isNone) {
+    if (selectingMode.isDisabled) {
       return;
     }
 
@@ -399,7 +402,7 @@ mixin SelectingState implements ITrinaGridState {
 
   @override
   bool isSelectingInteraction() {
-    return !selectingMode.isNone &&
+    return !selectingMode.isDisabled &&
         (keyPressed.shift || keyPressed.ctrl) &&
         currentCell != null;
   }
@@ -421,7 +424,7 @@ mixin SelectingState implements ITrinaGridState {
   // todo : code cleanup
   @override
   bool isSelectedCell(TrinaCell cell, TrinaColumn column, int rowIdx) {
-    if (selectingMode.isNone) {
+    if (selectingMode.isDisabled) {
       return false;
     }
 

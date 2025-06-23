@@ -92,7 +92,8 @@ class _RowWithCheckboxScreenState extends State<RowWithCheckboxScreen> {
           print(event);
         },
         onLoaded: (TrinaGridOnLoadedEvent event) {
-          event.stateManager.setSelectingMode(TrinaGridSelectingMode.row);
+          event.stateManager
+              .setSelectingMode(TrinaGridSelectingMode.rowWithSingleTap);
 
           stateManager = event.stateManager;
         },

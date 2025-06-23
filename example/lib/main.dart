@@ -176,6 +176,7 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
             onLoaded: (TrinaGridOnLoadedEvent event) {
               stateManager = event.stateManager;
               stateManager.setShowColumnFilter(true);
+              stateManager.setAutoEditing(true);
             },
             onChanged: (TrinaGridOnChangedEvent event) {
               print(event);

@@ -11,7 +11,7 @@ void main() {
       numberOfColumns: 5,
       numberOfRows: 5,
       startColumnIndex: 0,
-      selectingMode: TrinaGridSelectingMode.cell,
+      selectingMode: TrinaGridSelectingMode.cellWithSingleTap,
     );
 
     fiveByFiveGrid.test(

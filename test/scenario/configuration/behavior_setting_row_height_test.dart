@@ -10,7 +10,8 @@ import '../../helper/row_helper.dart';
 
 /// Row height setting behavior test
 void main() {
-  const TrinaGridSelectingMode selectingMode = TrinaGridSelectingMode.row;
+  const TrinaGridSelectingMode selectingMode =
+      TrinaGridSelectingMode.rowWithSingleTap;
 
   TrinaGridStateManager? stateManager;
 

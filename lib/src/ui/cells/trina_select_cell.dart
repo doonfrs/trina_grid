@@ -103,6 +103,6 @@ class TrinaSelectCellState extends State<TrinaSelectCell>
       event.stateManager.setShowColumnFilter(true, notify: false);
     }
 
-    event.stateManager.setSelectingMode(TrinaGridSelectingMode.none);
+    event.stateManager.setSelectingMode(TrinaGridSelectingMode.disabled);
   }
 }

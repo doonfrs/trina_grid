@@ -9,16 +9,6 @@ import '../../helper/row_helper.dart';
 class _MockScrollController extends Mock implements ScrollController {}
 
 void main() {
-  group('selectingModes', () {
-    test('Square, Row, None should be returned.', () {
-      const selectingModes = TrinaGridSelectingMode.values;
-
-      expect(selectingModes.contains(TrinaGridSelectingMode.cell), isTrue);
-      expect(selectingModes.contains(TrinaGridSelectingMode.row), isTrue);
-      expect(selectingModes.contains(TrinaGridSelectingMode.none), isTrue);
-    });
-  });
-
   group('TrinaScrollController', () {
     test('bodyRowsVertical', () {
       final TrinaGridScrollController scrollController =

@@ -60,7 +60,7 @@ class TrinaBaseCell extends StatelessWidget
   }
 
   void _handleOnLongPressStart(LongPressStartDetails details) {
-    if (stateManager.selectingMode.isNone) {
+    if (stateManager.selectingMode.isDisabled) {
       return;
     }
 
@@ -71,7 +71,7 @@ class TrinaBaseCell extends StatelessWidget
   }
 
   void _handleOnLongPressMoveUpdate(LongPressMoveUpdateDetails details) {
-    if (stateManager.selectingMode.isNone) {
+    if (stateManager.selectingMode.isDisabled) {
       return;
     }
 
@@ -82,7 +82,7 @@ class TrinaBaseCell extends StatelessWidget
   }
 
   void _handleOnLongPressEnd(LongPressEndDetails details) {
-    if (stateManager.selectingMode.isNone) {
+    if (stateManager.selectingMode.isDisabled) {
       return;
     }
 

@@ -7,8 +7,8 @@ Cell selection is a core feature in TrinaGrid that allows users to select indivi
 The cell selection feature enables you to:
 
 - Select individual cells with a single click
-- Select ranges of cells by dragging or using keyboard shortcuts
-- Select cells in different modes (cell, row, or column)
+- Select multiple cells by holding Ctrl key (Cmd on Mac) and clicking
+- Select a range of cells by dragging or using keyboard shortcuts
 - Perform operations on selected cells
 - Customize the appearance of selected cells
 - Programmatically control cell selection
@@ -24,16 +24,15 @@ TrinaGrid(
   columns: columns,
   rows: rows,
   configuration: TrinaGridConfiguration(
-    selectingMode: TrinaGridSelectingMode.cell, // Default
+    selectingMode: TrinaGridSelectingMode.cellWithSingleTap, // Default
   ),
 )
 ```
 
-### Available Selection Modes
+### Cell Selection Modes
 
-- `TrinaGridSelectingMode.cell`: Allows selection of individual cells or ranges of cells
-- `TrinaGridSelectingMode.row`: Selects entire rows when clicking on any cell
-- `TrinaGridSelectingMode.horizontal`: Allows selection of cells only in the horizontal direction
+- `TrinaGridSelectingMode.cellWithCtrl`: Allows selection of single or multiple cells using Ctrl key (Cmd on Mac)
+- `TrinaGridSelectingMode.cellWithSingleTap`: Allows selection of single or multiple cells with a single tap
 
 ## Basic Usage
 
@@ -111,7 +110,7 @@ List<TrinaGridSelectingCellPosition> selectedPositions =
 stateManager.clearCurrentCell(notify: true);
 
 // Set selection mode
-stateManager.setSelectingMode(TrinaGridSelectingMode.cell);
+stateManager.setSelectingMode(TrinaGridSelectingMode.cellWithCtrl);
 ```
 
 ## Handling Selection Events
@@ -147,18 +146,12 @@ When a cell is selected, you can start editing by:
 
 - Double-clicking the cell
 - Pressing F2 or Enter
-- Starting to type (if configured)
+- Directly starting to type (if auto editing is enabled)
 
-```dart
-TrinaGrid(
-  columns: columns,
-  rows: rows,
-  configuration: TrinaGridConfiguration(
-    enterKeyAction: PlutoGridEnterKeyAction.editingAndMoveDown,
-    enableMoveDownAfterSelecting: true,
-  ),
-)
-```
+#### Note on Auto Editing
+
+It's recommended to NOT use `TrinaGridSelectingMode.cellWithSingleTap` when Auto editing is enabled. Every thing will work as expected, but it's not a good experience.
+
 
 ### Cell Selection with Copy & Paste
 
@@ -291,7 +284,7 @@ class _CellSelectionExampleState extends State<CellSelectionExample> {
             }
           },
           configuration: TrinaGridConfiguration(
-            selectingMode: TrinaGridSelectingMode.cell,
+            selectingMode: TrinaGridSelectingMode.cellWithSingleTap,
             style: TrinaGridStyleConfig(
               activatedBorderColor: Colors.blue,
               activatedColor: Colors.lightBlue.withOpacity(0.2),

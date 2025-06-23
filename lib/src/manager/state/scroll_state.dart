@@ -172,7 +172,7 @@ mixin ScrollState implements ITrinaGridState {
 
   @override
   bool needMovingScroll(Offset? offset, TrinaMoveDirection move) {
-    if (selectingMode.isNone) {
+    if (selectingMode.isDisabled) {
       return false;
     }
 

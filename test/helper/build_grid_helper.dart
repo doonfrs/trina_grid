@@ -102,7 +102,8 @@ class BuildGridHelper {
                 rows: safetyRows,
                 onLoaded: (TrinaGridOnLoadedEvent event) {
                   stateManager = event.stateManager;
-                  stateManager.setSelectingMode(TrinaGridSelectingMode.row);
+                  stateManager.setSelectingMode(
+                      TrinaGridSelectingMode.rowWithSingleTap);
                 },
               ),
             ),
@@ -132,7 +133,7 @@ class BuildGridHelper {
     int numberOfRows = 1,
     int startColumnIndex = 1,
     String columnName = 'column',
-    TrinaGridSelectingMode selectingMode = TrinaGridSelectingMode.none,
+    TrinaGridSelectingMode selectingMode = TrinaGridSelectingMode.disabled,
   }) {
     // given
     final safetyColumns = columns ??

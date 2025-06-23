@@ -788,7 +788,7 @@ mixin ColumnState implements ITrinaGridState {
       height: 500,
       mode: TrinaGridMode.popup,
       onLoaded: (e) {
-        e.stateManager.setSelectingMode(TrinaGridSelectingMode.none);
+        e.stateManager.setSelectingMode(TrinaGridSelectingMode.disabled);
       },
       onRowChecked: handleOnRowChecked,
     );

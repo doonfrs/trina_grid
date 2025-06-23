@@ -417,7 +417,8 @@ class FilterPopupState {
   void onLoaded(TrinaGridOnLoadedEvent e) {
     _stateManager = e.stateManager;
 
-    _stateManager!.setSelectingMode(TrinaGridSelectingMode.row, notify: false);
+    _stateManager!.setSelectingMode(TrinaGridSelectingMode.rowWithSingleTap,
+        notify: false);
 
     if (_stateManager!.rows.isNotEmpty) {
       _stateManager!.setKeepFocus(true, notify: false);
