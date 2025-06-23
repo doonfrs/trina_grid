@@ -56,7 +56,7 @@ void main() {
 
         stateManager.setSelectingMode(TrinaGridSelectingMode.rowWithSingleTap);
 
-        stateManager.setCurrentSelectingRowsByRange(1, 2);
+        stateManager.selectRowsInRange(1, 2);
 
         // when
         final currentSelectingPositionList =
@@ -142,7 +142,7 @@ void main() {
 
       stateManager.setSelectingMode(TrinaGridSelectingMode.rowWithSingleTap);
 
-      stateManager.setCurrentSelectingRowsByRange(1, 2);
+      stateManager.selectRowsInRange(1, 2);
 
       // when
       final currentSelectingText = stateManager.currentSelectingText;
@@ -280,7 +280,7 @@ void main() {
 
       stateManager.setSelectingMode(TrinaGridSelectingMode.rowWithSingleTap);
 
-      stateManager.setCurrentSelectingRowsByRange(1, 2);
+      stateManager.selectRowsInRange(1, 2);
 
       // when
       final currentSelectingText = stateManager.currentSelectingText;
@@ -342,7 +342,7 @@ void main() {
 
       stateManager.setSelectingMode(TrinaGridSelectingMode.rowWithSingleTap);
 
-      stateManager.setCurrentSelectingRowsByRange(1, 2);
+      stateManager.selectRowsInRange(1, 2);
 
       // when
       final currentSelectingText = stateManager.currentSelectingText;
