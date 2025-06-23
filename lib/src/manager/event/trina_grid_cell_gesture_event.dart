@@ -51,10 +51,11 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
     } else if (stateManager.mode.isSelectMode) {
       _selectMode(stateManager);
     } else {
-      _handleNormalInteraction(stateManager);
+      _handleNormalTap(stateManager);
     }
   }
 
+  /// Handles interactions when selection mode is active (e.g., Shift or Ctrl key pressed).
   void _handleSelectingInteraction(TrinaGridStateManager stateManager) {
     if (stateManager.keyPressed.shift) {
       _onSelectionWithShift(stateManager);
@@ -63,6 +64,7 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
     }
   }
 
+  /// Handles selection when the Shift key is pressed.
   void _onSelectionWithShift(TrinaGridStateManager stateManager) {
     final int? columnIdx = stateManager.columnIndex(column);
 
@@ -72,9 +74,11 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
         rowIdx: rowIdx,
       ),
     );
+
+    _handleRangeSelectionIfSelectingRows(stateManager);
   }
 
-  void _handleNormalInteraction(TrinaGridStateManager stateManager) {
+  void _handleNormalTap(TrinaGridStateManager stateManager) {
     if (stateManager.isCurrentCell(cell) && stateManager.isEditing != true) {
       stateManager.setEditing(true);
     } else {
@@ -95,7 +99,17 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
   void _onLongPressMoveUpdate(TrinaGridStateManager stateManager) {
     _setCurrentCell(stateManager, cell, rowIdx);
 
+    final int? previousSelectingRowIdx =
+        stateManager.currentSelectingPosition?.rowIdx;
+
     stateManager.setCurrentSelectingPositionWithOffset(offset);
+
+    // Selected rows is only updated when the dragged offset enters a new row,
+    // preventing performance issues from frequent updates.
+    if (stateManager.currentSelectingPosition?.rowIdx !=
+        previousSelectingRowIdx) {
+      _handleRangeSelectionIfSelectingRows(stateManager);
+    }
 
     stateManager.eventManager!.addEvent(
       TrinaGridScrollUpdateEvent(offset: offset),
@@ -111,10 +125,7 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
       stateManager,
       TrinaGridScrollUpdateDirection.all,
     );
-
-    if (stateManager.mode.isMultiSelectMode) {
-      stateManager.handleOnSelected();
-    }
+    _handleRangeSelectionIfSelectingRows(stateManager);
   }
 
   void _onDoubleTap(TrinaGridStateManager stateManager) {
@@ -179,6 +190,18 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
   ) {
     if (stateManager.isCurrentCell(cell) != true) {
       stateManager.setCurrentCell(cell, rowIdx, notify: false);
+    }
+  }
+
+  void _handleRangeSelectionIfSelectingRows(
+      TrinaGridStateManager stateManager) {
+    if (stateManager.selectingMode.isRow) {
+      stateManager.selectRowsInRange(
+        stateManager.currentCellPosition?.rowIdx,
+        cell.row.sortIdx,
+        notify: false,
+      );
+      stateManager.handleOnSelected();
     }
   }
 }

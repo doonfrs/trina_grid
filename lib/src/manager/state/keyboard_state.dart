@@ -243,6 +243,14 @@ mixin KeyboardState implements ITrinaGridState {
     setCurrentCell(cellToMove, rowIdx, notify: notify);
 
     moveScrollByRow(direction, rowIdx - direction.offset);
+
+    if (selectingMode.isRow) {
+      selectRowsInRange(
+        currentCellPosition?.rowIdx,
+        currentSelectingPosition?.rowIdx,
+        notify: false,
+      );
+    }
   }
 
   @override
@@ -262,6 +270,14 @@ mixin KeyboardState implements ITrinaGridState {
             cellPosition.rowIdx! + (direction.vertical ? direction.offset : 0),
       ),
     );
+
+    if (selectingMode.isRow) {
+      selectRowsInRange(
+        currentCellPosition?.rowIdx,
+        currentSelectingPosition?.rowIdx,
+        notify: false,
+      );
+    }
 
     if (direction.horizontal) {
       moveScrollByColumn(direction, cellPosition.columnIdx);
@@ -333,6 +349,14 @@ mixin KeyboardState implements ITrinaGridState {
       notify: notify,
     );
 
+    if (selectingMode.isRow) {
+      selectRowsInRange(
+        currentCellPosition?.rowIdx,
+        currentSelectingPosition?.rowIdx,
+        notify: false,
+      );
+    }
+
     direction.isUp
         ? scroll.vertical!.jumpTo(0)
         : scroll.vertical!.jumpTo(scroll.maxScrollVertical);
@@ -364,6 +388,13 @@ mixin KeyboardState implements ITrinaGridState {
       cellPosition: TrinaGridCellPosition(columnIdx: columnIdx, rowIdx: rowIdx),
     );
 
+    if (selectingMode.isRow) {
+      selectRowsInRange(
+        currentCellPosition?.rowIdx,
+        currentSelectingPosition?.rowIdx,
+        notify: false,
+      );
+    }
     moveScrollByRow(direction, rowIdx - direction.offset);
   }
 }

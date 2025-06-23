@@ -251,14 +251,6 @@ mixin SelectingState implements ITrinaGridState {
     _state._currentSelectingPosition =
         isInvalidCellPosition(cellPosition) ? null : cellPosition;
 
-    if (currentSelectingPosition != null && selectingMode.isRow) {
-      selectRowsInRange(
-        currentRowIdx,
-        currentSelectingPosition!.rowIdx,
-        notify: false,
-      );
-    }
-
     notifyListeners(notify, setCurrentSelectingPosition.hashCode);
   }
 
