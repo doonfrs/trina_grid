@@ -970,7 +970,7 @@ void main() {
     );
 
     testWidgets(
-        'When currentSelectingRows is empty, '
+        'When selectedRows is empty, '
         'tapping the remove icon should call removeCurrentRow.', (
       tester,
     ) async {
@@ -978,7 +978,7 @@ void main() {
       const configuration = TrinaGridConfiguration();
       final mockListener = MockMethods();
 
-      when(stateManager.currentSelectingRows).thenReturn([]);
+      when(stateManager.selectedRows).thenReturn([]);
 
       await tester.pumpWidget(
         MaterialApp(
@@ -1005,7 +1005,7 @@ void main() {
     });
 
     testWidgets(
-        'When currentSelectingRows is not empty, '
+        'When selectedRows is not empty, '
         'tapping the remove icon should call removeRows.', (tester) async {
       final stateManager = MockTrinaGridStateManager();
       const configuration = TrinaGridConfiguration();
@@ -1013,7 +1013,7 @@ void main() {
 
       final dummyRow = TrinaRow(cells: {'test': TrinaCell(value: '')});
 
-      when(stateManager.currentSelectingRows).thenReturn([dummyRow]);
+      when(stateManager.selectedRows).thenReturn([dummyRow]);
 
       await tester.pumpWidget(
         MaterialApp(

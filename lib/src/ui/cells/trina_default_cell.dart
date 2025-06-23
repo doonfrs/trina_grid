@@ -244,12 +244,12 @@ class _RowDragIconWidget extends StatelessWidget {
   });
 
   List<TrinaRow> get _draggingRows {
-    if (stateManager.currentSelectingRows.isEmpty) {
+    if (stateManager.selectedRows.isEmpty) {
       return [row];
     }
 
     if (stateManager.isSelectedRow(row.key)) {
-      return stateManager.currentSelectingRows;
+      return stateManager.selectedRows;
     }
 
     // In case there are selected rows,

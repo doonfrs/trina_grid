@@ -188,7 +188,7 @@ mixin GridState implements ITrinaGridState {
           row: currentRow,
           rowIdx: currentRowIdx,
           cell: currentCell,
-          selectedRows: mode.isMultiSelectMode ? currentSelectingRows : null,
+          selectedRows: mode.isMultiSelectMode ? selectedRows : null,
         ),
       );
     }

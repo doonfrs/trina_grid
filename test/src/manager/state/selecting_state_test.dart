@@ -121,7 +121,7 @@ void main() {
     testWidgets(
         'WHEN'
         'selectingMode.rowWithSingleTap'
-        'currentSelectingRows.length > 0'
+        'selectedRows.length > 0'
         'THEN'
         'The values of the selected rows should be returned.',
         (WidgetTester tester) async {
@@ -163,7 +163,7 @@ void main() {
     testWidgets(
         'WHEN'
         'selectingMode.rowWithSingleTap'
-        'currentSelectingRows.length > 0'
+        'selectedRows.length > 0'
         'THEN'
         'The value of the row selected with toggleSelectingRow should be returned.',
         (WidgetTester tester) async {
@@ -213,7 +213,7 @@ void main() {
     testWidgets(
         'WHEN'
         'selectingMode.rowWithSingleTap'
-        'currentSelectingRows.length == 0'
+        'selectedRows.length == 0'
         'currentCellPosition == null'
         'currentSelectingPosition == null'
         'THEN'
@@ -246,7 +246,7 @@ void main() {
     testWidgets(
         'WHEN'
         'selectingMode.rowWithSingleTap'
-        'currentSelectingRows.length > 0'
+        'selectedRows.length > 0'
         'has frozen column In a state of sufficient width'
         'THEN'
         'The values of the selected rows should be returned.',
@@ -307,7 +307,7 @@ void main() {
     testWidgets(
         'WHEN'
         'selectingMode.rowWithSingleTap'
-        'currentSelectingRows.length > 0'
+        'selectedRows.length > 0'
         'has frozen column In a narrow area'
         'THEN'
         'The values of the selected rows should be returned.',
@@ -369,7 +369,7 @@ void main() {
     testWidgets(
         'WHEN'
         'selectingMode.cellWithSingleTap'
-        'currentSelectingRows.length == 0'
+        'selectedRows.length == 0'
         'currentCellPosition != null'
         'currentSelectingPosition != null'
         'THEN'
@@ -611,10 +611,10 @@ void main() {
     );
   });
 
-  group('clearCurrentSelectingRows', () {
+  group('clearselectedRows', () {
     testWidgets(
-      'When currentSelectingRows is not empty'
-      'then currentSelectingRows should be empty.',
+      'When selectedRows is not empty'
+      'then selectedRows should be empty.',
       (WidgetTester tester) async {
         // given
         List<TrinaColumn> columns = [
@@ -636,12 +636,12 @@ void main() {
 
         stateManager.toggleSelectingRow(1);
 
-        expect(stateManager.currentSelectingRows.length, 1);
+        expect(stateManager.selectedRows.length, 1);
 
         stateManager.clearCurrentSelecting();
 
         // then
-        expect(stateManager.currentSelectingRows.length, 0);
+        expect(stateManager.selectedRows.length, 0);
       },
     );
   });
@@ -669,7 +669,7 @@ void main() {
       // then
       expect(stateManager.currentCell, null);
       expect(stateManager.currentSelectingPosition, null);
-      expect(stateManager.currentSelectingRows.length, 0);
+      expect(stateManager.selectedRows.length, 0);
     });
 
     testWidgets(
@@ -694,7 +694,7 @@ void main() {
       // then
       expect(stateManager.currentCell, null);
       expect(stateManager.currentSelectingPosition, null);
-      expect(stateManager.currentSelectingRows.length, 0);
+      expect(stateManager.selectedRows.length, 0);
     });
 
     testWidgets(
@@ -758,7 +758,7 @@ void main() {
       expect(stateManager.currentCell!.value, rows.first.cells['text0']!.value);
       expect(stateManager.currentSelectingPosition!.columnIdx, 2);
       expect(stateManager.currentSelectingPosition!.rowIdx, 4);
-      expect(stateManager.currentSelectingRows.length, 5);
+      expect(stateManager.selectedRows.length, 5);
     });
 
     testWidgets(
@@ -788,14 +788,14 @@ void main() {
       // then
       expect(stateManager.currentCell, null);
       expect(stateManager.currentSelectingPosition, null);
-      expect(stateManager.currentSelectingRows.length, 0);
+      expect(stateManager.selectedRows.length, 0);
     });
   });
 
   group('setCurrentSelectingPosition', () {
     testWidgets(
       'When selectingMode is rowWithSingleTap'
-      'then currentRowIdx, rowIdx should be set to currentSelectingRows.',
+      'then currentRowIdx, rowIdx should be set to selectedRows.',
       (WidgetTester tester) async {
         // given
         List<TrinaColumn> columns = [
@@ -825,10 +825,10 @@ void main() {
 
         // then
         // Rows 3 and 4 are selected.
-        expect(stateManager.currentSelectingRows.length, 2);
+        expect(stateManager.selectedRows.length, 2);
 
         final List<Key> keys =
-            stateManager.currentSelectingRows.map((e) => e.key).toList();
+            stateManager.selectedRows.map((e) => e.key).toList();
 
         expect(keys.contains(rows[3].key), isTrue);
         expect(keys.contains(rows[4].key), isTrue);
