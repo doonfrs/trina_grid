@@ -65,7 +65,8 @@ abstract class ISelectingState {
   /// Sets the currentSelectingRows by range.
   /// [from] rowIdx of rows.
   /// [to] rowIdx of rows.
-  void setCurrentSelectingRowsByRange(int from, int to, {bool notify = true});
+  /// If [from] or [to] is null, it is set to [currentRowIdx].
+  void setCurrentSelectingRowsByRange(int? from, int? to, {bool notify = true});
 
   /// Resets currently selected rows and cells.
   void clearCurrentSelecting({bool notify = true});
@@ -132,17 +133,7 @@ mixin SelectingState implements ITrinaGridState {
   bool get hasCurrentSelectingPosition => currentSelectingPosition != null;
 
   @override
-  List<TrinaRow> get currentSelectingRows {
-    List<TrinaRow> rows = [];
-    rows = _state._currentSelectingRows;
-    if (currentRowIdx != null && selectingMode.isRow) {
-      if (!rows.contains(refRows[currentRowIdx!])) {
-        rows.add(refRows[currentRowIdx!]);
-      }
-      rows.sort((a, b) => a.sortIdx.compareTo(b.sortIdx));
-    }
-    return rows;
-  }
+  List<TrinaRow> get currentSelectingRows => _state._currentSelectingRows;
 
   @override
   String get currentSelectingText {
@@ -355,15 +346,24 @@ mixin SelectingState implements ITrinaGridState {
       return;
     }
 
-    final maxFrom = min(from!, to!);
+    final safeFrom = from ?? currentRowIdx;
+    final safeTo = to ?? currentRowIdx;
 
-    final maxTo = max(from, to) + 1;
-
-    if (maxFrom < 0 || maxTo > refRows.length) {
+    if (safeFrom == null || safeTo == null) {
       return;
     }
 
-    _state._currentSelectingRows = refRows.getRange(maxFrom, maxTo).toList();
+    final maxFrom = min(safeFrom, safeTo);
+    final maxTo = max(safeFrom, safeTo);
+
+    if (maxFrom < 0 || maxTo >= refRows.length) {
+      return;
+    }
+
+    _state._currentSelectingRows =
+        refRows.getRange(maxFrom, maxTo + 1).toList();
+
+    _state._currentSelectingRows.sort((a, b) => a.sortIdx.compareTo(b.sortIdx));
 
     notifyListeners(notify, setCurrentSelectingRowsByRange.hashCode);
   }
@@ -389,12 +389,15 @@ mixin SelectingState implements ITrinaGridState {
 
     final TrinaRow row = refRows[rowIdx];
 
-    final keys = Set.from(currentSelectingRows.map((e) => e.key));
+    final int index =
+        _state._currentSelectingRows.indexWhere((e) => e.key == row.key);
 
-    if (keys.contains(row.key)) {
-      currentSelectingRows.removeWhere((element) => element.key == row.key);
+    if (index != -1) {
+      _state._currentSelectingRows.removeAt(index);
     } else {
-      currentSelectingRows.add(row);
+      _state._currentSelectingRows.add(row);
+      _state._currentSelectingRows
+          .sort((a, b) => a.sortIdx.compareTo(b.sortIdx));
     }
 
     notifyListeners(notify, toggleSelectingRow.hashCode);
@@ -713,11 +716,11 @@ mixin SelectingState implements ITrinaGridState {
   }
 
   void _clearCurrentSelectingRows({bool notify = true}) {
-    if (currentSelectingRows.isEmpty) {
+    if (_state._currentSelectingRows.isEmpty) {
       return;
     }
 
-    _state._currentSelectingRows = [];
+    _state._currentSelectingRows.clear();
 
     if (notify) {
       notifyListeners();
