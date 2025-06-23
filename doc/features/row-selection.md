@@ -8,40 +8,39 @@ The row selection feature enables users to interact with rows as complete units 
 
 ## Enabling Row Selection
 
-To enable row selection in TrinaGrid, you need to set the selecting mode to `TrinaGridSelectingMode.row` using the state manager:
+To enable row selection in TrinaGrid, you can set the selecting mode in two ways:
 
 ```dart
 TrinaGrid(
   columns: columns,
   rows: rows,
+  // 1- Using the configuration
+  configuration: TrinaGridConfiguration(
+    selectingMode: TrinaGridSelectingMode.rowWithSingleTap,
+  ),
+  // 2- Using the state manager
   onLoaded: (TrinaGridOnLoadedEvent event) {
-    // Enable row selection mode
-    event.stateManager.setSelectingMode(TrinaGridSelectingMode.row);
+    event.stateManager.setSelectingMode(TrinaGridSelectingMode.rowWithSingleTap);
   },
 )
 ```
 
-## Selection Modes
+## Row Selection Modes
 
-TrinaGrid supports three selection modes:
 
-1. **Row Selection Mode** (`TrinaGridSelectingMode.row`): Allows users to select entire rows.
-2. **Cell Selection Mode** (`TrinaGridSelectingMode.cell`): Allows users to select individual cells or ranges of cells.
-3. **No Selection Mode** (`TrinaGridSelectingMode.none`): Disables selection functionality.
+### TrinaGridSelectingMode.rowWithSingleTap
 
-## User Interactions for Row Selection
+Allows users to select single or multiple rows with a single tap.
 
-When row selection mode is enabled, users can select rows using the following interactions:
+### TrinaGridSelectingMode.rowWithCtrl
 
-### Single Row Selection
+Allows users to select single or multiple rows using Click + Ctrl key(cmd on Mac).
 
-- **Click**: Click on any cell in a row to select it.
 - **Keyboard Navigation**: Use arrow keys to navigate to a row and press Space or Enter to select it.
 
-### Multiple Row Selection
+## Range Row Selection
 
 - **Shift + Click**: Select a range of rows from the currently selected row to the clicked row.
-- **Ctrl/Cmd + Click**: Add or remove individual rows from the selection without affecting other selected rows.
 - **Long Press and Drag**: Press and hold on a row, then drag to select multiple consecutive rows.
 
 ## Programmatic Row Selection
@@ -247,7 +246,7 @@ class _RowSelectionExampleState extends State<RowSelectionExample> {
               onLoaded: (TrinaGridOnLoadedEvent event) {
                 stateManager = event.stateManager;
                 // Enable row selection mode
-                stateManager.setSelectingMode(TrinaGridSelectingMode.row);
+                stateManager.setSelectingMode(TrinaGridSelectingMode.rowWithSingleTap);
               },
               onSelected: (TrinaGridOnSelectedEvent event) {
                 // Optional: Handle selection changes

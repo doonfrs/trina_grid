@@ -243,7 +243,8 @@ class _CellRendererScreenState extends State<CellRendererScreen> {
           print(event);
         },
         onLoaded: (TrinaGridOnLoadedEvent event) {
-          event.stateManager.setSelectingMode(TrinaGridSelectingMode.cell);
+          event.stateManager
+              .setSelectingMode(TrinaGridSelectingMode.cellWithCtrl);
           stateManager = event.stateManager;
         },
       ),

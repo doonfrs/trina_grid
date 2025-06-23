@@ -77,8 +77,6 @@ class _Header extends StatefulWidget {
 }
 
 class _HeaderState extends State<_Header> {
-  TrinaGridSelectingMode gridSelectingMode = TrinaGridSelectingMode.row;
-
   @override
   void initState() {
     super.initState();

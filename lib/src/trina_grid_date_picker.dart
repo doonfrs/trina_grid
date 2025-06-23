@@ -144,7 +144,7 @@ class TrinaGridDatePicker {
   void _onLoaded(TrinaGridOnLoadedEvent event) {
     datePickerStateManager = event.stateManager;
 
-    datePickerStateManager.setSelectingMode(TrinaGridSelectingMode.none);
+    datePickerStateManager.setSelectingMode(TrinaGridSelectingMode.disabled);
 
     keyboardStream = datePickerStateManager.eventManager!.listener(
       keyboardListener,

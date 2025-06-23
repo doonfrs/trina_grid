@@ -322,7 +322,7 @@ void main() {
 
         when(stateManager.isCurrentCell(any)).thenReturn(false);
         when(stateManager.selectingMode).thenReturn(
-          TrinaGridSelectingMode.cell,
+          TrinaGridSelectingMode.cellWithSingleTap,
         );
         clearInteractions(stateManager);
 
@@ -353,7 +353,7 @@ void main() {
 
         when(stateManager.isCurrentCell(any)).thenReturn(true);
         when(stateManager.selectingMode).thenReturn(
-          TrinaGridSelectingMode.cell,
+          TrinaGridSelectingMode.cellWithSingleTap,
         );
         clearInteractions(stateManager);
 
@@ -373,7 +373,7 @@ void main() {
     test(
       'When, '
       'isCurrentCell = false, '
-      'selectingMode = Row, '
+      'selectingMode = rowWithSingleTap, '
       'Then, '
       'toggleSelectingRow should be called.',
       () {
@@ -382,7 +382,8 @@ void main() {
         const rowIdx = 1;
 
         when(stateManager.isCurrentCell(any)).thenReturn(false);
-        when(stateManager.selectingMode).thenReturn(TrinaGridSelectingMode.row);
+        when(stateManager.selectingMode)
+            .thenReturn(TrinaGridSelectingMode.rowWithSingleTap);
         clearInteractions(stateManager);
 
         // when
@@ -403,7 +404,7 @@ void main() {
     test(
       'When, '
       'isCurrentCell = false, '
-      'selectingMode = Row, '
+      'selectingMode = rowWithSingleTap, '
       'Then, '
       'setCurrentSelectingPositionWithOffset should be called.',
       () {
@@ -413,7 +414,8 @@ void main() {
         const rowIdx = 1;
 
         when(stateManager.isCurrentCell(any)).thenReturn(false);
-        when(stateManager.selectingMode).thenReturn(TrinaGridSelectingMode.row);
+        when(stateManager.selectingMode)
+            .thenReturn(TrinaGridSelectingMode.rowWithSingleTap);
         clearInteractions(stateManager);
 
         // when

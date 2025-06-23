@@ -185,7 +185,7 @@ class TrinaDateTimeCellState extends State<TrinaDateTimeCell>
           final rows = stateManager.refRows;
           final length = rows.length;
 
-          stateManager.setSelectingMode(TrinaGridSelectingMode.none);
+          stateManager.setSelectingMode(TrinaGridSelectingMode.disabled);
 
           final currentHour = currentDateTime.hour.toString().padLeft(2, '0');
 
@@ -235,7 +235,7 @@ class TrinaDateTimeCellState extends State<TrinaDateTimeCell>
           final rows = stateManager.refRows;
           final length = rows.length;
 
-          stateManager.setSelectingMode(TrinaGridSelectingMode.none);
+          stateManager.setSelectingMode(TrinaGridSelectingMode.disabled);
 
           final currentMinute =
               currentDateTime.minute.toString().padLeft(2, '0');

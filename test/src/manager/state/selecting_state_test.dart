@@ -36,7 +36,7 @@ void main() {
 
   group('currentSelectingPositionList', () {
     testWidgets(
-      'selectingMode.Row status'
+      'selectingMode.rowWithSingleTap status'
       'should return an empty array.',
       (WidgetTester tester) async {
         // given
@@ -54,7 +54,7 @@ void main() {
           layout: const BoxConstraints(maxHeight: 300, maxWidth: 50),
         );
 
-        stateManager.setSelectingMode(TrinaGridSelectingMode.row);
+        stateManager.setSelectingMode(TrinaGridSelectingMode.rowWithSingleTap);
 
         stateManager.setCurrentSelectingRowsByRange(1, 2);
 
@@ -68,7 +68,7 @@ void main() {
     );
 
     testWidgets(
-      'selectingMode.Square status'
+      'selectingMode.cellWithSingleTap status'
       '(1, 3) ~ (2, 4) selection should return 4 selected cells.',
       (WidgetTester tester) async {
         // given
@@ -86,7 +86,7 @@ void main() {
           layout: const BoxConstraints(maxHeight: 300, maxWidth: 50),
         );
 
-        stateManager.setSelectingMode(TrinaGridSelectingMode.cell);
+        stateManager.setSelectingMode(TrinaGridSelectingMode.cellWithSingleTap);
 
         final currentCell = rows[3].cells['text1'];
 
@@ -120,7 +120,7 @@ void main() {
   group('currentSelectingText', () {
     testWidgets(
         'WHEN'
-        'selectingMode.Row'
+        'selectingMode.rowWithSingleTap'
         'currentSelectingRows.length > 0'
         'THEN'
         'The values of the selected rows should be returned.',
@@ -140,7 +140,7 @@ void main() {
         layout: const BoxConstraints(maxHeight: 300, maxWidth: 50),
       );
 
-      stateManager.setSelectingMode(TrinaGridSelectingMode.row);
+      stateManager.setSelectingMode(TrinaGridSelectingMode.rowWithSingleTap);
 
       stateManager.setCurrentSelectingRowsByRange(1, 2);
 
@@ -162,7 +162,7 @@ void main() {
 
     testWidgets(
         'WHEN'
-        'selectingMode.Row'
+        'selectingMode.rowWithSingleTap'
         'currentSelectingRows.length > 0'
         'THEN'
         'The value of the row selected with toggleSelectingRow should be returned.',
@@ -182,7 +182,7 @@ void main() {
         layout: const BoxConstraints(maxHeight: 300, maxWidth: 50),
       );
 
-      stateManager.setSelectingMode(TrinaGridSelectingMode.row);
+      stateManager.setSelectingMode(TrinaGridSelectingMode.rowWithSingleTap);
 
       stateManager.toggleSelectingRow(1);
       stateManager.toggleSelectingRow(3);
@@ -212,7 +212,7 @@ void main() {
 
     testWidgets(
         'WHEN'
-        'selectingMode.Row'
+        'selectingMode.rowWithSingleTap'
         'currentSelectingRows.length == 0'
         'currentCellPosition == null'
         'currentSelectingPosition == null'
@@ -234,7 +234,7 @@ void main() {
         layout: const BoxConstraints(maxHeight: 300, maxWidth: 50),
       );
 
-      stateManager.setSelectingMode(TrinaGridSelectingMode.row);
+      stateManager.setSelectingMode(TrinaGridSelectingMode.rowWithSingleTap);
 
       // when
       final currentSelectingText = stateManager.currentSelectingText;
@@ -245,7 +245,7 @@ void main() {
 
     testWidgets(
         'WHEN'
-        'selectingMode.Row'
+        'selectingMode.rowWithSingleTap'
         'currentSelectingRows.length > 0'
         'has frozen column In a state of sufficient width'
         'THEN'
@@ -278,7 +278,7 @@ void main() {
         layout: const BoxConstraints(maxHeight: 500, maxWidth: 600),
       );
 
-      stateManager.setSelectingMode(TrinaGridSelectingMode.row);
+      stateManager.setSelectingMode(TrinaGridSelectingMode.rowWithSingleTap);
 
       stateManager.setCurrentSelectingRowsByRange(1, 2);
 
@@ -306,7 +306,7 @@ void main() {
 
     testWidgets(
         'WHEN'
-        'selectingMode.Row'
+        'selectingMode.rowWithSingleTap'
         'currentSelectingRows.length > 0'
         'has frozen column In a narrow area'
         'THEN'
@@ -340,7 +340,7 @@ void main() {
         layout: const BoxConstraints(maxHeight: 500, maxWidth: 400),
       );
 
-      stateManager.setSelectingMode(TrinaGridSelectingMode.row);
+      stateManager.setSelectingMode(TrinaGridSelectingMode.rowWithSingleTap);
 
       stateManager.setCurrentSelectingRowsByRange(1, 2);
 
@@ -368,7 +368,7 @@ void main() {
 
     testWidgets(
         'WHEN'
-        'selectingMode.Square'
+        'selectingMode.cellWithSingleTap'
         'currentSelectingRows.length == 0'
         'currentCellPosition != null'
         'currentSelectingPosition != null'
@@ -390,7 +390,7 @@ void main() {
         layout: const BoxConstraints(maxHeight: 300, maxWidth: 50),
       );
 
-      stateManager.setSelectingMode(TrinaGridSelectingMode.cell);
+      stateManager.setSelectingMode(TrinaGridSelectingMode.cellWithSingleTap);
 
       final currentCell = rows[3].cells['text1'];
 
@@ -429,7 +429,7 @@ void main() {
           layout: const BoxConstraints(maxHeight: 500, maxWidth: 400),
         );
 
-        stateManager.setSelectingMode(TrinaGridSelectingMode.none);
+        stateManager.setSelectingMode(TrinaGridSelectingMode.disabled);
 
         expect(stateManager.isSelecting, false);
         // when
@@ -441,7 +441,7 @@ void main() {
     );
 
     testWidgets(
-      'When selectingMode is Square'
+      'When selectingMode is cellWithSingleTap'
       'and currentCell is null'
       'then isSelecting should not change.',
       (WidgetTester tester) async {
@@ -458,7 +458,7 @@ void main() {
           layout: const BoxConstraints(maxHeight: 500, maxWidth: 400),
         );
 
-        stateManager.setSelectingMode(TrinaGridSelectingMode.cell);
+        stateManager.setSelectingMode(TrinaGridSelectingMode.cellWithSingleTap);
 
         expect(stateManager.currentCell, null);
         expect(stateManager.isSelecting, false);
@@ -471,7 +471,7 @@ void main() {
     );
 
     testWidgets(
-      'When selectingMode is Row'
+      'When selectingMode is rowWithSingleTap'
       'and currentCell is null'
       'then isSelecting should not change.',
       (WidgetTester tester) async {
@@ -488,7 +488,7 @@ void main() {
           layout: const BoxConstraints(maxHeight: 500, maxWidth: 400),
         );
 
-        stateManager.setSelectingMode(TrinaGridSelectingMode.row);
+        stateManager.setSelectingMode(TrinaGridSelectingMode.rowWithSingleTap);
 
         expect(stateManager.currentCell, null);
         expect(stateManager.isSelecting, false);
@@ -501,7 +501,7 @@ void main() {
     );
 
     testWidgets(
-      'When selectingMode is Row'
+      'When selectingMode is rowWithSingleTap'
       'and currentCell is not null'
       'then isSelecting should change.',
       (WidgetTester tester) async {
@@ -520,7 +520,7 @@ void main() {
           layout: const BoxConstraints(maxHeight: 500, maxWidth: 400),
         );
 
-        stateManager.setSelectingMode(TrinaGridSelectingMode.row);
+        stateManager.setSelectingMode(TrinaGridSelectingMode.rowWithSingleTap);
         stateManager.setCurrentCell(rows.first.cells['text1'], 0);
 
         expect(stateManager.currentCell, isNot(null));
@@ -534,7 +534,7 @@ void main() {
     );
 
     testWidgets(
-      'When selectingMode is Row'
+      'When selectingMode is rowWithSingleTap'
       'and currentCell is not null'
       'then isSelecting should change.'
       'isEditing is true then isEditing should change to false.',
@@ -554,7 +554,7 @@ void main() {
           layout: const BoxConstraints(maxHeight: 500, maxWidth: 400),
         );
 
-        stateManager.setSelectingMode(TrinaGridSelectingMode.row);
+        stateManager.setSelectingMode(TrinaGridSelectingMode.rowWithSingleTap);
         stateManager.setCurrentCell(rows.first.cells['text1'], 0);
         stateManager.setEditing(true);
 
@@ -632,7 +632,7 @@ void main() {
         );
 
         // when
-        stateManager.setSelectingMode(TrinaGridSelectingMode.row);
+        stateManager.setSelectingMode(TrinaGridSelectingMode.rowWithSingleTap);
 
         stateManager.toggleSelectingRow(1);
 
@@ -698,7 +698,7 @@ void main() {
     });
 
     testWidgets(
-        'When selectingMode is Square'
+        'When selectingMode is cellWithSingleTap'
         'and rows.length > 0'
         'then current cell should be first cell, '
         'selected cell position should be last cell position.',
@@ -718,7 +718,7 @@ void main() {
         layout: const BoxConstraints(maxHeight: 500, maxWidth: 400),
       );
 
-      stateManager.setSelectingMode(TrinaGridSelectingMode.cell);
+      stateManager.setSelectingMode(TrinaGridSelectingMode.cellWithSingleTap);
 
       // when
       stateManager.setAllCurrentSelecting();
@@ -730,7 +730,7 @@ void main() {
     });
 
     testWidgets(
-        'When selectingMode is Row'
+        'When selectingMode is rowWithSingleTap'
         'and rows.length > 0'
         'then The number of selected rows should be correct.',
         (WidgetTester tester) async {
@@ -749,7 +749,7 @@ void main() {
         layout: const BoxConstraints(maxHeight: 500, maxWidth: 400),
       );
 
-      stateManager.setSelectingMode(TrinaGridSelectingMode.row);
+      stateManager.setSelectingMode(TrinaGridSelectingMode.rowWithSingleTap);
 
       // when
       stateManager.setAllCurrentSelecting();
@@ -780,7 +780,7 @@ void main() {
         layout: const BoxConstraints(maxHeight: 500, maxWidth: 400),
       );
 
-      stateManager.setSelectingMode(TrinaGridSelectingMode.none);
+      stateManager.setSelectingMode(TrinaGridSelectingMode.disabled);
 
       // when
       stateManager.setAllCurrentSelecting();
@@ -794,7 +794,7 @@ void main() {
 
   group('setCurrentSelectingPosition', () {
     testWidgets(
-      'When selectingMode is Row'
+      'When selectingMode is rowWithSingleTap'
       'then currentRowIdx, rowIdx should be set to currentSelectingRows.',
       (WidgetTester tester) async {
         // given
@@ -812,7 +812,7 @@ void main() {
           layout: const BoxConstraints(maxHeight: 500, maxWidth: 400),
         );
 
-        stateManager.setSelectingMode(TrinaGridSelectingMode.row);
+        stateManager.setSelectingMode(TrinaGridSelectingMode.rowWithSingleTap);
 
         stateManager.setCurrentCell(rows[3].cells['text1'], 3);
 
@@ -838,7 +838,7 @@ void main() {
 
   group('toggleSelectingRow', () {
     testWidgets(
-      'When selectingMode is Row'
+      'When selectingMode is rowWithSingleTap'
       'and the row is already selected'
       'then it should be removed.',
       (WidgetTester tester) async {
@@ -857,7 +857,7 @@ void main() {
           layout: const BoxConstraints(maxHeight: 500, maxWidth: 400),
         );
 
-        stateManager.setSelectingMode(TrinaGridSelectingMode.row);
+        stateManager.setSelectingMode(TrinaGridSelectingMode.rowWithSingleTap);
 
         stateManager.toggleSelectingRow(3);
 
@@ -892,7 +892,7 @@ void main() {
         );
 
         // when
-        stateManager.setSelectingMode(TrinaGridSelectingMode.none);
+        stateManager.setSelectingMode(TrinaGridSelectingMode.disabled);
 
         // then
         expect(stateManager.isSelectingInteraction(), isFalse);
@@ -920,7 +920,7 @@ void main() {
         );
 
         // when
-        stateManager.setSelectingMode(TrinaGridSelectingMode.row);
+        stateManager.setSelectingMode(TrinaGridSelectingMode.rowWithSingleTap);
 
         // then
         expect(stateManager.isSelectingInteraction(), isFalse);
@@ -949,7 +949,7 @@ void main() {
         );
 
         // when
-        stateManager.setSelectingMode(TrinaGridSelectingMode.row);
+        stateManager.setSelectingMode(TrinaGridSelectingMode.rowWithSingleTap);
         await tester.sendKeyDownEvent(LogicalKeyboardKey.shift);
 
         // then
@@ -979,7 +979,7 @@ void main() {
         );
 
         // when
-        stateManager.setSelectingMode(TrinaGridSelectingMode.row);
+        stateManager.setSelectingMode(TrinaGridSelectingMode.rowWithSingleTap);
         await tester.sendKeyDownEvent(LogicalKeyboardKey.control);
 
         // then
@@ -1009,7 +1009,7 @@ void main() {
         );
 
         // when
-        stateManager.setSelectingMode(TrinaGridSelectingMode.row);
+        stateManager.setSelectingMode(TrinaGridSelectingMode.rowWithSingleTap);
         await tester.sendKeyDownEvent(LogicalKeyboardKey.shift);
         stateManager.setCurrentCell(rows.first.cells['text0'], 0);
 
@@ -1040,7 +1040,7 @@ void main() {
         );
 
         // when
-        stateManager.setSelectingMode(TrinaGridSelectingMode.cell);
+        stateManager.setSelectingMode(TrinaGridSelectingMode.cellWithSingleTap);
         await tester.sendKeyDownEvent(LogicalKeyboardKey.control);
         stateManager.setCurrentCell(rows.first.cells['text0'], 0);
 

@@ -8,7 +8,8 @@ import '../../helper/row_helper.dart';
 
 /// Test of behavior after selecting rows
 void main() {
-  const TrinaGridSelectingMode selectingMode = TrinaGridSelectingMode.row;
+  const TrinaGridSelectingMode selectingMode =
+      TrinaGridSelectingMode.rowWithSingleTap;
 
   TrinaGridStateManager? stateManager;
 

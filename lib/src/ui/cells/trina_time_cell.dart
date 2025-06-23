@@ -133,7 +133,7 @@ class TrinaTimeCellState extends State<TrinaTimeCell>
           final rows = stateManager.refRows;
           final length = rows.length;
 
-          stateManager.setSelectingMode(TrinaGridSelectingMode.none);
+          stateManager.setSelectingMode(TrinaGridSelectingMode.disabled);
 
           for (var i = 0; i < length; i += 1) {
             if (rows[i].cells['hour']!.value == cellHour) {
@@ -181,7 +181,7 @@ class TrinaTimeCellState extends State<TrinaTimeCell>
           final rows = stateManager.refRows;
           final length = rows.length;
 
-          stateManager.setSelectingMode(TrinaGridSelectingMode.none);
+          stateManager.setSelectingMode(TrinaGridSelectingMode.disabled);
 
           for (var i = 0; i < length; i += 1) {
             if (rows[i].cells['minute']!.value == cellMinute) {

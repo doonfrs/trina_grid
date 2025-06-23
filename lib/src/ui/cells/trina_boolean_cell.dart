@@ -105,6 +105,6 @@ class TrinaBooleanCellState extends State<TrinaBooleanCell>
   void onLoaded(TrinaGridOnLoadedEvent event) {
     super.onLoaded(event);
 
-    event.stateManager.setSelectingMode(TrinaGridSelectingMode.none);
+    event.stateManager.setSelectingMode(TrinaGridSelectingMode.disabled);
   }
 }
