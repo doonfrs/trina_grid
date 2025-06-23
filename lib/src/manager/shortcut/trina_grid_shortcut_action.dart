@@ -335,9 +335,8 @@ class TrinaGridActionDefaultTab extends TrinaGridShortcutAction {
 /// {@template trina_grid_action_default_enter_key}
 /// This action is the default action of the Enter key.
 ///
-/// If [TrinaGrid.mode] is in selection mode,
-/// the [TrinaGrid.onSelected] callback that returns information
-/// of the currently selected row is called.
+/// If selection mode is not [TrinaGridSelectingMode.disabled],
+/// this will call the [TrinaGrid.onSelected] callback with the currently selected rows\cells.
 ///
 /// Otherwise, it behaves according to [TrinaGridConfiguration.enterKeyAction].
 /// {@endtemplate}
@@ -349,15 +348,15 @@ class TrinaGridActionDefaultEnterKey extends TrinaGridShortcutAction {
     required TrinaKeyManagerEvent keyEvent,
     required TrinaGridStateManager stateManager,
   }) {
-    // In SelectRow mode, the current Row is passed to the onSelected callback.
-    if (stateManager.mode.isSelectMode && stateManager.onSelected != null) {
+    // Check if selection is enabled based on selection mode
+    if (stateManager.selectingMode.isEnabled &&
+        stateManager.onSelected != null) {
       stateManager.onSelected!(TrinaGridOnSelectedEvent(
         row: stateManager.currentRow,
         rowIdx: stateManager.currentRowIdx,
         cell: stateManager.currentCell,
-        selectedRows: stateManager.mode.isMultiSelectMode
-            ? stateManager.selectedRows
-            : null,
+        selectedRows:
+            stateManager.selectingMode.isRow ? stateManager.selectedRows : null,
       ));
       return;
     }
@@ -465,9 +464,8 @@ class TrinaGridActionDefaultEnterKey extends TrinaGridShortcutAction {
 /// {@template trina_grid_action_default_escape_key}
 /// This is the action in which the default behavior of the Escape key is set.
 ///
-/// If [TrinaGridMode] is in selection or popup mode,
-/// call the [TrinaGrid.onSelected] callback,
-/// which returns a [TrinaGridOnSelectedEvent] with a null value meaning unselected.
+/// If selecting mode is not [TrinaGridSelectingMode.disabled],
+/// this will call the [TrinaGrid.onSelected] callback with a null value meaning unselected.
 ///
 /// In other cases, it cancels the currently edited cell.
 /// {@endtemplate}
@@ -479,7 +477,7 @@ class TrinaGridActionDefaultEscapeKey extends TrinaGridShortcutAction {
     required TrinaKeyManagerEvent keyEvent,
     required TrinaGridStateManager stateManager,
   }) {
-    if (stateManager.mode.isSelectMode ||
+    if (stateManager.selectingMode.isEnabled ||
         (stateManager.mode.isPopup && !stateManager.isEditing)) {
       if (stateManager.onSelected != null) {
         stateManager.clearCurrentSelecting();

@@ -722,6 +722,7 @@ enum TrinaGridSelectingMode {
       this == TrinaGridSelectingMode.rowWithSingleTap;
 
   bool get isDisabled => this == TrinaGridSelectingMode.disabled;
+  bool get isEnabled => this != TrinaGridSelectingMode.disabled;
 
   /// using only internal
   bool get isHorizontal => this == TrinaGridSelectingMode.horizontal;

@@ -38,12 +38,6 @@ abstract class ISelectingState {
   void setSelecting(bool flag, {bool notify = true});
 
   /// Set the mode to select cells or rows.
-  ///
-  /// If [TrinaGrid.mode] is [TrinaGridMode.select] or [TrinaGridMode.selectWithOneTap]
-  /// Coerced to [TrinaGridSelectingMode.disabled] regardless of [selectingMode] value.
-  ///
-  /// When [TrinaGrid.mode] is [TrinaGridMode.multiSelect]
-  /// Coerced to [TrinaGridSelectingMode.row] regardless of [selectingMode] value.
   void setSelectingMode(
     TrinaGridSelectingMode selectingMode, {
     bool notify = true,
