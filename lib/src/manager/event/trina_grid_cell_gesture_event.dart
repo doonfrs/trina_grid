@@ -44,14 +44,37 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
   void _onTapUp(TrinaGridStateManager stateManager) {
     if (_setKeepFocusAndCurrentCell(stateManager)) {
       return;
-    } else if (stateManager.isSelectingInteraction()) {
-      _selecting(stateManager);
-      return;
-    } else if (stateManager.mode.isSelectMode) {
-      _selectMode(stateManager);
-      return;
     }
 
+    if (stateManager.isSelectingInteraction()) {
+      _handleSelectingInteraction(stateManager);
+    } else if (stateManager.mode.isSelectMode) {
+      _selectMode(stateManager);
+    } else {
+      _handleNormalInteraction(stateManager);
+    }
+  }
+
+  void _handleSelectingInteraction(TrinaGridStateManager stateManager) {
+    if (stateManager.keyPressed.shift) {
+      _onSelectionWithShift(stateManager);
+    } else if (stateManager.keyPressed.ctrl) {
+      stateManager.toggleSelectingRow(rowIdx);
+    }
+  }
+
+  void _onSelectionWithShift(TrinaGridStateManager stateManager) {
+    final int? columnIdx = stateManager.columnIndex(column);
+
+    stateManager.setCurrentSelectingPosition(
+      cellPosition: TrinaGridCellPosition(
+        columnIdx: columnIdx,
+        rowIdx: rowIdx,
+      ),
+    );
+  }
+
+  void _handleNormalInteraction(TrinaGridStateManager stateManager) {
     if (stateManager.isCurrentCell(cell) && stateManager.isEditing != true) {
       stateManager.setEditing(true);
     } else {
@@ -123,29 +146,6 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
     stateManager.setKeepFocus(true);
 
     return stateManager.isCurrentCell(cell);
-  }
-
-  void _selecting(TrinaGridStateManager stateManager) {
-    bool callOnSelected = stateManager.mode.isMultiSelectMode;
-
-    if (stateManager.keyPressed.shift) {
-      final int? columnIdx = stateManager.columnIndex(column);
-
-      stateManager.setCurrentSelectingPosition(
-        cellPosition: TrinaGridCellPosition(
-          columnIdx: columnIdx,
-          rowIdx: rowIdx,
-        ),
-      );
-    } else if (stateManager.keyPressed.ctrl) {
-      stateManager.toggleSelectingRow(rowIdx);
-    } else {
-      callOnSelected = false;
-    }
-
-    if (callOnSelected) {
-      stateManager.handleOnSelected();
-    }
   }
 
   void _selectMode(TrinaGridStateManager stateManager) {
