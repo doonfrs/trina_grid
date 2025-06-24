@@ -60,7 +60,7 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
     if (stateManager.keyPressed.shift) {
       _onSelectionWithShift(stateManager);
     } else if (stateManager.keyPressed.ctrl) {
-      stateManager.toggleSelectingRow(rowIdx);
+      _onSelectionWithCTRL(stateManager);
     }
   }
 
@@ -79,21 +79,8 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
   }
 
   void _onSelectionWithCTRL(TrinaGridStateManager stateManager) {
-    if (stateManager.selectingMode.isDisabled) {
-      return;
-    }
     if (stateManager.selectingMode.isCellWithCtrl) {
-      if (stateManager.currentCell != null &&
-          stateManager.selectedCells.isEmpty) {
-        stateManager.toggleCellSelection(stateManager.currentCell!);
-      }
-      stateManager.toggleCellSelection(cell);
-      // This is to update the current cell color if it became unselected
-      if (stateManager.isCurrentCell(cell) &&
-          !stateManager.isSelectedCell(cell, column, rowIdx)) {
-        stateManager.clearCurrentCell();
-      }
-      _setCurrentSelectionPosition(stateManager);
+      //TODO: implement cell selection with Ctrl
     }
     if (stateManager.selectingMode.isRowWithCtrl) {
       final int? currentRowIdx = stateManager.currentRowIdx;
@@ -102,15 +89,9 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
       if (stateManager.selectedRows.isEmpty && currentRowIdx != rowIdx) {
         stateManager.toggleSelectingRow(currentRowIdx);
       }
-
       // Always toggle the selection state of the tapped row.
       stateManager.toggleSelectingRow(rowIdx);
     }
-
-    stateManager.setCurrentCellPosition(TrinaGridCellPosition(
-      rowIdx: rowIdx,
-      columnIdx: stateManager.columnIndex(column),
-    ));
     stateManager.handleOnSelected();
   }
 
