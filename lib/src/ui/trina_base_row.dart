@@ -25,10 +25,9 @@ class TrinaBaseRow extends StatelessWidget {
   });
 
   bool _checkSameDragRows(DragTargetDetails<TrinaRow> draggingRow) {
-    final List<TrinaRow> selectedRows =
-        stateManager.selectedRows.isNotEmpty
-            ? stateManager.selectedRows
-            : [draggingRow.data];
+    final List<TrinaRow> selectedRows = stateManager.selectedRows.isNotEmpty
+        ? stateManager.selectedRows
+        : [draggingRow.data];
 
     final end = rowIdx + selectedRows.length;
 
@@ -357,9 +356,7 @@ class _RowContainerWidgetState extends TrinaStateWithChange<_RowContainerWidget>
     final isCurrentRow = stateManager.currentRowIdx == widget.rowIdx;
     final isCheckedRow = widget.row.checked == true;
     final isHoveredRow = stateManager.isRowIdxHovered(widget.rowIdx);
-    final isSelectedRow = stateManager.selectedRows.contains(
-      widget.row,
-    );
+    final isSelectedRow = stateManager.isSelectedRow(widget.row.key);
     final isTopDragTarget = stateManager.isRowIdxTopDragTarget(widget.rowIdx);
     final isBottomDragTarget = stateManager.isRowIdxBottomDragTarget(
       widget.rowIdx,
@@ -367,10 +364,13 @@ class _RowContainerWidgetState extends TrinaStateWithChange<_RowContainerWidget>
 
     Color rowColor = _rowColor;
 
+    // A current row is considered active if we don't have any selected rows
+    final isActiveRow = (isCurrentRow &&
+            stateManager.hasFocus &&
+            stateManager.selectedRows.isEmpty) ||
+        isSelectedRow;
     // Only apply non-transparent activated color here
     // For transparent colors, we'll overlay them in the build method
-    final isActiveRow =
-        (isCurrentRow && stateManager.hasFocus) || isSelectedRow;
     if (isActiveRow && stateManager.configuration.style.activatedColor.a > 0) {
       rowColor = stateManager.configuration.style.activatedColor;
     } else if (isCheckedRow) {

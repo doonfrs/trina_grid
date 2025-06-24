@@ -316,27 +316,39 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
     required Color? cellDefaultColor,
     required TrinaGridSelectingMode selectingMode,
   }) {
-    // Check if the cell has uncommitted changes (is dirty)
     final bool isDirty = widget.cell.isDirty;
     final Color dirtyColor = stateManager.configuration.style.cellDirtyColor;
 
-    // Determine cell color
     Color cellColor;
     if (isDirty) {
       cellColor = dirtyColor;
-    } else if (isCurrentCell) {
-      cellColor = _currentCellColor(
-            hasFocus: hasFocus,
-            isEditing: isEditing,
-            readOnly: readOnly,
-            gridBackgroundColor: gridBackgroundColor,
-            activatedColor: activatedColor,
-            cellColorInReadOnlyState: cellColorInReadOnlyState,
-            cellColorInEditState: cellColorInEditState,
-            selectingMode: selectingMode,
-          ) ??
-          gridBackgroundColor;
-    } else if (isSelectedCell) {
+    } else if (isCurrentCell &&
+        stateManager.selectingMode.isCell &&
+        stateManager.selectedCells.isEmpty) {
+      // only highlight the "current" cell with activatedColor if
+      // no other cells are selected.This prevents the "current" cell and
+      //"selected" cells from looking identical
+      return BoxDecoration(
+        color: isDirty
+            ? dirtyColor
+            : _currentCellColor(
+                hasFocus: hasFocus,
+                isEditing: isEditing,
+                readOnly: readOnly,
+                gridBackgroundColor: gridBackgroundColor,
+                activatedColor: activatedColor,
+                cellColorInReadOnlyState: cellColorInReadOnlyState,
+                cellColorInEditState: cellColorInEditState,
+                selectingMode: selectingMode,
+              ),
+        border: Border.all(
+          color: hasFocus ? activatedBorderColor : inactivatedBorderColor,
+          width: 1,
+        ),
+      );
+    }
+
+    if (isSelectedCell) {
       cellColor = activatedColor;
     } else if (isGroupedRowCell) {
       cellColor = cellColorGroupedRow ?? gridBackgroundColor;
@@ -346,7 +358,6 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
       cellColor = cellDefaultColor ?? gridBackgroundColor;
     }
 
-    // Get appropriate border based on merge status
     final border = _getMergedCellBorder(
       enableCellVerticalBorder: enableCellVerticalBorder,
       borderColor: borderColor,
@@ -357,10 +368,7 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
       isSelectedCell: isSelectedCell,
     );
 
-    return BoxDecoration(
-      color: cellColor,
-      border: border,
-    );
+    return BoxDecoration(color: cellColor, border: border);
   }
 
   @override
