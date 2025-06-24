@@ -90,7 +90,8 @@ class _State {
   TrinaGridSelectingMode _selectingMode =
       TrinaGridSelectingMode.cellWithSingleTap;
 
-  List<TrinaRow> _selectedRows = [];
+  final Map<String, TrinaRow> _selectedRows = {};
+  List<TrinaRow> _sortedRows = [];
   final Map<String, TrinaCell> _selectedCells = {};
 
   TrinaGridCellPosition? _currentSelectingPosition;
@@ -135,7 +136,7 @@ mixin SelectingState implements ITrinaGridState {
   bool get hasCurrentSelectingPosition => currentSelectingPosition != null;
 
   @override
-  List<TrinaRow> get selectedRows => _state._selectedRows;
+  List<TrinaRow> get selectedRows => _state._sortedRows;
 
   @override
   String get currentSelectingText {
@@ -190,10 +191,9 @@ mixin SelectingState implements ITrinaGridState {
     if (_state._selectingMode == selectingMode) {
       return;
     }
-
-    _state._selectedRows = [];
-
     _state._currentSelectingPosition = null;
+
+    _clearSelectedRows(notify: false);
 
     _clearSelectedCells(notify: false);
 
@@ -356,9 +356,13 @@ mixin SelectingState implements ITrinaGridState {
       return;
     }
 
-    _state._selectedRows = refRows.getRange(maxFrom, maxTo + 1).toList();
+    for (int i = maxFrom; i <= maxTo; i += 1) {
+      final TrinaRow row = refRows[i];
+      _state._selectedRows[row.key.toString()] = row;
+    }
 
-    _state._selectedRows.sort((a, b) => a.sortIdx.compareTo(b.sortIdx));
+    _state._sortedRows = _state._selectedRows.values.toList();
+    _state._sortedRows.sort((a, b) => a.sortIdx.compareTo(b.sortIdx));
 
     notifyListeners(notify, selectRowsInRange.hashCode);
   }
@@ -385,14 +389,14 @@ mixin SelectingState implements ITrinaGridState {
 
     final TrinaRow row = refRows[rowIdx];
 
-    final int index = _state._selectedRows.indexWhere((e) => e.key == row.key);
-
-    if (index != -1) {
-      _state._selectedRows.removeAt(index);
+    final rowKey = row.key.toString();
+    if (_state._selectedRows.containsKey(rowKey)) {
+      _state._selectedRows.remove(rowKey);
     } else {
-      _state._selectedRows.add(row);
-      _state._selectedRows.sort((a, b) => a.sortIdx.compareTo(b.sortIdx));
+      _state._selectedRows[rowKey] = row;
     }
+    _state._sortedRows = _state._selectedRows.values.toList();
+    _state._sortedRows.sort((a, b) => a.sortIdx.compareTo(b.sortIdx));
 
     notifyListeners(notify, toggleSelectingRow.hashCode);
   }
@@ -469,10 +473,7 @@ mixin SelectingState implements ITrinaGridState {
       return false;
     }
 
-    return selectedRows.firstWhereOrNull(
-          (element) => element.key == rowKey,
-        ) !=
-        null;
+    return _state._selectedRows.containsKey(rowKey.toString());
   }
 
   @override
@@ -729,11 +730,12 @@ mixin SelectingState implements ITrinaGridState {
   }
 
   void _clearSelectedRows({bool notify = true}) {
-    if (_state._selectedRows.isEmpty) {
+    if (selectedRows.isEmpty) {
       return;
     }
 
     _state._selectedRows.clear();
+    _state._sortedRows.clear();
 
     if (notify) {
       notifyListeners();
