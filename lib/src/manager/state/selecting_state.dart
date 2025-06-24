@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:trina_grid/trina_grid.dart';
 
@@ -72,6 +71,11 @@ abstract class ISelectingState {
 
   bool isSelectedRow(Key rowKey);
 
+  /// Currently selected cells.
+  List<TrinaCell> get selectedCells;
+
+  void toggleCellSelection(TrinaCell cell, {bool notify = true});
+
   /// Whether the cell is the currently multi selected cell.
   bool isSelectedCell(TrinaCell cell, TrinaColumn column, int rowIdx);
 
@@ -87,6 +91,7 @@ class _State {
       TrinaGridSelectingMode.cellWithSingleTap;
 
   List<TrinaRow> _selectedRows = [];
+  final Map<String, TrinaCell> _selectedCells = {};
 
   TrinaGridCellPosition? _currentSelectingPosition;
 }
@@ -99,6 +104,9 @@ mixin SelectingState implements ITrinaGridState {
 
   @override
   TrinaGridSelectingMode get selectingMode => _state._selectingMode;
+
+  @override
+  get selectedCells => _state._selectedCells.values.toList();
 
   @override
   TrinaGridCellPosition? get currentSelectingPosition =>
@@ -187,6 +195,8 @@ mixin SelectingState implements ITrinaGridState {
 
     _state._currentSelectingPosition = null;
 
+    _clearSelectedCells(notify: false);
+
     _state._selectingMode = selectingMode;
 
     notifyListeners(notify, setSelectingMode.hashCode);
@@ -264,7 +274,7 @@ mixin SelectingState implements ITrinaGridState {
   }
 
   @override
-  void setCurrentSelectingPositionWithOffset(Offset? offset) {
+  void setCurrentSelectingPositionWithOffset(Offset offset) {
     if (currentCell == null) {
       return;
     }
@@ -280,7 +290,7 @@ mixin SelectingState implements ITrinaGridState {
         gridBodyOffsetDy -
         scroll.vertical!.offset;
 
-    if (gridBodyOffsetDy > offset!.dy) {
+    if (gridBodyOffsetDy > offset.dy) {
       return;
     }
 
@@ -358,6 +368,7 @@ mixin SelectingState implements ITrinaGridState {
     _clearCurrentSelectingPosition(notify: false);
 
     _clearSelectedRows(notify: false);
+    _clearSelectedCells(notify: false);
 
     notifyListeners(notify, clearCurrentSelecting.hashCode);
   }
@@ -387,6 +398,65 @@ mixin SelectingState implements ITrinaGridState {
   }
 
   @override
+  void toggleCellSelection(TrinaCell cell, {bool notify = true}) {
+    if (!selectingMode.isCell) {
+      return;
+    }
+
+    final cellKey = cell.key.toString();
+
+    if (_state._selectedCells.containsKey(cellKey)) {
+      _state._selectedCells.remove(cellKey);
+    } else {
+      _state._selectedCells[cellKey] = cell;
+    }
+
+    notifyListeners(notify, toggleCellSelection.hashCode);
+  }
+
+  void selectCellsInRange(
+    TrinaGridCellPosition startPosition,
+    TrinaGridCellPosition endPosition, {
+    bool notify = true,
+  }) {
+    if (!selectingMode.isCell) {
+      return;
+    }
+
+    final columnIndexes = columnIndexesByShowFrozen;
+
+    int columnStartIdx = min(
+      startPosition.columnIdx!,
+      endPosition.columnIdx!,
+    );
+
+    int columnEndIdx = max(
+      startPosition.columnIdx!,
+      endPosition.columnIdx!,
+    );
+
+    int rowStartIdx = min(
+      startPosition.rowIdx!,
+      endPosition.rowIdx!,
+    );
+
+    int rowEndIdx = max(
+      startPosition.rowIdx!,
+      endPosition.rowIdx!,
+    );
+
+    for (int i = rowStartIdx; i <= rowEndIdx; i += 1) {
+      for (int j = columnStartIdx; j <= columnEndIdx; j += 1) {
+        final String field = refColumns[columnIndexes[j]].field;
+        final TrinaCell cell = refRows[i].cells[field]!;
+        _state._selectedCells[cell.key.toString()] = cell;
+      }
+    }
+
+    notifyListeners(notify, selectCellsInRange.hashCode);
+  }
+
+  @override
   bool isSelectingInteraction() {
     return !selectingMode.isDisabled &&
         (keyPressed.shift || keyPressed.ctrl) &&
@@ -405,60 +475,22 @@ mixin SelectingState implements ITrinaGridState {
         null;
   }
 
-  // todo : code cleanup
   @override
   bool isSelectedCell(TrinaCell cell, TrinaColumn column, int rowIdx) {
     if (selectingMode.isDisabled) {
       return false;
     }
-
-    if (currentCellPosition == null) {
-      return false;
-    }
-
-    if (currentSelectingPosition == null) {
-      return false;
-    }
-
+    // If in cell selection mode (Ctrl or Single Tap), check if the cell is in the _selectedCells map.
     if (selectingMode.isCell) {
-      final bool inRangeOfRows = min(
-                currentCellPosition!.rowIdx as num,
-                currentSelectingPosition!.rowIdx as num,
-              ) <=
-              rowIdx &&
-          rowIdx <=
-              max(
-                currentCellPosition!.rowIdx!,
-                currentSelectingPosition!.rowIdx!,
-              );
+      return _state._selectedCells.containsKey(cell.key.toString());
+    }
 
-      if (inRangeOfRows == false) {
-        return false;
-      }
+    // For range selection modes (horizontal), use the range logic.
+    if (currentCellPosition == null || currentSelectingPosition == null) {
+      return false;
+    }
 
-      final int? columnIdx = columnIndex(column);
-
-      if (columnIdx == null) {
-        return false;
-      }
-
-      final bool inRangeOfColumns = min(
-                currentCellPosition!.columnIdx as num,
-                currentSelectingPosition!.columnIdx as num,
-              ) <=
-              columnIdx &&
-          columnIdx <=
-              max(
-                currentCellPosition!.columnIdx!,
-                currentSelectingPosition!.columnIdx!,
-              );
-
-      if (inRangeOfColumns == false) {
-        return false;
-      }
-
-      return true;
-    } else if (selectingMode.isHorizontal) {
+    if (selectingMode.isHorizontal) {
       int startRowIdx = min(
         currentCellPosition!.rowIdx!,
         currentSelectingPosition!.rowIdx!,
@@ -702,6 +734,18 @@ mixin SelectingState implements ITrinaGridState {
     }
 
     _state._selectedRows.clear();
+
+    if (notify) {
+      notifyListeners();
+    }
+  }
+
+  void _clearSelectedCells({bool notify = true}) {
+    if (_state._selectedCells.isEmpty) {
+      return;
+    }
+
+    _state._selectedCells.clear();
 
     if (notify) {
       notifyListeners();

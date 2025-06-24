@@ -54,17 +54,19 @@ class TrinaGridOnSelectedEvent {
   final int? rowIdx;
   final TrinaCell? cell;
   final List<TrinaRow>? selectedRows;
+  final List<TrinaCell>? selectedCells;
 
   const TrinaGridOnSelectedEvent({
     this.row,
     this.rowIdx,
     this.cell,
     this.selectedRows,
+    this.selectedCells,
   });
 
   @override
   String toString() {
-    return '[TrinaGridOnSelectedEvent] rowIdx: $rowIdx, selectedRows: ${selectedRows?.length}';
+    return '[TrinaGridOnSelectedEvent] rowIdx: $rowIdx, selectedRows: ${selectedRows?.length}, selectedCells: ${selectedCells?.length}';
   }
 }
 

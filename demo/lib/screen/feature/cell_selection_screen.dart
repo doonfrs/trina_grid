@@ -24,6 +24,8 @@ class _CellSelectionScreenState extends State<CellSelectionScreen> {
   TrinaGridSelectingMode currentSelectingMode =
       TrinaGridSelectingMode.cellWithSingleTap;
 
+  String selectedValues = '';
+
   @override
   void initState() {
     super.initState();
@@ -36,21 +38,6 @@ class _CellSelectionScreenState extends State<CellSelectionScreen> {
   }
 
   void handleSelected() async {
-    String value = '';
-
-    for (var element in stateManager.currentSelectingPositionList) {
-      final cellValue = stateManager
-          .rows[element.rowIdx!].cells[element.field!]!.value
-          .toString();
-
-      value +=
-          'rowIdx: ${element.rowIdx}, field: ${element.field}, value: $cellValue\n';
-    }
-
-    if (value.isEmpty) {
-      value = 'No cells are selected.';
-    }
-
     await showDialog<void>(
         context: context,
         builder: (BuildContext ctx) {
@@ -66,7 +53,7 @@ class _CellSelectionScreenState extends State<CellSelectionScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(value),
+                        Text(selectedValues),
                       ],
                     ),
                   ),
@@ -77,6 +64,19 @@ class _CellSelectionScreenState extends State<CellSelectionScreen> {
         });
   }
 
+  String _getSelected(List<TrinaCell>? selectedCells) {
+    if (selectedCells == null || selectedCells.isEmpty) {
+      return 'No cells are selected.';
+    }
+
+    String value = '';
+    for (var cell in selectedCells) {
+      value +=
+          'rowIdx: ${cell.row.sortIdx}, field: ${cell.column.field}, value: ${cell.value}\n';
+    }
+    return value;
+  }
+
   void changeSelectingMode(TrinaGridSelectingMode? mode) {
     if (mode == null) {
       return;
@@ -84,6 +84,7 @@ class _CellSelectionScreenState extends State<CellSelectionScreen> {
     stateManager.setSelectingMode(mode);
     setState(() {
       currentSelectingMode = mode;
+      selectedValues = _getSelected(stateManager.selectedCells);
     });
   }
 
@@ -93,13 +94,6 @@ class _CellSelectionScreenState extends State<CellSelectionScreen> {
       title: 'Cell selection',
       topTitle: 'Cell selection',
       topContents: [
-        Text(
-          '''Available cell selection modes:
-          Single tap: Select a cell or multiple cells with a single tap.
-          Ctrl + Click: Select a cell or multiple cells with Ctrl + Click.
-          Disabled: Disable cell selection.
-          ''',
-        ),
         Text(
           '''Range Selection:
           - Shift + Click: Select a range of cells from the currently selected cell to the clicked cell.
@@ -139,6 +133,28 @@ class _CellSelectionScreenState extends State<CellSelectionScreen> {
                   title: const Text('Disabled'),
                 ),
               ),
+              SizedBox(
+                width: 10,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'onSelected output (Scroll if you need):\n',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(
+                    height: 100,
+                    child: Scrollbar(
+                      thumbVisibility: true,
+                      child: SingleChildScrollView(
+                        primary: true,
+                        child: Text(selectedValues),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
@@ -169,6 +185,9 @@ class _CellSelectionScreenState extends State<CellSelectionScreen> {
               onChanged: (TrinaGridOnChangedEvent event) {
                 print(event);
               },
+              onSelected: (event) => setState(() {
+                selectedValues = _getSelected(event.selectedCells);
+              }),
               onLoaded: (TrinaGridOnLoadedEvent event) {
                 event.stateManager
                     .setSelectingMode(TrinaGridSelectingMode.cellWithSingleTap);
