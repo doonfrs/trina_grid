@@ -713,6 +713,10 @@ enum TrinaGridSelectingMode {
       this != TrinaGridSelectingMode.cellWithSingleTap &&
       this != TrinaGridSelectingMode.rowWithSingleTap;
 
+  bool get isSelectWithCTRL =>
+      this == TrinaGridSelectingMode.cellWithCtrl ||
+      this == TrinaGridSelectingMode.rowWithCtrl;
+
   bool get isCell =>
       this == TrinaGridSelectingMode.cellWithCtrl ||
       this == TrinaGridSelectingMode.cellWithSingleTap;
