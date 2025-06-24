@@ -78,11 +78,55 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
     _handleRangeSelectionIfSelectingRows(stateManager);
   }
 
+  void _onSelectionWithCTRL(TrinaGridStateManager stateManager) {
+    if (stateManager.selectingMode.isDisabled) {
+      return;
+    }
+    if (stateManager.selectingMode.isCellWithCtrl) {
+      if (stateManager.currentCell != null &&
+          stateManager.selectedCells.isEmpty) {
+        stateManager.toggleCellSelection(stateManager.currentCell!);
+      }
+      stateManager.toggleCellSelection(cell);
+      // This is to update the current cell color if it became unselected
+      if (stateManager.isCurrentCell(cell) &&
+          !stateManager.isSelectedCell(cell, column, rowIdx)) {
+        stateManager.clearCurrentCell();
+      }
+      _setCurrentSelectionPosition(stateManager);
+    }
+    if (stateManager.selectingMode.isRowWithCtrl) {
+      final int? currentRowIdx = stateManager.currentRowIdx;
+      // If no rows are currently selected and the current row is different from the tapped row,
+      // ensure the current row is included in the selection.
+      if (stateManager.selectedRows.isEmpty && currentRowIdx != rowIdx) {
+        stateManager.toggleSelectingRow(currentRowIdx);
+      }
+
+      // Always toggle the selection state of the tapped row.
+      stateManager.toggleSelectingRow(rowIdx);
+    }
+
+    stateManager.setCurrentCellPosition(TrinaGridCellPosition(
+      rowIdx: rowIdx,
+      columnIdx: stateManager.columnIndex(column),
+    ));
+    stateManager.handleOnSelected();
+  }
+
   void _handleNormalTap(TrinaGridStateManager stateManager) {
     if (stateManager.isCurrentCell(cell) && stateManager.isEditing != true) {
       stateManager.setEditing(true);
     } else {
       stateManager.setCurrentCell(cell, rowIdx);
+    }
+    // If selection activates with ctrl\cmd, then selected cells\rows is cleared by
+    // `stateManager.setCurrentCell`, so we should call handleOnSelected.
+    // If grid mode is popup, calling handleOnSelected means the user is finished selecting and
+    // the popup should be closed but It may not be the desired behavior.
+    if (stateManager.selectingMode.isSelectWithCTRL &&
+        stateManager.mode.isPopup == false) {
+      stateManager.handleOnSelected();
     }
   }
 
