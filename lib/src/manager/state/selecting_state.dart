@@ -75,6 +75,11 @@ abstract class ISelectingState {
   List<TrinaCell> get selectedCells;
 
   void toggleCellSelection(TrinaCell cell, {bool notify = true});
+  void selectCellsInRange(
+    TrinaGridCellPosition startPosition,
+    TrinaGridCellPosition endPosition, {
+    bool notify = true,
+  });
 
   /// Whether the cell is the currently multi selected cell.
   bool isSelectedCell(TrinaCell cell, TrinaColumn column, int rowIdx);
@@ -418,6 +423,7 @@ mixin SelectingState implements ITrinaGridState {
     notifyListeners(notify, toggleCellSelection.hashCode);
   }
 
+  @override
   void selectCellsInRange(
     TrinaGridCellPosition startPosition,
     TrinaGridCellPosition endPosition, {

@@ -101,9 +101,12 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
       if (stateManager.selectedRows.isEmpty && currentRowIdx != rowIdx) {
         stateManager.toggleSelectingRow(currentRowIdx);
       }
+
       // Always toggle the selection state of the tapped row.
       stateManager.toggleSelectingRow(rowIdx);
     }
+
+    _setCurrentSelectionPosition(stateManager);
 
     stateManager.setCurrentCellPosition(TrinaGridCellPosition(
       rowIdx: rowIdx,
@@ -211,11 +214,21 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
     if (stateManager.selectingMode.isCellWithSingleTap) {
       stateManager.toggleCellSelection(cell);
     }
+    _setCurrentSelectionPosition(stateManager);
     stateManager.setCurrentCellPosition(TrinaGridCellPosition(
       rowIdx: rowIdx,
       columnIdx: stateManager.columnIndex(column),
     ));
     stateManager.handleOnSelected();
+  }
+
+  void _setCurrentSelectionPosition(TrinaGridStateManager stateManager) {
+    stateManager.setCurrentSelectingPosition(
+      cellPosition: TrinaGridCellPosition(
+        columnIdx: stateManager.columnIndex(column),
+        rowIdx: rowIdx,
+      ),
+    );
   }
 
   void _setCurrentCell(
