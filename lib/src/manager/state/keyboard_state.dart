@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:trina_grid/trina_grid.dart';
 
 abstract class IKeyboardState {
@@ -261,28 +263,137 @@ mixin KeyboardState implements ITrinaGridState {
     if (canNotMoveCell(cellPosition, direction)) {
       return;
     }
-
-    setCurrentSelectingPosition(
-      cellPosition: TrinaGridCellPosition(
-        columnIdx: cellPosition!.columnIdx! +
-            (direction.horizontal ? direction.offset : 0),
-        rowIdx:
-            cellPosition.rowIdx! + (direction.vertical ? direction.offset : 0),
-      ),
-    );
-
-    if (selectingMode.isRow) {
-      selectRowsInRange(
-        currentCellPosition?.rowIdx,
-        currentSelectingPosition?.rowIdx,
-        notify: false,
-      );
+    if (cellPosition == null) {
+      return;
     }
 
     if (direction.horizontal) {
       moveScrollByColumn(direction, cellPosition.columnIdx);
     } else {
       moveScrollByRow(direction, cellPosition.rowIdx);
+    }
+
+    if (selectingMode.isEnabled) {
+      final oldSelectingPosition = currentSelectingPosition;
+      final newSelectingPosition = TrinaGridCellPosition(
+        columnIdx: cellPosition.columnIdx! +
+            (direction.horizontal ? direction.offset : 0),
+        rowIdx:
+            cellPosition.rowIdx! + (direction.vertical ? direction.offset : 0),
+      );
+      //
+      setCurrentSelectingPosition(cellPosition: newSelectingPosition);
+
+      // The anchor point for any selection is the cell that was current
+      // when the selection mode started.
+      final TrinaGridCellPosition? anchorPosition = currentCellPosition;
+      if (anchorPosition == null) {
+        return;
+      }
+      if (selectingMode.isRow) {
+        _updateSelectedRows(
+          anchorPosition,
+          oldSelectingPosition,
+          newSelectingPosition,
+        );
+      } else {
+        _updateSelectedCells(
+          anchorPosition,
+          newSelectingPosition,
+          oldSelectingPosition,
+        );
+      }
+      handleOnSelected();
+    }
+  }
+
+  void _updateSelectedCells(
+    TrinaGridCellPosition anchorPosition,
+    TrinaGridCellPosition newSelectingPosition,
+    TrinaGridCellPosition? oldSelectingPosition,
+  ) {
+    // This is the first move of a new selection drag.
+    // The "old range" is effectively just the anchor cell itself.
+    if (oldSelectingPosition == null) {
+      // The new range is from the anchor to the new position.
+
+      selectCellsInRange(anchorPosition, newSelectingPosition, notify: false);
+    } else {
+      // For subsequent moves, calculate the difference.
+
+      // 1. Get the map of cells in the old and new selection rectangles.
+      final Map<String, TrinaCell> oldRangeMap =
+          _getCellsMapInRange(anchorPosition, oldSelectingPosition);
+      final Map<String, TrinaCell> newRangeMap =
+          _getCellsMapInRange(anchorPosition, newSelectingPosition);
+
+      // 2. Use Sets to efficiently find the difference.
+      final Set<String> oldKeys = oldRangeMap.keys.toSet();
+      final Set<String> newKeys = newRangeMap.keys.toSet();
+
+      // 3. Determine which cells to add and which to remove.
+      final Set<String> keysToSelect = newKeys.difference(oldKeys);
+      final Set<String> keysToUnselect = oldKeys.difference(newKeys);
+
+      // 4. Apply the new selection.
+      for (final key in keysToUnselect) {
+        toggleCellSelection(oldRangeMap[key]!, notify: false);
+      }
+      for (final key in keysToSelect) {
+        toggleCellSelection(newRangeMap[key]!, notify: false);
+      }
+    }
+  }
+
+  /// Helper method to get a map of all cells within a rectangular range.
+  Map<String, TrinaCell> _getCellsMapInRange(
+    TrinaGridCellPosition pos1,
+    TrinaGridCellPosition pos2,
+  ) {
+    final Map<String, TrinaCell> cellsInRange = {};
+    final columnIndexes = columnIndexesByShowFrozen;
+
+    // Normalize coordinates to get top-left and bottom-right corners
+    final int startCol = min(pos1.columnIdx!, pos2.columnIdx!);
+    final int endCol = max(pos1.columnIdx!, pos2.columnIdx!);
+    final int startRow = min(pos1.rowIdx!, pos2.rowIdx!);
+    final int endRow = max(pos1.rowIdx!, pos2.rowIdx!);
+
+    for (int i = startRow; i <= endRow; i++) {
+      for (int j = startCol; j <= endCol; j++) {
+        final String field = refColumns[columnIndexes[j]].field;
+        final TrinaCell cell = refRows[i].cells[field]!;
+        cellsInRange[cell.key.toString()] = cell;
+      }
+    }
+    return cellsInRange;
+  }
+
+  void _updateSelectedRows(
+    TrinaGridCellPosition anchorPosition,
+    TrinaGridCellPosition? oldSelectingPosition,
+    TrinaGridCellPosition newSelectingPosition,
+  ) {
+    final int anchorRow = anchorPosition.rowIdx!;
+    final int newEndRow = newSelectingPosition.rowIdx!;
+
+    // This check is crucial. If oldSelectingPosition is null, it's the first
+    // move after pressing Shift. We must select the range.
+    if (oldSelectingPosition == null) {
+      selectRowsInRange(anchorRow, newEndRow, notify: false);
+    } else {
+      final int oldEndRow = oldSelectingPosition.rowIdx!;
+      // Check if we are moving towards the anchor row.
+      final bool isShrinkingSelection =
+          (newEndRow - anchorRow).abs() < (oldEndRow - anchorRow).abs();
+
+      if (isShrinkingSelection) {
+        // If we are shrinking, unselect the row we just moved away from.
+        toggleSelectingRow(oldEndRow, notify: false);
+      } else {
+        // If we are extending, select the new row
+        toggleSelectingRow(newEndRow, notify: false);
+      }
     }
   }
 
