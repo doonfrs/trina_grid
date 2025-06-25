@@ -23,6 +23,8 @@ class _RowSelectionScreenState extends State<RowSelectionScreen> {
   TrinaGridSelectingMode currentSelectingMode =
       TrinaGridSelectingMode.rowWithSingleTap;
 
+  String selectedValues = '';
+
   @override
   void initState() {
     super.initState();
@@ -35,18 +37,6 @@ class _RowSelectionScreenState extends State<RowSelectionScreen> {
   }
 
   void handleSelected() async {
-    String value = '';
-
-    for (var element in stateManager!.selectedRows) {
-      final cellValue = element.cells.entries.first.value.value.toString();
-
-      value += 'first cell value of row: $cellValue\n';
-    }
-
-    if (value.isEmpty) {
-      value = 'No rows are selected.';
-    }
-
     await showDialog<void>(
         context: context,
         builder: (BuildContext ctx) {
@@ -62,7 +52,7 @@ class _RowSelectionScreenState extends State<RowSelectionScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(value),
+                        Text(selectedValues),
                       ],
                     ),
                   ),
@@ -80,7 +70,20 @@ class _RowSelectionScreenState extends State<RowSelectionScreen> {
     stateManager!.setSelectingMode(mode);
     setState(() {
       currentSelectingMode = mode;
+      selectedValues = _getSelectedValues(stateManager!.selectedRows);
     });
+  }
+
+  String _getSelectedValues(List<TrinaRow>? selectedRows) {
+    if (selectedRows == null || selectedRows.isEmpty) {
+      return 'No rows are selected.';
+    }
+
+    String value = 'selected rows: ${selectedRows.length} \n';
+    for (var row in selectedRows) {
+      value += 'rowIdx: ${row.sortIdx}\n';
+    }
+    return value;
   }
 
   @override
@@ -89,11 +92,43 @@ class _RowSelectionScreenState extends State<RowSelectionScreen> {
       title: 'Row selection',
       topTitle: 'Row selection',
       topContents: [
-        Text(
-          'In Row selection mode:\n'
-          '• CTRL + Click to select a single row or multiple rows.\n'
-          '• Single tap to select a single row or multiple rows.\n'
-          '• Shift + tap or long press & drag to select a range.',
+        OverflowBar(
+          alignment: MainAxisAlignment.start,
+          children: [
+            Text(
+              'In Row selection mode:\n'
+              '• CTRL + Click to select a single row or multiple rows.\n'
+              '• Single tap to select a single row or multiple rows.\n'
+              '• Shift + tap or long press & drag to select a range.',
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * .3,
+            ),
+            SizedBox(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(00),
+                    child: Text(
+                      'onSelected output (Scroll if you need):\n',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 100,
+                    width: 200,
+                    child: Scrollbar(
+                      thumbVisibility: true,
+                      child: SingleChildScrollView(
+                        primary: true,
+                        child: Text(selectedValues),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
         OverflowBar(
           children: [
@@ -145,6 +180,9 @@ class _RowSelectionScreenState extends State<RowSelectionScreen> {
               onChanged: (TrinaGridOnChangedEvent event) {
                 print(event);
               },
+              onSelected: (event) => setState(() {
+                selectedValues = _getSelectedValues(event.selectedRows);
+              }),
               onLoaded: (TrinaGridOnLoadedEvent event) {
                 event.stateManager
                     .setSelectingMode(TrinaGridSelectingMode.rowWithSingleTap);
