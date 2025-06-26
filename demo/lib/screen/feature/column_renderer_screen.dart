@@ -145,11 +145,10 @@ class _ColumnRendererScreenState extends State<ColumnRendererScreen> {
         },
         onLoaded: (TrinaGridOnLoadedEvent event) {
           event.stateManager
-              .setSelectingMode(TrinaGridSelectingMode.cellWithSingleTap);
+              .setSelectingMode(TrinaGridSelectingMode.cellWithCtrl);
 
           stateManager = event.stateManager;
         },
-        // configuration: TrinaConfiguration.dark(),
       ),
     );
   }
