@@ -170,8 +170,7 @@ class _ColumnFooterScreenState extends State<ColumnFooterScreen> {
         },
         onLoaded: (TrinaGridOnLoadedEvent event) {
           stateManager = event.stateManager;
-          stateManager
-              .setSelectingMode(TrinaGridSelectingMode.cellWithSingleTap);
+          stateManager.setSelectingMode(TrinaGridSelectingMode.cellWithCtrl);
           stateManager.setShowColumnFilter(true);
         },
         configuration: const TrinaGridConfiguration(),
