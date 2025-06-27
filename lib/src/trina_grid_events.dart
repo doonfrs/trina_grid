@@ -50,23 +50,20 @@ class TrinaGridOnChangedEvent {
 /// This is the argument value of the [TrinaGrid.onSelected] callback
 
 class TrinaGridOnSelectedEvent {
-  final TrinaRow? row;
-  final int? rowIdx;
-  final TrinaCell? cell;
-  final List<TrinaRow>? selectedRows;
-  final List<TrinaCell>? selectedCells;
+  TrinaCell? get lastSelectedCell => selectedCells.lastOrNull;
+  TrinaRow? get lastSelectedRow => selectedRows.lastOrNull;
+
+  final List<TrinaRow> selectedRows;
+  final List<TrinaCell> selectedCells;
 
   const TrinaGridOnSelectedEvent({
-    this.row,
-    this.rowIdx,
-    this.cell,
-    this.selectedRows,
-    this.selectedCells,
+    this.selectedRows = const [],
+    this.selectedCells = const [],
   });
 
   @override
   String toString() {
-    return '[TrinaGridOnSelectedEvent] rowIdx: $rowIdx, selectedRows: ${selectedRows?.length}, selectedCells: ${selectedCells?.length}';
+    return '[TrinaGridOnSelectedEvent] selectedRows: ${selectedRows.length}, selectedCells: ${selectedCells.length}';
   }
 }
 

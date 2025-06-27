@@ -185,9 +185,6 @@ mixin GridState implements ITrinaGridState {
     if (onSelected != null) {
       onSelected!(
         TrinaGridOnSelectedEvent(
-          row: currentRow,
-          rowIdx: currentRowIdx,
-          cell: currentCell,
           selectedCells: selectedCells,
           selectedRows: selectedRows,
         ),

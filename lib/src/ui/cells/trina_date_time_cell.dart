@@ -76,8 +76,8 @@ class TrinaDateTimeCellState extends State<TrinaDateTimeCell>
         dateFormat: columnType.dateFormat,
         headerDateFormat: columnType.headerDateFormat,
         onSelected: (event) {
-          if (event.cell != null) {
-            final selectedDateStr = event.cell!.value.toString();
+          if (event.lastSelectedCell != null) {
+            final selectedDateStr = event.lastSelectedCell!.value.toString();
             try {
               final date = columnType.dateFormat.parse(selectedDateStr);
               completer.complete(date);
@@ -146,11 +146,12 @@ class TrinaDateTimeCellState extends State<TrinaDateTimeCell>
     TrinaDualGridPopup(
       context: context,
       onSelected: (TrinaDualOnSelectedEvent event) {
-        if (event.gridA == null || event.gridB == null) {
+        if (event.gridA.lastSelectedCell == null ||
+            event.gridB.lastSelectedCell == null) {
           timeCompleter.complete(null);
         } else {
           timeCompleter.complete(
-            '${event.gridA!.cell!.value}:${event.gridB!.cell!.value}',
+            '${event.gridA.lastSelectedCell?.value}:${event.gridB.lastSelectedCell?.value}',
           );
         }
       },

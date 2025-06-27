@@ -348,16 +348,32 @@ class TrinaGridActionDefaultEnterKey extends TrinaGridShortcutAction {
     required TrinaKeyManagerEvent keyEvent,
     required TrinaGridStateManager stateManager,
   }) {
-    // Check if selection is enabled based on selection mode
-    if (stateManager.selectingMode.isEnabled &&
+    // Handle popup mode with selection enabled
+    if (stateManager.mode.isPopup &&
+        stateManager.selectingMode.isEnabled &&
         stateManager.onSelected != null) {
-      stateManager.onSelected!(TrinaGridOnSelectedEvent(
-        row: stateManager.currentRow,
-        rowIdx: stateManager.currentRowIdx,
-        cell: stateManager.currentCell,
-        selectedRows:
-            stateManager.selectingMode.isRow ? stateManager.selectedRows : null,
-      ));
+      // Only proceed if we have a current cell
+      if (stateManager.currentCell != null) {
+        // Handle row vs cell selection based on selecting mode
+        stateManager.selectingMode.isRow
+            ? stateManager.toggleSelectingRow(
+                stateManager.currentRowIdx!,
+                notify: false,
+              )
+            : stateManager.toggleCellSelection(
+                stateManager.currentCell!,
+                notify: false,
+              );
+      }
+
+      stateManager.handleOnSelected();
+      return;
+    }
+    if (stateManager.selectingMode.isEnabled &&
+        (stateManager.selectedCells.isNotEmpty ||
+            stateManager.selectedRows.isNotEmpty)) {
+      stateManager.clearCurrentSelecting();
+      stateManager.handleOnSelected();
       return;
     }
 
@@ -432,11 +448,9 @@ class TrinaGridActionDefaultEnterKey extends TrinaGridShortcutAction {
       } else {
         // Check if we're on the last cell of the row
         final position = stateManager.currentCellPosition;
-        final columnIndexes = stateManager.columnIndexesByShowFrozen;
-        final currentVisualIndex = columnIndexes.indexOf(position!.columnIdx!);
-        final isAtLastColumn = currentVisualIndex == columnIndexes.length - 1;
-
-        if (isAtLastColumn &&
+        if (position != null &&
+            position.columnIdx == stateManager.refColumns.length - 1 &&
+            position.rowIdx != null &&
             position.rowIdx! < stateManager.refRows.length - 1) {
           // Move to first cell of next row
           stateManager.moveCurrentCell(

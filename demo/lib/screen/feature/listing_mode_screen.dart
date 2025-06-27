@@ -266,8 +266,8 @@ class _ListingModeScreenState extends State<ListingModeScreen> {
           stateManager.setSelectingMode(TrinaGridSelectingMode.disabled);
         },
         onSelected: (TrinaGridOnSelectedEvent event) {
-          if (event.row != null) {
-            openDetail(event.row);
+          if (event.lastSelectedRow != null) {
+            openDetail(event.lastSelectedRow);
           }
         },
         mode: TrinaGridMode.select,

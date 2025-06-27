@@ -154,13 +154,13 @@ mixin PopupCellState<T extends PopupCell> on State<T>
     isOpenedPopup = false;
 
     dynamic selectedValue;
-
-    if (event.row != null &&
+    final selectedRow = event.lastSelectedRow ?? event.lastSelectedCell?.row;
+    if (selectedRow != null &&
         fieldOnSelected != null &&
-        event.row!.cells.containsKey(fieldOnSelected)) {
-      selectedValue = event.row!.cells[fieldOnSelected!]!.value;
-    } else if (event.cell != null) {
-      selectedValue = event.cell!.value;
+        selectedRow.cells.containsKey(fieldOnSelected)) {
+      selectedValue = selectedRow.cells[fieldOnSelected!]!.value;
+    } else if (event.lastSelectedCell != null) {
+      selectedValue = event.lastSelectedCell!.value;
     } else {
       widget.stateManager.setKeepFocus(true);
       textFocus.requestFocus();
