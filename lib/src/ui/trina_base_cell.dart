@@ -52,7 +52,7 @@ class TrinaBaseCell extends StatelessWidget
   void _handleOnTapUp(TapUpDetails details) {
     if (PlatformHelper.isDesktop &&
         TrinaDoubleTapDetector.isDoubleTap(cell) &&
-        stateManager.onRowDoubleTap != null) {
+        stateManager.onDoubleTap != null) {
       _handleOnDoubleTap();
       return;
     }
@@ -96,18 +96,15 @@ class TrinaBaseCell extends StatelessWidget
     _addGestureEvent(TrinaGridGestureType.onDoubleTap, Offset.zero);
   }
 
+  void Function()? _onDoubleTapOrNull() {
+    return stateManager.onDoubleTap == null ? null : _handleOnDoubleTap;
+  }
+
   void _handleOnSecondaryTap(TapDownDetails details) {
     _addGestureEvent(
       TrinaGridGestureType.onSecondaryTap,
       details.globalPosition,
     );
-  }
-
-  void Function()? _onDoubleTapOrNull() {
-    if (PlatformHelper.isDesktop) {
-      return null;
-    }
-    return stateManager.onRowDoubleTap == null ? null : _handleOnDoubleTap;
   }
 
   @override

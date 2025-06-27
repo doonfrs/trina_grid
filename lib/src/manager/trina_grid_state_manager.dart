@@ -81,7 +81,7 @@ class TrinaGridStateChangeNotifier extends TrinaChangeNotifier
     this.onSelected,
     this.onSorted,
     this.onRowChecked,
-    this.onRowDoubleTap,
+    this.onDoubleTap,
     this.onRowSecondaryTap,
     this.onRowEnter,
     this.onRowExit,
@@ -157,7 +157,7 @@ class TrinaGridStateChangeNotifier extends TrinaChangeNotifier
   final TrinaOnRowCheckedEventCallback? onRowChecked;
 
   @override
-  final TrinaOnRowDoubleTapEventCallback? onRowDoubleTap;
+  final TrinaOnDoubleTapEventCallback? onDoubleTap;
 
   @override
   final TrinaOnRowSecondaryTapEventCallback? onRowSecondaryTap;
@@ -321,7 +321,7 @@ class TrinaGridStateManager extends TrinaGridStateChangeNotifier {
     super.onSelected,
     super.onSorted,
     super.onRowChecked,
-    super.onRowDoubleTap,
+    super.onDoubleTap,
     super.onRowSecondaryTap,
     super.onRowEnter,
     super.onRowExit,

@@ -24,8 +24,8 @@ typedef TrinaOnSortedEventCallback = void Function(
 typedef TrinaOnRowCheckedEventCallback = void Function(
     TrinaGridOnRowCheckedEvent event);
 
-typedef TrinaOnRowDoubleTapEventCallback = void Function(
-    TrinaGridOnRowDoubleTapEvent event);
+typedef TrinaOnDoubleTapEventCallback = void Function(
+    TrinaGridOnDoubleTapEvent event);
 
 typedef TrinaOnRowSecondaryTapEventCallback = void Function(
     TrinaGridOnRowSecondaryTapEvent event);
@@ -91,7 +91,7 @@ class TrinaGrid extends TrinaStatefulWidget {
     this.onSelected,
     this.onSorted,
     this.onRowChecked,
-    this.onRowDoubleTap,
+    this.onDoubleTap,
     this.onRowSecondaryTap,
     this.onRowEnter,
     this.onRowExit,
@@ -225,10 +225,10 @@ class TrinaGrid extends TrinaStatefulWidget {
   /// {@endtemplate}
   final TrinaOnRowCheckedEventCallback? onRowChecked;
 
-  /// {@template trina_grid_property_onRowDoubleTap}
-  /// [onRowDoubleTap] is called when a row is tapped twice in a row.
+  /// {@template trina_grid_property_onDoubleTap}
+  /// [onDoubleTap] is called when a row\cell is tapped twice in a row.
   /// {@endtemplate}
-  final TrinaOnRowDoubleTapEventCallback? onRowDoubleTap;
+  final TrinaOnDoubleTapEventCallback? onDoubleTap;
 
   /// {@template trina_grid_property_onRowSecondaryTap}
   /// [onRowSecondaryTap] is called when a mouse right-click event occurs.
@@ -595,7 +595,7 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
       onSelected: widget.onSelected,
       onSorted: widget.onSorted,
       onRowChecked: widget.onRowChecked,
-      onRowDoubleTap: widget.onRowDoubleTap,
+      onDoubleTap: widget.onDoubleTap,
       onRowSecondaryTap: widget.onRowSecondaryTap,
       onRowEnter: widget.onRowEnter,
       onRowExit: widget.onRowExit,
