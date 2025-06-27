@@ -186,7 +186,16 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
   }
 
   void _onSecondaryTap(TrinaGridStateManager stateManager) {
-    stateManager.onRowSecondaryTap!(
+    if (stateManager.selectingMode.isSingleTapSelection) {
+      if (!stateManager.isCurrentCell(cell)) {
+        stateManager.setCurrentCell(cell, rowIdx);
+      } else {
+        stateManager.clearCurrentSelecting();
+      }
+      stateManager.handleOnSelected();
+      stateManager.setEditing(true);
+    }
+    stateManager.onRowSecondaryTap?.call(
       TrinaGridOnRowSecondaryTapEvent(
         row: stateManager.getRowByIdx(rowIdx)!,
         rowIdx: rowIdx,
