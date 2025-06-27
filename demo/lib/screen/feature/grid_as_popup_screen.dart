@@ -70,7 +70,10 @@ class _GridAsPopupScreenState extends State<GridAsPopupScreen> {
       columns: columns,
       width: 600,
       rows: rows,
-      mode: TrinaGridMode.select,
+      mode: TrinaGridMode.popup,
+      configuration: TrinaGridConfiguration(
+        selectingMode: TrinaGridSelectingMode.cellWithCtrl,
+      ),
       onLoaded: (TrinaGridOnLoadedEvent event) {
         rows.asMap().entries.forEach((element) {
           final cell = element.value.cells[selectFieldName]!;

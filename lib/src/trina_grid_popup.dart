@@ -66,10 +66,7 @@ class TrinaGridPopup {
   ///
   /// [TrinaGridMode.normal]
   /// {@macro trina_grid_mode_normal}
-  ///
-  /// [TrinaGridMode.select], [TrinaGridMode.selectWithOneTap]
-  /// {@macro trina_grid_mode_select}
-  ///
+
   /// [TrinaGridMode.popup]
   /// {@macro trina_grid_mode_popup}
   final TrinaGridMode mode;
@@ -78,7 +75,7 @@ class TrinaGridPopup {
 
   final double? height;
 
-  final bool? barrierDismissible; //
+  final bool? barrierDismissible;
 
   TrinaGridPopup({
     required this.context,

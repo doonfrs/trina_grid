@@ -84,7 +84,7 @@ mixin PopupCellState<T extends PopupCell> on State<T>
 
     TrinaGridPopup(
       context: context,
-      mode: TrinaGridMode.select,
+      mode: TrinaGridMode.popup,
       onLoaded: onLoaded,
       onSelected: onSelected,
       columns: popupColumns,

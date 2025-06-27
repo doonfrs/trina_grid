@@ -71,6 +71,7 @@ class TrinaBooleanCellState extends State<TrinaBooleanCell>
         enableFilterMenuItem: false,
         enableHideColumnMenuItem: false,
         enableSetColumnsMenuItem: false,
+        enableEditingMode: false,
         renderer: widget.column.type.boolean.builder == null
             ? (rendererContext) {
                 switch (rendererContext.cell.value) {
@@ -99,12 +100,5 @@ class TrinaBooleanCellState extends State<TrinaBooleanCell>
   void onSelected(TrinaGridOnSelectedEvent event) {
     widget.column.type.boolean.onItemSelected(event);
     super.onSelected(event);
-  }
-
-  @override
-  void onLoaded(TrinaGridOnLoadedEvent event) {
-    super.onLoaded(event);
-
-    event.stateManager.setSelectingMode(TrinaGridSelectingMode.disabled);
   }
 }
