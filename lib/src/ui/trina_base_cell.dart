@@ -110,12 +110,6 @@ class TrinaBaseCell extends StatelessWidget
     return stateManager.onRowDoubleTap == null ? null : _handleOnDoubleTap;
   }
 
-  void Function(TapDownDetails details)? _onSecondaryTapOrNull() {
-    return stateManager.onRowSecondaryTap == null
-        ? null
-        : _handleOnSecondaryTap;
-  }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -127,7 +121,7 @@ class TrinaBaseCell extends StatelessWidget
       onLongPressEnd: _handleOnLongPressEnd,
       // Optional gestures.
       onDoubleTap: _onDoubleTapOrNull(),
-      onSecondaryTapDown: _onSecondaryTapOrNull(),
+      onSecondaryTapDown: _handleOnSecondaryTap,
       child: _CellContainer(
         cell: cell,
         rowIdx: rowIdx,
