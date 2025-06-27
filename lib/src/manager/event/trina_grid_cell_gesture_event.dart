@@ -116,7 +116,7 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
   }
 
   void _handleNormalTap(TrinaGridStateManager stateManager) {
-    if (stateManager.isCurrentCell(cell) && stateManager.isEditing != true) {
+    if (stateManager.isCurrentCell(cell)) {
       stateManager.setEditing(true);
     } else {
       stateManager.setCurrentCell(cell, rowIdx);
@@ -176,8 +176,16 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
   }
 
   void _onDoubleTap(TrinaGridStateManager stateManager) {
-    stateManager.onRowDoubleTap!(
-      TrinaGridOnRowDoubleTapEvent(
+    if (!stateManager.autoEditing &&
+        stateManager.selectingMode.isNotSingleTapSelection) {
+      if (stateManager.isCurrentCell(cell)) {
+        stateManager.setEditing(true);
+      } else {
+        stateManager.setCurrentCell(cell, rowIdx);
+      }
+    }
+    stateManager.onDoubleTap?.call(
+      TrinaGridOnDoubleTapEvent(
         row: stateManager.getRowByIdx(rowIdx)!,
         rowIdx: rowIdx,
         cell: cell,

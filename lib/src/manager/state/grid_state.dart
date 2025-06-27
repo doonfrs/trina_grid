@@ -20,7 +20,7 @@ abstract class IGridState {
 
   TrinaOnRowCheckedEventCallback? get onRowChecked;
 
-  TrinaOnRowDoubleTapEventCallback? get onRowDoubleTap;
+  TrinaOnDoubleTapEventCallback? get onDoubleTap;
 
   TrinaOnRowSecondaryTapEventCallback? get onRowSecondaryTap;
 

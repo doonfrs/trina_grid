@@ -122,14 +122,14 @@ class TrinaGridOnRowCheckedAllEvent extends TrinaGridOnRowCheckedEvent {
       : super(row: null, rowIdx: null);
 }
 
-/// The argument of the [TrinaGrid.onRowDoubleTap] callback
+/// The argument of the [TrinaGrid.onDoubleTap] callback
 /// to receive the event of double-tapping the row.
-class TrinaGridOnRowDoubleTapEvent {
+class TrinaGridOnDoubleTapEvent {
   final TrinaRow row;
   final int rowIdx;
   final TrinaCell cell;
 
-  const TrinaGridOnRowDoubleTapEvent({
+  const TrinaGridOnDoubleTapEvent({
     required this.row,
     required this.rowIdx,
     required this.cell,

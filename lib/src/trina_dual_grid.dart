@@ -188,7 +188,7 @@ class TrinaDualGridState extends State<TrinaDualGrid> {
         },
         onSorted: props.onSorted,
         onRowChecked: props.onRowChecked,
-        onRowDoubleTap: props.onRowDoubleTap,
+        onDoubleTap: props.onDoubleTap,
         onRowSecondaryTap: props.onRowSecondaryTap,
         onRowsMoved: props.onRowsMoved,
         onColumnsMoved: props.onColumnsMoved,
@@ -619,8 +619,8 @@ class TrinaDualGridProps {
   /// {@macro trina_grid_property_onRowChecked}
   final TrinaOnRowCheckedEventCallback? onRowChecked;
 
-  /// {@macro trina_grid_property_onRowDoubleTap}
-  final TrinaOnRowDoubleTapEventCallback? onRowDoubleTap;
+  /// {@macro trina_grid_property_onDoubleTap}
+  final TrinaOnDoubleTapEventCallback? onDoubleTap;
 
   /// {@macro trina_grid_property_onRowSecondaryTap}
   final TrinaOnRowSecondaryTapEventCallback? onRowSecondaryTap;
@@ -671,7 +671,7 @@ class TrinaDualGridProps {
     this.onChanged,
     this.onSorted,
     this.onRowChecked,
-    this.onRowDoubleTap,
+    this.onDoubleTap,
     this.onRowSecondaryTap,
     this.onRowsMoved,
     this.onColumnsMoved,
@@ -693,7 +693,7 @@ class TrinaDualGridProps {
     TrinaOptional<TrinaOnChangedEventCallback?>? onChanged,
     TrinaOptional<TrinaOnSortedEventCallback?>? onSorted,
     TrinaOptional<TrinaOnRowCheckedEventCallback?>? onRowChecked,
-    TrinaOptional<TrinaOnRowDoubleTapEventCallback?>? onRowDoubleTap,
+    TrinaOptional<TrinaOnDoubleTapEventCallback?>? onDoubleTap,
     TrinaOptional<TrinaOnRowSecondaryTapEventCallback?>? onRowSecondaryTap,
     TrinaOptional<TrinaOnRowsMovedEventCallback?>? onRowsMoved,
     TrinaOptional<TrinaOnColumnsMovedEventCallback?>? onColumnsMoved,
@@ -716,8 +716,7 @@ class TrinaDualGridProps {
       onSorted: onSorted == null ? this.onSorted : onSorted.value,
       onRowChecked:
           onRowChecked == null ? this.onRowChecked : onRowChecked.value,
-      onRowDoubleTap:
-          onRowDoubleTap == null ? this.onRowDoubleTap : onRowDoubleTap.value,
+      onDoubleTap: onDoubleTap == null ? this.onDoubleTap : onDoubleTap.value,
       onRowSecondaryTap: onRowSecondaryTap == null
           ? this.onRowSecondaryTap
           : onRowSecondaryTap.value,
