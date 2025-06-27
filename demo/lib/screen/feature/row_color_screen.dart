@@ -224,6 +224,7 @@ class _RowColorScreenState extends State<RowColorScreen> {
               columns: columns,
               rows: rows,
               configuration: TrinaGridConfiguration(
+                selectingMode: TrinaGridSelectingMode.rowWithSingleTap,
                 style: TrinaGridStyleConfig(
                   // Start with transparent activated color to demonstrate the fix
                   activatedColor: selectionColor,
@@ -235,14 +236,11 @@ class _RowColorScreenState extends State<RowColorScreen> {
                 print(event);
               },
               onLoaded: (TrinaGridOnLoadedEvent event) {
-                event.stateManager
-                    .setSelectingMode(TrinaGridSelectingMode.rowWithSingleTap);
                 setState(() {
                   stateManager = event.stateManager;
                 });
+                // Use rowWithSingleTap mode to test the bug scenario
               },
-              // Use selectWithOneTap mode to test the bug scenario
-              mode: TrinaGridMode.selectWithOneTap,
               rowColorCallback: (rowColorContext) {
                 if (rowColorContext.row.cells.entries
                         .elementAt(4)

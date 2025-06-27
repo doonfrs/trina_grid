@@ -18,42 +18,6 @@ enum TrinaGridMode {
   /// {@endtemplate}
   readOnly,
 
-  /// {@template trina_grid_mode_select}
-  /// Mode for selecting one list from a specific list.
-  /// Tap a row or press Enter to select the current row.
-  ///
-  /// [select]
-  /// Call the [TrinaGrid.onSelected] callback when the selected row is tapped.
-  /// To select an unselected row, select the row and then tap once more.
-  /// [selectWithOneTap]
-  /// Same as [select], but calls [TrinaGrid.onSelected] with one tap.
-  ///
-  /// This mode is non-editable, but programmatically possible.
-  /// ```dart
-  /// stateManager.changeCellValue(
-  ///   stateManager.currentRow!.cells['column_1']!,
-  ///   value,
-  ///   force: true,
-  /// );
-  /// ```
-  /// {@endtemplate}
-  select,
-
-  /// {@macro trina_grid_mode_select}
-  selectWithOneTap,
-
-  /// {@template trina_grid_mode_multiSelect}
-  /// Mode to select multiple rows.
-  /// When a row is tapped, it is selected or deselected and the [TrinaGrid.onSelected] callback is called.
-  /// [TrinaGridOnSelectedEvent.selectedRows] contains the selected rows.
-  /// When a row is selected with keyboard shift + arrowDown/Up keys,
-  /// the [TrinaGrid.onSelected] callback is called only when the Enter key is pressed.
-  /// When the Escape key is pressed,
-  /// the selected row is canceled and the [TrinaGrid.onSelected] callback is called
-  /// with a [TrinaGridOnSelectedEvent.selectedRows] value of null.
-  /// {@endtemplate}
-  multiSelect,
-
   /// {@template trina_grid_mode_popup}
   /// This is a mode for popup type.
   /// It is used when calling a popup for filtering or column setting
@@ -69,18 +33,6 @@ enum TrinaGridMode {
   bool get isReadOnly => this == TrinaGridMode.readOnly;
 
   bool get isEditableMode => isNormal || isPopup;
-
-  bool get isSelectMode => isSingleSelectMode || isMultiSelectMode;
-
-  bool get isSingleSelectMode => isSelect || isSelectWithOneTap;
-
-  bool get isMultiSelectMode => isMultiSelect;
-
-  bool get isSelect => this == TrinaGridMode.select;
-
-  bool get isSelectWithOneTap => this == TrinaGridMode.selectWithOneTap;
-
-  bool get isMultiSelect => this == TrinaGridMode.multiSelect;
 
   bool get isPopup => this == TrinaGridMode.popup;
 }

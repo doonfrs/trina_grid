@@ -343,37 +343,34 @@ class TrinaGridActionDefaultTab extends TrinaGridShortcutAction {
 class TrinaGridActionDefaultEnterKey extends TrinaGridShortcutAction {
   const TrinaGridActionDefaultEnterKey();
 
+  List<TrinaCell> _getSelectedCells(TrinaGridStateManager stateManager) {
+    return stateManager.selectedCells.isEmpty &&
+            stateManager.currentCell != null
+        ? [stateManager.currentCell!]
+        : stateManager.selectedCells;
+  }
+
+  List<TrinaRow> _getSelectedRows(TrinaGridStateManager stateManager) {
+    return stateManager.selectedCells.isEmpty && stateManager.currentRow != null
+        ? [stateManager.currentRow!]
+        : stateManager.selectedRows;
+  }
+
   @override
   void execute({
     required TrinaKeyManagerEvent keyEvent,
     required TrinaGridStateManager stateManager,
   }) {
+<<<<<<< HEAD
     // Handle popup mode with selection enabled
-    if (stateManager.mode.isPopup &&
-        stateManager.selectingMode.isEnabled &&
-        stateManager.onSelected != null) {
-      // Only proceed if we have a current cell
-      if (stateManager.currentCell != null) {
-        // Handle row vs cell selection based on selecting mode
-        stateManager.selectingMode.isRow
-            ? stateManager.toggleSelectingRow(
-                stateManager.currentRowIdx!,
-                notify: false,
-              )
-            : stateManager.toggleCellSelection(
-                stateManager.currentCell!,
-                notify: false,
-              );
-      }
-
-      stateManager.handleOnSelected();
-      return;
-    }
     if (stateManager.selectingMode.isEnabled &&
-        (stateManager.selectedCells.isNotEmpty ||
-            stateManager.selectedRows.isNotEmpty)) {
-      stateManager.clearCurrentSelecting();
-      stateManager.handleOnSelected();
+        stateManager.onSelected != null) {
+      stateManager.onSelected!(
+        TrinaGridOnSelectedEvent(
+          selectedCells: _getSelectedCells(stateManager),
+          selectedRows: _getSelectedRows(stateManager),
+        ),
+      );
       return;
     }
 
@@ -450,7 +447,6 @@ class TrinaGridActionDefaultEnterKey extends TrinaGridShortcutAction {
         final position = stateManager.currentCellPosition;
         if (position != null &&
             position.columnIdx == stateManager.refColumns.length - 1 &&
-            position.rowIdx != null &&
             position.rowIdx! < stateManager.refRows.length - 1) {
           // Move to first cell of next row
           stateManager.moveCurrentCell(

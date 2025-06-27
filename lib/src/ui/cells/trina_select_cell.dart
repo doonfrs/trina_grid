@@ -68,6 +68,7 @@ class TrinaSelectCellState extends State<TrinaSelectCell>
         title: widget.column.title,
         field: widget.column.title,
         readOnly: true,
+        enableEditingMode: false,
         type: TrinaColumnType.text(),
         formatter: widget.column.formatter,
         enableFilterMenuItem: enableColumnFilter,
@@ -102,7 +103,5 @@ class TrinaSelectCellState extends State<TrinaSelectCell>
     if (enableColumnFilter) {
       event.stateManager.setShowColumnFilter(true, notify: false);
     }
-
-    event.stateManager.setSelectingMode(TrinaGridSelectingMode.disabled);
   }
 }

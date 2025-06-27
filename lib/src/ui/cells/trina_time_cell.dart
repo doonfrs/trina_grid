@@ -110,6 +110,7 @@ class TrinaTimeCellState extends State<TrinaTimeCell>
             field: 'hour',
             readOnly: true,
             type: TrinaColumnType.text(),
+            enableEditingMode: false,
             enableSorting: false,
             enableColumnDrag: false,
             enableContextMenu: false,
@@ -134,8 +135,6 @@ class TrinaTimeCellState extends State<TrinaTimeCell>
           final rows = stateManager.refRows;
           final length = rows.length;
 
-          stateManager.setSelectingMode(TrinaGridSelectingMode.disabled);
-
           for (var i = 0; i < length; i += 1) {
             if (rows[i].cells['hour']!.value == cellHour) {
               stateManager.setCurrentCell(rows[i].cells['hour'], i);
@@ -158,6 +157,7 @@ class TrinaTimeCellState extends State<TrinaTimeCell>
             field: 'minute',
             readOnly: true,
             type: TrinaColumnType.text(),
+            enableEditingMode: false,
             enableSorting: false,
             enableColumnDrag: false,
             enableContextMenu: false,
@@ -182,8 +182,6 @@ class TrinaTimeCellState extends State<TrinaTimeCell>
           final rows = stateManager.refRows;
           final length = rows.length;
 
-          stateManager.setSelectingMode(TrinaGridSelectingMode.disabled);
-
           for (var i = 0; i < length; i += 1) {
             if (rows[i].cells['minute']!.value == cellMinute) {
               stateManager.setCurrentCell(rows[i].cells['minute'], i);
@@ -199,7 +197,7 @@ class TrinaTimeCellState extends State<TrinaTimeCell>
         },
         configuration: configuration,
       ),
-      mode: TrinaGridMode.select,
+      mode: TrinaGridMode.popup,
       width: 276,
       height: 300,
       divider: const TrinaDualGridDivider(show: false),
