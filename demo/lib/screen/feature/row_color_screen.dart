@@ -260,7 +260,7 @@ class _RowColorScreenState extends State<RowColorScreen> {
                 return defaultRowColor;
               },
               onSelected: (TrinaGridOnSelectedEvent event) {
-                print('Row selected: ${event.rowIdx}');
+                print('Row selected: ${event.lastSelectedRow?.sortIdx}');
               },
             ),
           ),

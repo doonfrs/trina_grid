@@ -120,14 +120,14 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
       stateManager.setEditing(true);
     } else {
       stateManager.setCurrentCell(cell, rowIdx);
-    }
-    // If selection activates with ctrl\cmd, then selected cells\rows is cleared by
-    // `stateManager.setCurrentCell`, so we should call handleOnSelected.
-    // If grid mode is popup, calling handleOnSelected means the user is finished selecting and
-    // the popup should be closed but It may not be the desired behavior.
-    if (stateManager.selectingMode.isSelectWithCTRL &&
-        stateManager.mode.isPopup == false) {
-      stateManager.handleOnSelected();
+      // If selection activates with ctrl\cmd, then selected cells\rows is cleared by
+      // `stateManager.setCurrentCell`, so we should call handleOnSelected.
+      // If grid mode is popup, calling handleOnSelected means the user is finished selecting and
+      // the popup should be closed but It may not be the desired behavior.
+      if (stateManager.selectingMode.isSelectWithCTRL &&
+          stateManager.mode.isPopup == false) {
+        stateManager.handleOnSelected();
+      }
     }
   }
 

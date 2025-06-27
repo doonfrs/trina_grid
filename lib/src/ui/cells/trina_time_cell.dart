@@ -91,15 +91,16 @@ class TrinaTimeCellState extends State<TrinaTimeCell>
       onSelected: (TrinaDualOnSelectedEvent event) {
         isOpenedPopup = false;
 
-        if (event.gridA == null || event.gridB == null) {
+        if (event.gridA.selectedCells.isEmpty &&
+            event.gridB.selectedCells.isEmpty) {
           widget.stateManager.setKeepFocus(true);
           textFocus.requestFocus();
           return;
         }
 
         super.handleSelected(
-          '${event.gridA!.cell!.value}:'
-          '${event.gridB!.cell!.value}',
+          '${event.gridA.selectedCells.first.value}:'
+          '${event.gridB.selectedCells.first.value}',
         );
       },
       gridPropsA: TrinaDualGridProps(

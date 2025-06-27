@@ -172,30 +172,19 @@ class TrinaDualGridState extends State<TrinaDualGrid> {
           }
         },
         onChanged: props.onChanged,
-        onSelected: (TrinaGridOnSelectedEvent onSelectedEvent) {
-          if (onSelectedEvent.row == null || onSelectedEvent.cell == null) {
-            widget.onSelected!(
-              TrinaDualOnSelectedEvent(
-                gridA: null,
-                gridB: null,
+        onSelected: (TrinaGridOnSelectedEvent event) {
+          widget.onSelected?.call(
+            TrinaDualOnSelectedEvent(
+              gridA: TrinaGridOnSelectedEvent(
+                selectedCells: getGridSelectedCells(_stateManagerA),
+                selectedRows: _stateManagerA.selectedRows,
               ),
-            );
-          } else {
-            widget.onSelected!(
-              TrinaDualOnSelectedEvent(
-                gridA: TrinaGridOnSelectedEvent(
-                  row: _stateManagerA.currentRow,
-                  rowIdx: _stateManagerA.currentRowIdx,
-                  cell: _stateManagerA.currentCell,
-                ),
-                gridB: TrinaGridOnSelectedEvent(
-                  row: _stateManagerB.currentRow,
-                  rowIdx: _stateManagerB.currentRowIdx,
-                  cell: _stateManagerB.currentCell,
-                ),
+              gridB: TrinaGridOnSelectedEvent(
+                selectedCells: getGridSelectedCells(_stateManagerB),
+                selectedRows: _stateManagerB.selectedRows,
               ),
-            );
-          }
+            ),
+          );
         },
         onSorted: props.onSorted,
         onRowChecked: props.onRowChecked,
@@ -213,6 +202,18 @@ class TrinaDualGridState extends State<TrinaDualGrid> {
         key: props.key,
       ),
     );
+  }
+
+  /// Returns the currently selected cells for a grid.
+  ///
+  /// In a dual grid context, when a user selects from one grid, the other grid's
+  /// current cell should be considered as selected (even if not explicitly selected)
+  /// to maintain selection synchronization between the two grids.
+  List<TrinaCell> getGridSelectedCells(TrinaGridStateManager stateManager) {
+    return stateManager.selectedCells.isEmpty &&
+            stateManager.currentCell != null
+        ? [stateManager.currentCell!]
+        : stateManager.selectedCells;
   }
 
   @override
@@ -508,13 +509,13 @@ class TrinaDualGridLayoutDelegate extends MultiChildLayoutDelegate {
 }
 
 class TrinaDualOnSelectedEvent {
-  TrinaGridOnSelectedEvent? gridA;
+  TrinaGridOnSelectedEvent gridA;
 
-  TrinaGridOnSelectedEvent? gridB;
+  TrinaGridOnSelectedEvent gridB;
 
   TrinaDualOnSelectedEvent({
-    this.gridA,
-    this.gridB,
+    required this.gridA,
+    required this.gridB,
   });
 }
 
