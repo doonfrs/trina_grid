@@ -415,20 +415,34 @@ mixin KeyboardState implements ITrinaGridState {
       return;
     }
 
+    direction.isLeft
+        ? scroll.horizontal!.jumpTo(0)
+        : scroll.horizontal!.jumpTo(scroll.maxScrollHorizontal);
+
+    if (selectingMode.isCell == false || currentCellPosition == null) {
+      return;
+    }
     final int columnIdx = direction.isLeft ? 0 : refColumns.length - 1;
 
     final int? rowIdx = hasCurrentSelectingPosition
         ? currentSelectingPosition!.rowIdx
         : currentCellPosition!.rowIdx;
 
+    final newSelectionPosition =
+        TrinaGridCellPosition(columnIdx: columnIdx, rowIdx: rowIdx);
+
+    clearCurrentSelecting(notify: false);
+
     setCurrentSelectingPosition(
-      cellPosition: TrinaGridCellPosition(columnIdx: columnIdx, rowIdx: rowIdx),
+      cellPosition: newSelectionPosition,
       notify: notify,
     );
-
-    direction.isLeft
-        ? scroll.horizontal!.jumpTo(0)
-        : scroll.horizontal!.jumpTo(scroll.maxScrollHorizontal);
+    selectCellsInRange(
+      currentCellPosition!,
+      newSelectionPosition,
+      notify: false,
+    );
+    handleOnSelected();
   }
 
   @override
@@ -449,23 +463,26 @@ mixin KeyboardState implements ITrinaGridState {
       return;
     }
 
-    final columnIdx = hasCurrentSelectingPosition
-        ? currentSelectingPosition!.columnIdx
-        : currentCellPosition!.columnIdx;
-
-    final int rowIdx = direction.isUp ? 0 : refRows.length - 1;
-
-    setCurrentSelectingPosition(
-      cellPosition: TrinaGridCellPosition(columnIdx: columnIdx, rowIdx: rowIdx),
-      notify: notify,
-    );
-
     if (selectingMode.isRow) {
+      clearCurrentSelecting(notify: false);
+      final columnIdx = hasCurrentSelectingPosition
+          ? currentSelectingPosition!.columnIdx
+          : currentCellPosition!.columnIdx;
+
+      final int rowIdx = direction.isUp ? 0 : refRows.length - 1;
+
+      setCurrentSelectingPosition(
+        cellPosition:
+            TrinaGridCellPosition(columnIdx: columnIdx, rowIdx: rowIdx),
+        notify: notify,
+      );
+
       selectRowsInRange(
         currentCellPosition?.rowIdx,
         currentSelectingPosition?.rowIdx,
         notify: false,
       );
+      handleOnSelected();
     }
 
     direction.isUp
