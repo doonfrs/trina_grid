@@ -495,6 +495,8 @@ mixin KeyboardState implements ITrinaGridState {
         ? currentSelectingPosition!.columnIdx
         : currentCellPosition!.columnIdx;
 
+    clearCurrentSelecting(notify: false);
+
     setCurrentSelectingPosition(
       cellPosition: TrinaGridCellPosition(columnIdx: columnIdx, rowIdx: rowIdx),
     );
@@ -505,6 +507,14 @@ mixin KeyboardState implements ITrinaGridState {
         currentSelectingPosition?.rowIdx,
         notify: false,
       );
+      handleOnSelected();
+    } else if (selectingMode.isCell) {
+      selectCellsInRange(
+        currentCellPosition!,
+        currentSelectingPosition!,
+        notify: false,
+      );
+      handleOnSelected();
     }
     moveScrollByRow(direction, rowIdx - direction.offset);
   }
