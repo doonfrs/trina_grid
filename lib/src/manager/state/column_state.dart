@@ -851,10 +851,6 @@ mixin ColumnState implements ITrinaGridState {
   }
 
   void _updateBeforeColumnSort() {
-    clearCurrentCell(notify: false);
-
-    clearCurrentSelecting(notify: false);
-
     // Reset column sort to none.
     for (var i = 0; i < refColumns.originalList.length; i += 1) {
       refColumns.originalList[i].sort = TrinaColumnSort.none;
