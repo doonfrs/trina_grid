@@ -21,16 +21,11 @@ class _RowColorScreenState extends State<RowColorScreen> {
 
   // Define color options with names for identification - using more subtle material colors
   final List<Map<String, dynamic>> colorOptions = [
-    {'name': 'Blue', 'color': Colors.blue[100]!},
-    {'name': 'Teal', 'color': Colors.teal[100]!},
-    {'name': 'Amber', 'color': Colors.amber[100]!},
-    {'name': 'Green', 'color': Colors.green[100]!},
+    {'name': 'Grey', 'color': Colors.grey[100]!},
     {'name': 'Purple', 'color': Colors.purple[100]!},
     {'name': 'Red', 'color': Colors.red[100]!},
-    {'name': 'Grey', 'color': Colors.grey[200]!},
-    {'name': 'Brown', 'color': Colors.brown[100]!},
     {'name': 'Indigo', 'color': Colors.indigo[100]!},
-    {'name': 'Orange', 'color': Colors.orange[100]!},
+    {'name': 'Transparent', 'color': Colors.transparent},
   ];
 
   // Selection colors - different from row colors and more subtle
@@ -39,19 +34,14 @@ class _RowColorScreenState extends State<RowColorScreen> {
     {'name': 'Teal', 'color': Colors.teal[200]!},
     {'name': 'Amber', 'color': Colors.amber[200]!},
     {'name': 'Green', 'color': Colors.green[200]!},
-    {'name': 'Purple', 'color': Colors.purple[200]!},
-    {'name': 'Red', 'color': Colors.red[200]!},
-    {'name': 'Grey', 'color': Colors.grey[300]!},
-    {'name': 'Indigo', 'color': Colors.indigo[200]!},
-    {'name': 'Transparent', 'color': Colors.transparent},
   ];
 
   // Color selections
-  int oneValueColorIndex = 0; // Blue
-  int twoValueColorIndex = 1; // Teal
-  int defaultRowColorIndex = 6; // Grey
-  int selectionColorIndex = 0; // Blue selection color
-  int activatedBorderColorIndex = 0; // Blue activated border color
+  int oneValueColorIndex = 0;
+  int twoValueColorIndex = 1;
+  int defaultRowColorIndex = 0;
+  int selectionColorIndex = 0;
+  int activatedBorderColorIndex = 0;
 
   Color get oneValueColor => colorOptions[oneValueColorIndex]['color'] as Color;
   Color get twoValueColor => colorOptions[twoValueColorIndex]['color'] as Color;
@@ -141,15 +131,11 @@ class _RowColorScreenState extends State<RowColorScreen> {
     return TrinaExampleScreen(
       title: 'Row color',
       topTitle: 'Row color',
-      topContents: const [
+      topContents: [
         Text(
-            'You can dynamically change the row color of row by implementing rowColorCallback.'),
+            'You can dynamically adjust row colors by utilizing the rowColorCallback function.'),
         Text(
-            'If you change the value of the 5th column, the background color is dynamically changed according to the value.'),
-        Text(
-            'Use the controls below to customize the row colors and selection color.'),
-        Text(
-            'This example uses transparent activatedColor and TrinaGridMode.selectWithOneTap to demonstrate row color overlay.'),
+            'Changing the value in the "${columns.elementAt(4).title}" column will automatically update the row\'s background color based on that value.'),
       ],
       topButtons: [
         TrinaExampleButton(
@@ -226,8 +212,9 @@ class _RowColorScreenState extends State<RowColorScreen> {
               configuration: TrinaGridConfiguration(
                 selectingMode: TrinaGridSelectingMode.rowWithSingleTap,
                 style: TrinaGridStyleConfig(
-                  // Start with transparent activated color to demonstrate the fix
                   activatedColor: selectionColor,
+                  cellColorInReadOnlyState: Colors.black45,
+                  cellReadonlyColor: Colors.transparent,
                   // Set initial border color
                   activatedBorderColor: activatedBorderColor,
                 ),
@@ -239,7 +226,6 @@ class _RowColorScreenState extends State<RowColorScreen> {
                 setState(() {
                   stateManager = event.stateManager;
                 });
-                // Use rowWithSingleTap mode to test the bug scenario
               },
               rowColorCallback: (rowColorContext) {
                 if (rowColorContext.row.cells.entries
@@ -258,7 +244,8 @@ class _RowColorScreenState extends State<RowColorScreen> {
                 return defaultRowColor;
               },
               onSelected: (TrinaGridOnSelectedEvent event) {
-                print('Row selected: ${event.lastSelectedRow?.sortIdx}');
+                print(
+                    'Row no. ${event.lastSelectedRow?.sortIdx} is selected. Total selected rows: ${event.selectedRows.length}');
               },
             ),
           ),
