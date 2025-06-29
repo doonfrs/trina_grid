@@ -105,6 +105,9 @@ mixin PopupCellState<T extends PopupCell> on State<T>
       },
       configuration: widget.stateManager.configuration.copyWith(
         tabKeyAction: TrinaGridTabKeyAction.normal,
+        // use cell selection with CTRL instead of single tap selection
+        // to not close the filter popup when tapping on a cell
+        selectingMode: TrinaGridSelectingMode.cellWithCtrl,
         style: widget.stateManager.configuration.style.copyWith(
           oddRowColor: const TrinaOptional(null),
           evenRowColor: const TrinaOptional(null),

@@ -168,6 +168,9 @@ mixin FilteringRowState implements ITrinaGridState {
       FilterPopupState(
         context: context,
         configuration: configuration.copyWith(
+          // use cell selection with CTRL instead of single tap selection
+          // to not close the filter popup when tapping on a cell
+          selectingMode: TrinaGridSelectingMode.cellWithCtrl,
           style: configuration.style.copyWith(
             gridBorderRadius: configuration.style.gridPopupBorderRadius,
             enableRowColorAnimation: false,
