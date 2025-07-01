@@ -590,46 +590,27 @@ mixin SelectingState implements ITrinaGridState {
   }
 
   List<TrinaGridSelectingCellPosition> _selectingCells() {
-    final List<TrinaGridSelectingCellPosition> positions = [];
-
-    final columnIndexes = columnIndexesByShowFrozen;
-
-    int columnStartIdx = min(
-      currentCellPosition!.columnIdx!,
-      currentSelectingPosition!.columnIdx!,
+    return _getSelectingPositions(
+      columnStartIdx: min(
+        currentCellPosition!.columnIdx!,
+        currentSelectingPosition!.columnIdx!,
+      ),
+      columnEndIdx: max(
+        currentCellPosition!.columnIdx!,
+        currentSelectingPosition!.columnIdx!,
+      ),
+      rowStartIdx: min(
+        currentCellPosition!.rowIdx!,
+        currentSelectingPosition!.rowIdx!,
+      ),
+      rowEndIdx: max(
+        currentCellPosition!.rowIdx!,
+        currentSelectingPosition!.rowIdx!,
+      ),
     );
-
-    int columnEndIdx = max(
-      currentCellPosition!.columnIdx!,
-      currentSelectingPosition!.columnIdx!,
-    );
-
-    int rowStartIdx = min(
-      currentCellPosition!.rowIdx!,
-      currentSelectingPosition!.rowIdx!,
-    );
-
-    int rowEndIdx = max(
-      currentCellPosition!.rowIdx!,
-      currentSelectingPosition!.rowIdx!,
-    );
-
-    for (int i = rowStartIdx; i <= rowEndIdx; i += 1) {
-      for (int j = columnStartIdx; j <= columnEndIdx; j += 1) {
-        final String field = refColumns[columnIndexes[j]].field;
-
-        positions.add(TrinaGridSelectingCellPosition(rowIdx: i, field: field));
-      }
-    }
-
-    return positions;
   }
 
   List<TrinaGridSelectingCellPosition> _selectingCellsHorizontally() {
-    final List<TrinaGridSelectingCellPosition> positions = [];
-
-    final columnIndexes = columnIndexesByShowFrozen;
-
     final bool firstCurrent = currentCellPosition!.rowIdx! <
             currentSelectingPosition!.rowIdx! ||
         (currentCellPosition!.rowIdx! == currentSelectingPosition!.rowIdx! &&
@@ -642,33 +623,12 @@ mixin SelectingState implements ITrinaGridState {
     TrinaGridCellPosition endCell =
         !firstCurrent ? currentCellPosition! : currentSelectingPosition!;
 
-    int columnStartIdx = startCell.columnIdx!;
-
-    int columnEndIdx = endCell.columnIdx!;
-
-    int rowStartIdx = startCell.rowIdx!;
-
-    int rowEndIdx = endCell.rowIdx!;
-
-    final length = columnIndexes.length;
-
-    for (int i = rowStartIdx; i <= rowEndIdx; i += 1) {
-      for (int j = 0; j < length; j += 1) {
-        if (i == rowStartIdx && j < columnStartIdx) {
-          continue;
-        }
-
-        final String field = refColumns[columnIndexes[j]].field;
-
-        positions.add(TrinaGridSelectingCellPosition(rowIdx: i, field: field));
-
-        if (i == rowEndIdx && j == columnEndIdx) {
-          break;
-        }
-      }
-    }
-
-    return positions;
+    return _getSelectingPositions(
+      columnStartIdx: startCell.columnIdx!,
+      columnEndIdx: endCell.columnIdx!,
+      rowStartIdx: startCell.rowIdx!,
+      rowEndIdx: endCell.rowIdx!,
+    );
   }
 
   String _selectingTextFromSelectingRows() {
@@ -741,6 +701,27 @@ mixin SelectingState implements ITrinaGridState {
     if (isEditing == true) {
       setEditing(false, notify: false);
     }
+  }
+
+  List<TrinaGridSelectingCellPosition> _getSelectingPositions({
+    required int columnStartIdx,
+    required int columnEndIdx,
+    required int rowStartIdx,
+    required int rowEndIdx,
+  }) {
+    final List<TrinaGridSelectingCellPosition> positions = [];
+
+    final columnIndexes = columnIndexesByShowFrozen;
+
+    for (int i = rowStartIdx; i <= rowEndIdx; i += 1) {
+      for (int j = columnStartIdx; j <= columnEndIdx; j += 1) {
+        final String field = refColumns[columnIndexes[j]].field;
+
+        positions.add(TrinaGridSelectingCellPosition(rowIdx: i, field: field));
+      }
+    }
+
+    return positions;
   }
 
   void _updateSortedRows() {
