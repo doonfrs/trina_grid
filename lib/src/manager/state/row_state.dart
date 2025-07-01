@@ -357,6 +357,8 @@ mixin RowState implements ITrinaGridState {
       return;
     }
 
+    final selectedRows = List<TrinaRow>.from(this.selectedRows);
+
     final Set<Key> removeKeys = Set.from(rows.map((e) => e.key));
 
     if (currentRowIdx != null &&
@@ -386,6 +388,8 @@ mixin RowState implements ITrinaGridState {
     setCurrentSelectingPositionByCellKey(selectingCellKey, notify: false);
 
     selectedRows.removeWhere((row) => removeKeys.contains(row.key));
+
+    setSelectedRows(selectedRows, notify: false);
 
     notifyListeners(notify, removeRows.hashCode);
   }

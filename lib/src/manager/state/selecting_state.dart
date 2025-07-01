@@ -61,6 +61,8 @@ abstract class ISelectingState {
   /// If [from] or [to] is null, it is set to [currentRowIdx].
   void selectRowsInRange(int? from, int? to, {bool notify = true});
 
+  void setSelectedRows(List<TrinaRow> rows, {bool notify = true});
+
   /// Resets currently selected rows and cells.
   void clearCurrentSelecting({bool notify = true});
 
@@ -366,10 +368,29 @@ mixin SelectingState implements ITrinaGridState {
       _state._selectedRows[row.key.toString()] = row;
     }
 
-    _state._sortedRows = _state._selectedRows.values.toList();
-    _state._sortedRows.sort((a, b) => a.sortIdx.compareTo(b.sortIdx));
+    _updateSortedRows();
 
     notifyListeners(notify, selectRowsInRange.hashCode);
+  }
+
+  @override
+  void setSelectedRows(
+    List<TrinaRow> rows, {
+    bool notify = true,
+  }) {
+    if (!selectingMode.isRow) {
+      return;
+    }
+
+    _clearSelectedRows(notify: false);
+
+    for (final row in rows) {
+      _state._selectedRows[row.key.toString()] = row;
+    }
+
+    _updateSortedRows();
+
+    notifyListeners(notify, setSelectedRows.hashCode);
   }
 
   @override
@@ -400,8 +421,7 @@ mixin SelectingState implements ITrinaGridState {
     } else {
       _state._selectedRows[rowKey] = row;
     }
-    _state._sortedRows = _state._selectedRows.values.toList();
-    _state._sortedRows.sort((a, b) => a.sortIdx.compareTo(b.sortIdx));
+    _updateSortedRows();
 
     notifyListeners(notify, toggleSelectingRow.hashCode);
   }
@@ -721,6 +741,11 @@ mixin SelectingState implements ITrinaGridState {
     if (isEditing == true) {
       setEditing(false, notify: false);
     }
+  }
+
+  void _updateSortedRows() {
+    _state._sortedRows = _state._selectedRows.values.toList();
+    _state._sortedRows.sort((a, b) => a.sortIdx.compareTo(b.sortIdx));
   }
 
   void _clearCurrentSelectingPosition({bool notify = true}) {
