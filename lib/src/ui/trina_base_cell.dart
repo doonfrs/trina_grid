@@ -97,7 +97,10 @@ class TrinaBaseCell extends StatelessWidget
   }
 
   void Function()? _onDoubleTapOrNull() {
-    return stateManager.onDoubleTap == null ? null : _handleOnDoubleTap;
+    return stateManager.onDoubleTap == null &&
+            stateManager.mode.isPopup == false
+        ? null
+        : _handleOnDoubleTap;
   }
 
   void _handleOnSecondaryTap(TapDownDetails details) {

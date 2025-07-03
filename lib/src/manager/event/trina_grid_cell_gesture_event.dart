@@ -206,7 +206,14 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
   }
 
   void _onDoubleTap(TrinaGridStateManager stateManager) {
-    if (!stateManager.autoEditing &&
+    if (stateManager.mode.isPopup && stateManager.selectingMode.isEnabled) {
+      if (stateManager.selectingMode.isRow) {
+        stateManager.toggleSelectingRow(rowIdx);
+      } else {
+        stateManager.toggleCellSelection(cell);
+      }
+      stateManager.handleOnSelected();
+    } else if (!stateManager.autoEditing &&
         stateManager.selectingMode.isNotSingleTapSelection) {
       if (stateManager.isCurrentCell(cell)) {
         stateManager.setEditing(true);
