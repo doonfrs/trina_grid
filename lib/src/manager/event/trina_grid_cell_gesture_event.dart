@@ -67,13 +67,14 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
   /// Handles selection when the Shift key is pressed.
   void _onSelectionWithShift(TrinaGridStateManager stateManager) {
     final int? columnIdx = stateManager.columnIndex(column);
-
-    stateManager.setCurrentSelectingPosition(
-      cellPosition: TrinaGridCellPosition(
-        columnIdx: columnIdx,
-        rowIdx: rowIdx,
-      ),
+    final currentPosition = TrinaGridCellPosition(
+      columnIdx: columnIdx,
+      rowIdx: rowIdx,
     );
+    stateManager.setCurrentSelectingPosition(cellPosition: currentPosition);
+    if (stateManager.currentCellPosition == null) {
+      stateManager.setCurrentCellPosition(currentPosition, notify: false);
+    }
     _handleRangeSelectionIfSelectingCells(stateManager);
     _handleRangeSelectionIfSelectingRows(stateManager);
   }
@@ -138,11 +139,6 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
   }
 
   void _onLongPressMoveUpdate(TrinaGridStateManager stateManager) {
-    // Ensure there is a current cell to act as an anchor.
-    if (stateManager.currentCell == null) {
-      return;
-    }
-
     // The anchor point for any selection is the cell that was current
     // when the selection started.
     final TrinaGridCellPosition? anchorPosition =
