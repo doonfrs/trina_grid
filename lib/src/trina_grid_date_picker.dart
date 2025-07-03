@@ -92,13 +92,6 @@ class TrinaGridDatePicker {
           1,
       height: popupHeight,
       createHeader: _createHeader,
-      onDoubleTap: (event) {
-        Navigator.pop(
-          context,
-          TrinaGridOnSelectedEvent(
-              selectedCells: [event.cell], selectedRows: [event.row]),
-        );
-      },
       configuration: configuration.copyWith(
         tabKeyAction: TrinaGridTabKeyAction.normal,
         style: configuration.style.copyWith(

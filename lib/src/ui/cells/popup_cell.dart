@@ -96,13 +96,6 @@ mixin PopupCellState<T extends PopupCell> on State<T>
       height: popupHeight,
       createHeader: createHeader,
       createFooter: createFooter,
-      onDoubleTap: (event) {
-        Navigator.pop(
-          context,
-          TrinaGridOnSelectedEvent(
-              selectedCells: [event.cell], selectedRows: [event.row]),
-        );
-      },
       configuration: widget.stateManager.configuration.copyWith(
         tabKeyAction: TrinaGridTabKeyAction.normal,
         // use cell selection with CTRL instead of single tap selection
