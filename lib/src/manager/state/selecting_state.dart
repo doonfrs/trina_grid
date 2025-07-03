@@ -490,7 +490,7 @@ mixin SelectingState implements ITrinaGridState {
   bool isSelectingInteraction() {
     return !selectingMode.isDisabled &&
         (keyPressed.shift || keyPressed.ctrl) &&
-        currentCell != null;
+        currentCellPosition != null;
   }
 
   @override
