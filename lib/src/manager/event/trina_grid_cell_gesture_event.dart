@@ -42,7 +42,7 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
   }
 
   void _onTapUp(TrinaGridStateManager stateManager) {
-    if (_setKeepFocusAndCurrentCell(stateManager)) {
+    if (_isFirstTapToFocusGrid(stateManager)) {
       return;
     }
 
@@ -246,7 +246,12 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
     );
   }
 
-  bool _setKeepFocusAndCurrentCell(TrinaGridStateManager stateManager) {
+  /// If the grid does not have focus, the tap's first job is to give it focus.
+  /// If the tapped cell is already the current one, we shouldn't proceed
+  /// with other actions like toggling selection or entering edit mode.
+  /// This prevents unintended behavior on the first tap that is only meant
+  /// to focus the grid.
+  bool _isFirstTapToFocusGrid(TrinaGridStateManager stateManager) {
     if (stateManager.hasFocus) {
       return false;
     }
