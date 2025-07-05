@@ -149,6 +149,10 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
 
     stateManager.setCurrentSelectingPositionWithOffset(offset);
 
+    stateManager.eventManager!.addEvent(
+      TrinaGridScrollUpdateEvent(offset: offset),
+    );
+
     final TrinaGridCellPosition? newSelectingPosition =
         stateManager.currentSelectingPosition;
 
@@ -184,10 +188,6 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
 
       stateManager.handleOnSelected();
     }
-
-    stateManager.eventManager!.addEvent(
-      TrinaGridScrollUpdateEvent(offset: offset),
-    );
   }
 
   void _onLongPressEnd(TrinaGridStateManager stateManager) {
@@ -229,6 +229,7 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
   void _onSecondaryTap(TrinaGridStateManager stateManager) {
     if (stateManager.selectingMode.isSingleTapSelection) {
       if (!stateManager.isCurrentCell(cell)) {
+        // calling `setCurrentCell` will clear the current selection
         stateManager.setCurrentCell(cell, rowIdx);
       } else {
         stateManager.clearCurrentSelecting();
@@ -263,6 +264,9 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
 
   /// Handle selection based on selecting mode
   void _handleSingleTapSelection(TrinaGridStateManager stateManager) {
+    if (stateManager.isEditing) {
+      stateManager.setEditing(false);
+    }
     if (stateManager.selectingMode.isRowWithSingleTap) {
       stateManager.toggleSelectingRow(rowIdx);
     }
