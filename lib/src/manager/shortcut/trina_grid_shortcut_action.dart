@@ -492,7 +492,6 @@ class TrinaGridActionDefaultEscapeKey extends TrinaGridShortcutAction {
         stateManager.clearCurrentSelecting();
         stateManager.onSelected!(const TrinaGridOnSelectedEvent());
       }
-      return;
     }
 
     if (stateManager.isEditing) {
