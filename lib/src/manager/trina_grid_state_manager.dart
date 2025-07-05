@@ -633,10 +633,7 @@ enum TrinaGridSelectingMode {
 
   /// Disables selection functionality.
   /// [TrinaGrid.onSelected] callback will not be triggered.
-  disabled,
-
-  /// using only internal
-  horizontal;
+  disabled;
 
   bool get isSingleTapSelection =>
       this == TrinaGridSelectingMode.cellWithSingleTap ||
@@ -670,9 +667,6 @@ enum TrinaGridSelectingMode {
 
   bool get isDisabled => this == TrinaGridSelectingMode.disabled;
   bool get isEnabled => this != TrinaGridSelectingMode.disabled;
-
-  /// using only internal
-  bool get isHorizontal => this == TrinaGridSelectingMode.horizontal;
 }
 
 abstract class _Apply {
