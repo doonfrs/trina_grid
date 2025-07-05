@@ -130,8 +130,6 @@ mixin SelectingState implements ITrinaGridState {
       case TrinaGridSelectingMode.cellWithCtrl:
       case TrinaGridSelectingMode.cellWithSingleTap:
         return _selectingCells();
-      case TrinaGridSelectingMode.horizontal:
-        return _selectingCellsHorizontally();
       case TrinaGridSelectingMode.rowWithCtrl:
       case TrinaGridSelectingMode.rowWithSingleTap:
       case TrinaGridSelectingMode.disabled:
@@ -218,7 +216,6 @@ mixin SelectingState implements ITrinaGridState {
     switch (selectingMode) {
       case TrinaGridSelectingMode.cellWithCtrl:
       case TrinaGridSelectingMode.cellWithSingleTap:
-      case TrinaGridSelectingMode.horizontal:
         _setFistCellAsCurrent();
 
         setCurrentSelectingPosition(
@@ -517,57 +514,7 @@ mixin SelectingState implements ITrinaGridState {
       return false;
     }
 
-    if (selectingMode.isHorizontal) {
-      int startRowIdx = min(
-        currentCellPosition!.rowIdx!,
-        currentSelectingPosition!.rowIdx!,
-      );
-
-      int endRowIdx = max(
-        currentCellPosition!.rowIdx!,
-        currentSelectingPosition!.rowIdx!,
-      );
-
-      final int? columnIdx = columnIndex(column);
-
-      if (columnIdx == null) {
-        return false;
-      }
-
-      int? startColumnIdx;
-
-      int? endColumnIdx;
-
-      if (currentCellPosition!.rowIdx! < currentSelectingPosition!.rowIdx!) {
-        startColumnIdx = currentCellPosition!.columnIdx;
-        endColumnIdx = currentSelectingPosition!.columnIdx;
-      } else if (currentCellPosition!.rowIdx! >
-          currentSelectingPosition!.rowIdx!) {
-        startColumnIdx = currentSelectingPosition!.columnIdx;
-        endColumnIdx = currentCellPosition!.columnIdx;
-      } else {
-        startColumnIdx = min(
-          currentCellPosition!.columnIdx!,
-          currentSelectingPosition!.columnIdx!,
-        );
-        endColumnIdx = max(
-          currentCellPosition!.columnIdx!,
-          currentSelectingPosition!.columnIdx!,
-        );
-      }
-
-      if (rowIdx == startRowIdx && startRowIdx == endRowIdx) {
-        return !(columnIdx < startColumnIdx! || columnIdx > endColumnIdx!);
-      } else if (rowIdx == startRowIdx && columnIdx >= startColumnIdx!) {
-        return true;
-      } else if (rowIdx == endRowIdx && columnIdx <= endColumnIdx!) {
-        return true;
-      } else if (rowIdx > startRowIdx && rowIdx < endRowIdx) {
-        return true;
-      }
-
-      return false;
-    } else if (selectingMode.isRow) {
+    if (selectingMode.isRow) {
       return false;
     } else {
       throw Exception('selectingMode is not handled');
@@ -610,26 +557,7 @@ mixin SelectingState implements ITrinaGridState {
     );
   }
 
-  List<TrinaGridSelectingCellPosition> _selectingCellsHorizontally() {
-    final bool firstCurrent = currentCellPosition!.rowIdx! <
-            currentSelectingPosition!.rowIdx! ||
-        (currentCellPosition!.rowIdx! == currentSelectingPosition!.rowIdx! &&
-            currentCellPosition!.columnIdx! <=
-                currentSelectingPosition!.columnIdx!);
-
-    TrinaGridCellPosition startCell =
-        firstCurrent ? currentCellPosition! : currentSelectingPosition!;
-
-    TrinaGridCellPosition endCell =
-        !firstCurrent ? currentCellPosition! : currentSelectingPosition!;
-
-    return _getSelectingPositions(
-      columnStartIdx: startCell.columnIdx!,
-      columnEndIdx: endCell.columnIdx!,
-      rowStartIdx: startCell.rowIdx!,
-      rowEndIdx: endCell.rowIdx!,
-    );
-  }
+  
 
   String _selectingTextFromSelectingRows() {
     final columnIndexes = columnIndexesByShowFrozen;
