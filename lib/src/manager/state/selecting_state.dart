@@ -14,16 +14,6 @@ abstract class ISelectingState {
   /// Calculate the currently selected cell and its multi-selection range.
   TrinaGridCellPosition? get currentSelectingPosition;
 
-  /// Position list of currently selected.
-  /// Only valid in [TrinaGridSelectingMode.cell].
-  ///
-  /// ```dart
-  /// stateManager.currentSelectingPositionList.forEach((element) {
-  ///   final cellValue = stateManager.rows[element.rowIdx].cells[element.field].value;
-  /// });
-  /// ```
-  List<TrinaGridSelectingCellPosition> get currentSelectingPositionList;
-
   bool get hasCurrentSelectingPosition;
 
   /// Currently selected rows.
@@ -119,23 +109,6 @@ mixin SelectingState implements ITrinaGridState {
   @override
   TrinaGridCellPosition? get currentSelectingPosition =>
       _state._currentSelectingPosition;
-
-  @override
-  List<TrinaGridSelectingCellPosition> get currentSelectingPositionList {
-    if (currentCellPosition == null || currentSelectingPosition == null) {
-      return [];
-    }
-
-    switch (selectingMode) {
-      case TrinaGridSelectingMode.cellWithCtrl:
-      case TrinaGridSelectingMode.cellWithSingleTap:
-        return _selectingCells();
-      case TrinaGridSelectingMode.rowWithCtrl:
-      case TrinaGridSelectingMode.rowWithSingleTap:
-      case TrinaGridSelectingMode.disabled:
-        return [];
-    }
-  }
 
   @override
   bool get hasCurrentSelectingPosition => currentSelectingPosition != null;
@@ -536,29 +509,6 @@ mixin SelectingState implements ITrinaGridState {
     notifyListeners(true, handleAfterSelectingRow.hashCode);
   }
 
-  List<TrinaGridSelectingCellPosition> _selectingCells() {
-    return _getSelectingPositions(
-      columnStartIdx: min(
-        currentCellPosition!.columnIdx!,
-        currentSelectingPosition!.columnIdx!,
-      ),
-      columnEndIdx: max(
-        currentCellPosition!.columnIdx!,
-        currentSelectingPosition!.columnIdx!,
-      ),
-      rowStartIdx: min(
-        currentCellPosition!.rowIdx!,
-        currentSelectingPosition!.rowIdx!,
-      ),
-      rowEndIdx: max(
-        currentCellPosition!.rowIdx!,
-        currentSelectingPosition!.rowIdx!,
-      ),
-    );
-  }
-
-  
-
   String _selectingTextFromSelectingRows() {
     final columnIndexes = columnIndexesByShowFrozen;
 
@@ -629,27 +579,6 @@ mixin SelectingState implements ITrinaGridState {
     if (isEditing == true) {
       setEditing(false, notify: false);
     }
-  }
-
-  List<TrinaGridSelectingCellPosition> _getSelectingPositions({
-    required int columnStartIdx,
-    required int columnEndIdx,
-    required int rowStartIdx,
-    required int rowEndIdx,
-  }) {
-    final List<TrinaGridSelectingCellPosition> positions = [];
-
-    final columnIndexes = columnIndexesByShowFrozen;
-
-    for (int i = rowStartIdx; i <= rowEndIdx; i += 1) {
-      for (int j = columnStartIdx; j <= columnEndIdx; j += 1) {
-        final String field = refColumns[columnIndexes[j]].field;
-
-        positions.add(TrinaGridSelectingCellPosition(rowIdx: i, field: field));
-      }
-    }
-
-    return positions;
   }
 
   void _updateSortedRows() {
