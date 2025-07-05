@@ -672,10 +672,8 @@ void main() {
         );
 
         verify(
-          stateManager.setSelectingMode(
-            TrinaGridSelectingMode.rowWithSingleTap,
-            notify: false,
-          ),
+          stateManager.setSelectingMode(TrinaGridSelectingMode.cellWithCtrl,
+              notify: false),
         ).called(1);
 
         verify(
