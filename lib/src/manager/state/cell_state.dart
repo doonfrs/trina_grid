@@ -200,6 +200,8 @@ mixin CellState implements ITrinaGridState {
       columnIdx: columnIdxByCellKeyAndRowIdx(cell.key, rowIdx),
     );
 
+    setCurrentCellPosition(_state._currentCellPosition);
+
     clearCurrentSelecting(notify: false);
 
     setEditing(autoEditing, notify: false);

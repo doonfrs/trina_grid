@@ -411,7 +411,7 @@ mixin KeyboardState implements ITrinaGridState {
       return;
     }
 
-    if (currentCell == null) {
+    if (currentCellPosition == null) {
       return;
     }
 
@@ -459,27 +459,36 @@ mixin KeyboardState implements ITrinaGridState {
       return;
     }
 
-    if (currentCell == null) {
+    if (currentCellPosition == null) {
       return;
     }
 
+    /// The current cell column index
+    final columnIdx = hasCurrentSelectingPosition
+        ? currentSelectingPosition!.columnIdx
+        : currentCellPosition!.columnIdx;
+
+    clearCurrentSelecting(notify: false);
+
+    final int rowIdx = direction.isUp ? 0 : refRows.length - 1;
+
+    setCurrentSelectingPosition(
+      cellPosition: TrinaGridCellPosition(columnIdx: columnIdx, rowIdx: rowIdx),
+      notify: notify,
+    );
+
     if (selectingMode.isRow) {
-      clearCurrentSelecting(notify: false);
-      final columnIdx = hasCurrentSelectingPosition
-          ? currentSelectingPosition!.columnIdx
-          : currentCellPosition!.columnIdx;
-
-      final int rowIdx = direction.isUp ? 0 : refRows.length - 1;
-
-      setCurrentSelectingPosition(
-        cellPosition:
-            TrinaGridCellPosition(columnIdx: columnIdx, rowIdx: rowIdx),
-        notify: notify,
-      );
-
       selectRowsInRange(
         currentCellPosition?.rowIdx,
         currentSelectingPosition?.rowIdx,
+        notify: false,
+      );
+      handleOnSelected();
+    }
+    if (selectingMode.isCell) {
+      selectCellsInRange(
+        currentCellPosition!,
+        TrinaGridCellPosition(columnIdx: columnIdx, rowIdx: rowIdx),
         notify: false,
       );
       handleOnSelected();
@@ -496,12 +505,13 @@ mixin KeyboardState implements ITrinaGridState {
     TrinaMoveDirection direction, {
     bool notify = true,
   }) {
-    if (rowIdx < 0) {
-      rowIdx = 0;
+    int moveToRowId = rowIdx;
+    if (moveToRowId < 0) {
+      moveToRowId = 0;
     }
 
-    if (rowIdx > refRows.length - 1) {
-      rowIdx = refRows.length - 1;
+    if (moveToRowId > refRows.length - 1) {
+      moveToRowId = refRows.length - 1;
     }
 
     if (currentCell == null) {
@@ -515,9 +525,18 @@ mixin KeyboardState implements ITrinaGridState {
     clearCurrentSelecting(notify: false);
 
     setCurrentSelectingPosition(
-      cellPosition: TrinaGridCellPosition(columnIdx: columnIdx, rowIdx: rowIdx),
+      cellPosition:
+          TrinaGridCellPosition(columnIdx: columnIdx, rowIdx: moveToRowId),
     );
-
+    if (currentCellPosition?.hasPosition != true) {
+      setCurrentCellPosition(
+        TrinaGridCellPosition(
+          rowIdx: currentRowIdx,
+          columnIdx: columnIndex(currentCell!.column),
+        ),
+        notify: false,
+      );
+    }
     if (selectingMode.isRow) {
       selectRowsInRange(
         currentCellPosition?.rowIdx,
