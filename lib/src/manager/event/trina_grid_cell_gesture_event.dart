@@ -83,15 +83,20 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
     if (stateManager.selectingMode.isDisabled) {
       return;
     }
+
     if (stateManager.selectingMode.isCellWithCtrl) {
-      if (stateManager.currentCell != null &&
+      final isCurrentCell = stateManager.isCurrentCell(cell);
+      final wasSelected = stateManager.isSelectedCell(cell);
+      if (!isCurrentCell &&
+          stateManager.currentCell != null &&
           stateManager.selectedCells.isEmpty) {
         stateManager.toggleCellSelection(stateManager.currentCell!);
       }
       stateManager.toggleCellSelection(cell);
-      // This is to update the current cell color if it became unselected
-      if (stateManager.isCurrentCell(cell) &&
-          !stateManager.isSelectedCell(cell)) {
+      // Check after toggling the cell selection state
+      final isNotCurrentlySelected = !stateManager.isSelectedCell(cell);
+      // This is to update the current cell color if it was selected and became unselected
+      if (isCurrentCell && wasSelected && isNotCurrentlySelected) {
         stateManager.clearCurrentCell();
       }
     }
