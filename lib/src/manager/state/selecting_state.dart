@@ -73,8 +73,8 @@ abstract class ISelectingState {
     bool notify = true,
   });
 
-  /// Whether the cell is the currently multi selected cell.
-  bool isSelectedCell(TrinaCell cell, TrinaColumn column, int rowIdx);
+  /// Whether the cell is currently selected.
+  bool isSelectedCell(TrinaCell cell);
 
   /// The action that is selected in the Select dialog
   /// and processed after the dialog is closed.
@@ -473,7 +473,7 @@ mixin SelectingState implements ITrinaGridState {
   }
 
   @override
-  bool isSelectedCell(TrinaCell cell, TrinaColumn column, int rowIdx) {
+  bool isSelectedCell(TrinaCell cell) {
     if (selectingMode.isDisabled) {
       return false;
     }
