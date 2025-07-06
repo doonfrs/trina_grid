@@ -356,7 +356,7 @@ class TrinaGridActionDefaultEnterKey extends TrinaGridShortcutAction {
       if (stateManager.currentCell != null) {
         // Handle row vs cell selection based on selecting mode
         stateManager.selectingMode.isRow
-            ? stateManager.toggleSelectingRow(
+            ? stateManager.toggleRowSelection(
                 stateManager.currentRowIdx!,
                 notify: false,
               )

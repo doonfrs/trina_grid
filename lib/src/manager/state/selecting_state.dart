@@ -57,7 +57,7 @@ abstract class ISelectingState {
   void clearCurrentSelecting({bool notify = true});
 
   /// Select or unselect a row.
-  void toggleSelectingRow(int rowIdx, {bool notify = true});
+  void toggleRowSelection(int rowIdx, {bool notify = true});
 
   bool isSelectingInteraction();
 
@@ -374,7 +374,7 @@ mixin SelectingState implements ITrinaGridState {
   }
 
   @override
-  void toggleSelectingRow(int? rowIdx, {notify = true}) {
+  void toggleRowSelection(int? rowIdx, {notify = true}) {
     if (!selectingMode.isRow) {
       return;
     }
@@ -393,7 +393,7 @@ mixin SelectingState implements ITrinaGridState {
     }
     _updateSortedRows();
 
-    notifyListeners(notify, toggleSelectingRow.hashCode);
+    notifyListeners(notify, toggleRowSelection.hashCode);
   }
 
   @override

@@ -389,10 +389,10 @@ mixin KeyboardState implements ITrinaGridState {
 
       if (isShrinkingSelection) {
         // If we are shrinking, unselect the row we just moved away from.
-        toggleSelectingRow(oldEndRow, notify: false);
+        toggleRowSelection(oldEndRow, notify: false);
       } else {
         // If we are extending, select the new row
-        toggleSelectingRow(newEndRow, notify: false);
+        toggleRowSelection(newEndRow, notify: false);
       }
     }
   }
