@@ -58,7 +58,7 @@ stateManager.selectRowsInRange(2, 5);
 
 ```dart
 // Toggle selection state of the row at index 3
-stateManager.toggleSelectingRow(3);
+stateManager.toggleRowSelection(3);
 ```
 
 ### Clearing Selection

@@ -105,11 +105,11 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
       // If no rows are currently selected and the current row is different from the tapped row,
       // ensure the current row is included in the selection.
       if (stateManager.selectedRows.isEmpty && currentRowIdx != rowIdx) {
-        stateManager.toggleSelectingRow(currentRowIdx);
+        stateManager.toggleRowSelection(currentRowIdx);
       }
 
       // Always toggle the selection state of the tapped row.
-      stateManager.toggleSelectingRow(rowIdx);
+      stateManager.toggleRowSelection(rowIdx);
     }
 
     _setCurrentSelectionPosition(stateManager);
@@ -209,7 +209,7 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
   void _onDoubleTap(TrinaGridStateManager stateManager) {
     if (stateManager.mode.isPopup && stateManager.selectingMode.isEnabled) {
       if (stateManager.selectingMode.isRow) {
-        stateManager.toggleSelectingRow(rowIdx);
+        stateManager.toggleRowSelection(rowIdx);
       } else {
         stateManager.toggleCellSelection(cell);
       }
@@ -273,7 +273,7 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
       stateManager.setEditing(false);
     }
     if (stateManager.selectingMode.isRowWithSingleTap) {
-      stateManager.toggleSelectingRow(rowIdx);
+      stateManager.toggleRowSelection(rowIdx);
     }
     if (stateManager.selectingMode.isCellWithSingleTap) {
       stateManager.toggleCellSelection(cell);
