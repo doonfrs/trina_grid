@@ -71,8 +71,7 @@ void main() {
         when(stateManager.dragRows).thenReturn(dragRows);
         when(stateManager.isSelectedRow(any)).thenReturn(isSelectedRow);
         when(stateManager.isCurrentCell(any)).thenReturn(isCurrentCell);
-        when(stateManager.isSelectedCell(any, any, any))
-            .thenReturn(isSelectedCell);
+        when(stateManager.isSelectedCell(any)).thenReturn(isSelectedCell);
 
         // given
         columns = ColumnHelper.textColumn('header', count: 3);

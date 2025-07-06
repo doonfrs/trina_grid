@@ -3696,12 +3696,36 @@ class MockTrinaGridStateManager extends _i1.Mock
   ) =>
       (super.noSuchMethod(
         Invocation.method(
-          #isSelectedCell,
+          #toggleCellSelection,
+          [cell],
+          {#notify: notify},
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void selectCellsInRange(
+    _i2.TrinaGridCellPosition? startPosition,
+    _i2.TrinaGridCellPosition? endPosition, {
+    bool? notify = true,
+  }) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #selectCellsInRange,
           [
-            cell,
-            column,
-            rowIdx,
+            startPosition,
+            endPosition,
           ],
+          {#notify: notify},
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  bool isSelectedCell(_i2.TrinaCell? cell) => (super.noSuchMethod(
+        Invocation.method(
+          #isSelectedCell,
+          [cell],
         ),
         returnValue: false,
         returnValueForMissingStub: false,

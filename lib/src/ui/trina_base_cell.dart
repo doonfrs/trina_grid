@@ -216,11 +216,7 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
         readOnly: widget.column.checkReadOnly(widget.row, widget.cell),
         isEditing: stateManager.isEditing,
         isCurrentCell: isCurrentCell,
-        isSelectedCell: stateManager.isSelectedCell(
-          widget.cell,
-          widget.column,
-          widget.rowIdx,
-        ),
+        isSelectedCell: stateManager.isSelectedCell(widget.cell),
         isGroupedRowCell: stateManager.enabledRowGroups &&
             stateManager.rowGroupDelegate!.isExpandableCell(widget.cell),
         enableCellVerticalBorder: style.enableCellBorderVertical,

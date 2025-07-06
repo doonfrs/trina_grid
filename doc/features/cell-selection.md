@@ -99,7 +99,7 @@ stateManager.setCurrentCell(
 );
 
 // Check if a cell is selected
-bool isSelected = stateManager.isSelectedCell(cell, column, rowIdx);
+bool isSelected = stateManager.isSelectedCell(cell);
 
 // Get current selection information
 TrinaGridCellPosition? currentPosition = stateManager.currentCellPosition;
