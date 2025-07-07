@@ -188,7 +188,10 @@ class TrinaFeatures extends StatefulWidget {
 class _TrinaFeaturesState extends State<TrinaFeatures> {
   final Icon newIcon = const Icon(Icons.fiber_new, color: Colors.deepOrange);
 
-  final Icon updateIcon = const Icon(Icons.update, color: Colors.deepOrange);
+  final updateIcon = Tooltip(
+    message: 'This feature has been improved',
+    child: const Icon(Icons.update, color: Colors.deepOrange),
+  );
 
   String _searchQuery = '';
 
@@ -375,10 +378,11 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
       TrinaListTile(
         title: 'Row selection',
         description:
-            'In Row selection mode, Shift + tap or long tap and then move or Control + tap to select a row.',
+            'Select rows with single tap, CTRL, long press, or keyboard.',
         onTapLiveDemo: () {
           Navigator.pushNamed(context, RowSelectionScreen.routeName);
         },
+        trailing: updateIcon,
       ),
       TrinaListTile(
         title: 'Row moving',
@@ -458,11 +462,11 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
       ),
       TrinaListTile(
         title: 'Cell selection',
-        description:
-            'In cell selection mode, Shift + tap or long tap and then move to select cells.',
+        description: 'Select cells with single tap, CTRL, or keyboard.',
         onTapLiveDemo: () {
           Navigator.pushNamed(context, CellSelectionScreen.routeName);
         },
+        trailing: updateIcon,
       ),
       TrinaListTile(
         title: 'Column renderer',
