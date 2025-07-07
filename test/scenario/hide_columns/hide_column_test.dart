@@ -123,7 +123,7 @@ void main() {
 
         await tester.tap(headerCheckbox0, warnIfMissed: false);
 
-        await tester.pump();
+        await tester.pumpAndSettle(Duration(seconds: 1));
 
         expect(stateManager.refColumns.length, 9);
 
@@ -175,7 +175,7 @@ void main() {
 
         await tester.tap(headerCheckbox0, warnIfMissed: false);
 
-        await tester.pump();
+        await tester.pumpAndSettle(Duration(seconds: 1));
 
         expect(stateManager.refColumns.length, 10);
 
