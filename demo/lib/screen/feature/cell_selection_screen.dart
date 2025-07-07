@@ -21,6 +21,11 @@ class _CellSelectionScreenState extends State<CellSelectionScreen> {
 
   late TrinaGridStateManager stateManager;
 
+  TrinaGridSelectingMode currentSelectingMode =
+      TrinaGridSelectingMode.cellWithSingleTap;
+
+  String selectedValues = '';
+
   @override
   void initState() {
     super.initState();
@@ -33,21 +38,6 @@ class _CellSelectionScreenState extends State<CellSelectionScreen> {
   }
 
   void handleSelected() async {
-    String value = '';
-
-    for (var element in stateManager.currentSelectingPositionList) {
-      final cellValue = stateManager
-          .rows[element.rowIdx!].cells[element.field!]!.value
-          .toString();
-
-      value +=
-          'rowIdx: ${element.rowIdx}, field: ${element.field}, value: $cellValue\n';
-    }
-
-    if (value.isEmpty) {
-      value = 'No cells are selected.';
-    }
-
     await showDialog<void>(
         context: context,
         builder: (BuildContext ctx) {
@@ -63,7 +53,7 @@ class _CellSelectionScreenState extends State<CellSelectionScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(value),
+                        Text(selectedValues),
                       ],
                     ),
                   ),
@@ -74,14 +64,100 @@ class _CellSelectionScreenState extends State<CellSelectionScreen> {
         });
   }
 
+  String _getSelected(List<TrinaCell>? selectedCells) {
+    if (selectedCells == null || selectedCells.isEmpty) {
+      return 'No cells are selected.';
+    }
+
+    String value = '';
+    for (var cell in selectedCells) {
+      value +=
+          'rowIdx: ${cell.row.sortIdx}, field: ${cell.column.field}, value: ${cell.value}\n';
+    }
+    return value;
+  }
+
+  void changeSelectingMode(TrinaGridSelectingMode? mode) {
+    if (mode == null) {
+      return;
+    }
+    stateManager.setSelectingMode(mode);
+    setState(() {
+      currentSelectingMode = mode;
+      selectedValues = _getSelected(stateManager.selectedCells);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return TrinaExampleScreen(
       title: 'Cell selection',
       topTitle: 'Cell selection',
-      topContents: const [
+      topContents: [
         Text(
-            'In cell selection mode, Shift + tap or long tap and then move to select cells.'),
+          '''Range Selection:
+          - Shift + Click: Select a range of cells from the currently selected cell to the clicked cell.
+          - Long Press and Drag: Press and hold on a cell, then drag to select multiple consecutive cells.
+          ''',
+        ),
+        SizedBox(
+          width: double.infinity,
+          child: OverflowBar(
+            alignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(width: 200, child: Text('Choose selecting mode:')),
+              SizedBox(
+                width: 200,
+                child: RadioListTile(
+                  value: TrinaGridSelectingMode.cellWithSingleTap,
+                  groupValue: currentSelectingMode,
+                  onChanged: changeSelectingMode,
+                  title: const Text('Single tap'),
+                ),
+              ),
+              SizedBox(
+                width: 200,
+                child: RadioListTile(
+                  value: TrinaGridSelectingMode.cellWithCtrl,
+                  groupValue: currentSelectingMode,
+                  onChanged: changeSelectingMode,
+                  title: const Text('Ctrl + Click'),
+                ),
+              ),
+              SizedBox(
+                width: 200,
+                child: RadioListTile(
+                  value: TrinaGridSelectingMode.disabled,
+                  groupValue: currentSelectingMode,
+                  onChanged: changeSelectingMode,
+                  title: const Text('Disabled'),
+                ),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'onSelected output (Scroll if you need):\n',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(
+                    height: 100,
+                    child: Scrollbar(
+                      thumbVisibility: true,
+                      child: SingleChildScrollView(
+                        primary: true,
+                        child: Text(selectedValues),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ],
       topButtons: [
         TrinaExampleButton(
@@ -109,11 +185,17 @@ class _CellSelectionScreenState extends State<CellSelectionScreen> {
               onChanged: (TrinaGridOnChangedEvent event) {
                 print(event);
               },
+              onSelected: (event) => setState(() {
+                selectedValues = _getSelected(event.selectedCells);
+              }),
               onLoaded: (TrinaGridOnLoadedEvent event) {
                 event.stateManager
-                    .setSelectingMode(TrinaGridSelectingMode.cell);
+                    .setSelectingMode(TrinaGridSelectingMode.cellWithSingleTap);
 
                 stateManager = event.stateManager;
+                setState(() {
+                  currentSelectingMode = stateManager.selectingMode;
+                });
               },
             ),
           ),

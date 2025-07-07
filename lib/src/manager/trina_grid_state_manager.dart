@@ -80,7 +80,7 @@ class TrinaGridStateChangeNotifier extends TrinaChangeNotifier
     this.onSelected,
     this.onSorted,
     this.onRowChecked,
-    this.onRowDoubleTap,
+    this.onDoubleTap,
     this.onRowSecondaryTap,
     this.onRowEnter,
     this.onRowExit,
@@ -156,7 +156,7 @@ class TrinaGridStateChangeNotifier extends TrinaChangeNotifier
   final TrinaOnRowCheckedEventCallback? onRowChecked;
 
   @override
-  final TrinaOnRowDoubleTapEventCallback? onRowDoubleTap;
+  final TrinaOnDoubleTapEventCallback? onDoubleTap;
 
   @override
   final TrinaOnRowSecondaryTapEventCallback? onRowSecondaryTap;
@@ -314,7 +314,7 @@ class TrinaGridStateManager extends TrinaGridStateChangeNotifier {
     super.onSelected,
     super.onSorted,
     super.onRowChecked,
-    super.onRowDoubleTap,
+    super.onDoubleTap,
     super.onRowSecondaryTap,
     super.onRowEnter,
     super.onRowExit,
@@ -623,31 +623,50 @@ class TrinaGridKeyPressed {
   }
 }
 
-/// A type of selection mode when you select a row or cell in a grid
-/// by tapping and holding, then moving the pointer
-/// or selecting a row or cell in the grid with controls or shift and tap.
-///
-/// [TrinaGridSelectingMode.cell] selects each cell.
-///
-/// [TrinaGridSelectingMode.row] selects row by row.
-///
-/// [TrinaGridSelectingMode.none] does nothing.
+/// Defines how cells or rows can be selected.
 enum TrinaGridSelectingMode {
-  cell,
-  row,
-  none,
+  cellWithCtrl,
+  cellWithSingleTap,
 
-  /// using only internal
-  horizontal;
+  rowWithCtrl,
+  rowWithSingleTap,
 
-  bool get isCell => this == TrinaGridSelectingMode.cell;
+  /// Disables selection functionality.
+  /// [TrinaGrid.onSelected] callback will not be triggered.
+  disabled;
 
-  bool get isRow => this == TrinaGridSelectingMode.row;
+  bool get isSingleTapSelection =>
+      this == TrinaGridSelectingMode.cellWithSingleTap ||
+      this == TrinaGridSelectingMode.rowWithSingleTap;
 
-  bool get isNone => this == TrinaGridSelectingMode.none;
+  bool get isNotSingleTapSelection =>
+      this != TrinaGridSelectingMode.cellWithSingleTap &&
+      this != TrinaGridSelectingMode.rowWithSingleTap;
 
-  /// using only internal
-  bool get isHorizontal => this == TrinaGridSelectingMode.horizontal;
+  bool get isSelectWithCTRL =>
+      this == TrinaGridSelectingMode.cellWithCtrl ||
+      this == TrinaGridSelectingMode.rowWithCtrl;
+
+  bool get isCell =>
+      this == TrinaGridSelectingMode.cellWithCtrl ||
+      this == TrinaGridSelectingMode.cellWithSingleTap;
+
+  bool get isRow =>
+      this == TrinaGridSelectingMode.rowWithCtrl ||
+      this == TrinaGridSelectingMode.rowWithSingleTap;
+
+  bool get isRowWithCtrl => this == TrinaGridSelectingMode.rowWithCtrl;
+
+  bool get isRowWithSingleTap =>
+      this == TrinaGridSelectingMode.rowWithSingleTap;
+
+  bool get isCellWithCtrl => this == TrinaGridSelectingMode.cellWithCtrl;
+
+  bool get isCellWithSingleTap =>
+      this == TrinaGridSelectingMode.cellWithSingleTap;
+
+  bool get isDisabled => this == TrinaGridSelectingMode.disabled;
+  bool get isEnabled => this != TrinaGridSelectingMode.disabled;
 }
 
 abstract class _Apply {

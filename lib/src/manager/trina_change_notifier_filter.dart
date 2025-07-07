@@ -140,10 +140,10 @@ abstract class TrinaChangeNotifierFilterResolver {
       stateManager.setSelectingMode.hashCode: 'setSelectingMode',
       stateManager.setCurrentSelectingPosition.hashCode:
           'setCurrentSelectingPosition',
-      stateManager.setCurrentSelectingRowsByRange.hashCode:
-          'setCurrentSelectingRowsByRange',
+      stateManager.selectRowsInRange.hashCode: 'selectRowsInRange',
+      stateManager.setSelectedRows.hashCode: 'setSelectedRows',
       stateManager.clearCurrentSelecting.hashCode: 'clearCurrentSelecting',
-      stateManager.toggleSelectingRow.hashCode: 'toggleSelectingRow',
+      stateManager.toggleRowSelection.hashCode: 'toggleRowSelection',
       stateManager.handleAfterSelectingRow.hashCode: 'handleAfterSelectingRow',
 
       /// hovering_state

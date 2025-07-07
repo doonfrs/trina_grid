@@ -172,34 +172,23 @@ class TrinaDualGridState extends State<TrinaDualGrid> {
           }
         },
         onChanged: props.onChanged,
-        onSelected: (TrinaGridOnSelectedEvent onSelectedEvent) {
-          if (onSelectedEvent.row == null || onSelectedEvent.cell == null) {
-            widget.onSelected!(
-              TrinaDualOnSelectedEvent(
-                gridA: null,
-                gridB: null,
+        onSelected: (TrinaGridOnSelectedEvent event) {
+          widget.onSelected?.call(
+            TrinaDualOnSelectedEvent(
+              gridA: TrinaGridOnSelectedEvent(
+                selectedCells: getGridSelectedCells(_stateManagerA),
+                selectedRows: _stateManagerA.selectedRows,
               ),
-            );
-          } else {
-            widget.onSelected!(
-              TrinaDualOnSelectedEvent(
-                gridA: TrinaGridOnSelectedEvent(
-                  row: _stateManagerA.currentRow,
-                  rowIdx: _stateManagerA.currentRowIdx,
-                  cell: _stateManagerA.currentCell,
-                ),
-                gridB: TrinaGridOnSelectedEvent(
-                  row: _stateManagerB.currentRow,
-                  rowIdx: _stateManagerB.currentRowIdx,
-                  cell: _stateManagerB.currentCell,
-                ),
+              gridB: TrinaGridOnSelectedEvent(
+                selectedCells: getGridSelectedCells(_stateManagerB),
+                selectedRows: _stateManagerB.selectedRows,
               ),
-            );
-          }
+            ),
+          );
         },
         onSorted: props.onSorted,
         onRowChecked: props.onRowChecked,
-        onRowDoubleTap: props.onRowDoubleTap,
+        onDoubleTap: props.onDoubleTap,
         onRowSecondaryTap: props.onRowSecondaryTap,
         onRowsMoved: props.onRowsMoved,
         onColumnsMoved: props.onColumnsMoved,
@@ -213,6 +202,18 @@ class TrinaDualGridState extends State<TrinaDualGrid> {
         key: props.key,
       ),
     );
+  }
+
+  /// Returns the currently selected cells for a grid.
+  ///
+  /// In a dual grid context, when a user selects from one grid, the other grid's
+  /// current cell should be considered as selected (even if not explicitly selected)
+  /// to maintain selection synchronization between the two grids.
+  List<TrinaCell> getGridSelectedCells(TrinaGridStateManager stateManager) {
+    return stateManager.selectedCells.isEmpty &&
+            stateManager.currentCell != null
+        ? [stateManager.currentCell!]
+        : stateManager.selectedCells;
   }
 
   @override
@@ -508,13 +509,13 @@ class TrinaDualGridLayoutDelegate extends MultiChildLayoutDelegate {
 }
 
 class TrinaDualOnSelectedEvent {
-  TrinaGridOnSelectedEvent? gridA;
+  TrinaGridOnSelectedEvent gridA;
 
-  TrinaGridOnSelectedEvent? gridB;
+  TrinaGridOnSelectedEvent gridB;
 
   TrinaDualOnSelectedEvent({
-    this.gridA,
-    this.gridB,
+    required this.gridA,
+    required this.gridB,
   });
 }
 
@@ -618,8 +619,8 @@ class TrinaDualGridProps {
   /// {@macro trina_grid_property_onRowChecked}
   final TrinaOnRowCheckedEventCallback? onRowChecked;
 
-  /// {@macro trina_grid_property_onRowDoubleTap}
-  final TrinaOnRowDoubleTapEventCallback? onRowDoubleTap;
+  /// {@macro trina_grid_property_onDoubleTap}
+  final TrinaOnDoubleTapEventCallback? onDoubleTap;
 
   /// {@macro trina_grid_property_onRowSecondaryTap}
   final TrinaOnRowSecondaryTapEventCallback? onRowSecondaryTap;
@@ -670,7 +671,7 @@ class TrinaDualGridProps {
     this.onChanged,
     this.onSorted,
     this.onRowChecked,
-    this.onRowDoubleTap,
+    this.onDoubleTap,
     this.onRowSecondaryTap,
     this.onRowsMoved,
     this.onColumnsMoved,
@@ -692,7 +693,7 @@ class TrinaDualGridProps {
     TrinaOptional<TrinaOnChangedEventCallback?>? onChanged,
     TrinaOptional<TrinaOnSortedEventCallback?>? onSorted,
     TrinaOptional<TrinaOnRowCheckedEventCallback?>? onRowChecked,
-    TrinaOptional<TrinaOnRowDoubleTapEventCallback?>? onRowDoubleTap,
+    TrinaOptional<TrinaOnDoubleTapEventCallback?>? onDoubleTap,
     TrinaOptional<TrinaOnRowSecondaryTapEventCallback?>? onRowSecondaryTap,
     TrinaOptional<TrinaOnRowsMovedEventCallback?>? onRowsMoved,
     TrinaOptional<TrinaOnColumnsMovedEventCallback?>? onColumnsMoved,
@@ -715,8 +716,7 @@ class TrinaDualGridProps {
       onSorted: onSorted == null ? this.onSorted : onSorted.value,
       onRowChecked:
           onRowChecked == null ? this.onRowChecked : onRowChecked.value,
-      onRowDoubleTap:
-          onRowDoubleTap == null ? this.onRowDoubleTap : onRowDoubleTap.value,
+      onDoubleTap: onDoubleTap == null ? this.onDoubleTap : onDoubleTap.value,
       onRowSecondaryTap: onRowSecondaryTap == null
           ? this.onRowSecondaryTap
           : onRowSecondaryTap.value,

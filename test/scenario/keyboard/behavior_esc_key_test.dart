@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 import '../../helper/column_helper.dart';
@@ -56,20 +55,11 @@ void main() {
       );
     }
 
-    withTheCellSelected(TrinaGridMode.select).test(
-      'When the grid is in Select mode, the onSelected event should be triggered.',
-      (tester) async {
-        verify(mock.oneParamReturnVoid(any)).called(1);
-
-        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
-      },
-    );
-
-    withTheCellSelected().test(
-      'When the grid is not in Select mode and is in editing state, '
+    withTheCellSelected(TrinaGridMode.normal).test(
+      'When the grid is in editing state, '
       'editing should be set to false.',
       (tester) async {
-        expect(stateManager!.mode.isSelect, isFalse);
+        expect(stateManager!.mode.isNormal, isTrue);
 
         stateManager!.setEditing(true);
 
@@ -80,11 +70,9 @@ void main() {
     );
 
     withTheCellSelected().test(
-      'When the grid is not in Select mode and the cell value has changed, '
+      'When the cell value has changed, '
       'the cell value should be restored to its original value.',
       (tester) async {
-        expect(stateManager!.mode.isSelect, isFalse);
-
         expect(stateManager!.currentCell!.value, 'header0 value 0');
 
         await tester.sendKeyEvent(LogicalKeyboardKey.keyA);

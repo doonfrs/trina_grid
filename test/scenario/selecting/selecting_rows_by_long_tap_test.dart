@@ -36,10 +36,10 @@ void main() {
           tester: tester,
         );
 
-        expect(grid.stateManager.currentSelectingRows.length, 1);
+        expect(grid.stateManager.selectedRows.length, 1);
 
         expect(
-          grid.stateManager.currentSelectingRows[0],
+          grid.stateManager.selectedRows[0],
           grid.stateManager.refRows[0],
         );
       },

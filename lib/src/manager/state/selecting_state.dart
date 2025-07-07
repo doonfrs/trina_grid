@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:trina_grid/trina_grid.dart';
 
@@ -8,28 +7,17 @@ abstract class ISelectingState {
   /// Multi-selection state.
   bool get isSelecting;
 
-  /// [selectingMode]
+  /// The selecting mode of the grid.
   TrinaGridSelectingMode get selectingMode;
 
   /// Current position of multi-select cell.
   /// Calculate the currently selected cell and its multi-selection range.
   TrinaGridCellPosition? get currentSelectingPosition;
 
-  /// Position list of currently selected.
-  /// Only valid in [TrinaGridSelectingMode.cell].
-  ///
-  /// ```dart
-  /// stateManager.currentSelectingPositionList.forEach((element) {
-  ///   final cellValue = stateManager.rows[element.rowIdx].cells[element.field].value;
-  /// });
-  /// ```
-  List<TrinaGridSelectingCellPosition> get currentSelectingPositionList;
-
   bool get hasCurrentSelectingPosition;
 
-  /// Rows of currently selected.
-  /// Only valid in [TrinaGridSelectingMode.row].
-  List<TrinaRow> get currentSelectingRows;
+  /// Currently selected rows.
+  List<TrinaRow> get selectedRows;
 
   /// String of multi-selected cells.
   /// Preserves the structure of the cells selected by the tabs and the enter key.
@@ -39,12 +27,6 @@ abstract class ISelectingState {
   void setSelecting(bool flag, {bool notify = true});
 
   /// Set the mode to select cells or rows.
-  ///
-  /// If [TrinaGrid.mode] is [TrinaGridMode.select] or [TrinaGridMode.selectWithOneTap]
-  /// Coerced to [TrinaGridSelectingMode.none] regardless of [selectingMode] value.
-  ///
-  /// When [TrinaGrid.mode] is [TrinaGridMode.multiSelect]
-  /// Coerced to [TrinaGridSelectingMode.row] regardless of [selectingMode] value.
   void setSelectingMode(
     TrinaGridSelectingMode selectingMode, {
     bool notify = true,
@@ -63,23 +45,36 @@ abstract class ISelectingState {
   /// Sets the position of a multi-selected cell.
   void setCurrentSelectingPositionWithOffset(Offset offset);
 
-  /// Sets the currentSelectingRows by range.
+  /// Sets the selectedRows by range.
   /// [from] rowIdx of rows.
   /// [to] rowIdx of rows.
-  void setCurrentSelectingRowsByRange(int from, int to, {bool notify = true});
+  /// If [from] or [to] is null, it is set to [currentRowIdx].
+  void selectRowsInRange(int? from, int? to, {bool notify = true});
+
+  void setSelectedRows(List<TrinaRow> rows, {bool notify = true});
 
   /// Resets currently selected rows and cells.
   void clearCurrentSelecting({bool notify = true});
 
   /// Select or unselect a row.
-  void toggleSelectingRow(int rowIdx, {bool notify = true});
+  void toggleRowSelection(int rowIdx, {bool notify = true});
 
   bool isSelectingInteraction();
 
   bool isSelectedRow(Key rowKey);
 
-  /// Whether the cell is the currently multi selected cell.
-  bool isSelectedCell(TrinaCell cell, TrinaColumn column, int rowIdx);
+  /// Currently selected cells.
+  List<TrinaCell> get selectedCells;
+
+  void toggleCellSelection(TrinaCell cell, {bool notify = true});
+  void selectCellsInRange(
+    TrinaGridCellPosition startPosition,
+    TrinaGridCellPosition endPosition, {
+    bool notify = true,
+  });
+
+  /// Whether the cell is currently selected.
+  bool isSelectedCell(TrinaCell cell);
 
   /// The action that is selected in the Select dialog
   /// and processed after the dialog is closed.
@@ -89,9 +84,12 @@ abstract class ISelectingState {
 class _State {
   bool _isSelecting = false;
 
-  TrinaGridSelectingMode _selectingMode = TrinaGridSelectingMode.cell;
+  TrinaGridSelectingMode _selectingMode =
+      TrinaGridSelectingMode.cellWithSingleTap;
 
-  List<TrinaRow> _currentSelectingRows = [];
+  final Map<String, TrinaRow> _selectedRows = {};
+  List<TrinaRow> _sortedRows = [];
+  final Map<String, TrinaCell> _selectedCells = {};
 
   TrinaGridCellPosition? _currentSelectingPosition;
 }
@@ -106,46 +104,22 @@ mixin SelectingState implements ITrinaGridState {
   TrinaGridSelectingMode get selectingMode => _state._selectingMode;
 
   @override
-  TrinaGridCellPosition? get currentSelectingPosition =>
-      _state._currentSelectingPosition;
+  get selectedCells => _state._selectedCells.values.toList();
 
   @override
-  List<TrinaGridSelectingCellPosition> get currentSelectingPositionList {
-    if (currentCellPosition == null || currentSelectingPosition == null) {
-      return [];
-    }
-
-    switch (selectingMode) {
-      case TrinaGridSelectingMode.cell:
-        return _selectingCells();
-      case TrinaGridSelectingMode.horizontal:
-        return _selectingCellsHorizontally();
-      case TrinaGridSelectingMode.row:
-      case TrinaGridSelectingMode.none:
-        return [];
-    }
-  }
+  TrinaGridCellPosition? get currentSelectingPosition =>
+      _state._currentSelectingPosition;
 
   @override
   bool get hasCurrentSelectingPosition => currentSelectingPosition != null;
 
   @override
-  List<TrinaRow> get currentSelectingRows {
-    List<TrinaRow> rows = [];
-    rows = _state._currentSelectingRows;
-    if (currentRowIdx != null && selectingMode.isRow) {
-      if (!rows.contains(refRows[currentRowIdx!])) {
-        rows.add(refRows[currentRowIdx!]);
-      }
-      rows.sort((a, b) => a.sortIdx.compareTo(b.sortIdx));
-    }
-    return rows;
-  }
+  List<TrinaRow> get selectedRows => _state._sortedRows;
 
   @override
   String get currentSelectingText {
     final bool fromSelectingRows =
-        selectingMode.isRow && currentSelectingRows.isNotEmpty;
+        selectingMode.isRow && selectedRows.isNotEmpty;
 
     final bool fromSelectingPosition =
         currentCellPosition != null && currentSelectingPosition != null;
@@ -165,7 +139,7 @@ mixin SelectingState implements ITrinaGridState {
 
   @override
   void setSelecting(bool flag, {bool notify = true}) {
-    if (selectingMode.isNone) {
+    if (selectingMode.isDisabled) {
       return;
     }
 
@@ -192,19 +166,14 @@ mixin SelectingState implements ITrinaGridState {
     TrinaGridSelectingMode selectingMode, {
     bool notify = true,
   }) {
-    if (mode.isSingleSelectMode) {
-      selectingMode = TrinaGridSelectingMode.none;
-    } else if (mode.isMultiSelectMode) {
-      selectingMode = TrinaGridSelectingMode.row;
-    }
-
     if (_state._selectingMode == selectingMode) {
       return;
     }
-
-    _state._currentSelectingRows = [];
-
     _state._currentSelectingPosition = null;
+
+    _clearSelectedRows(notify: false);
+
+    _clearSelectedCells(notify: false);
 
     _state._selectingMode = selectingMode;
 
@@ -218,8 +187,8 @@ mixin SelectingState implements ITrinaGridState {
     }
 
     switch (selectingMode) {
-      case TrinaGridSelectingMode.cell:
-      case TrinaGridSelectingMode.horizontal:
+      case TrinaGridSelectingMode.cellWithCtrl:
+      case TrinaGridSelectingMode.cellWithSingleTap:
         _setFistCellAsCurrent();
 
         setCurrentSelectingPosition(
@@ -229,7 +198,8 @@ mixin SelectingState implements ITrinaGridState {
           ),
         );
         break;
-      case TrinaGridSelectingMode.row:
+      case TrinaGridSelectingMode.rowWithCtrl:
+      case TrinaGridSelectingMode.rowWithSingleTap:
         if (currentCell == null) {
           _setFistCellAsCurrent();
         }
@@ -239,9 +209,9 @@ mixin SelectingState implements ITrinaGridState {
           rowIdx: refRows.length - 1,
         );
 
-        setCurrentSelectingRowsByRange(0, refRows.length - 1);
+        selectRowsInRange(0, refRows.length - 1);
         break;
-      case TrinaGridSelectingMode.none:
+      case TrinaGridSelectingMode.disabled:
         break;
     }
   }
@@ -251,7 +221,7 @@ mixin SelectingState implements ITrinaGridState {
     TrinaGridCellPosition? cellPosition,
     bool notify = true,
   }) {
-    if (selectingMode.isNone) {
+    if (selectingMode.isDisabled) {
       return;
     }
 
@@ -261,14 +231,6 @@ mixin SelectingState implements ITrinaGridState {
 
     _state._currentSelectingPosition =
         isInvalidCellPosition(cellPosition) ? null : cellPosition;
-
-    if (currentSelectingPosition != null && selectingMode.isRow) {
-      setCurrentSelectingRowsByRange(
-        currentRowIdx,
-        currentSelectingPosition!.rowIdx,
-        notify: false,
-      );
-    }
 
     notifyListeners(notify, setCurrentSelectingPosition.hashCode);
   }
@@ -289,7 +251,7 @@ mixin SelectingState implements ITrinaGridState {
   }
 
   @override
-  void setCurrentSelectingPositionWithOffset(Offset? offset) {
+  void setCurrentSelectingPositionWithOffset(Offset offset) {
     if (currentCell == null) {
       return;
     }
@@ -305,7 +267,7 @@ mixin SelectingState implements ITrinaGridState {
         gridBodyOffsetDy -
         scroll.vertical!.offset;
 
-    if (gridBodyOffsetDy > offset!.dy) {
+    if (gridBodyOffsetDy > offset.dy) {
       return;
     }
 
@@ -348,7 +310,7 @@ mixin SelectingState implements ITrinaGridState {
   }
 
   @override
-  void setCurrentSelectingRowsByRange(
+  void selectRowsInRange(
     int? from,
     int? to, {
     bool notify = true,
@@ -357,30 +319,62 @@ mixin SelectingState implements ITrinaGridState {
       return;
     }
 
-    final maxFrom = min(from!, to!);
+    final safeFrom = from ?? currentRowIdx;
+    final safeTo = to ?? currentRowIdx;
 
-    final maxTo = max(from, to) + 1;
-
-    if (maxFrom < 0 || maxTo > refRows.length) {
+    if (safeFrom == null || safeTo == null) {
       return;
     }
 
-    _state._currentSelectingRows = refRows.getRange(maxFrom, maxTo).toList();
+    final maxFrom = min(safeFrom, safeTo);
+    final maxTo = max(safeFrom, safeTo);
 
-    notifyListeners(notify, setCurrentSelectingRowsByRange.hashCode);
+    if (maxFrom < 0 || maxTo >= refRows.length) {
+      return;
+    }
+
+    for (int i = maxFrom; i <= maxTo; i += 1) {
+      final TrinaRow row = refRows[i];
+      _state._selectedRows[row.key.toString()] = row;
+    }
+
+    _updateSortedRows();
+
+    notifyListeners(notify, selectRowsInRange.hashCode);
+  }
+
+  @override
+  void setSelectedRows(
+    List<TrinaRow> rows, {
+    bool notify = true,
+  }) {
+    if (!selectingMode.isRow) {
+      return;
+    }
+
+    _clearSelectedRows(notify: false);
+
+    for (final row in rows) {
+      _state._selectedRows[row.key.toString()] = row;
+    }
+
+    _updateSortedRows();
+
+    notifyListeners(notify, setSelectedRows.hashCode);
   }
 
   @override
   void clearCurrentSelecting({bool notify = true}) {
     _clearCurrentSelectingPosition(notify: false);
 
-    _clearCurrentSelectingRows(notify: false);
+    _clearSelectedRows(notify: false);
+    _clearSelectedCells(notify: false);
 
     notifyListeners(notify, clearCurrentSelecting.hashCode);
   }
 
   @override
-  void toggleSelectingRow(int? rowIdx, {notify = true}) {
+  void toggleRowSelection(int? rowIdx, {notify = true}) {
     if (!selectingMode.isRow) {
       return;
     }
@@ -391,142 +385,109 @@ mixin SelectingState implements ITrinaGridState {
 
     final TrinaRow row = refRows[rowIdx];
 
-    final keys = Set.from(currentSelectingRows.map((e) => e.key));
-
-    if (keys.contains(row.key)) {
-      currentSelectingRows.removeWhere((element) => element.key == row.key);
+    final rowKey = row.key.toString();
+    if (_state._selectedRows.containsKey(rowKey)) {
+      _state._selectedRows.remove(rowKey);
     } else {
-      currentSelectingRows.add(row);
+      _state._selectedRows[rowKey] = row;
+    }
+    _updateSortedRows();
+
+    notifyListeners(notify, toggleRowSelection.hashCode);
+  }
+
+  @override
+  void toggleCellSelection(TrinaCell cell, {bool notify = true}) {
+    if (!selectingMode.isCell) {
+      return;
     }
 
-    notifyListeners(notify, toggleSelectingRow.hashCode);
+    final cellKey = cell.key.toString();
+
+    if (_state._selectedCells.containsKey(cellKey)) {
+      _state._selectedCells.remove(cellKey);
+    } else {
+      _state._selectedCells[cellKey] = cell;
+    }
+
+    notifyListeners(notify, toggleCellSelection.hashCode);
+  }
+
+  @override
+  void selectCellsInRange(
+    TrinaGridCellPosition startPosition,
+    TrinaGridCellPosition endPosition, {
+    bool notify = true,
+  }) {
+    if (!selectingMode.isCell) {
+      return;
+    }
+
+    final columnIndexes = columnIndexesByShowFrozen;
+
+    int columnStartIdx = min(
+      startPosition.columnIdx!,
+      endPosition.columnIdx!,
+    );
+
+    int columnEndIdx = max(
+      startPosition.columnIdx!,
+      endPosition.columnIdx!,
+    );
+
+    int rowStartIdx = min(
+      startPosition.rowIdx!,
+      endPosition.rowIdx!,
+    );
+
+    int rowEndIdx = max(
+      startPosition.rowIdx!,
+      endPosition.rowIdx!,
+    );
+
+    for (int i = rowStartIdx; i <= rowEndIdx; i += 1) {
+      for (int j = columnStartIdx; j <= columnEndIdx; j += 1) {
+        final String field = refColumns[columnIndexes[j]].field;
+        final TrinaCell cell = refRows[i].cells[field]!;
+        _state._selectedCells[cell.key.toString()] = cell;
+      }
+    }
+
+    notifyListeners(notify, selectCellsInRange.hashCode);
   }
 
   @override
   bool isSelectingInteraction() {
-    return !selectingMode.isNone &&
+    return !selectingMode.isDisabled &&
         (keyPressed.shift || keyPressed.ctrl) &&
-        currentCell != null;
+        currentCellPosition != null;
   }
 
   @override
   bool isSelectedRow(Key? rowKey) {
-    if (rowKey == null ||
-        !selectingMode.isRow ||
-        currentSelectingRows.isEmpty) {
+    if (rowKey == null || !selectingMode.isRow || selectedRows.isEmpty) {
       return false;
     }
 
-    return currentSelectingRows.firstWhereOrNull(
-          (element) => element.key == rowKey,
-        ) !=
-        null;
+    return _state._selectedRows.containsKey(rowKey.toString());
   }
 
-  // todo : code cleanup
   @override
-  bool isSelectedCell(TrinaCell cell, TrinaColumn column, int rowIdx) {
-    if (selectingMode.isNone) {
+  bool isSelectedCell(TrinaCell cell) {
+    if (selectingMode.isDisabled) {
       return false;
     }
-
-    if (currentCellPosition == null) {
-      return false;
-    }
-
-    if (currentSelectingPosition == null) {
-      return false;
-    }
-
+    // If in cell selection mode (Ctrl or Single Tap), check if the cell is in the _selectedCells map.
     if (selectingMode.isCell) {
-      final bool inRangeOfRows = min(
-                currentCellPosition!.rowIdx as num,
-                currentSelectingPosition!.rowIdx as num,
-              ) <=
-              rowIdx &&
-          rowIdx <=
-              max(
-                currentCellPosition!.rowIdx!,
-                currentSelectingPosition!.rowIdx!,
-              );
+      return _state._selectedCells.containsKey(cell.key.toString());
+    }
 
-      if (inRangeOfRows == false) {
-        return false;
-      }
-
-      final int? columnIdx = columnIndex(column);
-
-      if (columnIdx == null) {
-        return false;
-      }
-
-      final bool inRangeOfColumns = min(
-                currentCellPosition!.columnIdx as num,
-                currentSelectingPosition!.columnIdx as num,
-              ) <=
-              columnIdx &&
-          columnIdx <=
-              max(
-                currentCellPosition!.columnIdx!,
-                currentSelectingPosition!.columnIdx!,
-              );
-
-      if (inRangeOfColumns == false) {
-        return false;
-      }
-
-      return true;
-    } else if (selectingMode.isHorizontal) {
-      int startRowIdx = min(
-        currentCellPosition!.rowIdx!,
-        currentSelectingPosition!.rowIdx!,
-      );
-
-      int endRowIdx = max(
-        currentCellPosition!.rowIdx!,
-        currentSelectingPosition!.rowIdx!,
-      );
-
-      final int? columnIdx = columnIndex(column);
-
-      if (columnIdx == null) {
-        return false;
-      }
-
-      int? startColumnIdx;
-
-      int? endColumnIdx;
-
-      if (currentCellPosition!.rowIdx! < currentSelectingPosition!.rowIdx!) {
-        startColumnIdx = currentCellPosition!.columnIdx;
-        endColumnIdx = currentSelectingPosition!.columnIdx;
-      } else if (currentCellPosition!.rowIdx! >
-          currentSelectingPosition!.rowIdx!) {
-        startColumnIdx = currentSelectingPosition!.columnIdx;
-        endColumnIdx = currentCellPosition!.columnIdx;
-      } else {
-        startColumnIdx = min(
-          currentCellPosition!.columnIdx!,
-          currentSelectingPosition!.columnIdx!,
-        );
-        endColumnIdx = max(
-          currentCellPosition!.columnIdx!,
-          currentSelectingPosition!.columnIdx!,
-        );
-      }
-
-      if (rowIdx == startRowIdx && startRowIdx == endRowIdx) {
-        return !(columnIdx < startColumnIdx! || columnIdx > endColumnIdx!);
-      } else if (rowIdx == startRowIdx && columnIdx >= startColumnIdx!) {
-        return true;
-      } else if (rowIdx == endRowIdx && columnIdx <= endColumnIdx!) {
-        return true;
-      } else if (rowIdx > startRowIdx && rowIdx < endRowIdx) {
-        return true;
-      }
-
+    // For range selection modes (horizontal), use the range logic.
+    if (currentCellPosition == null || currentSelectingPosition == null) {
       return false;
-    } else if (selectingMode.isRow) {
+    }
+
+    if (selectingMode.isRow) {
       return false;
     } else {
       throw Exception('selectingMode is not handled');
@@ -548,94 +509,12 @@ mixin SelectingState implements ITrinaGridState {
     notifyListeners(true, handleAfterSelectingRow.hashCode);
   }
 
-  List<TrinaGridSelectingCellPosition> _selectingCells() {
-    final List<TrinaGridSelectingCellPosition> positions = [];
-
-    final columnIndexes = columnIndexesByShowFrozen;
-
-    int columnStartIdx = min(
-      currentCellPosition!.columnIdx!,
-      currentSelectingPosition!.columnIdx!,
-    );
-
-    int columnEndIdx = max(
-      currentCellPosition!.columnIdx!,
-      currentSelectingPosition!.columnIdx!,
-    );
-
-    int rowStartIdx = min(
-      currentCellPosition!.rowIdx!,
-      currentSelectingPosition!.rowIdx!,
-    );
-
-    int rowEndIdx = max(
-      currentCellPosition!.rowIdx!,
-      currentSelectingPosition!.rowIdx!,
-    );
-
-    for (int i = rowStartIdx; i <= rowEndIdx; i += 1) {
-      for (int j = columnStartIdx; j <= columnEndIdx; j += 1) {
-        final String field = refColumns[columnIndexes[j]].field;
-
-        positions.add(TrinaGridSelectingCellPosition(rowIdx: i, field: field));
-      }
-    }
-
-    return positions;
-  }
-
-  List<TrinaGridSelectingCellPosition> _selectingCellsHorizontally() {
-    final List<TrinaGridSelectingCellPosition> positions = [];
-
-    final columnIndexes = columnIndexesByShowFrozen;
-
-    final bool firstCurrent = currentCellPosition!.rowIdx! <
-            currentSelectingPosition!.rowIdx! ||
-        (currentCellPosition!.rowIdx! == currentSelectingPosition!.rowIdx! &&
-            currentCellPosition!.columnIdx! <=
-                currentSelectingPosition!.columnIdx!);
-
-    TrinaGridCellPosition startCell =
-        firstCurrent ? currentCellPosition! : currentSelectingPosition!;
-
-    TrinaGridCellPosition endCell =
-        !firstCurrent ? currentCellPosition! : currentSelectingPosition!;
-
-    int columnStartIdx = startCell.columnIdx!;
-
-    int columnEndIdx = endCell.columnIdx!;
-
-    int rowStartIdx = startCell.rowIdx!;
-
-    int rowEndIdx = endCell.rowIdx!;
-
-    final length = columnIndexes.length;
-
-    for (int i = rowStartIdx; i <= rowEndIdx; i += 1) {
-      for (int j = 0; j < length; j += 1) {
-        if (i == rowStartIdx && j < columnStartIdx) {
-          continue;
-        }
-
-        final String field = refColumns[columnIndexes[j]].field;
-
-        positions.add(TrinaGridSelectingCellPosition(rowIdx: i, field: field));
-
-        if (i == rowEndIdx && j == columnEndIdx) {
-          break;
-        }
-      }
-    }
-
-    return positions;
-  }
-
   String _selectingTextFromSelectingRows() {
     final columnIndexes = columnIndexesByShowFrozen;
 
     List<String> rowText = [];
 
-    for (final row in currentSelectingRows) {
+    for (final row in selectedRows) {
       List<String> columnText = [];
 
       for (int i = 0; i < columnIndexes.length; i += 1) {
@@ -702,6 +581,11 @@ mixin SelectingState implements ITrinaGridState {
     }
   }
 
+  void _updateSortedRows() {
+    _state._sortedRows = _state._selectedRows.values.toList();
+    _state._sortedRows.sort((a, b) => a.sortIdx.compareTo(b.sortIdx));
+  }
+
   void _clearCurrentSelectingPosition({bool notify = true}) {
     if (currentSelectingPosition == null) {
       return;
@@ -714,12 +598,25 @@ mixin SelectingState implements ITrinaGridState {
     }
   }
 
-  void _clearCurrentSelectingRows({bool notify = true}) {
-    if (currentSelectingRows.isEmpty) {
+  void _clearSelectedRows({bool notify = true}) {
+    if (selectedRows.isEmpty) {
       return;
     }
 
-    _state._currentSelectingRows = [];
+    _state._selectedRows.clear();
+    _state._sortedRows.clear();
+
+    if (notify) {
+      notifyListeners();
+    }
+  }
+
+  void _clearSelectedCells({bool notify = true}) {
+    if (_state._selectedCells.isEmpty) {
+      return;
+    }
+
+    _state._selectedCells.clear();
 
     if (notify) {
       notifyListeners();

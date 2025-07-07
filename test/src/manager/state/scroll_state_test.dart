@@ -65,9 +65,9 @@ void main() {
       'When scroll offset.dx is less than bodyLeftScrollOffset'
       'but selectingMode is None, should return false.',
       (WidgetTester tester) async {
-        stateManager.setSelectingMode(TrinaGridSelectingMode.none);
+        stateManager.setSelectingMode(TrinaGridSelectingMode.disabled);
 
-        expect(stateManager.selectingMode.isNone, true);
+        expect(stateManager.selectingMode.isDisabled, true);
 
         expect(
           stateManager.needMovingScroll(
@@ -122,9 +122,9 @@ void main() {
       'When scroll offset.dx is greater than bodyRightScrollOffset'
       'but selectingMode is None, should return false.',
       (WidgetTester tester) async {
-        stateManager.setSelectingMode(TrinaGridSelectingMode.none);
+        stateManager.setSelectingMode(TrinaGridSelectingMode.disabled);
 
-        expect(stateManager.selectingMode.isNone, true);
+        expect(stateManager.selectingMode.isDisabled, true);
 
         expect(
           stateManager.needMovingScroll(

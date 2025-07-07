@@ -417,7 +417,10 @@ class FilterPopupState {
   void onLoaded(TrinaGridOnLoadedEvent e) {
     _stateManager = e.stateManager;
 
-    _stateManager!.setSelectingMode(TrinaGridSelectingMode.row, notify: false);
+    // use cell selection with CTRL instead of single tap selection
+    // to not close the filter popup when tapping on a cell
+    _stateManager!
+        .setSelectingMode(TrinaGridSelectingMode.cellWithCtrl, notify: false);
 
     if (_stateManager!.rows.isNotEmpty) {
       _stateManager!.setKeepFocus(true, notify: false);
@@ -546,10 +549,10 @@ class TrinaGridFilterPopupHeader extends StatelessWidget {
   }
 
   void handleRemoveButton() {
-    if (stateManager!.currentSelectingRows.isEmpty) {
+    if (stateManager!.selectedRows.isEmpty) {
       stateManager!.removeCurrentRow();
     } else {
-      stateManager!.removeRows(stateManager!.currentSelectingRows);
+      stateManager!.removeRows(stateManager!.selectedRows);
     }
   }
 

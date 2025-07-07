@@ -42,9 +42,10 @@ void main() {
     when(stateManager.gridFocusNode).thenReturn(FocusNode());
     when(stateManager.keepFocus).thenReturn(true);
     when(stateManager.hasFocus).thenReturn(true);
-    when(stateManager.selectingMode).thenReturn(TrinaGridSelectingMode.cell);
+    when(stateManager.selectingMode)
+        .thenReturn(TrinaGridSelectingMode.cellWithSingleTap);
     when(stateManager.canRowDrag).thenReturn(true);
-    when(stateManager.isSelectedCell(any, any, any)).thenReturn(false);
+    when(stateManager.isSelectedCell(any)).thenReturn(false);
     when(stateManager.enabledRowGroups).thenReturn(false);
     when(stateManager.rowGroupDelegate).thenReturn(null);
   });
@@ -90,7 +91,7 @@ void main() {
 
     // when
     when(stateManager.isCurrentCell(any)).thenReturn(false);
-    when(stateManager.isSelectedCell(any, any, any)).thenReturn(false);
+    when(stateManager.isSelectedCell(any)).thenReturn(false);
     when(stateManager.isEditing).thenReturn(false);
 
     await tester.pumpWidget(
@@ -388,7 +389,7 @@ void main() {
       // when
       when(stateManager.isCurrentCell(any)).thenReturn(false);
       when(stateManager.isEditing).thenReturn(false);
-      when(stateManager.isSelectedCell(any, any, any)).thenReturn(false);
+      when(stateManager.isSelectedCell(any)).thenReturn(false);
 
       await tester.pumpWidget(
         buildApp(
@@ -437,7 +438,7 @@ void main() {
       // when
       when(stateManager.isCurrentCell(any)).thenReturn(false);
       when(stateManager.isEditing).thenReturn(false);
-      when(stateManager.isSelectedCell(any, any, any)).thenReturn(false);
+      when(stateManager.isSelectedCell(any)).thenReturn(false);
 
       await tester.pumpWidget(
         buildApp(
@@ -485,7 +486,8 @@ void main() {
 
       when(stateManager.isCurrentCell(any)).thenReturn(true);
       when(stateManager.isEditing).thenReturn(false);
-      when(stateManager.selectingMode).thenReturn(TrinaGridSelectingMode.row);
+      when(stateManager.selectingMode)
+          .thenReturn(TrinaGridSelectingMode.rowWithSingleTap);
 
       when(stateManager.isSelectingInteraction()).thenReturn(false);
       when(stateManager.needMovingScroll(any, any)).thenReturn(false);
@@ -541,7 +543,7 @@ void main() {
       return TrinaWidgetTestHelper('a cell.', (tester) async {
         when(stateManager.isCurrentCell(any)).thenReturn(isCurrentCell);
         when(stateManager.isEditing).thenReturn(isEditing);
-        when(stateManager.isSelectedCell(any, any, any)).thenReturn(false);
+        when(stateManager.isSelectedCell(any)).thenReturn(false);
         when(stateManager.hasFocus).thenReturn(true);
 
         cell = TrinaCell(value: 'one');
@@ -620,8 +622,7 @@ void main() {
     }) {
       return TrinaWidgetTestHelper('a cell.', (tester) async {
         when(stateManager.isCurrentCell(any)).thenReturn(isCurrentCell);
-        when(stateManager.isSelectedCell(any, any, any))
-            .thenReturn(isSelectedCell);
+        when(stateManager.isSelectedCell(any)).thenReturn(isSelectedCell);
         when(stateManager.style).thenReturn(configuration.style);
         when(stateManager.hasFocus).thenReturn(true);
         when(stateManager.isEditing).thenReturn(true);
@@ -667,8 +668,7 @@ void main() {
       return TrinaWidgetTestHelper('a cell inside TrinaBaseRow.',
           (tester) async {
         when(stateManager.isCurrentCell(any)).thenReturn(isCurrentCell);
-        when(stateManager.isSelectedCell(any, any, any))
-            .thenReturn(isSelectedCell);
+        when(stateManager.isSelectedCell(any)).thenReturn(isSelectedCell);
         when(stateManager.style).thenReturn(configuration.style);
         when(stateManager.hasFocus).thenReturn(true);
         when(stateManager.isEditing).thenReturn(true);

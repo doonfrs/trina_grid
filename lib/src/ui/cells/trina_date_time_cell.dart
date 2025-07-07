@@ -76,8 +76,8 @@ class TrinaDateTimeCellState extends State<TrinaDateTimeCell>
         dateFormat: columnType.dateFormat,
         headerDateFormat: columnType.headerDateFormat,
         onSelected: (event) {
-          if (event.cell != null) {
-            final selectedDateStr = event.cell!.value.toString();
+          if (event.lastSelectedCell != null) {
+            final selectedDateStr = event.lastSelectedCell!.value.toString();
             try {
               final date = columnType.dateFormat.parse(selectedDateStr);
               completer.complete(date);
@@ -146,11 +146,12 @@ class TrinaDateTimeCellState extends State<TrinaDateTimeCell>
     TrinaDualGridPopup(
       context: context,
       onSelected: (TrinaDualOnSelectedEvent event) {
-        if (event.gridA == null || event.gridB == null) {
+        if (event.gridA.lastSelectedCell == null ||
+            event.gridB.lastSelectedCell == null) {
           timeCompleter.complete(null);
         } else {
           timeCompleter.complete(
-            '${event.gridA!.cell!.value}:${event.gridB!.cell!.value}',
+            '${event.gridA.lastSelectedCell?.value}:${event.gridB.lastSelectedCell?.value}',
           );
         }
       },
@@ -161,6 +162,7 @@ class TrinaDateTimeCellState extends State<TrinaDateTimeCell>
             field: 'hour',
             readOnly: true,
             type: TrinaColumnType.text(),
+            enableEditingMode: false,
             enableSorting: false,
             enableColumnDrag: false,
             enableContextMenu: false,
@@ -184,8 +186,6 @@ class TrinaDateTimeCellState extends State<TrinaDateTimeCell>
           final stateManager = event.stateManager;
           final rows = stateManager.refRows;
           final length = rows.length;
-
-          stateManager.setSelectingMode(TrinaGridSelectingMode.none);
 
           final currentHour = currentDateTime.hour.toString().padLeft(2, '0');
 
@@ -211,6 +211,7 @@ class TrinaDateTimeCellState extends State<TrinaDateTimeCell>
             field: 'minute',
             readOnly: true,
             type: TrinaColumnType.text(),
+            enableEditingMode: false,
             enableSorting: false,
             enableColumnDrag: false,
             enableContextMenu: false,
@@ -235,8 +236,6 @@ class TrinaDateTimeCellState extends State<TrinaDateTimeCell>
           final rows = stateManager.refRows;
           final length = rows.length;
 
-          stateManager.setSelectingMode(TrinaGridSelectingMode.none);
-
           final currentMinute =
               currentDateTime.minute.toString().padLeft(2, '0');
 
@@ -255,7 +254,7 @@ class TrinaDateTimeCellState extends State<TrinaDateTimeCell>
         },
         configuration: configuration,
       ),
-      mode: TrinaGridMode.select,
+      mode: TrinaGridMode.popup,
       width: 276,
       height: 300,
       divider: const TrinaDualGridDivider(show: false),

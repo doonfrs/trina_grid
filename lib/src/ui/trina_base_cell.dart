@@ -52,7 +52,7 @@ class TrinaBaseCell extends StatelessWidget
   void _handleOnTapUp(TapUpDetails details) {
     if (PlatformHelper.isDesktop &&
         TrinaDoubleTapDetector.isDoubleTap(cell) &&
-        stateManager.onRowDoubleTap != null) {
+        stateManager.onDoubleTap != null) {
       _handleOnDoubleTap();
       return;
     }
@@ -60,7 +60,7 @@ class TrinaBaseCell extends StatelessWidget
   }
 
   void _handleOnLongPressStart(LongPressStartDetails details) {
-    if (stateManager.selectingMode.isNone) {
+    if (stateManager.selectingMode.isDisabled) {
       return;
     }
 
@@ -71,7 +71,7 @@ class TrinaBaseCell extends StatelessWidget
   }
 
   void _handleOnLongPressMoveUpdate(LongPressMoveUpdateDetails details) {
-    if (stateManager.selectingMode.isNone) {
+    if (stateManager.selectingMode.isDisabled) {
       return;
     }
 
@@ -82,7 +82,7 @@ class TrinaBaseCell extends StatelessWidget
   }
 
   void _handleOnLongPressEnd(LongPressEndDetails details) {
-    if (stateManager.selectingMode.isNone) {
+    if (stateManager.selectingMode.isDisabled) {
       return;
     }
 
@@ -96,24 +96,18 @@ class TrinaBaseCell extends StatelessWidget
     _addGestureEvent(TrinaGridGestureType.onDoubleTap, Offset.zero);
   }
 
+  void Function()? _onDoubleTapOrNull() {
+    return stateManager.onDoubleTap == null &&
+            stateManager.mode.isPopup == false
+        ? null
+        : _handleOnDoubleTap;
+  }
+
   void _handleOnSecondaryTap(TapDownDetails details) {
     _addGestureEvent(
       TrinaGridGestureType.onSecondaryTap,
       details.globalPosition,
     );
-  }
-
-  void Function()? _onDoubleTapOrNull() {
-    if (PlatformHelper.isDesktop) {
-      return null;
-    }
-    return stateManager.onRowDoubleTap == null ? null : _handleOnDoubleTap;
-  }
-
-  void Function(TapDownDetails details)? _onSecondaryTapOrNull() {
-    return stateManager.onRowSecondaryTap == null
-        ? null
-        : _handleOnSecondaryTap;
   }
 
   @override
@@ -127,7 +121,7 @@ class TrinaBaseCell extends StatelessWidget
       onLongPressEnd: _handleOnLongPressEnd,
       // Optional gestures.
       onDoubleTap: _onDoubleTapOrNull(),
-      onSecondaryTapDown: _onSecondaryTapOrNull(),
+      onSecondaryTapDown: _handleOnSecondaryTap,
       child: _CellContainer(
         cell: cell,
         rowIdx: rowIdx,
@@ -203,11 +197,7 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
         readOnly: widget.column.checkReadOnly(widget.row, widget.cell),
         isEditing: stateManager.isEditing,
         isCurrentCell: isCurrentCell,
-        isSelectedCell: stateManager.isSelectedCell(
-          widget.cell,
-          widget.column,
-          widget.rowIdx,
-        ),
+        isSelectedCell: stateManager.isSelectedCell(widget.cell),
         isGroupedRowCell: stateManager.enabledRowGroups &&
             stateManager.rowGroupDelegate!.isExpandableCell(widget.cell),
         enableCellVerticalBorder: style.enableCellBorderVertical,
@@ -271,7 +261,11 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
     final bool isDirty = widget.cell.isDirty;
     final Color dirtyColor = stateManager.configuration.style.cellDirtyColor;
 
-    if (isCurrentCell) {
+    // Customize the cell as a current cell only if no other cells is selected.
+    // This because current & selected cells have the same color.
+    if (isCurrentCell &&
+        stateManager.selectingMode.isCell &&
+        stateManager.selectedCells.isEmpty) {
       return BoxDecoration(
         color: isDirty
             ? dirtyColor

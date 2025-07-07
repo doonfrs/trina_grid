@@ -806,7 +806,7 @@ mixin ColumnState implements ITrinaGridState {
       height: 500,
       mode: TrinaGridMode.popup,
       onLoaded: (e) {
-        e.stateManager.setSelectingMode(TrinaGridSelectingMode.none);
+        e.stateManager.setSelectingMode(TrinaGridSelectingMode.disabled);
       },
       onRowChecked: handleOnRowChecked,
     );
@@ -885,10 +885,6 @@ mixin ColumnState implements ITrinaGridState {
   }
 
   void _updateBeforeColumnSort() {
-    clearCurrentCell(notify: false);
-
-    clearCurrentSelecting(notify: false);
-
     // Reset column sort to none.
     for (var i = 0; i < refColumns.originalList.length; i += 1) {
       refColumns.originalList[i].sort = TrinaColumnSort.none;

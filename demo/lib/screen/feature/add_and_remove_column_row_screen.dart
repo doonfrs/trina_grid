@@ -182,7 +182,7 @@ class _HeaderState extends State<_Header> {
 
   int addedCount = 0;
 
-  TrinaGridSelectingMode gridSelectingMode = TrinaGridSelectingMode.row;
+  TrinaGridSelectingMode gridSelectingMode = TrinaGridSelectingMode.rowWithCtrl;
 
   @override
   void initState() {
@@ -271,7 +271,7 @@ class _HeaderState extends State<_Header> {
   }
 
   void handleRemoveSelectedRowsButton() {
-    widget.stateManager.removeRows(widget.stateManager.currentSelectingRows);
+    widget.stateManager.removeRows(widget.stateManager.selectedRows);
   }
 
   void handleFiltering() {
