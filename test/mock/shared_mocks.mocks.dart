@@ -1377,14 +1377,6 @@ class MockTrinaGridStateManager extends _i1.Mock
       ) as _i2.TrinaGridSelectingMode);
 
   @override
-  List<_i2.TrinaGridSelectingCellPosition> get currentSelectingPositionList =>
-      (super.noSuchMethod(
-        Invocation.getter(#currentSelectingPositionList),
-        returnValue: <_i2.TrinaGridSelectingCellPosition>[],
-        returnValueForMissingStub: <_i2.TrinaGridSelectingCellPosition>[],
-      ) as List<_i2.TrinaGridSelectingCellPosition>);
-
-  @override
   bool get hasCurrentSelectingPosition => (super.noSuchMethod(
         Invocation.getter(#hasCurrentSelectingPosition),
         returnValue: false,
@@ -1410,6 +1402,13 @@ class MockTrinaGridStateManager extends _i1.Mock
           Invocation.getter(#currentSelectingText),
         ),
       ) as String);
+
+  @override
+  List<_i2.TrinaCell> get selectedCells => (super.noSuchMethod(
+        Invocation.getter(#selectedCells),
+        returnValue: <_i2.TrinaCell>[],
+        returnValueForMissingStub: <_i2.TrinaCell>[],
+      ) as List<_i2.TrinaCell>);
 
   @override
   set headerHeight(double? value) => super.noSuchMethod(
@@ -3645,6 +3644,20 @@ class MockTrinaGridStateManager extends _i1.Mock
       );
 
   @override
+  void setSelectedRows(
+    List<_i2.TrinaRow<dynamic>>? rows, {
+    bool? notify = true,
+  }) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #setSelectedRows,
+          [rows],
+          {#notify: notify},
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
   void clearCurrentSelecting({bool? notify = true}) => super.noSuchMethod(
         Invocation.method(
           #clearCurrentSelecting,
@@ -3655,13 +3668,13 @@ class MockTrinaGridStateManager extends _i1.Mock
       );
 
   @override
-  void toggleSelectingRow(
+  void toggleRowSelection(
     int? rowIdx, {
     bool? notify = true,
   }) =>
       super.noSuchMethod(
         Invocation.method(
-          #toggleSelectingRow,
+          #toggleRowSelection,
           [rowIdx],
           {#notify: notify},
         ),
@@ -3689,12 +3702,11 @@ class MockTrinaGridStateManager extends _i1.Mock
       ) as bool);
 
   @override
-  bool isSelectedCell(
-    _i2.TrinaCell? cell,
-    _i2.TrinaColumn? column,
-    int? rowIdx,
-  ) =>
-      (super.noSuchMethod(
+  void toggleCellSelection(
+    _i2.TrinaCell? cell, {
+    bool? notify = true,
+  }) =>
+      super.noSuchMethod(
         Invocation.method(
           #toggleCellSelection,
           [cell],

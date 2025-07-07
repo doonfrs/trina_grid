@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -261,6 +262,8 @@ void main() {
   buildPopup(
     format: 'yyyy-MM-dd',
     headerFormat: 'yyyy-MM',
+    // This required so the cell of first-day-of-month is set as the current cell .
+    initDate: DateTime(now.year, now.month, 1),
   ).test(
     'When selecting the 1st day of the current month and pressing the up arrow key, '
     'the previous month should be displayed',
@@ -273,12 +276,10 @@ void main() {
 
       await tester.tap(find.text('2'));
       await tester.tap(find.text('1'));
+      await tester.pumpAndSettle();
 
-      await tester.pump();
-
-      await tester.sendKeyDownEvent(LogicalKeyboardKey.arrowUp);
-
-      await tester.pump();
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowUp);
+      await tester.pumpAndSettle();
 
       final expectDate = DateTime(now.year, now.month - 1);
 
@@ -372,17 +373,40 @@ void main() {
     initDate: DateTime(2022, 6, 11),
     onSelected: mockListener.oneParamReturnVoid<TrinaGridOnSelectedEvent>,
   ).test(
-    'When selecting June 11, 2022 and tapping, '
+    'When selecting(by double tap) June 11, 2022, '
     'onSelected callback should be called',
     (tester) async {
       await tester.tap(find.text('11'));
+      await tester.pump(kDoubleTapMinTime);
+      await tester.tap(find.text('11'));
 
-      await tester.pump();
+      await tester.pumpAndSettle();
 
       verify(
-        mockListener.oneParamReturnVoid(argThat(
-            TrinaObjectMatcher<TrinaGridOnSelectedEvent>(rule: (object) {
-          return object.cell!.value == '2022-06-11';
+        mockListener.oneParamReturnVoid(
+            argThat(TrinaObjectMatcher<TrinaGridOnSelectedEvent>(rule: (event) {
+          return event.lastSelectedCell?.value == '2022-06-11';
+        }))),
+      ).called(1);
+    },
+  );
+  buildPopup(
+    format: 'yyyy-MM-dd',
+    headerFormat: 'yyyy-MM',
+    initDate: DateTime(2022, 6, 11),
+    onSelected: mockListener.oneParamReturnVoid<TrinaGridOnSelectedEvent>,
+  ).test(
+    'When selecting(by Enter Key) June 11, 2022, '
+    'onSelected callback should be called',
+    (tester) async {
+      await tester.tap(find.text('11'));
+      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+      await tester.pumpAndSettle();
+
+      verify(
+        mockListener.oneParamReturnVoid(
+            argThat(TrinaObjectMatcher<TrinaGridOnSelectedEvent>(rule: (event) {
+          return event.lastSelectedCell?.value == '2022-06-11';
         }))),
       ).called(1);
     },

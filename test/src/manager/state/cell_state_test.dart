@@ -546,36 +546,6 @@ void main() {
 
     test(
       'not readonly column.'
-      'grid mode is select.'
-      'should be returned false.',
-      () {
-        final normalGridAndReadonlyColumn = createStateManager(
-          columns: [],
-          rows: [],
-          gridFocusNode: null,
-          scroll: null,
-          mode: TrinaGridMode.select,
-        );
-
-        final cell = TrinaCell(value: '');
-        final column = createColumn(readonly: false);
-        final row = TrinaRow(cells: {'field': cell});
-        cell
-          ..setColumn(column)
-          ..setRow(row);
-
-        final bool result = normalGridAndReadonlyColumn.canChangeCellValue(
-          cell: cell,
-          newValue: 'abc',
-          oldValue: 'ABC',
-        );
-
-        expect(result, isFalse);
-      },
-    );
-
-    test(
-      'not readonly column.'
       'grid mode is normal.'
       'but same values.'
       'should be returned false.',

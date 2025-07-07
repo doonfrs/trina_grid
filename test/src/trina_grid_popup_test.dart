@@ -28,7 +28,7 @@ void main() {
     TrinaOnSelectedEventCallback? onSelected,
     TrinaOnSortedEventCallback? onSorted,
     TrinaOnRowCheckedEventCallback? onRowChecked,
-    TrinaOnRowDoubleTapEventCallback? onRowDoubleTap,
+    TrinaOnDoubleTapEventCallback? onDoubleTap,
     TrinaOnRowSecondaryTapEventCallback? onRowSecondaryTap,
     TrinaOnRowsMovedEventCallback? onRowsMoved,
     TrinaOnActiveCellChangedEventCallback? onActiveCellChanged,
@@ -38,8 +38,10 @@ void main() {
     Widget? noRowsWidget,
     TrinaRowColorCallback? rowColorCallback,
     TrinaColumnMenuDelegate? columnMenuDelegate,
-    TrinaGridConfiguration configuration = const TrinaGridConfiguration(),
-    TrinaGridMode mode = TrinaGridMode.normal,
+    TrinaGridConfiguration configuration = const TrinaGridConfiguration(
+      selectingMode: TrinaGridSelectingMode.cellWithCtrl,
+    ),
+    TrinaGridMode mode = TrinaGridMode.popup,
     TextDirection textDirection = TextDirection.ltr,
   }) async {
     await TestHelperUtil.changeWidth(
@@ -67,7 +69,7 @@ void main() {
                       onSelected: onSelected,
                       onSorted: onSorted,
                       onRowChecked: onRowChecked,
-                      onRowDoubleTap: onRowDoubleTap,
+                      onDoubleTap: onDoubleTap,
                       onRowSecondaryTap: onRowSecondaryTap,
                       onRowsMoved: onRowsMoved,
                       onActiveCellChanged: onActiveCellChanged,
@@ -236,13 +238,16 @@ void main() {
 
     final cell = find.text('title0 value 0');
     await tester.tap(cell);
-    await tester.pump();
+    await tester.pumpAndSettle(Duration(seconds: 1));
+
     await tester.tap(cell);
-    await tester.pump();
+    await tester.pumpAndSettle(Duration(seconds: 1));
+
     await tester.enterText(cell, 'test value');
     await tester.pump();
+
     await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-    await tester.pump();
+    await tester.pumpAndSettle();
 
     expect(event, isNotNull);
     expect(event!.value, 'test value');
@@ -251,7 +256,7 @@ void main() {
   });
 
   testWidgets(
-      'In select mode, double-tapping a row should trigger the onSelected callback',
+      'In popup mode, double-tapping a row should trigger the onSelected callback',
       (tester) async {
     final columns = ColumnHelper.textColumn('title', count: 10);
     final rows = RowHelper.count(10, columns);
@@ -263,7 +268,7 @@ void main() {
       columns: columns,
       rows: rows,
       onSelected: (e) => event = e,
-      mode: TrinaGridMode.select,
+      mode: TrinaGridMode.popup,
     );
 
     await tester.tap(find.text(buttonText));
@@ -271,41 +276,13 @@ void main() {
 
     final cell = find.text('title1 value 3');
     await tester.tap(cell);
-    await tester.pump();
+    await tester.pump(kDoubleTapMinTime);
     await tester.tap(cell);
-    await tester.pump();
-
-    expect(event, isNotNull);
-    expect(event!.rowIdx, 3);
-    expect(event!.cell!.value, 'title1 value 3');
-  });
-
-  testWidgets(
-      'In selectWithOneTap mode, tapping a row should trigger the onSelected callback',
-      (tester) async {
-    final columns = ColumnHelper.textColumn('title', count: 10);
-    final rows = RowHelper.count(10, columns);
-
-    TrinaGridOnSelectedEvent? event;
-
-    await build(
-      tester: tester,
-      columns: columns,
-      rows: rows,
-      onSelected: (e) => event = e,
-      mode: TrinaGridMode.selectWithOneTap,
-    );
-
-    await tester.tap(find.text(buttonText));
     await tester.pumpAndSettle();
 
-    final cell = find.text('title2 value 4');
-    await tester.tap(cell);
-    await tester.pump();
-
     expect(event, isNotNull);
-    expect(event!.rowIdx, 4);
-    expect(event!.cell!.value, 'title2 value 4');
+    expect(event!.lastSelectedCell?.row.sortIdx, 3);
+    expect(event!.lastSelectedCell?.value, 'title1 value 3');
   });
 
   testWidgets('Tapping a column should trigger the onSorted callback',
@@ -378,7 +355,7 @@ void main() {
       matching: find.byType(Checkbox),
     );
     await tester.tap(checkbox);
-    await tester.pump();
+    await tester.pumpAndSettle(Duration(seconds: 1));
 
     expect(event, isNotNull);
     expect(event!.rowIdx, 1);
@@ -387,19 +364,18 @@ void main() {
     expect(event!.isRow, true);
   });
 
-  testWidgets(
-      'Double-tapping a cell should trigger the onRowDoubleTap callback',
+  testWidgets('Double-tapping a cell should trigger the onDoubleTap callback',
       (tester) async {
     final columns = ColumnHelper.textColumn('title', count: 10);
     final rows = RowHelper.count(10, columns);
 
-    TrinaGridOnRowDoubleTapEvent? event;
+    TrinaGridOnDoubleTapEvent? event;
 
     await build(
       tester: tester,
       columns: columns,
       rows: rows,
-      onRowDoubleTap: (e) => event = e,
+      onDoubleTap: (e) => event = e,
     );
 
     await tester.tap(find.text(buttonText));
@@ -468,8 +444,8 @@ void main() {
       matching: find.byType(Icon),
     );
     // When dragging a row, the row height is 45 * 2 (2 rows below)
-    await tester.drag(dragIcon, const Offset(0, 90));
-    await tester.pump();
+    await tester.timedDrag(dragIcon, const Offset(0, 90), Duration(seconds: 1));
+    await tester.pumpAndSettle();
 
     expect(event, isNotNull);
     expect(event!.idx, 2);
@@ -526,9 +502,11 @@ void main() {
       columns: columns,
       rows: rows,
       configuration: const TrinaGridConfiguration(
-          style: TrinaGridStyleConfig(
-        enableRowColorAnimation: true,
-      )),
+        autoSetFirstCellAsCurrent: false,
+        style: TrinaGridStyleConfig(
+          enableRowColorAnimation: true,
+        ),
+      ),
       rowColorCallback: (context) {
         return context.rowIdx % 2 == 0 ? Colors.pink : Colors.cyan;
       },

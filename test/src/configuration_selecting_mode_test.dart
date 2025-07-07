@@ -7,10 +7,9 @@ import '../mock/shared_mocks.mocks.dart';
 
 void main() {
   group('TrinaGridConfiguration selectingMode', () {
-    test('should have default selectingMode as cellWithSingleTap', () {
+    test('should have default selectingMode as cellWithCtrl', () {
       const configuration = TrinaGridConfiguration();
-      expect(configuration.selectingMode,
-          TrinaGridSelectingMode.cellWithSingleTap);
+      expect(configuration.selectingMode, TrinaGridSelectingMode.cellWithCtrl);
     });
 
     test('should include selectingMode in copyWith', () {

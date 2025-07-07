@@ -49,13 +49,14 @@ void main() {
 
     when(scrollController.vertical).thenReturn(vertical);
 
+    when(stateManager.eventManager?.stateManager).thenReturn(stateManager);
+
     stateManager = TrinaGridStateManager(
       columns: columns,
       rows: rows,
       gridFocusNode: MockFocusNode(),
       scroll: scrollController,
     );
-
     stateManager.setEventManager(eventManager);
     stateManager.setLayout(const BoxConstraints(maxWidth: 500, maxHeight: 500));
   });
@@ -549,7 +550,7 @@ void main() {
     );
 
     withColumnAndRows.test(
-      'When currentCell is null, no cell should be selected',
+      'When currentSelectingPosition is null, no cell should be selected',
       (tester) async {
         stateManager.setEditing(false);
 
