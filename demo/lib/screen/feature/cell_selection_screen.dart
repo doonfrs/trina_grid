@@ -188,6 +188,8 @@ class _CellSelectionScreenState extends State<CellSelectionScreen> {
               onSelected: (event) => setState(() {
                 selectedValues = _getSelected(event.selectedCells);
               }),
+              configuration:
+                  TrinaGridConfiguration(autoSetFirstCellAsCurrent: true),
               onLoaded: (TrinaGridOnLoadedEvent event) {
                 event.stateManager
                     .setSelectingMode(TrinaGridSelectingMode.cellWithSingleTap);

@@ -19,15 +19,6 @@ void runGeneralCellSelectionTestCases({
   required Future<void> Function(WidgetTester tester, String cellValue)
       selectCell,
 }) {
-  buildGrid().test(
-    'the first cell is set as current cell',
-    (tester) async {
-      expect(stateManager().currentCell, isNot(null));
-      expect(stateManager().currentCellPosition?.rowIdx, 0);
-      expect(stateManager().currentCellPosition?.columnIdx, 0);
-    },
-  );
-
   buildGrid(numberOfRows: 0).test(
     'When there are no rows, no error should occur and the grid should be focused',
     (tester) async {
@@ -74,6 +65,9 @@ void runCellSelectionWithKeyboardTestCases({
     'press shift + arrowRight 3 times, '
     'the onSelected callback should contain cells 0, 1, 2, 3.',
     (tester) async {
+      expect(stateManager().currentCellPosition?.columnIdx, 0);
+      expect(stateManager().currentCellPosition?.rowIdx, 0);
+
       await tester.sendKeyDownEvent(LogicalKeyboardKey.shift);
       await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
       await tester.pumpAndSettle();

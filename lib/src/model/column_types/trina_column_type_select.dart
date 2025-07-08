@@ -5,7 +5,10 @@ import 'package:trina_grid/trina_grid.dart';
 
 class TrinaColumnTypeSelect
     with TrinaColumnTypeDefaultMixin
-    implements TrinaColumnType, TrinaColumnTypeHasPopupIcon {
+    implements
+        TrinaColumnType,
+        TrinaColumnTypeHasPopupIcon,
+        TrinaColumnTypeWithPopup {
   @override
   final dynamic defaultValue;
 
@@ -21,6 +24,10 @@ class TrinaColumnTypeSelect
   @override
   final IconData? popupIcon;
 
+  /// Whether the popup should be closed when a value is selected.
+  @override
+  final bool selectWithSingleTap;
+
   const TrinaColumnTypeSelect({
     required this.onItemSelected,
     this.defaultValue,
@@ -29,6 +36,7 @@ class TrinaColumnTypeSelect
     this.popupIcon,
     this.builder,
     this.width,
+    this.selectWithSingleTap = false,
   });
 
   @override

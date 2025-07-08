@@ -69,7 +69,9 @@ class TrinaDateCellState extends State<TrinaDateCell>
         headerDateFormat: widget.column.type.date.headerDateFormat,
         onSelected: onSelected,
         itemHeight: widget.stateManager.rowTotalHeight,
-        configuration: widget.stateManager.configuration,
+        configuration: widget.stateManager.configuration.copyWith(
+          selectingMode: getPopupGridSelectingMode(),
+        ),
       );
     }
   }

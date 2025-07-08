@@ -51,15 +51,6 @@ void runGeneralRowSelectionTestCases({
   required Future<void> Function(WidgetTester tester, {required int count})
       selectRows,
 }) {
-  buildGrid().test(
-    'the first row is set as current row',
-    (tester) async {
-      expect(stateManager().currentCell, isNot(null));
-      expect(stateManager().currentCellPosition?.rowIdx, 0);
-      expect(stateManager().currentCellPosition?.columnIdx, 0);
-    },
-  );
-
   buildGrid(numberOfRows: 0).test(
     'When there are no rows, no error should occur and the grid should be focused',
     (tester) async {
