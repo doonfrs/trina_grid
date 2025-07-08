@@ -56,6 +56,12 @@ class _BooleanTypeColumnScreenState extends State<BooleanTypeColumnScreen> {
         type: TrinaColumnType.boolean(),
       ),
       TrinaColumn(
+        title: 'Active (close popup on selection)',
+        field: 'active_close_on_selection',
+        width: 280,
+        type: TrinaColumnType.boolean(selectWithSingleTap: true),
+      ),
+      TrinaColumn(
         title: 'Active Allow Empty',
         field: 'active_allow_empty',
         type: TrinaColumnType.boolean(allowEmpty: true),
@@ -87,6 +93,7 @@ class _BooleanTypeColumnScreenState extends State<BooleanTypeColumnScreen> {
                     ? 'Developer'
                     : (i % 3 == 1 ? 'Designer' : 'Manager')),
             'active': TrinaCell(value: i % 2 == 0),
+            'active_close_on_selection': TrinaCell(value: i % 2 == 0),
             'active_allow_empty': TrinaCell(value: i % 2 == 0),
             'salary': TrinaCell(value: 50000 + (i * 1000)),
             'joinDate':

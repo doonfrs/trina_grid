@@ -135,6 +135,7 @@ abstract interface class TrinaColumnType {
     final Function(TrinaGridOnSelectedEvent event)? onItemSelected,
     dynamic defaultValue = '',
     bool enableColumnFilter = false,
+    bool selectWithSingleTap = false,
     IconData? popupIcon = Icons.arrow_drop_down,
     Widget Function(dynamic item)? builder,
     double? width,
@@ -147,6 +148,7 @@ abstract interface class TrinaColumnType {
       popupIcon: popupIcon,
       builder: builder,
       width: width,
+      selectWithSingleTap: selectWithSingleTap,
     );
   }
 
@@ -173,6 +175,7 @@ abstract interface class TrinaColumnType {
     String headerFormat = 'yyyy-MM',
     bool applyFormatOnInit = true,
     IconData? popupIcon = Icons.date_range,
+    bool selectWithSingleTap = false,
   }) {
     return TrinaColumnTypeDate(
       defaultValue: defaultValue,
@@ -182,6 +185,7 @@ abstract interface class TrinaColumnType {
       headerFormat: headerFormat,
       applyFormatOnInit: applyFormatOnInit,
       popupIcon: popupIcon,
+      selectWithSingleTap: selectWithSingleTap,
     );
   }
 
@@ -242,6 +246,7 @@ abstract interface class TrinaColumnType {
   factory TrinaColumnType.boolean({
     dynamic defaultValue = false,
     bool allowEmpty = false,
+    bool selectWithSingleTap = false,
     String trueText = 'Yes',
     String falseText = 'No',
     double? width,
@@ -258,6 +263,7 @@ abstract interface class TrinaColumnType {
       popupIcon: popupIcon,
       builder: builder,
       onItemSelected: onItemSelected ?? (event) {},
+      selectWithSingleTap: selectWithSingleTap,
     );
   }
 

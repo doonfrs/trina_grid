@@ -26,9 +26,11 @@ class RowHelper {
             } else if (column.type.isTime) {
               return cellOfTimeColumn(column, rowIdx);
             } else if (column.type.isSelect) {
-              return cellOfTimeColumn(column, rowIdx);
+              return cellOfSelectColumn(column, rowIdx);
             } else if (column.type.isNumber || column.type.isCurrency) {
               return cellOfNumberColumn(column, rowIdx);
+            } else if (column.type.isBoolean) {
+              return cellOfBooleanColumn(column, rowIdx);
             }
 
             throw Exception('Column is not implemented.');
@@ -62,6 +64,10 @@ class RowHelper {
 
   static TrinaCell cellOfNumberColumn(TrinaColumn column, int rowIdx) {
     return TrinaCell(value: Random().nextInt(10000));
+  }
+
+  static TrinaCell cellOfBooleanColumn(TrinaColumn column, int rowIdx) {
+    return TrinaCell(value: Random().nextBool());
   }
 
   static double resolveRowTotalHeight(TrinaGridStyleConfig style) {

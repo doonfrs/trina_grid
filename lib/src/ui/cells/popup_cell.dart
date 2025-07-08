@@ -98,9 +98,7 @@ mixin PopupCellState<T extends PopupCell> on State<T>
       createFooter: createFooter,
       configuration: widget.stateManager.configuration.copyWith(
         tabKeyAction: TrinaGridTabKeyAction.normal,
-        // use cell selection with CTRL instead of single tap selection
-        // to not close the filter popup when tapping on a cell
-        selectingMode: TrinaGridSelectingMode.cellWithCtrl,
+        selectingMode: getPopupGridSelectingMode(),
         style: widget.stateManager.configuration.style.copyWith(
           oddRowColor: const TrinaOptional(null),
           evenRowColor: const TrinaOptional(null),
@@ -113,6 +111,14 @@ mixin PopupCellState<T extends PopupCell> on State<T>
         ),
       ),
     );
+  }
+
+  TrinaGridSelectingMode getPopupGridSelectingMode() {
+    if (widget.column.type case TrinaColumnTypeWithPopup type
+        when type.selectWithSingleTap) {
+      return TrinaGridSelectingMode.cellWithSingleTap;
+    }
+    return TrinaGridSelectingMode.cellWithCtrl;
   }
 
   void onLoaded(TrinaGridOnLoadedEvent event) {

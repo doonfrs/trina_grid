@@ -3,7 +3,7 @@ import 'package:trina_grid/trina_grid.dart';
 
 class TrinaColumnTypeBoolean
     with TrinaColumnTypeDefaultMixin
-    implements TrinaColumnType {
+    implements TrinaColumnType, TrinaColumnTypeWithPopup {
   @override
   final dynamic defaultValue;
   final bool allowEmpty;
@@ -14,6 +14,10 @@ class TrinaColumnTypeBoolean
   final Widget Function(dynamic item)? builder;
   final Function(TrinaGridOnSelectedEvent event) onItemSelected;
 
+  /// Whether the popup should be closed when a value is selected.
+  @override
+  final bool selectWithSingleTap;
+
   const TrinaColumnTypeBoolean({
     required this.defaultValue,
     required this.allowEmpty,
@@ -23,6 +27,7 @@ class TrinaColumnTypeBoolean
     this.width,
     this.popupIcon,
     this.builder,
+    this.selectWithSingleTap = false,
   });
 
   dynamic get value => defaultValue;
