@@ -49,8 +49,6 @@ void main() {
 
     when(scrollController.vertical).thenReturn(vertical);
 
-    when(stateManager.eventManager?.stateManager).thenReturn(stateManager);
-
     stateManager = TrinaGridStateManager(
       columns: columns,
       rows: rows,
@@ -58,6 +56,7 @@ void main() {
       scroll: scrollController,
     );
     stateManager.setEventManager(eventManager);
+    when(stateManager.eventManager?.stateManager).thenReturn(stateManager);
     stateManager.setLayout(const BoxConstraints(maxWidth: 500, maxHeight: 500));
   });
 
