@@ -261,11 +261,12 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
     final bool isDirty = widget.cell.isDirty;
     final Color dirtyColor = stateManager.configuration.style.cellDirtyColor;
 
-    // Customize the cell as a current cell only if no other cells is selected.
-    // This because current & selected cells have the same color.
-    if (isCurrentCell &&
-        stateManager.selectingMode.isCell &&
-        stateManager.selectedCells.isEmpty) {
+    final bool isPrimaryCell = isCurrentCell &&
+        (stateManager.selectingMode.isCell
+            ? stateManager.selectedCells.isEmpty
+            : true);
+
+    if (isPrimaryCell) {
       return BoxDecoration(
         color: isDirty
             ? dirtyColor
