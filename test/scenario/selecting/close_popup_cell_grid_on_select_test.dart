@@ -6,63 +6,78 @@ import '../../helper/column_helper.dart';
 import '../../helper/row_helper.dart';
 
 void main() {
-  Future<void> build({
+  Future<void> buildAndOpenPopup({
     required WidgetTester tester,
-    required List<TrinaColumn> columns,
+    required TrinaColumn column,
     required List<TrinaRow> rows,
   }) async {
     await tester.pumpWidget(
       MaterialApp(
         home: Material(
-          child: TrinaGrid(columns: columns, rows: rows),
+          child: TrinaGrid(columns: [column], rows: rows),
         ),
       ),
     );
+    await tester.pumpAndSettle();
+
+    final cell = rows.first.cells.values.first;
+    final cellValue = cell.column.formattedValueForDisplay(cell.value);
+
+    // Open the popup
+    await tester.tap(find.text(cellValue)); // Set as current cell
+    await tester.pump();
+    await tester.tap(find.text(cellValue)); // Enter edit mode
+    await tester.pump();
+    await tester.tap(find.text(cellValue)); // Open popup
+    await tester.pumpAndSettle();
+
+    // Ensure the popup grid is visible
+    expect(find.byType(TrinaGrid), findsNWidgets(2),
+        reason: 'A second grid for the popup should be visible.');
   }
 
-  testCase({
+  void runTestCase({
+    required String testName,
     required TrinaColumn column,
     required dynamic valueToSelect,
-    required bool assertPopupShouldClose,
-  }) async {
-    final rows = RowHelper.count(1, [column]);
-    testWidgets(
-      assertPopupShouldClose
-          ? 'WHEN selectWithSingleTap is true, '
-              'tapping a cell should close the popup.'
-          : 'WHEN selectWithSingleTap is false, '
-              'tapping a cell should not close the popup.',
-      (tester) async {
-        await build(
-          columns: [column],
-          rows: rows,
-          tester: tester,
-        );
-        final cell = rows.first.cells.values.first;
-        final cellValue =
-            cell.column.formattedValueForDisplay(cell.value).toString();
+    required bool shouldPopupClose,
+  }) {
+    testWidgets(testName, (tester) async {
+      final rows = RowHelper.count(1, [column]);
 
-        await tester.tap(find.text(cellValue)); // set as current cell
-        await tester.pump();
-        await tester.tap(find.text(cellValue)); // enter edit mode
-        await tester.pump();
-        await tester.tap(find.text(cellValue)); // open popup
-        await tester.pumpAndSettle(Duration(milliseconds: 500));
+      await buildAndOpenPopup(
+        tester: tester,
+        column: column,
+        rows: rows,
+      );
 
-        expect(find.byType(TrinaGrid), findsNWidgets(2));
-        valueToSelect = column.formattedValueForDisplayInEditing(valueToSelect);
-        await tester.tap(find.text(valueToSelect).first, warnIfMissed: false);
-        await tester.pumpAndSettle(Duration(milliseconds: 500));
-        assertPopupShouldClose
-            ? expect(find.byType(TrinaGrid), findsOneWidget)
-            : expect(find.byType(TrinaGrid), findsNWidgets(2));
-      },
-    );
+      final formattedValue =
+          column.formattedValueForDisplayInEditing(valueToSelect);
+
+      // Find the popup grid and tap the value
+      final popupGrid = find.byType(TrinaGrid).last;
+      await tester.tap(find.descendant(
+        of: popupGrid,
+        matching: find.text(formattedValue),
+      ));
+      await tester.pumpAndSettle(Duration(seconds: 1));
+
+      // Assert whether the popup closed
+      if (shouldPopupClose) {
+        expect(find.byType(TrinaGrid), findsOneWidget,
+            reason: 'Popup grid should have closed after selection.');
+      } else {
+        expect(find.byType(TrinaGrid), findsNWidgets(2),
+            reason: 'Popup grid should remain open after selection.');
+      }
+    });
   }
 
-  group('popup cell in a TrinaSelectColumn, ', () {
-    testCase(
-      assertPopupShouldClose: true,
+  group('TrinaSelectColumn popup', () {
+    runTestCase(
+      testName:
+          'When selectWithSingleTap is true, tapping a value should close the popup.',
+      shouldPopupClose: true,
       column: ColumnHelper.selectColumn(
         'select',
         items: ['one', 'two', 'three'],
@@ -71,8 +86,11 @@ void main() {
       ),
       valueToSelect: 'two',
     );
-    testCase(
-      assertPopupShouldClose: false,
+
+    runTestCase(
+      testName:
+          'When selectWithSingleTap is false, tapping a value should not close the popup.',
+      shouldPopupClose: false,
       column: ColumnHelper.selectColumn(
         'select',
         items: ['one', 'two', 'three'],
@@ -82,24 +100,39 @@ void main() {
       valueToSelect: 'two',
     );
   });
-  group('popup cell in a TrinaBooleanColumn, ', () {
-    testCase(
-      assertPopupShouldClose: true,
-      column: ColumnHelper.booleanColumn('boolean', selectWithSingleTap: true),
+
+  group('TrinaBooleanColumn popup', () {
+    runTestCase(
+      testName:
+          'When selectWithSingleTap is true, tapping a value should close the popup.',
+      shouldPopupClose: true,
+      column: ColumnHelper.booleanColumn('boolean',
+          initialValue: true, selectWithSingleTap: true),
       valueToSelect: true,
     );
-    testCase(
-      assertPopupShouldClose: false,
-      column: ColumnHelper.booleanColumn('boolean', selectWithSingleTap: false),
-      valueToSelect: false,
+
+    runTestCase(
+      testName:
+          'When selectWithSingleTap is false, tapping a value should not close the popup.',
+      shouldPopupClose: false,
+      column: ColumnHelper.booleanColumn(
+        'boolean',
+        initialValue: true,
+        selectWithSingleTap: false,
+      ),
+      valueToSelect: true,
     );
   });
-  group('popup cell in a TrinaDateColumn, ', () {
+
+  group('TrinaDateColumn popup', () {
     final startingDate = DateTime.now();
     final valueToSelect =
         startingDate.add(const Duration(days: 1)).day.toString();
-    testCase(
-      assertPopupShouldClose: true,
+
+    runTestCase(
+      testName:
+          'When selectWithSingleTap is true, tapping a value should close the popup.',
+      shouldPopupClose: true,
       column: ColumnHelper.dateColumn(
         'date',
         startDate: startingDate,
@@ -107,8 +140,11 @@ void main() {
       ).first,
       valueToSelect: valueToSelect,
     );
-    testCase(
-      assertPopupShouldClose: false,
+
+    runTestCase(
+      testName:
+          'When selectWithSingleTap is false, tapping a value should not close the popup.',
+      shouldPopupClose: false,
       column: ColumnHelper.dateColumn(
         'date',
         selectWithSingleTap: false,
