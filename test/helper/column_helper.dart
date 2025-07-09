@@ -20,12 +20,14 @@ class ColumnHelper {
 
   static TrinaColumn booleanColumn(
     String title, {
+    bool? initialValue,
     bool selectWithSingleTap = false,
   }) {
     return TrinaColumn(
       title: title,
       field: title,
       type: TrinaColumnType.boolean(
+        defaultValue: initialValue,
         selectWithSingleTap: selectWithSingleTap,
       ),
     );
