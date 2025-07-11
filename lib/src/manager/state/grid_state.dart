@@ -192,6 +192,18 @@ mixin GridState implements ITrinaGridState {
     }
   }
 
+  /// calls [handleOnSelected] if [mode] is not [TrinaGridMode.popup]
+  ///
+  /// Reason is that in [TrinaGridMode.popup] mode, selecting a row or a cell
+  /// will dismiss the popup grid which is not desired.
+  void handleOnSelectedIfNotPopup() {
+    if (mode.isPopup) {
+      return;
+    }
+
+    handleOnSelected();
+  }
+
   void _handleSelectCheckRowBehavior() {
     final stateManager = eventManager?.stateManager;
     if (currentRow == null || stateManager == null) return;

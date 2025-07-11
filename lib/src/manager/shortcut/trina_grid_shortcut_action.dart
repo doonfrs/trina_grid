@@ -89,6 +89,8 @@ class TrinaGridActionMoveCellFocus extends TrinaGridShortcutAction {
     }
 
     stateManager.moveCurrentCell(direction, force: force);
+
+    stateManager.handleOnSelectedIfNotPopup();
   }
 }
 
@@ -162,11 +164,13 @@ class TrinaGridActionMoveCellFocusByPage extends TrinaGridShortcutAction {
             (stateManager.rowContainerHeight / stateManager.rowTotalHeight)
                 .floor();
 
-        int rowIdx = stateManager.currentRowIdx!;
+        int rowIdx = stateManager.currentRowIdx ?? 0;
 
         rowIdx += direction.isUp ? -moveCount : moveCount;
 
         stateManager.moveCurrentCellByRowIdx(rowIdx, direction);
+
+        stateManager.handleOnSelectedIfNotPopup();
 
         break;
     }
@@ -255,6 +259,8 @@ class TrinaGridActionDefaultTab extends TrinaGridShortcutAction {
         : _moveCellNext(stateManager);
 
     stateManager.setEditing(stateManager.autoEditing || saveIsEditing);
+
+    stateManager.handleOnSelectedIfNotPopup();
   }
 
   void _moveCellPrevious(TrinaGridStateManager stateManager) {
@@ -517,10 +523,12 @@ class TrinaGridActionMoveCellFocusToEdge extends TrinaGridShortcutAction {
       case TrinaMoveDirection.left:
       case TrinaMoveDirection.right:
         stateManager.moveCurrentCellToEdgeOfColumns(direction);
+        stateManager.handleOnSelectedIfNotPopup();
         break;
       case TrinaMoveDirection.up:
       case TrinaMoveDirection.down:
         stateManager.moveCurrentCellToEdgeOfRows(direction);
+        stateManager.handleOnSelectedIfNotPopup();
         break;
     }
   }
