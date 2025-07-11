@@ -245,14 +245,6 @@ mixin KeyboardState implements ITrinaGridState {
     setCurrentCell(cellToMove, rowIdx, notify: notify);
 
     moveScrollByRow(direction, rowIdx - direction.offset);
-
-    if (selectingMode.isRow) {
-      selectRowsInRange(
-        currentCellPosition?.rowIdx,
-        currentSelectingPosition?.rowIdx,
-        notify: false,
-      );
-    }
   }
 
   @override
