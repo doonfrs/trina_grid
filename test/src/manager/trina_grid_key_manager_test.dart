@@ -498,4 +498,144 @@ void main() {
           .called(1);
     });
   });
+  group('_handleDefaultActions', () {
+    late TrinaGridKeyManager keyManager;
+    setUp(() {
+      keyManager = TrinaGridKeyManager(stateManager: stateManager);
+      keyManager.init();
+    });
+    Future<void> buildAndFocus(WidgetTester tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Material(
+            child: KeyboardListener(
+              onKeyEvent: (event) {
+                keyManager.subject.add(TrinaKeyManagerEvent(
+                  focusNode: FocusNode(),
+                  event: event,
+                ));
+              },
+              focusNode: keyboardFocusNode,
+              child: const TextField(),
+            ),
+          ),
+        ),
+      );
+      keyboardFocusNode.requestFocus();
+      // Ensures the focus has been processed.
+      await tester.pump();
+    }
+
+    group('_handleCharacter', () {
+      testWidgets(
+        'When isEditing is false and currentCell != null, '
+        'setEditing(true) should be called',
+        (WidgetTester tester) async {
+          await tester.runAsync(() async {
+            await buildAndFocus(tester);
+
+            // given
+            when(stateManager.isEditing).thenReturn(false);
+            when(stateManager.currentCell).thenReturn(TrinaCell(value: 'test'));
+
+            // when
+            await tester.sendKeyEvent(LogicalKeyboardKey.keyA);
+            await tester.pump();
+
+            // then
+            verify(stateManager.setEditing(true)).called(1);
+          });
+        },
+      );
+      testWidgets(
+        'When isEditing is true, '
+        'CurrentCell != null, '
+        'setEditing should not be called',
+        (WidgetTester tester) async {
+          await buildAndFocus(tester); // setup
+
+          // given
+          when(stateManager.isEditing).thenReturn(true);
+          when(stateManager.currentCell).thenReturn(TrinaCell(value: 'test'));
+
+          // when
+          await tester.sendKeyEvent(LogicalKeyboardKey.keyA);
+
+          // then
+          verifyNever(stateManager.setEditing(any));
+        },
+      );
+      testWidgets(
+        'When CurrentCell is null, '
+        'no calls should be made',
+        (WidgetTester tester) async {
+          await buildAndFocus(tester); // setup
+
+          // given
+          when(stateManager.currentCell).thenReturn(null);
+
+          // when
+          await tester.sendKeyEvent(LogicalKeyboardKey.keyA);
+          // then
+          verifyNever(stateManager.setEditing(any));
+          verifyNever(stateManager.textEditingController);
+        },
+      );
+    });
+    group('when a modifier key is pressed with a character', () {
+      testWidgets(
+        'When alt is pressed, '
+        'no calls should be made',
+        (WidgetTester tester) async {
+          await buildAndFocus(tester); // setup
+
+          // when
+          await tester.sendKeyDownEvent(LogicalKeyboardKey.alt);
+          await tester.sendKeyEvent(LogicalKeyboardKey.keyA);
+          await tester.sendKeyUpEvent(LogicalKeyboardKey.alt);
+          await tester.pump();
+          // then
+          verifyNever(stateManager.setEditing(any));
+        },
+      );
+      testWidgets(
+        'When ctrl is pressed, '
+        'no calls should be made',
+        (WidgetTester tester) async {
+          await buildAndFocus(tester); // setup
+
+          // when
+          await tester.sendKeyDownEvent(LogicalKeyboardKey.control);
+          await tester.sendKeyEvent(LogicalKeyboardKey.keyA);
+          await tester.sendKeyUpEvent(LogicalKeyboardKey.control);
+          await tester.pump();
+
+          // then
+          verifyNever(stateManager.setEditing(any));
+        },
+      );
+      testWidgets(
+        'When shift is pressed, '
+        'event should be handled',
+        (WidgetTester tester) async {
+          await tester.runAsync(
+            () async {
+              await buildAndFocus(tester); // setup
+
+              when(stateManager.isEditing).thenReturn(false);
+              when(stateManager.currentCell)
+                  .thenReturn(TrinaCell(value: 'test'));
+              // when
+              await tester.sendKeyDownEvent(LogicalKeyboardKey.shift);
+              await tester.sendKeyEvent(LogicalKeyboardKey.keyA);
+              await tester.sendKeyUpEvent(LogicalKeyboardKey.shift);
+              await tester.pumpAndSettle();
+              // then
+              verify(stateManager.setEditing(true)).called(1);
+            },
+          );
+        },
+      );
+    });
+  });
 }
