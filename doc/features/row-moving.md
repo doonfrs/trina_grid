@@ -33,9 +33,9 @@ When row moving is enabled:
 
 ### Moving Multiple Rows
 
-When using row selection mode (`TrinaGridSelectingMode.row`), users can:
+When using row selection modes (`TrinaGridSelectingMode.rowWithCtrl` or `TrinaGridSelectingMode.rowWithSingleTap`), users can:
 
-1. Select multiple rows using Shift+Click or Ctrl/Cmd+Click.
+1. Select multiple rows.
 2. Drag any of the selected rows to move all selected rows together to a new position.
 
 ## Programmatic Row Moving

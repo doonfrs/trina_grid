@@ -24,7 +24,7 @@ TrinaGrid(
   columns: columns,
   rows: rows,
   configuration: TrinaGridConfiguration(
-    selectingMode: TrinaGridSelectingMode.cellWithSingleTap, // Default
+    selectingMode: TrinaGridSelectingMode.cellWithCtrl, // Default
   ),
 )
 ```
@@ -36,29 +36,30 @@ TrinaGrid(
 
 ## Basic Usage
 
-### Single Cell Selection
-
-To select a single cell, simply click on it:
-
-```dart
-// The cell will be selected when clicked
-// No additional code required
-```
-
 ### Range Selection
 
-To select a range of cells:
+You can select a range of cells using one of the following methods:
 
-1. Click on the first cell
-2. Drag to the last cell in the range
-3. Release to complete the selection
+*Note*: range selection is available by default when using one of the above cell-selecting modes.
 
-Alternatively, you can use keyboard shortcuts:
+#### Drag Selection
 
-1. Click on the first cell
-2. Hold Shift
-3. Use arrow keys to extend the selection
-4. Release Shift when done
+1. Click and hold on the first cell.
+2. Drag the mouse to the last cell in the desired range.
+3. Release the mouse button to complete the selection.
+
+#### Keyboard (Shift + Arrow Keys)
+
+1. Select the starting cell.
+2. Hold down the **Shift** key.
+3. Use the **arrow keys** (Up, Down, Left, Right) to extend the selection.
+4. Release the **Shift** key when the desired range is selected.
+
+#### Keyboard (Shift + Click)
+
+1. Click on a cell to set the starting point of the selection.
+2. Hold down the **Shift** key.
+3. Click on another cell to select all cells between the starting point and the clicked cell.
 
 ## Styling Selected Cells
 
@@ -92,19 +93,13 @@ You can programmatically control cell selection through the state manager:
 
 ```dart
 // Select a specific cell
-stateManager.setCurrentCell(
-  cell,
-  rowIdx,
-  notify: true,
-);
+stateManager.toggleCellSelection(cell, notify: true);
 
 // Check if a cell is selected
 bool isSelected = stateManager.isSelectedCell(cell);
 
 // Get current selection information
-TrinaGridCellPosition? currentPosition = stateManager.currentCellPosition;
-List<TrinaGridSelectingCellPosition> selectedPositions = 
-    stateManager.currentSelectingPositionList;
+TrinaCellPosition? currentPosition = stateManager.currentSelectingPosition;
 
 // Clear selection
 stateManager.clearCurrentCell(notify: true);
@@ -115,23 +110,18 @@ stateManager.setSelectingMode(TrinaGridSelectingMode.cellWithCtrl);
 
 ## Handling Selection Events
 
-You can respond to cell selection events using the `onChanged` callback:
+You can respond to cell selection events using the `onSelected` callback:
 
 ```dart
 TrinaGrid(
   columns: columns,
   rows: rows,
-  onChanged: (PlutoGridOnChangedEvent event) {
-    // Check if this is a selection change event
-    if (event.type == PlutoGridEventType.selection) {
-      // Access the current selection
-      final currentCell = event.stateManager.currentCell;
-      final selectedPositions = event.stateManager.currentSelectingPositionList;
-      
-      // Perform actions based on selection
-      print('Selected cell: ${currentCell?.value}');
-      print('Number of cells in selection: ${selectedPositions.length}');
-    }
+  onSelected: (TrinaGridOnSelectedEvent event) {
+    final selectedCells = event.selectedCells;
+    
+    // Perform actions based on selection
+    print('Currently selected cell: ${event.lastSelectedCell?.value}');
+    print('Number of cells in selection: ${selectedCells.length}');
   },
 )
 ```
@@ -141,12 +131,6 @@ TrinaGrid(
 Cell selection integrates with other TrinaGrid features for enhanced functionality:
 
 ### Cell Selection with Editing
-
-When a cell is selected, you can start editing by:
-
-- Double-clicking the cell
-- Pressing F2 or Enter
-- Directly starting to type (if auto editing is enabled)
 
 #### Note on Auto Editing
 
@@ -272,7 +256,7 @@ class _CellSelectionExampleState extends State<CellSelectionExample> {
             stateManager = event.stateManager;
           },
           onChanged: (TrinaGridOnChangedEvent event) {
-            if (event.type == TrinaGridEventType.selection) {
+            if (event is TrinaGridChangeSelection) {
               // Handle selection changes
               print('Selection changed');
               
