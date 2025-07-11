@@ -63,13 +63,27 @@ class _RowMovingScreenState extends State<RowMovingScreen> {
       title: 'Row moving',
       topTitle: 'Row moving',
       topContents: const [
-        Text('You can move the row by dragging it.'),
+        Text.rich(
+          TextSpan(
+            children: [
+              TextSpan(
+                  text:
+                      'If enableRowDrag of the column property is set to true, the icon '),
+              WidgetSpan(child: Icon(Icons.drag_indicator)),
+              TextSpan(text: ' will appear on the left side of the cell.'),
+            ],
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 8.0),
+          child: Text(
+            'Usage:',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
+        Text('- Drag the icon to move the row up and down.'),
         Text(
-            'If enableRowDrag of the column property is set to true, an icon that can be dragged to the left of the cell value is created.'),
-        Text('You can drag the icon to move the row up and down.'),
-        Text('In Selecting Row mode, you can move all the selected rows.'),
-        Text(
-            'You can receive the moved rows passed to the onRowsMoved callback.'),
+            '- To move multiple rows at once, select the desired rows by clicking on them or with shift + click, and then drag the icon of any of those rows.'),
       ],
       topButtons: [
         TrinaExampleButton(
