@@ -131,7 +131,7 @@ Configure how cells or rows can be selected:
 
 ```dart
 TrinaGridConfiguration(
-  selectingMode: TrinaGridSelectingMode.cellWithSingleTap,
+  selectingMode: TrinaGridSelectingMode.cellWithCtrl,
 )
 ```
 

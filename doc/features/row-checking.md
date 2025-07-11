@@ -258,8 +258,8 @@ TrinaGrid(
   columns: columns,
   rows: rows,
   onLoaded: (TrinaGridOnLoadedEvent event) {
-    // Enable row selection mode
-    event.stateManager.setSelectingMode(TrinaGridSelectingMode.row);
+    // Use a row selection mode
+    event.stateManager.setSelectingMode(TrinaGridSelectingMode.rowWithCtrl); // or TrinaGridSelectingMode.rowWithSingleTap
     stateManager = event.stateManager;
   },
   onRowChecked: handleRowChecked,

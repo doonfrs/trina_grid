@@ -36,7 +36,6 @@ Allows users to select single or multiple rows with a single tap.
 
 Allows users to select single or multiple rows using Click + Ctrl key(cmd on Mac).
 
-- **Keyboard Navigation**: Use arrow keys to navigate to a row and press Space or Enter to select it.
 
 ## Range Row Selection
 
@@ -94,9 +93,8 @@ TrinaGrid(
   rows: rows,
   onSelected: (TrinaGridOnSelectedEvent event) {
     // Handle selection change
-    print('Selected rows: ${event.row}');
-    print('Selected cell: ${event.cell}');
-    print('Selected column: ${event.column}');
+    print('Selected rows: ${event.selectedRows.length}');
+    print('Currently selected row: ${event.lastSelectedRow?.sortIdx}');
   },
 )
 ```
