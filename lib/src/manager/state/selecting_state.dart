@@ -153,7 +153,6 @@ mixin SelectingState implements ITrinaGridState {
       setEditing(false, notify: false);
     }
 
-    // Invalidates the previously selected row.
     if (isSelecting) {
       clearCurrentSelecting(notify: false);
     }

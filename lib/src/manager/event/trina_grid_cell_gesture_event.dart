@@ -80,16 +80,16 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
   }
 
   void _onSelectionWithCTRL(TrinaGridStateManager stateManager) {
-    if (stateManager.selectingMode.isDisabled) {
-      return;
-    }
-
     if (stateManager.selectingMode.isCellWithCtrl) {
       final isCurrentCell = stateManager.isCurrentCell(cell);
       final wasSelected = stateManager.isSelectedCell(cell);
-      if (!isCurrentCell &&
+
+      // Equals to `true` if tapped cell != currentCell and
+      // we have a currentCell and it's not selected
+      final addCurrentCellToSelection = !isCurrentCell &&
           stateManager.currentCell != null &&
-          stateManager.selectedCells.isEmpty) {
+          stateManager.selectedCells.isEmpty;
+      if (addCurrentCellToSelection) {
         stateManager.toggleCellSelection(stateManager.currentCell!);
       }
       stateManager.toggleCellSelection(cell);
@@ -167,9 +167,11 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
 
     bool hasPositionChanged = false;
     if (stateManager.selectingMode.isRow) {
+      // In row mode, the position is changed when the rowIdx is changed.
       hasPositionChanged =
           newSelectingPosition.rowIdx != previousSelectingPosition?.rowIdx;
     } else if (stateManager.selectingMode.isCell) {
+      // In cell mode, the position is changed when the rowIdx or columnIdx is changed.
       hasPositionChanged =
           newSelectingPosition.rowIdx != previousSelectingPosition?.rowIdx ||
               newSelectingPosition.columnIdx !=
