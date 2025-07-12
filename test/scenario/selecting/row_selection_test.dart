@@ -23,13 +23,14 @@ void main() {
 
   buildGrid({
     int numberOfRows = 10,
+    int numberOfCols = 1,
     bool autoSetFirstCellAsCurrent = true,
     void Function(TrinaGridOnLoadedEvent)? onLoaded,
     void Function(TrinaGridOnSelectedEvent)? onSelected,
     required TrinaGridSelectingMode selectingMode,
   }) {
     // given
-    final columns = ColumnHelper.textColumn('column');
+    final columns = ColumnHelper.textColumn('column', count: numberOfCols);
     final rows = RowHelper.count(numberOfRows, columns);
 
     return TrinaWidgetTestHelper(
@@ -72,11 +73,13 @@ void main() {
     /// Builds a grid with `selectingMode` set to TrinaGridSelectingMode.rowWithSingleTap.
     buildGridHelper({
       int numberOfRows = 10,
+      int numberOfCols = 1,
       void Function(TrinaGridOnLoadedEvent)? onLoaded,
       void Function(TrinaGridOnSelectedEvent)? onSelected,
     }) {
       return buildGrid(
         numberOfRows: numberOfRows,
+        numberOfCols: numberOfCols,
         onLoaded: onLoaded,
         onSelected: onSelected,
         selectingMode: TrinaGridSelectingMode.rowWithSingleTap,
@@ -110,6 +113,12 @@ void main() {
       selectRow: selectRow,
     );
 
+    runClearRowSelectionOnNavigatingViaKeyboardTestCases(
+      stateManager: () => stateManager,
+      buildGrid: buildGridHelper,
+      mock: mock,
+      selectRow: selectRow,
+    );
     buildGrid(
       selectingMode: TrinaGridSelectingMode.rowWithSingleTap,
       onSelected: mock.oneParamReturnVoid<TrinaGridOnSelectedEvent>,
@@ -175,11 +184,13 @@ void main() {
     /// Builds a grid with `selectingMode` set to TrinaGridSelectingMode.rowWithCtrl.
     buildGridHelper({
       int numberOfRows = 10,
+      int numberOfCols = 1,
       void Function(TrinaGridOnLoadedEvent)? onLoaded,
       void Function(TrinaGridOnSelectedEvent)? onSelected,
     }) {
       return buildGrid(
         numberOfRows: numberOfRows,
+        numberOfCols: numberOfCols,
         onLoaded: onLoaded,
         onSelected: onSelected,
         selectingMode: TrinaGridSelectingMode.rowWithCtrl,
@@ -213,8 +224,15 @@ void main() {
       selectRow: selectRow,
     );
 
+    runClearRowSelectionOnNavigatingViaKeyboardTestCases(
+      stateManager: () => stateManager,
+      buildGrid: buildGridHelper,
+      mock: mock,
+      selectRow: selectRow,
+    );
+
     buildGridHelper().test(
-      'when currently selecting rows, tapping or a row should clear selection',
+      'when currently selecting rows, tapping a row should clear selection',
       (tester) async {
         // select first row
         await selectRow(tester, 0);
