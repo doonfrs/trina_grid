@@ -153,6 +153,12 @@ void main() {
         verifyOnSelectedEvent(mock: mock, expectedSelectedCells: []);
       },
     );
+    runClearCellSelectionOnNavigatingViaKeyboardTestCases(
+      buildGrid: buildGridHelper,
+      stateManager: () => stateManager,
+      mock: mock,
+      selectCell: selectCell,
+    );
   });
 
   group('cell with ctrl selecting mode', () {
@@ -203,6 +209,13 @@ void main() {
     runCellRangeSelectionWithShiftTestCases(
       stateManager: () => stateManager,
       buildGrid: buildGridHelper,
+      mock: mock,
+      selectCell: selectCell,
+    );
+
+    runClearCellSelectionOnNavigatingViaKeyboardTestCases(
+      buildGrid: buildGridHelper,
+      stateManager: () => stateManager,
       mock: mock,
       selectCell: selectCell,
     );

@@ -3814,6 +3814,15 @@ class MockTrinaGridStateManager extends _i1.Mock
         ),
         returnValueForMissingStub: null,
       ) as String?);
+
+  @override
+  void handleOnSelectedIfNotPopup() => super.noSuchMethod(
+        Invocation.method(
+          #handleOnSelectedIfNotPopup,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
 }
 
 /// A class which mocks [TrinaGridEventManager].
