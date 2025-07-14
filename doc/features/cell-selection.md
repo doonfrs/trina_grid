@@ -130,12 +130,6 @@ TrinaGrid(
 
 Cell selection integrates with other TrinaGrid features for enhanced functionality:
 
-### Cell Selection with Editing
-
-#### Note on Auto Editing
-
-It's recommended to NOT use `TrinaGridSelectingMode.cellWithSingleTap` when Auto editing is enabled. Every thing will work as expected, but it's not a good experience.
-
 
 ### Cell Selection with Copy & Paste
 
