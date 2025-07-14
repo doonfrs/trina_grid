@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:trina_grid/trina_grid.dart';
 
@@ -72,7 +74,7 @@ class _CellSelectionScreenState extends State<CellSelectionScreen> {
     String value = '';
     for (var cell in selectedCells) {
       value +=
-          'rowIdx: ${cell.row.sortIdx}, field: ${cell.column.field}, value: ${cell.value}\n';
+          'value: ${cell.value}, row: ${cell.row.sortIdx}, column: ${cell.column.field}\n';
     }
     return value;
   }
@@ -94,57 +96,30 @@ class _CellSelectionScreenState extends State<CellSelectionScreen> {
       title: 'Cell selection',
       topTitle: 'Cell selection',
       topContents: [
-        Text(
-          '''Range Selection:
+        OverflowBar(
+          alignment: MainAxisAlignment.start,
+          // overflowSpacing: 10,
+          children: [
+            Text(
+              '''Range Selection:
           - Shift + Click: Select a range of cells from the currently selected cell to the clicked cell.
           - Long Press and Drag: Press and hold on a cell, then drag to select multiple consecutive cells.
           ''',
-        ),
-        SizedBox(
-          width: double.infinity,
-          child: OverflowBar(
-            alignment: MainAxisAlignment.start,
-            children: [
-              SizedBox(width: 200, child: Text('Choose selecting mode:')),
-              SizedBox(
-                width: 200,
-                child: RadioListTile(
-                  value: TrinaGridSelectingMode.cellWithSingleTap,
-                  groupValue: currentSelectingMode,
-                  onChanged: changeSelectingMode,
-                  title: const Text('Single tap'),
-                ),
-              ),
-              SizedBox(
-                width: 200,
-                child: RadioListTile(
-                  value: TrinaGridSelectingMode.cellWithCtrl,
-                  groupValue: currentSelectingMode,
-                  onChanged: changeSelectingMode,
-                  title: const Text('Ctrl + Click'),
-                ),
-              ),
-              SizedBox(
-                width: 200,
-                child: RadioListTile(
-                  value: TrinaGridSelectingMode.disabled,
-                  groupValue: currentSelectingMode,
-                  onChanged: changeSelectingMode,
-                  title: const Text('Disabled'),
-                ),
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Column(
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * .2,
+            ),
+            SizedBox(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'onSelected output (Scroll if you need):\n',
+                    'onSelected output (Scroll if needed):\n',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   SizedBox(
                     height: 100,
+                    width: 300,
                     child: Scrollbar(
                       thumbVisibility: true,
                       child: SingleChildScrollView(
@@ -155,8 +130,41 @@ class _CellSelectionScreenState extends State<CellSelectionScreen> {
                   ),
                 ],
               ),
-            ],
-          ),
+            ),
+          ],
+        ),
+        OverflowBar(
+          alignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(width: 200, child: Text('Choose selecting mode:')),
+            SizedBox(
+              width: 200,
+              child: RadioListTile(
+                value: TrinaGridSelectingMode.cellWithSingleTap,
+                groupValue: currentSelectingMode,
+                onChanged: changeSelectingMode,
+                title: const Text('Single tap'),
+              ),
+            ),
+            SizedBox(
+              width: 200,
+              child: RadioListTile(
+                value: TrinaGridSelectingMode.cellWithCtrl,
+                groupValue: currentSelectingMode,
+                onChanged: changeSelectingMode,
+                title: const Text('Ctrl + Click'),
+              ),
+            ),
+            SizedBox(
+              width: 200,
+              child: RadioListTile(
+                value: TrinaGridSelectingMode.disabled,
+                groupValue: currentSelectingMode,
+                onChanged: changeSelectingMode,
+                title: const Text('Disabled'),
+              ),
+            ),
+          ],
         ),
       ],
       topButtons: [

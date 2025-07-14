@@ -36,33 +36,6 @@ class _RowSelectionScreenState extends State<RowSelectionScreen> {
     rows.addAll(dummyData.rows);
   }
 
-  void handleSelected() async {
-    await showDialog<void>(
-        context: context,
-        builder: (BuildContext ctx) {
-          return Dialog(
-            child: LayoutBuilder(
-              builder: (ctx, size) {
-                return Container(
-                  padding: const EdgeInsets.all(15),
-                  width: 400,
-                  height: 500,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(selectedValues),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-          );
-        });
-  }
-
   void changeSelectingMode(TrinaGridSelectingMode? mode) {
     if (mode == null) {
       return;
@@ -79,7 +52,7 @@ class _RowSelectionScreenState extends State<RowSelectionScreen> {
       return 'No rows are selected.';
     }
 
-    String value = 'selected rows: ${selectedRows.length} \n';
+    String value = 'Total selected rows: ${selectedRows.length} \n';
     for (var row in selectedRows) {
       value += 'rowIdx: ${row.sortIdx}\n';
     }
@@ -93,6 +66,7 @@ class _RowSelectionScreenState extends State<RowSelectionScreen> {
       topTitle: 'Row selection',
       topContents: [
         OverflowBar(
+          overflowSpacing: 10,
           alignment: MainAxisAlignment.start,
           children: [
             Text(
@@ -107,16 +81,13 @@ class _RowSelectionScreenState extends State<RowSelectionScreen> {
             SizedBox(
               child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(00),
-                    child: Text(
-                      'onSelected output (Scroll if you need):\n',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
+                  Text(
+                    'onSelected output (Scroll if you need):\n',
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   SizedBox(
                     height: 100,
-                    width: 200,
+                    width: 300,
                     child: Scrollbar(
                       thumbVisibility: true,
                       child: SingleChildScrollView(
@@ -151,6 +122,15 @@ class _RowSelectionScreenState extends State<RowSelectionScreen> {
                 title: const Text('Ctrl + Click'),
               ),
             ),
+            SizedBox(
+              width: 200,
+              child: RadioListTile(
+                value: TrinaGridSelectingMode.disabled,
+                groupValue: currentSelectingMode,
+                onChanged: changeSelectingMode,
+                title: const Text('Disabled'),
+              ),
+            ),
           ],
         ),
       ],
@@ -162,17 +142,6 @@ class _RowSelectionScreenState extends State<RowSelectionScreen> {
       ],
       body: Column(
         children: [
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                TextButton(
-                  onPressed: handleSelected,
-                  child: const Text('Show selected rows.'),
-                ),
-              ],
-            ),
-          ),
           Expanded(
             child: TrinaGrid(
               columns: columns,
