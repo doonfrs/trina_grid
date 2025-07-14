@@ -22,7 +22,7 @@ class _EditingStateScreenState extends State<EditingStateScreen> {
   late TrinaGridStateManager stateManager;
 
   bool autoEditing = false;
-
+  bool enterKeyTogglesEditing = false;
   @override
   void initState() {
     super.initState();
@@ -38,6 +38,17 @@ class _EditingStateScreenState extends State<EditingStateScreen> {
     setState(() {
       autoEditing = flag;
       stateManager.setAutoEditing(flag);
+    });
+  }
+
+  void toggleEnterKeyActionToEditing(bool flag) {
+    setState(() {
+      enterKeyTogglesEditing = flag;
+      stateManager.setConfiguration(stateManager.configuration.copyWith(
+        enterKeyAction: flag
+            ? TrinaGridEnterKeyAction.toggleEditing
+            : TrinaGridEnterKeyAction.editingAndMoveDown,
+      ));
     });
   }
 
@@ -57,16 +68,28 @@ class _EditingStateScreenState extends State<EditingStateScreen> {
       ],
       body: Column(
         children: [
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                Switch(
-                  value: autoEditing,
-                  onChanged: toggleAutoEditing,
-                ),
-                const Text('autoEditing'),
-              ],
+          Expanded(
+            flex: 0,
+            child: SingleChildScrollView(
+              padding: EdgeInsets.only(bottom: 10),
+              scrollDirection: Axis.horizontal,
+              child: OverflowBar(
+                spacing: 10,
+                children: [
+                  LabeledSwitch(
+                    width: 220,
+                    label: 'Auto Editing on tap',
+                    value: autoEditing,
+                    onChanged: toggleAutoEditing,
+                  ),
+                  LabeledSwitch(
+                    width: 280,
+                    label: 'Press Enter to Toggle Editing',
+                    value: enterKeyTogglesEditing,
+                    onChanged: toggleEnterKeyActionToEditing,
+                  ),
+                ],
+              ),
             ),
           ),
           Expanded(
@@ -85,6 +108,49 @@ class _EditingStateScreenState extends State<EditingStateScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class LabeledSwitch extends StatelessWidget {
+  const LabeledSwitch({
+    super.key,
+    required this.label,
+    required this.value,
+    required this.onChanged,
+    this.padding,
+    this.width = 200,
+  });
+
+  final String label;
+  final EdgeInsets? padding;
+  final bool value;
+  final ValueChanged<bool> onChanged;
+  final double width;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        onChanged(!value);
+      },
+      child: Container(
+        width: width,
+        padding: padding ?? EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        decoration: BoxDecoration(
+          color: Colors.blueGrey[50],
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: Row(
+          children: <Widget>[
+            Expanded(child: Text(label)),
+            Switch(
+              value: value,
+              onChanged: onChanged,
+            ),
+          ],
+        ),
       ),
     );
   }
