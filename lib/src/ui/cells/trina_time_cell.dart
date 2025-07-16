@@ -62,6 +62,7 @@ class TrinaTimeCellState extends State<TrinaTimeCell>
 
     final configuration = widget.stateManager.configuration.copyWith(
       tabKeyAction: TrinaGridTabKeyAction.normal,
+      enterKeyAction: TrinaGridEnterKeyAction.select,
       style: style.copyWith(
         enableColumnBorderVertical: false,
         enableColumnBorderHorizontal: false,

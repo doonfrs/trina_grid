@@ -94,6 +94,7 @@ class TrinaGridDatePicker {
       createHeader: _createHeader,
       configuration: configuration.copyWith(
         tabKeyAction: TrinaGridTabKeyAction.normal,
+        enterKeyAction: TrinaGridEnterKeyAction.select,
         style: configuration.style.copyWith(
           enableColumnBorderVertical: false,
           enableColumnBorderHorizontal: false,

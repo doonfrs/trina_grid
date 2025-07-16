@@ -97,6 +97,7 @@ mixin PopupCellState<T extends PopupCell> on State<T>
       createHeader: createHeader,
       createFooter: createFooter,
       configuration: widget.stateManager.configuration.copyWith(
+        enterKeyAction: TrinaGridEnterKeyAction.select,
         tabKeyAction: TrinaGridTabKeyAction.normal,
         selectingMode: getPopupGridSelectingMode(),
         style: widget.stateManager.configuration.style.copyWith(

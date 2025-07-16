@@ -2001,18 +2001,19 @@ enum TrinaGridRowSelectionCheckBoxBehavior {
 
 /// Behavior of the Enter key when a cell is selected.
 enum TrinaGridEnterKeyAction {
-  /// When the Enter key is pressed, the cell is changed to the edit state,
-  /// or if it is already in the edit state, it moves to the cell below.
+  /// It switches to the editing state or if already in editing state, it moves to the cell below.
   editingAndMoveDown,
 
-  /// When the Enter key is pressed, the cell is changed to the edit state,
-  /// or if it is already in the edit state, it moves to the right cell.
+  /// It switches to the editing state or if already in editing state, it moves to the cell on the right.
   editingAndMoveRight,
 
-  /// Pressing the Enter key toggles the editing status.
+  /// Toggles The editing state without changing the cell.
   toggleEditing,
 
-  /// Pressing the Enter key does nothing.
+  /// Selects current cell\row if [selectingMode] is not [TrinaGridSelectingMode.disabled].
+  select,
+
+  /// There is no action.
   none;
 
   bool get isEditingAndMoveDown =>
@@ -2022,6 +2023,8 @@ enum TrinaGridEnterKeyAction {
       this == TrinaGridEnterKeyAction.editingAndMoveRight;
 
   bool get isToggleEditing => this == TrinaGridEnterKeyAction.toggleEditing;
+
+  bool get isSelect => this == TrinaGridEnterKeyAction.select;
 
   bool get isNone => this == TrinaGridEnterKeyAction.none;
 }

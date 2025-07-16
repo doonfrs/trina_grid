@@ -77,5 +77,40 @@ void main() {
         expect(stateManager!.currentCellPosition!.rowIdx, 4);
       },
     );
+    withTheCellSelected.test(
+      'When selectingMode != disabled, '
+      'enterKeyAction != select, '
+      'we have selected cell(s), '
+      'pressing enter should set currentCell to the last selected cell.',
+      (tester) async {
+        // setup
+        expect(
+          stateManager!.configuration.enterKeyAction !=
+              TrinaGridEnterKeyAction.select,
+          isTrue,
+        );
+        stateManager!.setSelectingMode(TrinaGridSelectingMode.cellWithCtrl);
+        // select a cell on a row different than the current cell
+        await tester.sendKeyDownEvent(LogicalKeyboardKey.control);
+        await tester.tap(find.text('header3 value 0'));
+        await tester.sendKeyUpEvent(LogicalKeyboardKey.control);
+        await tester.pumpAndSettle();
+
+        expect(stateManager!.currentCellPosition!.columnIdx, 3);
+        expect(stateManager!.currentCellPosition!.rowIdx, 0);
+        expect(
+          stateManager!.currentCellPosition!.rowIdx?.toString() !=
+              stateManager!.currentCell!.row.sortIdx.toString(),
+          isTrue,
+        );
+        // act
+        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+        await tester.pump();
+        //  assert
+        expect(stateManager!.currentCell!.value, 'header3 value 0');
+        expect(stateManager!.currentCellPosition!.columnIdx, 3);
+        expect(stateManager!.currentCellPosition!.rowIdx, 0);
+      },
+    );
   });
 }
