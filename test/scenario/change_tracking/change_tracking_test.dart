@@ -44,8 +44,6 @@ void main() {
               onLoaded: (TrinaGridOnLoadedEvent event) {
                 stateManager = event.stateManager;
                 stateManager!.setAutoEditing(true);
-                stateManager!
-                    .setSelectingMode(TrinaGridSelectingMode.cellWithCtrl);
                 stateManager!.setChangeTracking(true);
               },
             ),

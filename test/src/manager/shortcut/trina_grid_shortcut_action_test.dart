@@ -192,7 +192,7 @@ void main() {
         'it should call toggleRowSelection',
         () {
           when(stateManager.selectingMode)
-              .thenReturn(TrinaGridSelectingMode.rowWithCtrl);
+              .thenReturn(TrinaGridSelectingMode.row);
           when(stateManager.currentCell).thenReturn(currentCell);
           // act
           action.execute(keyEvent: enterKeyEvent, stateManager: stateManager);
@@ -211,7 +211,7 @@ void main() {
         'it should call toggleCellSelection',
         () {
           when(stateManager.selectingMode)
-              .thenReturn(TrinaGridSelectingMode.cellWithCtrl);
+              .thenReturn(TrinaGridSelectingMode.cell);
           when(stateManager.currentCell).thenReturn(currentCell);
           // act
           action.execute(keyEvent: enterKeyEvent, stateManager: stateManager);

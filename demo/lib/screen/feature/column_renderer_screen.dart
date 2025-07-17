@@ -144,9 +144,6 @@ class _ColumnRendererScreenState extends State<ColumnRendererScreen> {
           print(event);
         },
         onLoaded: (TrinaGridOnLoadedEvent event) {
-          event.stateManager
-              .setSelectingMode(TrinaGridSelectingMode.cellWithCtrl);
-
           stateManager = event.stateManager;
         },
       ),

@@ -45,6 +45,16 @@ The following sequence diagram illustrates the handling of user gestures and key
 
 #### - TrinaGridSelectingMode (Enum)
 
-- A simple enum that defines the available selection behaviors.
+Defines how cells or rows can be selected:
+
+- `cell`: Enables cell selection with the following capabilities:
+  - Multiple cell selection with Ctrl/Cmd key
+  - Range selection with Shift key or drag
+
+- `row`: Enables row selection with the following capabilities:
+  - Multiple row selection with Ctrl/Cmd key
+  - Range selection with Shift key or drag
+
+- `disabled`: Disables all selection functionality
 
 ---

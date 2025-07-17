@@ -89,7 +89,7 @@ void main() {
               TrinaGridEnterKeyAction.select,
           isTrue,
         );
-        stateManager!.setSelectingMode(TrinaGridSelectingMode.cellWithCtrl);
+        stateManager!.setSelectingMode(TrinaGridSelectingMode.cell);
         // select a cell on a row different than the current cell
         await tester.sendKeyDownEvent(LogicalKeyboardKey.control);
         await tester.tap(find.text('header3 value 0'));

@@ -492,9 +492,7 @@ void runClearCellSelectionOnNavigatingViaKeyboardTestCases({
     await tester.sendKeyEvent(LogicalKeyboardKey.pageDown);
     await tester.pumpAndSettle();
     await selectCell(tester, 'column0 value 8');
-    // we used [isNotEmptyHere] because we selected a cell other than
-    // the first cell(which is current cell by default)
-    // And in case of cellWithCtrl selection, the current cell is included in the selection.
+
     expect(stateManager().selectedCells, isNotEmpty);
     // Reset mock because selection fires an event.
     reset(mock);
@@ -536,10 +534,8 @@ void runClearCellSelectionOnNavigatingViaKeyboardTestCases({
     await tester.sendKeyEvent(LogicalKeyboardKey.pageDown);
     await tester.pumpAndSettle();
     await selectCell(tester, 'column0 value 8');
-    // we used [isNotEmptyHere] because we selected a cell other than
-    // the first cell(which is current cell by default)
-    // And in case of cellWithCtrl selection, the current cell is included in the selection.
     expect(stateManager().selectedCells, isNotEmpty);
+
     // Reset mock because selection fires an event.
     reset(mock);
 

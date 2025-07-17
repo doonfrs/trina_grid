@@ -98,8 +98,7 @@ class _RowMovingScreenState extends State<RowMovingScreen> {
           print(event);
         },
         onLoaded: (TrinaGridOnLoadedEvent event) {
-          event.stateManager
-              .setSelectingMode(TrinaGridSelectingMode.rowWithSingleTap);
+          event.stateManager.setSelectingMode(TrinaGridSelectingMode.row);
 
           stateManager = event.stateManager;
         },

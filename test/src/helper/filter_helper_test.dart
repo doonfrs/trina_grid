@@ -672,7 +672,7 @@ void main() {
         );
 
         verify(
-          stateManager.setSelectingMode(TrinaGridSelectingMode.cellWithCtrl,
+          stateManager.setSelectingMode(TrinaGridSelectingMode.cell,
               notify: false),
         ).called(1);
 

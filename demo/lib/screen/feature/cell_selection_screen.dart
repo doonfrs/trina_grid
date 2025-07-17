@@ -19,10 +19,7 @@ class _CellSelectionScreenState extends State<CellSelectionScreen> {
 
   final List<TrinaRow> rows = [];
 
-  late TrinaGridStateManager stateManager;
-
-  TrinaGridSelectingMode currentSelectingMode =
-      TrinaGridSelectingMode.cellWithSingleTap;
+  TrinaGridStateManager? stateManager;
 
   String selectedValues = '';
 
@@ -35,33 +32,6 @@ class _CellSelectionScreenState extends State<CellSelectionScreen> {
     columns.addAll(dummyData.columns);
 
     rows.addAll(dummyData.rows);
-  }
-
-  void handleSelected() async {
-    await showDialog<void>(
-        context: context,
-        builder: (BuildContext ctx) {
-          return Dialog(
-            child: LayoutBuilder(
-              builder: (ctx, size) {
-                return Container(
-                  padding: const EdgeInsets.all(15),
-                  width: 400,
-                  height: 500,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(selectedValues),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-          );
-        });
   }
 
   String _getSelected(List<TrinaCell>? selectedCells) {
@@ -77,17 +47,6 @@ class _CellSelectionScreenState extends State<CellSelectionScreen> {
     return value;
   }
 
-  void changeSelectingMode(TrinaGridSelectingMode? mode) {
-    if (mode == null) {
-      return;
-    }
-    stateManager.setSelectingMode(mode);
-    setState(() {
-      currentSelectingMode = mode;
-      selectedValues = _getSelected(stateManager.selectedCells);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return TrinaExampleScreen(
@@ -96,33 +55,42 @@ class _CellSelectionScreenState extends State<CellSelectionScreen> {
       topContents: [
         OverflowBar(
           alignment: MainAxisAlignment.start,
-          // overflowSpacing: 10,
           children: [
             Text(
-              '''Range Selection:
-          - Shift + Click: Select a range of cells from the currently selected cell to the clicked cell.
-          - Long Press and Drag: Press and hold on a cell, then drag to select multiple consecutive cells.
-          ''',
+              '''- Ctrl + Click: select multiple cells.
+- Shift + Click: select a range of cells from the currently selected cell to the clicked cell.
+- Long Press and Drag: press and hold on a cell, then drag to select multiple consecutive cells
+           ''',
             ),
             SizedBox(
               width: MediaQuery.of(context).size.width * .2,
             ),
             SizedBox(
+              height: 120,
+              width: 300,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'onSelected output (Scroll if needed):\n',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(
-                    height: 100,
-                    width: 300,
-                    child: Scrollbar(
-                      thumbVisibility: true,
-                      child: SingleChildScrollView(
-                        primary: true,
-                        child: Text(selectedValues),
+                  if (stateManager != null)
+                    ListenableBuilder(
+                      listenable: stateManager!,
+                      builder: (context, asyncSnapshot) {
+                        return Text(
+                          'onSelected event - '
+                          'Total selected cells: ${stateManager!.selectedCells.length} \n',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        );
+                      },
+                    ),
+                  Flexible(
+                    child: SizedBox(
+                      width: 300,
+                      child: Scrollbar(
+                        thumbVisibility: true,
+                        child: SingleChildScrollView(
+                          primary: true,
+                          reverse: true,
+                          child: Text(selectedValues),
+                        ),
                       ),
                     ),
                   ),
@@ -134,34 +102,41 @@ class _CellSelectionScreenState extends State<CellSelectionScreen> {
         OverflowBar(
           alignment: MainAxisAlignment.start,
           children: [
-            SizedBox(width: 200, child: Text('Choose selecting mode:')),
-            SizedBox(
-              width: 200,
-              child: RadioListTile(
-                value: TrinaGridSelectingMode.cellWithSingleTap,
-                groupValue: currentSelectingMode,
-                onChanged: changeSelectingMode,
-                title: const Text('Single tap'),
+            SizedBox(width: 180, child: Text('Programmatic control:')),
+            if (stateManager != null)
+              ListenableBuilder(
+                listenable: stateManager!,
+                builder: (context, _) {
+                  return Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    spacing: 20,
+                    children: [
+                      SizedBox(
+                        width: 250,
+                        child: SwitchListTile(
+                          title: Text('Enable selection'),
+                          value: stateManager!.selectingMode.isCell,
+                          onChanged: (flag) {
+                            stateManager!.setSelectingMode(flag == true
+                                ? TrinaGridSelectingMode.cell
+                                : TrinaGridSelectingMode.disabled);
+                          },
+                        ),
+                      ),
+                      FilledButton(
+                        onPressed: stateManager!.selectedCells.isEmpty
+                            ? null
+                            : () {
+                                stateManager!
+                                  ..clearCurrentSelecting()
+                                  ..handleOnSelected();
+                              },
+                        child: Text('Clear selection'),
+                      ),
+                    ],
+                  );
+                },
               ),
-            ),
-            SizedBox(
-              width: 200,
-              child: RadioListTile(
-                value: TrinaGridSelectingMode.cellWithCtrl,
-                groupValue: currentSelectingMode,
-                onChanged: changeSelectingMode,
-                title: const Text('Ctrl + Click'),
-              ),
-            ),
-            SizedBox(
-              width: 200,
-              child: RadioListTile(
-                value: TrinaGridSelectingMode.disabled,
-                groupValue: currentSelectingMode,
-                onChanged: changeSelectingMode,
-                title: const Text('Disabled'),
-              ),
-            ),
           ],
         ),
       ],
@@ -173,17 +148,6 @@ class _CellSelectionScreenState extends State<CellSelectionScreen> {
       ],
       body: Column(
         children: [
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                ElevatedButton(
-                  onPressed: handleSelected,
-                  child: const Text('Show selected cells.'),
-                ),
-              ],
-            ),
-          ),
           Expanded(
             child: TrinaGrid(
               columns: columns,
@@ -194,15 +158,13 @@ class _CellSelectionScreenState extends State<CellSelectionScreen> {
               onSelected: (event) => setState(() {
                 selectedValues = _getSelected(event.selectedCells);
               }),
-              configuration:
-                  TrinaGridConfiguration(autoSetFirstCellAsCurrent: true),
+              configuration: TrinaGridConfiguration(
+                autoSetFirstCellAsCurrent: true,
+                selectingMode: TrinaGridSelectingMode.cell,
+              ),
               onLoaded: (TrinaGridOnLoadedEvent event) {
-                event.stateManager
-                    .setSelectingMode(TrinaGridSelectingMode.cellWithSingleTap);
-
-                stateManager = event.stateManager;
                 setState(() {
-                  currentSelectingMode = stateManager.selectingMode;
+                  stateManager = event.stateManager;
                 });
               },
             ),

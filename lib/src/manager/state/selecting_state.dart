@@ -84,8 +84,7 @@ abstract class ISelectingState {
 class _State {
   bool _isSelecting = false;
 
-  TrinaGridSelectingMode _selectingMode =
-      TrinaGridSelectingMode.cellWithSingleTap;
+  TrinaGridSelectingMode _selectingMode = TrinaGridSelectingMode.cell;
 
   final Map<String, TrinaRow> _selectedRows = {};
   List<TrinaRow> _sortedRows = [];
@@ -186,8 +185,7 @@ mixin SelectingState implements ITrinaGridState {
     }
 
     switch (selectingMode) {
-      case TrinaGridSelectingMode.cellWithCtrl:
-      case TrinaGridSelectingMode.cellWithSingleTap:
+      case TrinaGridSelectingMode.cell:
         _setFistCellAsCurrent();
 
         setCurrentSelectingPosition(
@@ -197,8 +195,7 @@ mixin SelectingState implements ITrinaGridState {
           ),
         );
         break;
-      case TrinaGridSelectingMode.rowWithCtrl:
-      case TrinaGridSelectingMode.rowWithSingleTap:
+      case TrinaGridSelectingMode.row:
         if (currentCell == null) {
           _setFistCellAsCurrent();
         }
@@ -476,12 +473,11 @@ mixin SelectingState implements ITrinaGridState {
     if (selectingMode.isDisabled) {
       return false;
     }
-    // If in cell selection mode (Ctrl or Single Tap), check if the cell is in the _selectedCells map.
+
     if (selectingMode.isCell) {
       return _state._selectedCells.containsKey(cell.key.toString());
     }
 
-    // For range selection modes (horizontal), use the range logic.
     if (currentCellPosition == null || currentSelectingPosition == null) {
       return false;
     }

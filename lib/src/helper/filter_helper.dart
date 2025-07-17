@@ -417,10 +417,7 @@ class FilterPopupState {
   void onLoaded(TrinaGridOnLoadedEvent e) {
     _stateManager = e.stateManager;
 
-    // use cell selection with CTRL instead of single tap selection
-    // to not close the filter popup when tapping on a cell
-    _stateManager!
-        .setSelectingMode(TrinaGridSelectingMode.cellWithCtrl, notify: false);
+    _stateManager!.setSelectingMode(TrinaGridSelectingMode.cell, notify: false);
 
     if (_stateManager!.rows.isNotEmpty) {
       _stateManager!.setKeepFocus(true, notify: false);

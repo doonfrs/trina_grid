@@ -59,6 +59,7 @@ void main() {
     when(verticalScrollController.offset).thenReturn(0.0);
     when(stateManager.onDoubleTap).thenReturn((event) {});
     when(stateManager.onRowSecondaryTap).thenReturn((event) {});
+    when(stateManager.selectingMode).thenReturn(TrinaGridSelectingMode.cell);
   });
 
   group('onTapUp', () {
@@ -211,7 +212,7 @@ void main() {
       'hasFocus = true, '
       'isSelectingInteraction = true, '
       'keyPressed.ctrl = true, '
-      'selectingMode = TrinaGridSelectingMode.rowWithCtrl, '
+      'selectingMode = TrinaGridSelectingMode.row, '
       'Then, '
       'toggleRowSelection should be called.',
       () {
@@ -220,8 +221,7 @@ void main() {
         const rowIdx = 1;
 
         when(stateManager.hasFocus).thenReturn(true);
-        when(stateManager.selectingMode)
-            .thenReturn(TrinaGridSelectingMode.rowWithCtrl);
+        when(stateManager.selectingMode).thenReturn(TrinaGridSelectingMode.row);
         when(stateManager.isSelectingInteraction()).thenReturn(true);
         when(keyPressed.ctrl).thenReturn(true);
         clearInteractions(stateManager);
@@ -248,7 +248,7 @@ void main() {
       'hasFocus = true, '
       'isSelectingInteraction = false, '
       'isCurrentCell = true, '
-      'selectingMode is TrinaGridSelectingMode.cellWithCtrl, '
+      'selectingMode is TrinaGridSelectingMode.cell, '
       'Then, '
       'handleOnSelected should NOT be called.',
       () {
@@ -259,7 +259,7 @@ void main() {
         when(stateManager.hasFocus).thenReturn(true);
         when(stateManager.isSelectingInteraction()).thenReturn(false);
         when(stateManager.selectingMode)
-            .thenReturn(TrinaGridSelectingMode.cellWithCtrl);
+            .thenReturn(TrinaGridSelectingMode.cell);
         when(stateManager.isCurrentCell(any)).thenReturn(true);
         clearInteractions(stateManager);
 
@@ -282,7 +282,6 @@ void main() {
       'When, '
       'hasFocus = true, '
       'isSelectingInteraction = false, '
-      'selectingMode is TrinaGridSelectingMode.rowWithCtrl, '
       'isCurrentCell = false, '
       'Then, '
       'setCurrentCell should be called.',
@@ -292,8 +291,7 @@ void main() {
         const rowIdx = 1;
 
         when(stateManager.hasFocus).thenReturn(true);
-        when(stateManager.selectingMode)
-            .thenReturn(TrinaGridSelectingMode.rowWithCtrl);
+        when(stateManager.selectingMode).thenReturn(TrinaGridSelectingMode.row);
         when(stateManager.isSelectingInteraction()).thenReturn(false);
         when(stateManager.isCurrentCell(any)).thenReturn(false);
         clearInteractions(stateManager);
@@ -314,7 +312,7 @@ void main() {
       'When, '
       'hasFocus = true, '
       'isSelectingInteraction = false, '
-      'selectingMode = TrinaGridSelectingMode.rowWithCtrl, '
+      'selectingMode = TrinaGridSelectingMode.row, '
       'isCurrentCell = false, '
       'mode is not TrinaGridMode.popup, '
       'Then, '
@@ -325,8 +323,7 @@ void main() {
         const rowIdx = 1;
 
         when(stateManager.hasFocus).thenReturn(true);
-        when(stateManager.selectingMode)
-            .thenReturn(TrinaGridSelectingMode.rowWithCtrl);
+        when(stateManager.selectingMode).thenReturn(TrinaGridSelectingMode.row);
         when(stateManager.isSelectingInteraction()).thenReturn(false);
         when(stateManager.isCurrentCell(any)).thenReturn(false);
         clearInteractions(stateManager);
@@ -357,9 +354,7 @@ void main() {
         const rowIdx = 1;
 
         when(stateManager.isCurrentCell(any)).thenReturn(false);
-        when(stateManager.selectingMode).thenReturn(
-          TrinaGridSelectingMode.cellWithSingleTap,
-        );
+
         clearInteractions(stateManager);
 
         // when
@@ -388,9 +383,7 @@ void main() {
         const rowIdx = 1;
 
         when(stateManager.isCurrentCell(any)).thenReturn(true);
-        when(stateManager.selectingMode).thenReturn(
-          TrinaGridSelectingMode.cellWithSingleTap,
-        );
+
         clearInteractions(stateManager);
 
         // when
@@ -443,7 +436,7 @@ void main() {
         setUpMocksForLongPressMoveUpdate(
           previousSelectingPosition: position,
           newSelectingPosition: null,
-          selectingMode: TrinaGridSelectingMode.rowWithSingleTap,
+          selectingMode: TrinaGridSelectingMode.row,
           offset: offset,
         );
 
@@ -481,7 +474,7 @@ void main() {
         setUpMocksForLongPressMoveUpdate(
           previousSelectingPosition: anchorPosition,
           newSelectingPosition: newPosition,
-          selectingMode: TrinaGridSelectingMode.rowWithSingleTap,
+          selectingMode: TrinaGridSelectingMode.row,
           offset: offset,
         );
 
@@ -521,7 +514,7 @@ void main() {
         setUpMocksForLongPressMoveUpdate(
           previousSelectingPosition: position,
           newSelectingPosition: null,
-          selectingMode: TrinaGridSelectingMode.cellWithSingleTap,
+          selectingMode: TrinaGridSelectingMode.cell,
           offset: offset,
         );
 
@@ -559,7 +552,7 @@ void main() {
         setUpMocksForLongPressMoveUpdate(
           previousSelectingPosition: anchorPosition,
           newSelectingPosition: newPosition,
-          selectingMode: TrinaGridSelectingMode.cellWithSingleTap,
+          selectingMode: TrinaGridSelectingMode.cell,
           offset: offset,
         );
 
@@ -600,7 +593,7 @@ void main() {
         setUpMocksForLongPressMoveUpdate(
           previousSelectingPosition: anchorPosition,
           newSelectingPosition: newPosition,
-          selectingMode: TrinaGridSelectingMode.cellWithSingleTap,
+          selectingMode: TrinaGridSelectingMode.cell,
           offset: offset,
         );
 
@@ -637,8 +630,6 @@ void main() {
         const rowIdx = 1;
 
         when(stateManager.isCurrentCell(any)).thenReturn(false);
-        when(stateManager.selectingMode)
-            .thenReturn(TrinaGridSelectingMode.rowWithSingleTap);
         when(stateManager.currentCellPosition).thenReturn(null);
         clearInteractions(stateManager);
 
@@ -694,7 +685,7 @@ void main() {
     test(
       'When, '
       'mode is popup, '
-      'selectingMode is TrinaGridSelectingMode.rowWithCtrl (not single tap selection), '
+      'selectingMode is TrinaGridSelectingMode.row, '
       'Then, '
       'toggleRowSelection and handleOnSelected should be called.',
       () {
@@ -705,8 +696,7 @@ void main() {
         when(stateManager.mode).thenReturn(TrinaGridMode.popup);
         when(stateManager.selectingMode.isEnabled).thenReturn(true);
         when(stateManager.onDoubleTap).thenReturn(null);
-        when(stateManager.selectingMode)
-            .thenReturn(TrinaGridSelectingMode.rowWithCtrl);
+        when(stateManager.selectingMode).thenReturn(TrinaGridSelectingMode.row);
         clearInteractions(stateManager);
 
         // when
@@ -725,7 +715,7 @@ void main() {
     test(
       'When, '
       'mode is popup, '
-      'selectingMode is TrinaGridSelectingMode.cellWithCtrl (not single tap selection), '
+      'selectingMode is TrinaGridSelectingMode.cell '
       'Then, '
       'toggleCellSelection and handleOnSelected should be called.',
       () {
@@ -737,7 +727,7 @@ void main() {
         when(stateManager.selectingMode.isEnabled).thenReturn(true);
         when(stateManager.onDoubleTap).thenReturn(null);
         when(stateManager.selectingMode)
-            .thenReturn(TrinaGridSelectingMode.cellWithCtrl);
+            .thenReturn(TrinaGridSelectingMode.cell);
         clearInteractions(stateManager);
 
         // when
@@ -758,7 +748,7 @@ void main() {
       return test(
         'When, '
         'autoEditing is false, '
-        'selectingMode is ${selectingMode.name} (not single tap selection), '
+        'selectingMode is ${selectingMode.name}, '
         'isCurrentCell is true, '
         'Then, '
         'setEditing(true) should be called.',
@@ -776,7 +766,6 @@ void main() {
           clearInteractions(stateManager);
 
           // when
-          expect(stateManager.selectingMode.isSingleTapSelection, isFalse);
           var event = eventBuilder(
             gestureType: TrinaGridGestureType.onDoubleTap,
             cell: cell,
@@ -791,14 +780,14 @@ void main() {
       );
     }
 
-    testDoubleTapCurrentCellToEdit(TrinaGridSelectingMode.cellWithCtrl);
-    testDoubleTapCurrentCellToEdit(TrinaGridSelectingMode.rowWithCtrl);
+    testDoubleTapCurrentCellToEdit(TrinaGridSelectingMode.cell);
+    testDoubleTapCurrentCellToEdit(TrinaGridSelectingMode.row);
 
     testDoubleTapNotCurrentCell(TrinaGridSelectingMode selectingMode) {
       return test(
         'When, '
         'autoEditing is false, '
-        'selectingMode is ${selectingMode.name} (not single tap selection), '
+        'selectingMode is ${selectingMode.name}, '
         'isCurrentCell is false, '
         'Then, '
         'setCurrentCell should be called.',
@@ -829,8 +818,8 @@ void main() {
       );
     }
 
-    testDoubleTapNotCurrentCell(TrinaGridSelectingMode.cellWithCtrl);
-    testDoubleTapNotCurrentCell(TrinaGridSelectingMode.rowWithCtrl);
+    testDoubleTapNotCurrentCell(TrinaGridSelectingMode.cell);
+    testDoubleTapNotCurrentCell(TrinaGridSelectingMode.row);
 
     test(
       'When, '
@@ -843,8 +832,6 @@ void main() {
         const rowIdx = 1;
 
         when(stateManager.mode).thenReturn(TrinaGridMode.normal);
-        when(stateManager.selectingMode)
-            .thenReturn(TrinaGridSelectingMode.cellWithCtrl);
         when(stateManager.autoEditing).thenReturn(true);
         when(stateManager.onDoubleTap).thenReturn(null);
         when(stateManager.isCurrentCell(cell)).thenReturn(true);
@@ -852,39 +839,6 @@ void main() {
         clearInteractions(stateManager);
 
         // when
-        var event = eventBuilder(
-          gestureType: TrinaGridGestureType.onDoubleTap,
-          cell: cell,
-          rowIdx: rowIdx,
-        );
-        event.handler(stateManager);
-
-        // then
-        verifyNever(stateManager.setEditing(any));
-        verifyNever(stateManager.setCurrentCell(any, any));
-      },
-    );
-    test(
-      'When, '
-      'selectingMode is single tap selection, '
-      'Then, '
-      'setEditing, setCurrentCell should NOT be called.',
-      () {
-        // given``
-        final cell = TrinaCell(value: 'value');
-        const rowIdx = 1;
-
-        when(stateManager.mode).thenReturn(TrinaGridMode.normal);
-        when(stateManager.selectingMode)
-            .thenReturn(TrinaGridSelectingMode.cellWithSingleTap);
-        when(stateManager.autoEditing).thenReturn(false);
-        when(stateManager.onDoubleTap).thenReturn(null);
-        when(stateManager.isCurrentCell(cell)).thenReturn(true);
-
-        clearInteractions(stateManager);
-
-        // when
-        expect(stateManager.selectingMode.isSingleTapSelection, isTrue);
         var event = eventBuilder(
           gestureType: TrinaGridGestureType.onDoubleTap,
           cell: cell,
@@ -909,8 +863,6 @@ void main() {
         final row = TrinaRow(cells: {'cell1': cell});
         const rowIdx = 1;
 
-        when(stateManager.selectingMode)
-            .thenReturn(TrinaGridSelectingMode.cellWithCtrl);
         when(stateManager.onDoubleTap)
             .thenReturn(mock.oneParamReturnVoid<TrinaGridOnDoubleTapEvent>);
         clearInteractions(stateManager);
@@ -946,8 +898,6 @@ void main() {
         final row = TrinaRow(cells: {'cell1': cell});
         const rowIdx = 1;
 
-        when(stateManager.selectingMode)
-            .thenReturn(TrinaGridSelectingMode.cellWithCtrl);
         when(stateManager.onDoubleTap)
             .thenReturn(mock.oneParamReturnVoid<TrinaGridOnDoubleTapEvent>);
         clearInteractions(stateManager);
@@ -969,80 +919,6 @@ void main() {
   });
 
   group('onSecondaryTap', () {
-    testWithSingleTapSelection(TrinaGridSelectingMode selectingMode) {
-      test(
-        'When, '
-        'selectingMode is (${selectingMode.name}) single tap selection, '
-        'isCurrentCell is true, '
-        'Then, '
-        'clearCurrentSelecting, handleOnSelected, setEditing should be called.',
-        () {
-          // given
-          final cell = TrinaCell(value: 'value');
-          const rowIdx = 1;
-
-          when(stateManager.isCurrentCell(cell)).thenReturn(true);
-          when(stateManager.selectingMode).thenReturn(selectingMode);
-          when(stateManager.onRowSecondaryTap).thenReturn(null);
-          clearInteractions(stateManager);
-
-          // when
-          var event = eventBuilder(
-            gestureType: TrinaGridGestureType.onSecondaryTap,
-            cell: cell,
-            rowIdx: rowIdx,
-          );
-          event.handler(stateManager);
-
-          // then
-          verify(stateManager.clearCurrentSelecting()).called(1);
-          verify(stateManager.handleOnSelected()).called(1);
-          verify(stateManager.setEditing(true)).called(1);
-          verifyNever(stateManager.setCurrentCell(any, any));
-        },
-      );
-    }
-
-    testWithSingleTapSelection(TrinaGridSelectingMode.cellWithSingleTap);
-    testWithSingleTapSelection(TrinaGridSelectingMode.rowWithSingleTap);
-
-    testWithoutSingleTapSelection(TrinaGridSelectingMode selectingMode) {
-      test(
-        'When, '
-        'selectingMode is ${selectingMode.name} (not single tap selection), '
-        'Then, '
-        'NO calls should be made for: clearCurrentSelecting, handleOnSelected, setEditing.',
-        () {
-          // given
-          final cell = TrinaCell(value: 'value');
-          const rowIdx = 1;
-
-          when(stateManager.isCurrentCell(cell)).thenReturn(true);
-          when(stateManager.selectingMode).thenReturn(selectingMode);
-          when(stateManager.onRowSecondaryTap).thenReturn(null);
-          clearInteractions(stateManager);
-
-          // when
-          expect(stateManager.selectingMode.isSingleTapSelection, isFalse);
-          var event = eventBuilder(
-            gestureType: TrinaGridGestureType.onSecondaryTap,
-            cell: cell,
-            rowIdx: rowIdx,
-          );
-          event.handler(stateManager);
-
-          // then
-          verifyNever(stateManager.clearCurrentSelecting());
-          verifyNever(stateManager.handleOnSelected());
-          verifyNever(stateManager.setEditing(any));
-          verifyNever(stateManager.setCurrentCell(any, any));
-        },
-      );
-    }
-
-    testWithoutSingleTapSelection(TrinaGridSelectingMode.cellWithCtrl);
-    testWithoutSingleTapSelection(TrinaGridSelectingMode.rowWithCtrl);
-
     test(
       'When, '
       'stateManager.onRowSecondaryTap is not null'
@@ -1055,8 +931,6 @@ void main() {
         final row = TrinaRow(cells: {'cell1': cell});
         const rowIdx = 1;
 
-        when(stateManager.selectingMode)
-            .thenReturn(TrinaGridSelectingMode.cellWithCtrl);
         when(stateManager.onRowSecondaryTap).thenReturn(
             mock.oneParamReturnVoid<TrinaGridOnRowSecondaryTapEvent>);
         clearInteractions(stateManager);
@@ -1091,8 +965,6 @@ void main() {
         final row = TrinaRow(cells: {'cell1': cell});
         const rowIdx = 1;
 
-        when(stateManager.selectingMode)
-            .thenReturn(TrinaGridSelectingMode.cellWithCtrl);
         when(stateManager.onRowSecondaryTap).thenReturn(null);
         clearInteractions(stateManager);
         when(stateManager.getRowByIdx(rowIdx)).thenReturn(row);

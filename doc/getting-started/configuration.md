@@ -131,17 +131,14 @@ Configure how cells or rows can be selected:
 
 ```dart
 TrinaGridConfiguration(
-  selectingMode: TrinaGridSelectingMode.cellWithCtrl,
+  selectingMode: TrinaGridSelectingMode.cell, // or TrinaGridSelectingMode.row 
 )
 ```
 
 The available selection modes are:
-
-- `TrinaGridSelectingMode.cellWithSingleTap`: Allows selection of cells with a single tap
-- `TrinaGridSelectingMode.rowWithSingleTap`: Selects entire rows with a single tap
-- `TrinaGridSelectingMode.cellWithCtrl`: Allows cells selection using Ctrl (cmd on Mac) key
-- `TrinaGridSelectingMode.rowWithCtrl`: Allows rows selection using Ctrl (cmd on Mac) key 
-- `TrinaGridSelectingMode.disabled`: Disables selection functionality
+- `TrinaGridSelectingMode.cell`: Allows selection of individual cells with mouse clicks or keyboard navigation
+- `TrinaGridSelectingMode.row`: Enables selection of entire rows when clicking any cell within that row
+- `TrinaGridSelectingMode.disable`: 
 
 
 ### Editing Configuration

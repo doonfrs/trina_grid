@@ -7,28 +7,28 @@ import '../mock/shared_mocks.mocks.dart';
 
 void main() {
   group('TrinaGridConfiguration selectingMode', () {
-    test('should have default selectingMode as cellWithCtrl', () {
+    test('should have default selectingMode as cell', () {
       const configuration = TrinaGridConfiguration();
-      expect(configuration.selectingMode, TrinaGridSelectingMode.cellWithCtrl);
+      expect(configuration.selectingMode, TrinaGridSelectingMode.cell);
     });
 
     test('should include selectingMode in copyWith', () {
       const configuration = TrinaGridConfiguration();
       final copied = configuration.copyWith(
-        selectingMode: TrinaGridSelectingMode.rowWithSingleTap,
+        selectingMode: TrinaGridSelectingMode.row,
       );
-      expect(copied.selectingMode, TrinaGridSelectingMode.rowWithSingleTap);
+      expect(copied.selectingMode, TrinaGridSelectingMode.row);
     });
 
     test('should include selectingMode in equality comparison', () {
       const config1 = TrinaGridConfiguration(
-        selectingMode: TrinaGridSelectingMode.cellWithCtrl,
+        selectingMode: TrinaGridSelectingMode.cell,
       );
       const config2 = TrinaGridConfiguration(
-        selectingMode: TrinaGridSelectingMode.cellWithCtrl,
+        selectingMode: TrinaGridSelectingMode.cell,
       );
       const config3 = TrinaGridConfiguration(
-        selectingMode: TrinaGridSelectingMode.rowWithCtrl,
+        selectingMode: TrinaGridSelectingMode.row,
       );
 
       expect(config1, equals(config2));
@@ -45,14 +45,13 @@ void main() {
         gridFocusNode: MockFocusNode(),
         scroll: MockTrinaGridScrollController(),
         configuration: const TrinaGridConfiguration(
-          selectingMode: TrinaGridSelectingMode.rowWithSingleTap,
+          selectingMode: TrinaGridSelectingMode.row,
         ),
       );
 
       stateManager.setEventManager(MockTrinaGridEventManager());
 
-      expect(
-          stateManager.selectingMode, TrinaGridSelectingMode.rowWithSingleTap);
+      expect(stateManager.selectingMode, TrinaGridSelectingMode.row);
     });
 
     test('should use configuration selectingMode in normal mode', () {

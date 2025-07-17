@@ -262,9 +262,6 @@ class _ListingModeScreenState extends State<ListingModeScreen> {
 
           removeKeyboardListener =
               stateManager.keyManager!.subject.stream.listen(handleKeyboard);
-
-          stateManager
-              .setSelectingMode(TrinaGridSelectingMode.cellWithSingleTap);
         },
         onSelected: (TrinaGridOnSelectedEvent event) {
           if (event.lastSelectedCell != null) {

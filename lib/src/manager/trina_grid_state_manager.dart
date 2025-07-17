@@ -692,47 +692,19 @@ class TrinaGridKeyPressed {
 
 /// Defines how cells or rows can be selected.
 enum TrinaGridSelectingMode {
-  cellWithCtrl,
-  cellWithSingleTap,
-
-  rowWithCtrl,
-  rowWithSingleTap,
+  cell,
+  row,
 
   /// Disables selection functionality.
   /// [TrinaGrid.onSelected] callback will not be triggered.
   disabled;
 
-  bool get isSingleTapSelection =>
-      this == TrinaGridSelectingMode.cellWithSingleTap ||
-      this == TrinaGridSelectingMode.rowWithSingleTap;
+  bool get isCell => this == TrinaGridSelectingMode.cell;
 
-  bool get isNotSingleTapSelection =>
-      this != TrinaGridSelectingMode.cellWithSingleTap &&
-      this != TrinaGridSelectingMode.rowWithSingleTap;
-
-  bool get isSelectWithCTRL =>
-      this == TrinaGridSelectingMode.cellWithCtrl ||
-      this == TrinaGridSelectingMode.rowWithCtrl;
-
-  bool get isCell =>
-      this == TrinaGridSelectingMode.cellWithCtrl ||
-      this == TrinaGridSelectingMode.cellWithSingleTap;
-
-  bool get isRow =>
-      this == TrinaGridSelectingMode.rowWithCtrl ||
-      this == TrinaGridSelectingMode.rowWithSingleTap;
-
-  bool get isRowWithCtrl => this == TrinaGridSelectingMode.rowWithCtrl;
-
-  bool get isRowWithSingleTap =>
-      this == TrinaGridSelectingMode.rowWithSingleTap;
-
-  bool get isCellWithCtrl => this == TrinaGridSelectingMode.cellWithCtrl;
-
-  bool get isCellWithSingleTap =>
-      this == TrinaGridSelectingMode.cellWithSingleTap;
+  bool get isRow => this == TrinaGridSelectingMode.row;
 
   bool get isDisabled => this == TrinaGridSelectingMode.disabled;
+
   bool get isEnabled => this != TrinaGridSelectingMode.disabled;
 }
 

@@ -182,7 +182,7 @@ class _HeaderState extends State<_Header> {
 
   int addedCount = 0;
 
-  TrinaGridSelectingMode gridSelectingMode = TrinaGridSelectingMode.rowWithCtrl;
+  TrinaGridSelectingMode gridSelectingMode = TrinaGridSelectingMode.row;
 
   @override
   void initState() {

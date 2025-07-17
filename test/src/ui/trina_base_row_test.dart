@@ -32,8 +32,7 @@ void main() {
     when(stateManager.isSelecting).thenReturn(true);
     when(stateManager.hasCurrentSelectingPosition).thenReturn(true);
     when(stateManager.isEditing).thenReturn(true);
-    when(stateManager.selectingMode)
-        .thenReturn(TrinaGridSelectingMode.cellWithSingleTap);
+    when(stateManager.selectingMode).thenReturn(TrinaGridSelectingMode.row);
     when(stateManager.hasFocus).thenReturn(true);
     when(stateManager.canRowDrag).thenReturn(true);
     when(stateManager.showFrozenColumn).thenReturn(false);

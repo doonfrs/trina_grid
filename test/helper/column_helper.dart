@@ -5,31 +5,23 @@ class ColumnHelper {
     String title, {
     List<String> items = const [],
     bool enableAutoEditing = false,
-    bool selectWithSingleTap = false,
   }) {
     return TrinaColumn(
       title: title,
       field: title,
       enableAutoEditing: enableAutoEditing,
-      type: TrinaColumnType.select(
-        items,
-        selectWithSingleTap: selectWithSingleTap,
-      ),
+      type: TrinaColumnType.select(items),
     );
   }
 
   static TrinaColumn booleanColumn(
     String title, {
     bool? initialValue,
-    bool selectWithSingleTap = false,
   }) {
     return TrinaColumn(
       title: title,
       field: title,
-      type: TrinaColumnType.boolean(
-        defaultValue: initialValue,
-        selectWithSingleTap: selectWithSingleTap,
-      ),
+      type: TrinaColumnType.boolean(defaultValue: initialValue),
     );
   }
 
@@ -72,7 +64,6 @@ class ColumnHelper {
     String format = 'yyyy-MM-dd',
     bool applyFormatOnInit = true,
     TrinaColumnFooterRenderer? footerRenderer,
-    bool selectWithSingleTap = false,
   }) {
     return Iterable<int>.generate(count).map((e) {
       e += start;
@@ -85,7 +76,6 @@ class ColumnHelper {
         hide: hide,
         type: TrinaColumnType.date(
           startDate: startDate,
-          selectWithSingleTap: selectWithSingleTap,
           endDate: endDate,
           format: format,
           applyFormatOnInit: applyFormatOnInit,

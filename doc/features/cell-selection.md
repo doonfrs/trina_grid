@@ -17,30 +17,29 @@ Cell selection provides a foundation for many other features in TrinaGrid, such 
 
 ## Selection Modes
 
-TrinaGrid supports multiple selection modes that can be configured based on your requirements:
+To enable cell selection, set `selectingMode` as shown below: 
 
 ```dart
 TrinaGrid(
   columns: columns,
   rows: rows,
   configuration: TrinaGridConfiguration(
-    selectingMode: TrinaGridSelectingMode.cellWithCtrl, // Default
+    selectingMode: TrinaGridSelectingMode.cell, // Default
   ),
 )
 ```
 
-### Cell Selection Modes
-
-- `TrinaGridSelectingMode.cellWithCtrl`: Allows selection of single or multiple cells using Ctrl key (Cmd on Mac)
-- `TrinaGridSelectingMode.cellWithSingleTap`: Allows selection of single or multiple cells with a single tap
-
 ## Basic Usage
+
+### Multiple Cells Selection
+
+To select multiple disconnected cells, hold CTRL and tap on the cell you want to select.
 
 ### Range Selection
 
 You can select a range of cells using one of the following methods:
 
-*Note*: range selection is available by default when using one of the above cell-selecting modes.
+*Note*: range selection is available by default when `selecingMode` is not disabled.
 
 #### Drag Selection
 

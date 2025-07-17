@@ -254,7 +254,7 @@ class _ChangeTrackingScreenState extends State<ChangeTrackingScreen> {
               },
               onLoaded: (TrinaGridOnLoadedEvent event) {
                 event.stateManager
-                    .setSelectingMode(TrinaGridSelectingMode.cellWithCtrl);
+                    .setSelectingMode(TrinaGridSelectingMode.cell);
                 stateManager = event.stateManager;
               },
               onActiveCellChanged: (TrinaGridOnActiveCellChangedEvent event) {

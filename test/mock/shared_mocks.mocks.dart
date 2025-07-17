@@ -1372,8 +1372,8 @@ class MockTrinaGridStateManager extends _i1.Mock
   @override
   _i2.TrinaGridSelectingMode get selectingMode => (super.noSuchMethod(
         Invocation.getter(#selectingMode),
-        returnValue: _i2.TrinaGridSelectingMode.cellWithCtrl,
-        returnValueForMissingStub: _i2.TrinaGridSelectingMode.cellWithCtrl,
+        returnValue: _i2.TrinaGridSelectingMode.cell,
+        returnValueForMissingStub: _i2.TrinaGridSelectingMode.cell,
       ) as _i2.TrinaGridSelectingMode);
 
   @override

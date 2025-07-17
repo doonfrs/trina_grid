@@ -70,7 +70,7 @@ class TrinaDateCellState extends State<TrinaDateCell>
         onSelected: onSelected,
         itemHeight: widget.stateManager.rowTotalHeight,
         configuration: widget.stateManager.configuration.copyWith(
-          selectingMode: getPopupGridSelectingMode(),
+          selectingMode: TrinaGridSelectingMode.cell,
         ),
       );
     }

@@ -67,7 +67,6 @@ export 'src/model/column_types/trina_column_type_number.dart';
 export 'src/model/column_types/trina_column_type_percentage.dart';
 export 'src/model/column_types/trina_column_type_text.dart';
 export 'src/model/trina_column_type_has_format.dart';
-export 'src/model/trina_column_type_with_popup.dart';
 
 // Export grid export functionality
 export './src/export/trina_grid_export.dart';

@@ -213,14 +213,11 @@ void main() {
   );
 
   group('Popup grid selection mode', () {
-    makeSelectCell({bool selectWithSingleTap = false}) {
+    makeSelectCell() {
       TrinaColumn column = TrinaColumn(
         title: 'column title',
         field: 'column_field_name',
-        type: TrinaColumnType.select(
-          selectItems,
-          selectWithSingleTap: selectWithSingleTap,
-        ),
+        type: TrinaColumnType.select(selectItems),
       );
 
       TrinaCell cell = TrinaCell(value: selectItems.first);
@@ -243,29 +240,14 @@ void main() {
       });
     }
 
-    makeSelectCell(selectWithSingleTap: false).test(
-      'When selectWithSingleTap is false, grid selection mode should be cellWithCtrl',
-      (tester) async {
-        await tester.tap(find.byType(TextField));
-        await tester.pumpAndSettle();
-        final popupGrid = tester.widget<TrinaGrid>(find.byType(TrinaGrid));
-        expect(
-          popupGrid.configuration.selectingMode,
-          TrinaGridSelectingMode.cellWithCtrl,
-        );
-      },
-    );
-    makeSelectCell(selectWithSingleTap: true).test(
-      'When selectWithSingleTap is true, grid selection mode should be cellWithSingleTap',
-      (tester) async {
-        await tester.tap(find.byType(TextField));
-        await tester.pumpAndSettle();
-        final popupGrid = tester.widget<TrinaGrid>(find.byType(TrinaGrid));
-        expect(
-          popupGrid.configuration.selectingMode,
-          TrinaGridSelectingMode.cellWithSingleTap,
-        );
-      },
-    );
+    makeSelectCell().test('Grid selection mode should be cell', (tester) async {
+      await tester.tap(find.byType(TextField));
+      await tester.pumpAndSettle();
+      final popupGrid = tester.widget<TrinaGrid>(find.byType(TrinaGrid));
+      expect(
+        popupGrid.configuration.selectingMode,
+        TrinaGridSelectingMode.cell,
+      );
+    });
   });
 }

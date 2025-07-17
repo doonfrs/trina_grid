@@ -99,7 +99,7 @@ mixin PopupCellState<T extends PopupCell> on State<T>
       configuration: widget.stateManager.configuration.copyWith(
         enterKeyAction: TrinaGridEnterKeyAction.select,
         tabKeyAction: TrinaGridTabKeyAction.normal,
-        selectingMode: getPopupGridSelectingMode(),
+        selectingMode: TrinaGridSelectingMode.cell,
         style: widget.stateManager.configuration.style.copyWith(
           oddRowColor: const TrinaOptional(null),
           evenRowColor: const TrinaOptional(null),
@@ -112,14 +112,6 @@ mixin PopupCellState<T extends PopupCell> on State<T>
         ),
       ),
     );
-  }
-
-  TrinaGridSelectingMode getPopupGridSelectingMode() {
-    if (widget.column.type case TrinaColumnTypeWithPopup type
-        when type.selectWithSingleTap) {
-      return TrinaGridSelectingMode.cellWithSingleTap;
-    }
-    return TrinaGridSelectingMode.cellWithCtrl;
   }
 
   void onLoaded(TrinaGridOnLoadedEvent event) {

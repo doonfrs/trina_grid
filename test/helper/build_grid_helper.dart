@@ -102,8 +102,7 @@ class BuildGridHelper {
                 rows: safetyRows,
                 onLoaded: (TrinaGridOnLoadedEvent event) {
                   stateManager = event.stateManager;
-                  stateManager.setSelectingMode(
-                      TrinaGridSelectingMode.rowWithSingleTap);
+                  stateManager.setSelectingMode(TrinaGridSelectingMode.row);
                 },
               ),
             ),

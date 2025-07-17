@@ -7,7 +7,6 @@ import 'package:trina_grid/trina_grid.dart';
 
 import '../../helper/column_helper.dart';
 import '../../helper/cell_selection_test_cases.dart';
-import '../../helper/on_selected_helper.dart';
 import '../../helper/trina_widget_test_helper.dart';
 import '../../helper/row_helper.dart';
 import '../../mock/mock_methods.dart';
@@ -59,109 +58,7 @@ void main() {
     );
   }
 
-  group('cell with single tap selecting mode', () {
-    selectCell(WidgetTester tester, String cellValue) async {
-      await tester.tap(find.text(cellValue));
-      await tester.pumpAndSettle();
-    }
-
-    /// Builds a grid with `selectingMode` set to TrinaGridSelectingMode.cellWithSingleTap.
-    buildGridHelper({
-      int numberOfCols = 1,
-      int numberOfRows = 10,
-      void Function(TrinaGridOnLoadedEvent)? onLoaded,
-      void Function(TrinaGridOnSelectedEvent)? onSelected,
-    }) {
-      return buildGrid(
-        numberOfCols: numberOfCols,
-        numberOfRows: numberOfRows,
-        onLoaded: onLoaded,
-        onSelected: onSelected,
-        selectingMode: TrinaGridSelectingMode.cellWithSingleTap,
-      );
-    }
-
-    runGeneralCellSelectionTestCases(
-      stateManager: () => stateManager,
-      buildGrid: buildGridHelper,
-      selectCell: selectCell,
-    );
-
-    runCellSelectionWithKeyboardTestCases(
-      stateManager: () => stateManager,
-      buildGrid: buildGridHelper,
-      mock: mock,
-      selectCell: selectCell,
-    );
-
-    runCellSelectionByLongPressTestCases(
-      stateManager: () => stateManager,
-      buildGrid: buildGridHelper,
-      mock: mock,
-      selectCell: selectCell,
-    );
-
-    runCellRangeSelectionWithShiftTestCases(
-      stateManager: () => stateManager,
-      buildGrid: buildGridHelper,
-      mock: mock,
-      selectCell: selectCell,
-    );
-
-    buildGrid(
-      selectingMode: TrinaGridSelectingMode.cellWithSingleTap,
-      onSelected: mock.oneParamReturnVoid<TrinaGridOnSelectedEvent>,
-    ).test(
-      'when tapping on a cell with secondary button, '
-      'the selection should be cleared',
-      (tester) async {
-        await selectCell(tester, 'column0 value 0');
-
-        expect(stateManager.selectedCells.length, 1);
-        reset(mock);
-
-        await tester.tap(
-          find.text('column0 value 1'),
-          buttons: kSecondaryButton,
-          kind: PointerDeviceKind.mouse,
-        );
-        await tester.pumpAndSettle();
-
-        expect(stateManager.selectedCells.length, 0);
-        verifyOnSelectedEvent(mock: mock, expectedSelectedCells: []);
-      },
-    );
-    buildGridHelper(
-      onSelected: mock.oneParamReturnVoid<TrinaGridOnSelectedEvent>,
-    ).test(
-      'when tapping on a selected cell with secondary button, '
-      'the selection should be cleared',
-      (tester) async {
-        await selectCell(tester, 'column0 value 0');
-
-        expect(stateManager.selectedCells.length, 1);
-        reset(mock);
-
-        await tester.tap(
-          find.text('column0 value 0'),
-          buttons: kSecondaryButton,
-          kind: PointerDeviceKind.mouse,
-        );
-        await tester.pumpAndSettle();
-
-        expect(stateManager.selectedCells.length, 0);
-        verifyOnSelectedEvent(mock: mock, expectedSelectedCells: []);
-      },
-    );
-    runClearCellSelectionOnNavigatingViaKeyboardTestCases(
-      buildGrid: buildGridHelper,
-      stateManager: () => stateManager,
-      mock: mock,
-      selectCell: selectCell,
-    );
-  });
-
-  group('cell with ctrl selecting mode', () {
+  group('cell selecting mode', () {
     selectCell(WidgetTester tester, String cellValue) async {
       await tester.sendKeyDownEvent(LogicalKeyboardKey.control);
 
@@ -170,7 +67,7 @@ void main() {
       await tester.pumpAndSettle();
     }
 
-    /// Builds a grid with `selectingMode` set to TrinaGridSelectingMode.cellWithCtrl.
+    /// Builds a grid with `selectingMode` set to TrinaGridSelectingMode.cell
     buildGridHelper({
       int numberOfRows = 10,
       int numberOfCols = 1,
@@ -182,7 +79,7 @@ void main() {
         numberOfRows: numberOfRows,
         onLoaded: onLoaded,
         onSelected: onSelected,
-        selectingMode: TrinaGridSelectingMode.cellWithCtrl,
+        selectingMode: TrinaGridSelectingMode.cell,
       );
     }
 
@@ -221,7 +118,7 @@ void main() {
     );
 
     buildGridHelper().test(
-      'when currently selecting cells, tapping or a cell should clear selection',
+      'when currently selecting cells, tapping on a cell should clear selection',
       (tester) async {
         // select first cell
         await selectCell(tester, 'column0 value 0');

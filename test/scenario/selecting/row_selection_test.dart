@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -6,7 +5,6 @@ import 'package:mockito/mockito.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 import '../../helper/column_helper.dart';
-import '../../helper/on_selected_helper.dart';
 import '../../helper/row_selection_test_cases.dart';
 import '../../helper/trina_widget_test_helper.dart';
 import '../../helper/row_helper.dart';
@@ -58,115 +56,7 @@ void main() {
     );
   }
 
-  group('row with single tap selecting mode', () {
-    selectRow(WidgetTester tester, int rowId) async {
-      await tester.tap(find.text('column0 value $rowId'));
-      await tester.pumpAndSettle();
-    }
-
-    selectRows(tester, {required int count}) async {
-      for (var i = 0; i < count; i += 1) {
-        await selectRow.call(tester, i);
-      }
-    }
-
-    /// Builds a grid with `selectingMode` set to TrinaGridSelectingMode.rowWithSingleTap.
-    buildGridHelper({
-      int numberOfRows = 10,
-      int numberOfCols = 1,
-      void Function(TrinaGridOnLoadedEvent)? onLoaded,
-      void Function(TrinaGridOnSelectedEvent)? onSelected,
-    }) {
-      return buildGrid(
-        numberOfRows: numberOfRows,
-        numberOfCols: numberOfCols,
-        onLoaded: onLoaded,
-        onSelected: onSelected,
-        selectingMode: TrinaGridSelectingMode.rowWithSingleTap,
-      );
-    }
-
-    runGeneralRowSelectionTestCases(
-      stateManager: () => stateManager,
-      buildGrid: buildGridHelper,
-      selectRows: selectRows,
-    );
-
-    runRowSelectionWithKeyboardTestCases(
-      stateManager: () => stateManager,
-      buildGrid: buildGridHelper,
-      mock: mock,
-      selectRow: selectRow,
-    );
-
-    runRowSelectionByLongPressTestCases(
-      stateManager: () => stateManager,
-      buildGrid: buildGridHelper,
-      mock: mock,
-      selectRow: selectRow,
-    );
-
-    runRowRangeSelectionWithShiftTestCases(
-      stateManager: () => stateManager,
-      buildGrid: buildGridHelper,
-      mock: mock,
-      selectRow: selectRow,
-    );
-
-    runClearRowSelectionOnNavigatingViaKeyboardTestCases(
-      stateManager: () => stateManager,
-      buildGrid: buildGridHelper,
-      mock: mock,
-      selectRow: selectRow,
-    );
-    buildGrid(
-      selectingMode: TrinaGridSelectingMode.rowWithSingleTap,
-      onSelected: mock.oneParamReturnVoid<TrinaGridOnSelectedEvent>,
-    ).test(
-      'when tapping on a row with secondary button, '
-      'the selection should be cleared',
-      (tester) async {
-        await selectRow(tester, 0);
-
-        expect(stateManager.selectedRows.length, 1);
-        reset(mock);
-
-        await tester.tap(
-          find.text('column0 value 1'),
-          buttons: kSecondaryButton,
-          kind: PointerDeviceKind.mouse,
-        );
-        await tester.pumpAndSettle();
-
-        expect(stateManager.selectedRows.length, 0);
-        verifyOnSelectedEvent(mock: mock, expectedSelectedRows: []);
-      },
-    );
-    buildGridHelper(
-      onSelected: mock.oneParamReturnVoid<TrinaGridOnSelectedEvent>,
-    ).test(
-      'when tapping on a selected row with secondary button, '
-      'the selection should be cleared',
-      (tester) async {
-        await selectRow(tester, 0);
-
-        expect(stateManager.selectedRows.length, 1);
-        reset(mock);
-
-        await tester.tap(
-          find.text('column0 value 0'),
-          buttons: kSecondaryButton,
-          kind: PointerDeviceKind.mouse,
-        );
-        await tester.pumpAndSettle();
-
-        expect(stateManager.selectedRows.length, 0);
-        verifyOnSelectedEvent(mock: mock, expectedSelectedRows: []);
-      },
-    );
-  });
-
-  group('row with ctrl selecting mode', () {
+  group('row selecting mode', () {
     selectRow(WidgetTester tester, int rowId) async {
       await tester.sendKeyDownEvent(LogicalKeyboardKey.control);
 
@@ -181,7 +71,7 @@ void main() {
       }
     }
 
-    /// Builds a grid with `selectingMode` set to TrinaGridSelectingMode.rowWithCtrl.
+    /// Builds a grid with `selectingMode` set to TrinaGridSelectingMode.row.
     buildGridHelper({
       int numberOfRows = 10,
       int numberOfCols = 1,
@@ -193,7 +83,7 @@ void main() {
         numberOfCols: numberOfCols,
         onLoaded: onLoaded,
         onSelected: onSelected,
-        selectingMode: TrinaGridSelectingMode.rowWithCtrl,
+        selectingMode: TrinaGridSelectingMode.row,
       );
     }
 

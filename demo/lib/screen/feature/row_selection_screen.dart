@@ -20,8 +20,6 @@ class _RowSelectionScreenState extends State<RowSelectionScreen> {
   final List<TrinaRow> rows = [];
 
   TrinaGridStateManager? stateManager;
-  TrinaGridSelectingMode currentSelectingMode =
-      TrinaGridSelectingMode.rowWithSingleTap;
 
   String selectedValues = '';
 
@@ -36,23 +34,12 @@ class _RowSelectionScreenState extends State<RowSelectionScreen> {
     rows.addAll(dummyData.rows);
   }
 
-  void changeSelectingMode(TrinaGridSelectingMode? mode) {
-    if (mode == null) {
-      return;
-    }
-    stateManager!.setSelectingMode(mode);
-    setState(() {
-      currentSelectingMode = mode;
-      selectedValues = _getSelectedValues(stateManager!.selectedRows);
-    });
-  }
-
   String _getSelectedValues(List<TrinaRow>? selectedRows) {
     if (selectedRows == null || selectedRows.isEmpty) {
       return 'No rows are selected.';
     }
 
-    String value = 'Total selected rows: ${selectedRows.length} \n';
+    String value = '';
     for (var row in selectedRows) {
       value += 'rowIdx: ${row.sortIdx}\n';
     }
@@ -70,29 +57,39 @@ class _RowSelectionScreenState extends State<RowSelectionScreen> {
           alignment: MainAxisAlignment.start,
           children: [
             Text(
-              'In Row selection mode:\n'
-              '• CTRL + Click to select a single row or multiple rows.\n'
-              '• Single tap to select a single row or multiple rows.\n'
-              '• Shift + tap or long press & drag to select a range.',
+              '• CTRL + Click to select multiple rows.\n'
+              '• Shift + Click to select a range of rows from the currently selected row to the clicked row.\n'
+              '• Long Press and Drag to select multiple consecutive rows.',
             ),
             SizedBox(
-              width: MediaQuery.of(context).size.width * .3,
+              width: MediaQuery.of(context).size.width * .2,
             ),
             SizedBox(
+              height: 120,
+              width: 300,
               child: Column(
                 children: [
-                  Text(
-                    'onSelected output (Scroll if you need):\n',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(
-                    height: 100,
-                    width: 300,
-                    child: Scrollbar(
-                      thumbVisibility: true,
-                      child: SingleChildScrollView(
-                        primary: true,
-                        child: Text(selectedValues),
+                  if (stateManager != null)
+                    ListenableBuilder(
+                      listenable: stateManager!,
+                      builder: (context, asyncSnapshot) {
+                        return Text(
+                          'onSelected event - '
+                          'Total selected rows: ${stateManager!.selectedRows.length} \n',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        );
+                      },
+                    ),
+                  Flexible(
+                    child: SizedBox(
+                      width: 300,
+                      child: Scrollbar(
+                        thumbVisibility: true,
+                        child: SingleChildScrollView(
+                          primary: true,
+                          reverse: true,
+                          child: Text(selectedValues),
+                        ),
                       ),
                     ),
                   ),
@@ -101,38 +98,46 @@ class _RowSelectionScreenState extends State<RowSelectionScreen> {
             ),
           ],
         ),
-        OverflowBar(
-          children: [
-            Text('Choose selecting mode:'),
-            SizedBox(
-              width: 200,
-              child: RadioListTile(
-                value: TrinaGridSelectingMode.rowWithSingleTap,
-                groupValue: currentSelectingMode,
-                onChanged: changeSelectingMode,
-                title: const Text('Single tap'),
+        if (stateManager != null)
+          OverflowBar(
+            alignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(width: 180, child: Text('Programmatic control:')),
+              ListenableBuilder(
+                listenable: stateManager!,
+                builder: (context, _) {
+                  return Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    spacing: 20,
+                    children: [
+                      SizedBox(
+                        width: 250,
+                        child: SwitchListTile(
+                          title: Text('Enable selection'),
+                          value: stateManager!.selectingMode.isRow,
+                          onChanged: (flag) {
+                            stateManager!.setSelectingMode(flag == true
+                                ? TrinaGridSelectingMode.row
+                                : TrinaGridSelectingMode.disabled);
+                          },
+                        ),
+                      ),
+                      FilledButton(
+                        onPressed: stateManager!.selectedRows.isEmpty
+                            ? null
+                            : () {
+                                stateManager!
+                                  ..clearCurrentSelecting()
+                                  ..handleOnSelected();
+                              },
+                        child: Text('Clear selection'),
+                      ),
+                    ],
+                  );
+                },
               ),
-            ),
-            SizedBox(
-              width: 200,
-              child: RadioListTile(
-                value: TrinaGridSelectingMode.rowWithCtrl,
-                groupValue: currentSelectingMode,
-                onChanged: changeSelectingMode,
-                title: const Text('Ctrl + Click'),
-              ),
-            ),
-            SizedBox(
-              width: 200,
-              child: RadioListTile(
-                value: TrinaGridSelectingMode.disabled,
-                groupValue: currentSelectingMode,
-                onChanged: changeSelectingMode,
-                title: const Text('Disabled'),
-              ),
-            ),
-          ],
-        ),
+            ],
+          ),
       ],
       topButtons: [
         TrinaExampleButton(
@@ -152,11 +157,13 @@ class _RowSelectionScreenState extends State<RowSelectionScreen> {
               onSelected: (event) => setState(() {
                 selectedValues = _getSelectedValues(event.selectedRows);
               }),
+              configuration:
+                  TrinaGridConfiguration(autoSetFirstCellAsCurrent: true),
               onLoaded: (TrinaGridOnLoadedEvent event) {
-                event.stateManager
-                    .setSelectingMode(TrinaGridSelectingMode.rowWithSingleTap);
-
-                stateManager = event.stateManager;
+                event.stateManager.setSelectingMode(TrinaGridSelectingMode.row);
+                setState(() {
+                  stateManager = event.stateManager;
+                });
               },
             ),
           ),

@@ -42,7 +42,7 @@ void main() {
     testWidgets(
         'WHEN'
         'currentCellPosition != null'
-        'selectingMode.rowWithSingleTap'
+        'selectingMode.row'
         'selectedRows.length > 0'
         'THEN'
         'Values should be filled in the selected rows by _pasteCellValueIntoSelectingRows.',
@@ -68,7 +68,7 @@ void main() {
         layout: const BoxConstraints(maxHeight: 300, maxWidth: 50),
       );
 
-      stateManager.setSelectingMode(TrinaGridSelectingMode.rowWithSingleTap);
+      stateManager.setSelectingMode(TrinaGridSelectingMode.row);
 
       final currentCell = rows[2].cells['body2'];
 
@@ -104,7 +104,7 @@ void main() {
     testWidgets(
         'WHEN'
         'currentCellPosition != null'
-        'selectingMode.cellWithSingleTap'
+        'selectingMode.cell'
         'selectedRows.length < 1'
         '_currentSelectingPosition != null'
         'THEN'
@@ -129,7 +129,7 @@ void main() {
         layout: const BoxConstraints(maxHeight: 300, maxWidth: 50),
       );
 
-      stateManager.setSelectingMode(TrinaGridSelectingMode.cellWithSingleTap);
+      stateManager.setSelectingMode(TrinaGridSelectingMode.cell);
 
       final currentCell = rows[2].cells['body2'];
 

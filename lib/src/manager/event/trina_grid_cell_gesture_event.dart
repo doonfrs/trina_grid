@@ -48,8 +48,6 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
 
     if (stateManager.isSelectingInteraction()) {
       _handleSelectingInteraction(stateManager);
-    } else if (stateManager.selectingMode.isSingleTapSelection) {
-      _handleSingleTapSelection(stateManager);
     } else {
       _handleNormalTap(stateManager);
     }
@@ -80,12 +78,10 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
   }
 
   void _onSelectionWithCTRL(TrinaGridStateManager stateManager) {
-    if (stateManager.selectingMode.isCellWithCtrl) {
+    if (stateManager.selectingMode.isCell) {
       final isCurrentCell = stateManager.isCurrentCell(cell);
       final wasSelected = stateManager.isSelectedCell(cell);
 
-      // Equals to `true` if tapped cell != currentCell and
-      // we have a currentCell and it's not selected
       final addCurrentCellToSelection = !isCurrentCell &&
           stateManager.currentCell != null &&
           stateManager.selectedCells.isEmpty;
@@ -100,7 +96,7 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
         stateManager.clearCurrentCell();
       }
     }
-    if (stateManager.selectingMode.isRowWithCtrl) {
+    if (stateManager.selectingMode.isRow) {
       final int? currentRowIdx = stateManager.currentRowIdx;
       // If no rows are currently selected and the current row is different from the tapped row,
       // ensure the current row is included in the selection.
@@ -126,12 +122,12 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
       stateManager.setEditing(true);
     } else {
       stateManager.setCurrentCell(cell, rowIdx);
-      // If selection activates with ctrl\cmd, then selected cells\rows is cleared by
-      // `stateManager.setCurrentCell`, so we should call handleOnSelected.
-      // If grid mode is popup, calling handleOnSelected means the user is finished selecting and
-      // the popup should be closed but It may not be the desired behavior.
-      if (stateManager.selectingMode.isSelectWithCTRL &&
-          stateManager.mode.isPopup == false) {
+      // selected cells\rows is cleared by `stateManager.setCurrentCell`,
+      // so we should call handleOnSelected.
+      // But If grid mode is popup, calling `handleOnSelected` means the user
+      // finished selecting and the popup should be closed
+      // and this may not be the desired behavior.
+      if (stateManager.mode.isPopup == false) {
         stateManager.handleOnSelected();
       }
     }
@@ -216,8 +212,7 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
         stateManager.toggleCellSelection(cell);
       }
       stateManager.handleOnSelected();
-    } else if (!stateManager.autoEditing &&
-        stateManager.selectingMode.isNotSingleTapSelection) {
+    } else if (!stateManager.autoEditing) {
       if (stateManager.isCurrentCell(cell)) {
         stateManager.setEditing(true);
       } else {
@@ -234,16 +229,6 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
   }
 
   void _onSecondaryTap(TrinaGridStateManager stateManager) {
-    if (stateManager.selectingMode.isSingleTapSelection) {
-      if (!stateManager.isCurrentCell(cell)) {
-        // calling `setCurrentCell` will clear the current selection
-        stateManager.setCurrentCell(cell, rowIdx);
-      } else {
-        stateManager.clearCurrentSelecting();
-      }
-      stateManager.handleOnSelected();
-      stateManager.setEditing(true);
-    }
     stateManager.onRowSecondaryTap?.call(
       TrinaGridOnRowSecondaryTapEvent(
         row: stateManager.getRowByIdx(rowIdx)!,
@@ -267,25 +252,6 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
     stateManager.setKeepFocus(true);
 
     return stateManager.isCurrentCell(cell);
-  }
-
-  /// Handle selection based on selecting mode
-  void _handleSingleTapSelection(TrinaGridStateManager stateManager) {
-    if (stateManager.isEditing) {
-      stateManager.setEditing(false);
-    }
-    if (stateManager.selectingMode.isRowWithSingleTap) {
-      stateManager.toggleRowSelection(rowIdx);
-    }
-    if (stateManager.selectingMode.isCellWithSingleTap) {
-      stateManager.toggleCellSelection(cell);
-    }
-    _setCurrentSelectionPosition(stateManager);
-    stateManager.setCurrentCellPosition(TrinaGridCellPosition(
-      rowIdx: rowIdx,
-      columnIdx: stateManager.columnIndex(column),
-    ));
-    stateManager.handleOnSelected();
   }
 
   void _setCurrentSelectionPosition(TrinaGridStateManager stateManager) {

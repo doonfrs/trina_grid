@@ -38,9 +38,7 @@ void main() {
     Widget? noRowsWidget,
     TrinaRowColorCallback? rowColorCallback,
     TrinaColumnMenuDelegate? columnMenuDelegate,
-    TrinaGridConfiguration configuration = const TrinaGridConfiguration(
-      selectingMode: TrinaGridSelectingMode.cellWithCtrl,
-    ),
+    TrinaGridConfiguration configuration = const TrinaGridConfiguration(),
     TrinaGridMode mode = TrinaGridMode.popup,
     TextDirection textDirection = TextDirection.ltr,
   }) async {

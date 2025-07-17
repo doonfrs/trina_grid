@@ -210,7 +210,7 @@ class _RowColorScreenState extends State<RowColorScreen> {
               columns: columns,
               rows: rows,
               configuration: TrinaGridConfiguration(
-                selectingMode: TrinaGridSelectingMode.rowWithSingleTap,
+                selectingMode: TrinaGridSelectingMode.row,
                 style: TrinaGridStyleConfig(
                   activatedColor: selectionColor,
                   cellColorInReadOnlyState: Colors.black45,

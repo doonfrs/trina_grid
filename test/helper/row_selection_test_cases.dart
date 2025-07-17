@@ -442,9 +442,7 @@ void runClearRowSelectionOnNavigatingViaKeyboardTestCases({
     await tester.sendKeyEvent(LogicalKeyboardKey.pageDown);
     await tester.pumpAndSettle();
     await selectRow(tester, 8);
-    // we used [isNotEmptyHere] because we selected a row other than
-    // the first row(which is current row by default)
-    // And in case of rowWithCtrl selection, the current row is included in the selection.
+
     expect(stateManager().selectedRows, isNotEmpty);
     // Reset mock because selection fires an event.
     reset(mock);
@@ -486,9 +484,7 @@ void runClearRowSelectionOnNavigatingViaKeyboardTestCases({
     await tester.sendKeyEvent(LogicalKeyboardKey.pageDown);
     await tester.pumpAndSettle();
     await selectRow(tester, 8);
-    // we used [isNotEmptyHere] because we selected a row other than
-    // the first row(which is current row by default)
-    // And in case of rowWithCtrl selection, the current row is included in the selection.
+
     expect(stateManager().selectedRows, isNotEmpty);
     // Reset mock because selection fires an event.
     reset(mock);

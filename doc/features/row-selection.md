@@ -16,26 +16,18 @@ TrinaGrid(
   rows: rows,
   // 1- Using the configuration
   configuration: TrinaGridConfiguration(
-    selectingMode: TrinaGridSelectingMode.rowWithSingleTap,
+    selectingMode: TrinaGridSelectingMode.row,
   ),
   // 2- Using the state manager
   onLoaded: (TrinaGridOnLoadedEvent event) {
-    event.stateManager.setSelectingMode(TrinaGridSelectingMode.rowWithSingleTap);
+    event.stateManager.setSelectingMode(TrinaGridSelectingMode.row);
   },
 )
 ```
 
-## Row Selection Modes
+## Multiple Rows Selection
 
-
-### TrinaGridSelectingMode.rowWithSingleTap
-
-Allows users to select single or multiple rows with a single tap.
-
-### TrinaGridSelectingMode.rowWithCtrl
-
-Allows users to select single or multiple rows using Click + Ctrl key(cmd on Mac).
-
+- To select multiple disconnected rows, hold CTRL and tap on the row you want to select.
 
 ## Range Row Selection
 

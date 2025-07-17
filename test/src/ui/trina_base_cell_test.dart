@@ -44,8 +44,7 @@ void main() {
     when(stateManager.gridFocusNode).thenReturn(FocusNode());
     when(stateManager.keepFocus).thenReturn(true);
     when(stateManager.hasFocus).thenReturn(true);
-    when(stateManager.selectingMode)
-        .thenReturn(TrinaGridSelectingMode.cellWithSingleTap);
+    when(stateManager.selectingMode).thenReturn(TrinaGridSelectingMode.cell);
     when(stateManager.canRowDrag).thenReturn(true);
     when(stateManager.isSelectedCell(any)).thenReturn(false);
     when(stateManager.enabledRowGroups).thenReturn(false);
@@ -494,8 +493,7 @@ void main() {
 
       when(stateManager.isCurrentCell(any)).thenReturn(true);
       when(stateManager.isEditing).thenReturn(false);
-      when(stateManager.selectingMode)
-          .thenReturn(TrinaGridSelectingMode.rowWithSingleTap);
+      when(stateManager.selectingMode).thenReturn(TrinaGridSelectingMode.row);
 
       when(stateManager.isSelectingInteraction()).thenReturn(false);
       when(stateManager.needMovingScroll(any, any)).thenReturn(false);

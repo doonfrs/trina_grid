@@ -404,13 +404,12 @@ void main() {
   });
 
   group('Popup grid selection mode', () {
-    makeDateCell({bool selectWithSingleTap = false}) {
+    makeDateCell() {
       TrinaColumn column = TrinaColumn(
         title: 'column title',
         field: 'column_field_name',
         type: TrinaColumnType.date(
           format: 'yyyy-MM-dd',
-          selectWithSingleTap: selectWithSingleTap,
         ),
       );
 
@@ -438,28 +437,15 @@ void main() {
       });
     }
 
-    makeDateCell(selectWithSingleTap: false).test(
-      'When selectWithSingleTap is false, grid selection mode should be cellWithCtrl',
-      (tester) async {
-        await tester.tap(find.byType(TextField));
-        await tester.pumpAndSettle();
-
-        final popupGrid = tester.widget<TrinaGrid>(find.byType(TrinaGrid));
-        expect(
-          popupGrid.configuration.selectingMode,
-          TrinaGridSelectingMode.cellWithCtrl,
-        );
-      },
-    );
-    makeDateCell(selectWithSingleTap: true).test(
-      'When selectWithSingleTap is true, grid selection mode should be cellWithSingleTap',
+    makeDateCell().test(
+      'grid selection mode should be cell',
       (tester) async {
         await tester.tap(find.byType(TextField));
         await tester.pumpAndSettle();
         final popupGrid = tester.widget<TrinaGrid>(find.byType(TrinaGrid));
         expect(
           popupGrid.configuration.selectingMode,
-          TrinaGridSelectingMode.cellWithSingleTap,
+          TrinaGridSelectingMode.cell,
         );
       },
     );
