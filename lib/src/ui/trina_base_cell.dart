@@ -96,6 +96,13 @@ class TrinaBaseCell extends StatelessWidget
     _addGestureEvent(TrinaGridGestureType.onDoubleTap, Offset.zero);
   }
 
+  void _handleOnSecondaryTap(TapDownDetails details) {
+    _addGestureEvent(
+      TrinaGridGestureType.onSecondaryTap,
+      details.globalPosition,
+    );
+  }
+
   void Function()? _onDoubleTapOrNull() {
     return stateManager.onDoubleTap == null &&
             stateManager.mode.isPopup == false
@@ -103,11 +110,10 @@ class TrinaBaseCell extends StatelessWidget
         : _handleOnDoubleTap;
   }
 
-  void _handleOnSecondaryTap(TapDownDetails details) {
-    _addGestureEvent(
-      TrinaGridGestureType.onSecondaryTap,
-      details.globalPosition,
-    );
+  void Function(TapDownDetails details)? _onSecondaryTapOrNull() {
+    return stateManager.onRowSecondaryTap == null
+        ? null
+        : _handleOnSecondaryTap;
   }
 
   @override
@@ -140,7 +146,7 @@ class TrinaBaseCell extends StatelessWidget
       onLongPressEnd: _handleOnLongPressEnd,
       // Optional gestures.
       onDoubleTap: _onDoubleTapOrNull(),
-      onSecondaryTapDown: _handleOnSecondaryTap,
+      onSecondaryTapDown: _onSecondaryTapOrNull(),
       child: _CellContainer(
         cell: cell,
         rowIdx: rowIdx,
