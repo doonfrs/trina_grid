@@ -1,6 +1,30 @@
 import 'package:trina_grid/trina_grid.dart';
 
 class ColumnHelper {
+  static TrinaColumn selectColumn(
+    String title, {
+    List<String> items = const [],
+    bool enableAutoEditing = false,
+  }) {
+    return TrinaColumn(
+      title: title,
+      field: title,
+      enableAutoEditing: enableAutoEditing,
+      type: TrinaColumnType.select(items),
+    );
+  }
+
+  static TrinaColumn booleanColumn(
+    String title, {
+    bool? initialValue,
+  }) {
+    return TrinaColumn(
+      title: title,
+      field: title,
+      type: TrinaColumnType.boolean(defaultValue: initialValue),
+    );
+  }
+
   static List<TrinaColumn> textColumn(
     String title, {
     int count = 1,

@@ -80,7 +80,8 @@ class TrinaGridActionMoveCellFocus extends TrinaGridShortcutAction {
     required TrinaKeyManagerEvent keyEvent,
     required TrinaGridStateManager stateManager,
   }) {
-    bool force = keyEvent.isHorizontal &&
+    bool force =
+        keyEvent.isHorizontal &&
         stateManager.configuration.enableMoveHorizontalInEditing == true;
 
     if (stateManager.currentCell == null) {
@@ -91,6 +92,8 @@ class TrinaGridActionMoveCellFocus extends TrinaGridShortcutAction {
     final rtlAwareDirection = direction.asRTLAwareDirection(stateManager.isRTL);
 
     stateManager.moveCurrentCell(rtlAwareDirection, force: force);
+
+    stateManager.handleOnSelectedIfNotPopup();
   }
 }
 
@@ -142,8 +145,9 @@ class TrinaGridActionMoveCellFocusByPage extends TrinaGridShortcutAction {
 
         final previousPosition = stateManager.currentCellPosition;
 
-        int toPage =
-            direction.isLeft ? stateManager.page - 1 : stateManager.page + 1;
+        int toPage = direction.isLeft
+            ? stateManager.page - 1
+            : stateManager.page + 1;
 
         if (toPage < 1) {
           toPage = 1;
@@ -166,11 +170,13 @@ class TrinaGridActionMoveCellFocusByPage extends TrinaGridShortcutAction {
             (stateManager.rowContainerHeight / stateManager.rowTotalHeight)
                 .floor();
 
-        int rowIdx = stateManager.currentRowIdx!;
+        int rowIdx = stateManager.currentRowIdx ?? 0;
 
         rowIdx += direction.isUp ? -moveCount : moveCount;
 
         stateManager.moveCurrentCellByRowIdx(rowIdx, direction);
+
+        stateManager.handleOnSelectedIfNotPopup();
 
         break;
     }
@@ -219,7 +225,8 @@ class TrinaGridActionMoveSelectedCellFocusByPage
     final int moveCount =
         (stateManager.rowContainerHeight / stateManager.rowTotalHeight).floor();
 
-    int rowIdx = stateManager.currentSelectingPosition?.rowIdx ??
+    int rowIdx =
+        stateManager.currentSelectingPosition?.rowIdx ??
         stateManager.currentCellPosition?.rowIdx ??
         0;
 
@@ -259,11 +266,15 @@ class TrinaGridActionDefaultTab extends TrinaGridShortcutAction {
         : _moveCellNext(stateManager);
 
     stateManager.setEditing(stateManager.autoEditing || saveIsEditing);
+
+    stateManager.handleOnSelectedIfNotPopup();
   }
 
   void _moveCellPrevious(TrinaGridStateManager stateManager) {
     if (_willMoveToPreviousRow(
-        stateManager.currentCellPosition, stateManager)) {
+      stateManager.currentCellPosition,
+      stateManager,
+    )) {
       _moveCellToPreviousRow(stateManager);
     } else {
       stateManager.moveCurrentCell(TrinaMoveDirection.left, force: true);
@@ -335,11 +346,8 @@ class TrinaGridActionDefaultTab extends TrinaGridShortcutAction {
 /// {@template trina_grid_action_default_enter_key}
 /// This action is the default action of the Enter key.
 ///
-/// If [TrinaGrid.mode] is in selection mode,
-/// the [TrinaGrid.onSelected] callback that returns information
-/// of the currently selected row is called.
+/// It behaves according to [TrinaGridConfiguration.enterKeyAction].
 ///
-/// Otherwise, it behaves according to [TrinaGridConfiguration.enterKeyAction].
 /// {@endtemplate}
 class TrinaGridActionDefaultEnterKey extends TrinaGridShortcutAction {
   const TrinaGridActionDefaultEnterKey();
@@ -349,55 +357,109 @@ class TrinaGridActionDefaultEnterKey extends TrinaGridShortcutAction {
     required TrinaKeyManagerEvent keyEvent,
     required TrinaGridStateManager stateManager,
   }) {
-    // In SelectRow mode, the current Row is passed to the onSelected callback.
-    if (stateManager.mode.isSelectMode && stateManager.onSelected != null) {
-      stateManager.onSelected!(TrinaGridOnSelectedEvent(
-        row: stateManager.currentRow,
-        rowIdx: stateManager.currentRowIdx,
-        cell: stateManager.currentCell,
-        selectedRows: stateManager.mode.isMultiSelectMode
-            ? stateManager.currentSelectingRows
-            : null,
-      ));
-      return;
-    }
-
-    if (stateManager.configuration.enterKeyAction.isNone) {
-      return;
-    }
-
-    if (!stateManager.isEditing && _isExpandableCell(stateManager)) {
-      stateManager.toggleExpandedRowGroup(rowGroup: stateManager.currentRow!);
-      return;
-    }
+    if (_handleKeyActionIsSelect(stateManager)) return;
+    if (_handleCurrentlySelecting(stateManager)) return;
+    if (stateManager.configuration.enterKeyAction.isNone) return;
+    if (_handleExpandableCell(stateManager)) return;
 
     if (stateManager.configuration.enterKeyAction.isToggleEditing) {
       stateManager.toggleEditing(notify: false);
     } else {
-      if (stateManager.isEditing == true ||
-          stateManager.currentColumn?.enableEditingMode == false) {
-        final saveIsEditing = stateManager.isEditing;
-
-        _moveCell(keyEvent, stateManager);
-
-        stateManager.setEditing(saveIsEditing, notify: false);
-      } else {
-        stateManager.toggleEditing(notify: false);
-      }
-    }
-
-    if (stateManager.autoEditing) {
-      stateManager.setEditing(true, notify: false);
+      _handleEditingAndMoveCell(keyEvent, stateManager);
     }
 
     stateManager.notifyListeners();
   }
 
+  bool _handleKeyActionIsSelect(TrinaGridStateManager stateManager) {
+    if (stateManager.configuration.enterKeyAction.isSelect == false) {
+      return false;
+    }
+    if (stateManager.currentCell != null) {
+      if (stateManager.selectingMode.isRow) {
+        stateManager.toggleRowSelection(stateManager.currentRowIdx!);
+      } else if (stateManager.selectingMode.isCell) {
+        stateManager.toggleCellSelection(stateManager.currentCell!);
+      }
+    }
+
+    stateManager.handleOnSelected();
+    return true;
+  }
+
+  bool _handleCurrentlySelecting(TrinaGridStateManager stateManager) {
+    // Early exit if selection is disabled or no current selections
+    if (stateManager.selectingMode.isDisabled ||
+        (stateManager.selectedCells.isEmpty &&
+            stateManager.selectedRows.isEmpty)) {
+      return false;
+    }
+
+    // Clear current selection and notify listeners
+    stateManager.clearCurrentSelecting();
+    stateManager.handleOnSelected();
+
+    final currentCell = stateManager.currentCell;
+    final lastSelectedPosition = stateManager.currentCellPosition;
+
+    if (currentCell == null || lastSelectedPosition?.hasPosition != true) {
+      return true;
+    }
+
+    final currentCellColumnIdx = stateManager.columnIndex(currentCell.column);
+    final currentCellRowIdx = currentCell.row.sortIdx;
+
+    // Check if current cell matches last selected position
+    final isSamePosition =
+        lastSelectedPosition!.columnIdx == currentCellColumnIdx &&
+            lastSelectedPosition.rowIdx == currentCellRowIdx;
+
+    // Update current cell if needed to match last selection
+    if (!isSamePosition) {
+      final targetRow = stateManager.refRows[lastSelectedPosition.rowIdx!];
+      final targetColumn =
+          stateManager.refColumns[lastSelectedPosition.columnIdx!];
+      stateManager.setCurrentCell(
+        targetRow.cells[targetColumn.field]!,
+        lastSelectedPosition.rowIdx,
+      );
+    }
+
+    return true;
+  }
+
+  bool _handleExpandableCell(TrinaGridStateManager stateManager) {
+    if (stateManager.isEditing || !_isExpandableCell(stateManager)) {
+      return false;
+    }
+    stateManager.toggleExpandedRowGroup(rowGroup: stateManager.currentRow!);
+    return true;
+  }
+
+  void _handleEditingAndMoveCell(
+    TrinaKeyManagerEvent keyEvent,
+    TrinaGridStateManager stateManager,
+  ) {
+    if (stateManager.isEditing ||
+        stateManager.currentColumn?.enableEditingMode == false) {
+      final saveIsEditing = stateManager.isEditing;
+      _moveCell(keyEvent, stateManager);
+      stateManager.setEditing(saveIsEditing, notify: false);
+    } else {
+      stateManager.toggleEditing(notify: false);
+    }
+
+    if (stateManager.autoEditing) {
+      stateManager.setEditing(true, notify: false);
+    }
+  }
+
   bool _isExpandableCell(TrinaGridStateManager stateManager) {
     return stateManager.currentCell != null &&
         stateManager.enabledRowGroups &&
-        stateManager.rowGroupDelegate
-                ?.isExpandableCell(stateManager.currentCell!) ==
+        stateManager.rowGroupDelegate?.isExpandableCell(
+              stateManager.currentCell!,
+            ) ==
             true;
   }
 
@@ -413,15 +475,9 @@ class TrinaGridActionDefaultEnterKey extends TrinaGridShortcutAction {
 
     if (enterKeyAction.isEditingAndMoveDown) {
       if (keyEvent.isShiftPressed) {
-        stateManager.moveCurrentCell(
-          TrinaMoveDirection.up,
-          notify: false,
-        );
+        stateManager.moveCurrentCell(TrinaMoveDirection.up, notify: false);
       } else {
-        stateManager.moveCurrentCell(
-          TrinaMoveDirection.down,
-          notify: false,
-        );
+        stateManager.moveCurrentCell(TrinaMoveDirection.down, notify: false);
       }
     } else if (enterKeyAction.isEditingAndMoveRight) {
       if (keyEvent.isShiftPressed) {
@@ -433,11 +489,9 @@ class TrinaGridActionDefaultEnterKey extends TrinaGridShortcutAction {
       } else {
         // Check if we're on the last cell of the row
         final position = stateManager.currentCellPosition;
-        final columnIndexes = stateManager.columnIndexesByShowFrozen;
-        final currentVisualIndex = columnIndexes.indexOf(position!.columnIdx!);
-        final isAtLastColumn = currentVisualIndex == columnIndexes.length - 1;
-
-        if (isAtLastColumn &&
+        if (position != null &&
+            position.columnIdx == stateManager.refColumns.length - 1 &&
+            position.rowIdx != null &&
             position.rowIdx! < stateManager.refRows.length - 1) {
           // Move to first cell of next row
           stateManager.moveCurrentCell(
@@ -465,9 +519,8 @@ class TrinaGridActionDefaultEnterKey extends TrinaGridShortcutAction {
 /// {@template trina_grid_action_default_escape_key}
 /// This is the action in which the default behavior of the Escape key is set.
 ///
-/// If [TrinaGridMode] is in selection or popup mode,
-/// call the [TrinaGrid.onSelected] callback,
-/// which returns a [TrinaGridOnSelectedEvent] with a null value meaning unselected.
+/// If selecting mode is not [TrinaGridSelectingMode.disabled],
+/// this will call the [TrinaGrid.onSelected] callback with a null value meaning unselected.
 ///
 /// In other cases, it cancels the currently edited cell.
 /// {@endtemplate}
@@ -479,13 +532,12 @@ class TrinaGridActionDefaultEscapeKey extends TrinaGridShortcutAction {
     required TrinaKeyManagerEvent keyEvent,
     required TrinaGridStateManager stateManager,
   }) {
-    if (stateManager.mode.isSelectMode ||
+    if (stateManager.selectingMode.isEnabled ||
         (stateManager.mode.isPopup && !stateManager.isEditing)) {
       if (stateManager.onSelected != null) {
         stateManager.clearCurrentSelecting();
         stateManager.onSelected!(const TrinaGridOnSelectedEvent());
       }
-      return;
     }
 
     if (stateManager.isEditing) {
@@ -511,10 +563,12 @@ class TrinaGridActionMoveCellFocusToEdge extends TrinaGridShortcutAction {
       case TrinaMoveDirection.left:
       case TrinaMoveDirection.right:
         stateManager.moveCurrentCellToEdgeOfColumns(direction);
+        stateManager.handleOnSelectedIfNotPopup();
         break;
       case TrinaMoveDirection.up:
       case TrinaMoveDirection.down:
         stateManager.moveCurrentCellToEdgeOfRows(direction);
+        stateManager.handleOnSelectedIfNotPopup();
         break;
     }
   }
@@ -686,8 +740,9 @@ class TrinaGridActionPasteValues extends TrinaGridShortcutAction {
       if (value == null) {
         return;
       }
-      List<List<String>> textList =
-          TrinaClipboardTransformation.stringToList(value.text!);
+      List<List<String>> textList = TrinaClipboardTransformation.stringToList(
+        value.text!,
+      );
 
       stateManager.pasteCellValue(textList);
     });

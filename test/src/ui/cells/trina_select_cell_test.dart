@@ -211,4 +211,43 @@ void main() {
       });
     },
   );
+
+  group('Popup grid selection mode', () {
+    makeSelectCell() {
+      TrinaColumn column = TrinaColumn(
+        title: 'column title',
+        field: 'column_field_name',
+        type: TrinaColumnType.select(selectItems),
+      );
+
+      TrinaCell cell = TrinaCell(value: selectItems.first);
+
+      final TrinaRow row = TrinaRow(cells: {'column_field_name': cell});
+
+      return TrinaWidgetTestHelper('Create TrinaSelectCell', (tester) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Material(
+              child: TrinaSelectCell(
+                stateManager: stateManager,
+                cell: cell,
+                column: column,
+                row: row,
+              ),
+            ),
+          ),
+        );
+      });
+    }
+
+    makeSelectCell().test('Grid selection mode should be cell', (tester) async {
+      await tester.tap(find.byType(TextField));
+      await tester.pumpAndSettle();
+      final popupGrid = tester.widget<TrinaGrid>(find.byType(TrinaGrid));
+      expect(
+        popupGrid.configuration.selectingMode,
+        TrinaGridSelectingMode.cell,
+      );
+    });
+  });
 }

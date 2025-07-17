@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -220,8 +221,8 @@ void main() {
 
     tapCell.test('Select 12:29', (tester) async {
       await tester.tap(find.text('29'));
+      await tester.pump(kDoubleTapMinTime);
       await tester.tap(find.text('29'));
-
       verify(stateManager.handleAfterSelectingRow(cell, '12:29')).called(1);
     });
 

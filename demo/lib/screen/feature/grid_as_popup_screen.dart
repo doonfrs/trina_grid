@@ -70,7 +70,7 @@ class _GridAsPopupScreenState extends State<GridAsPopupScreen> {
       columns: columns,
       width: 600,
       rows: rows,
-      mode: TrinaGridMode.select,
+      mode: TrinaGridMode.popup,
       onLoaded: (TrinaGridOnLoadedEvent event) {
         rows.asMap().entries.forEach((element) {
           final cell = element.value.cells[selectFieldName]!;
@@ -85,7 +85,9 @@ class _GridAsPopupScreenState extends State<GridAsPopupScreen> {
         event.stateManager.setShowColumnFilter(true);
       },
       onSelected: (TrinaGridOnSelectedEvent event) {
-        controller.text = event.row!.cells[selectFieldName]!.value.toString();
+        controller.text =
+            event.lastSelectedRow?.cells[selectFieldName]?.value.toString() ??
+                'No value was selected';
       },
       onSorted: (TrinaGridOnSortedEvent event) {
         print(event);

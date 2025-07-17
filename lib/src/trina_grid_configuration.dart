@@ -11,8 +11,8 @@ class TrinaGridConfiguration {
   /// Moves the current cell when focus reaches the left or right edge in the edit state.
   final bool enableMoveHorizontalInEditing;
 
-  /// Automatically selects the first row when in selection mode.
-  final bool enableAutoSelectFirstRow;
+  /// Automatically sets the first cell as the current cell.
+  final bool autoSetFirstCellAsCurrent;
 
   /// [TrinaGridRowSelectionCheckBoxBehavior.none]
   /// Selecting a row does nothing to its checkbox
@@ -56,14 +56,6 @@ class TrinaGridConfiguration {
 
   /// Set the mode to select cells or rows.
   ///
-  /// [TrinaGridSelectingMode.cell] selects each cell.
-  /// [TrinaGridSelectingMode.row] selects row by row.
-  /// [TrinaGridSelectingMode.none] does nothing.
-  ///
-  /// Note: This setting may be overridden by the grid mode:
-  /// - In [TrinaGridMode.select] or [TrinaGridMode.selectWithOneTap],
-  ///   it's forced to [TrinaGridSelectingMode.none]
-  /// - In [TrinaGridMode.multiSelect], it's forced to [TrinaGridSelectingMode.row]
   final TrinaGridSelectingMode selectingMode;
 
   /// Set custom shortcut keys.
@@ -109,7 +101,7 @@ class TrinaGridConfiguration {
   const TrinaGridConfiguration({
     this.enableMoveDownAfterSelecting = false,
     this.enableMoveHorizontalInEditing = false,
-    this.enableAutoSelectFirstRow = true,
+    this.autoSetFirstCellAsCurrent = false,
     this.rowSelectionCheckBoxBehavior =
         TrinaGridRowSelectionCheckBoxBehavior.none,
     this.enterKeyAction = TrinaGridEnterKeyAction.editingAndMoveDown,
@@ -126,7 +118,7 @@ class TrinaGridConfiguration {
   const TrinaGridConfiguration.dark({
     this.enableMoveDownAfterSelecting = false,
     this.enableMoveHorizontalInEditing = false,
-    this.enableAutoSelectFirstRow = true,
+    this.autoSetFirstCellAsCurrent = false,
     this.rowSelectionCheckBoxBehavior =
         TrinaGridRowSelectionCheckBoxBehavior.none,
     this.enterKeyAction = TrinaGridEnterKeyAction.editingAndMoveDown,
@@ -170,7 +162,7 @@ class TrinaGridConfiguration {
   TrinaGridConfiguration copyWith({
     bool? enableMoveDownAfterSelecting,
     bool? enableMoveHorizontalInEditing,
-    bool? enableAutoSelectFirstRow,
+    bool? autoSetFirstCellAsCurrent,
     TrinaGridRowSelectionCheckBoxBehavior? rowSelectionCheckBoxBehavior,
     TrinaGridEnterKeyAction? enterKeyAction,
     TrinaGridTabKeyAction? tabKeyAction,
@@ -187,8 +179,8 @@ class TrinaGridConfiguration {
           enableMoveDownAfterSelecting ?? this.enableMoveDownAfterSelecting,
       enableMoveHorizontalInEditing:
           enableMoveHorizontalInEditing ?? this.enableMoveHorizontalInEditing,
-      enableAutoSelectFirstRow:
-          enableAutoSelectFirstRow ?? this.enableAutoSelectFirstRow,
+      autoSetFirstCellAsCurrent:
+          autoSetFirstCellAsCurrent ?? this.autoSetFirstCellAsCurrent,
       rowSelectionCheckBoxBehavior:
           rowSelectionCheckBoxBehavior ?? this.rowSelectionCheckBoxBehavior,
       enterKeyAction: enterKeyAction ?? this.enterKeyAction,
@@ -212,7 +204,7 @@ class TrinaGridConfiguration {
                 other.enableMoveDownAfterSelecting &&
             enableMoveHorizontalInEditing ==
                 other.enableMoveHorizontalInEditing &&
-            enableAutoSelectFirstRow == other.enableAutoSelectFirstRow &&
+            autoSetFirstCellAsCurrent == other.autoSetFirstCellAsCurrent &&
             rowSelectionCheckBoxBehavior ==
                 other.rowSelectionCheckBoxBehavior &&
             enterKeyAction == other.enterKeyAction &&
@@ -230,7 +222,7 @@ class TrinaGridConfiguration {
   int get hashCode => Object.hash(
         enableMoveDownAfterSelecting,
         enableMoveHorizontalInEditing,
-        enableAutoSelectFirstRow,
+        autoSetFirstCellAsCurrent,
         rowSelectionCheckBoxBehavior,
         enterKeyAction,
         tabKeyAction,
@@ -2009,18 +2001,19 @@ enum TrinaGridRowSelectionCheckBoxBehavior {
 
 /// Behavior of the Enter key when a cell is selected.
 enum TrinaGridEnterKeyAction {
-  /// When the Enter key is pressed, the cell is changed to the edit state,
-  /// or if it is already in the edit state, it moves to the cell below.
+  /// It switches to the editing state or if already in editing state, it moves to the cell below.
   editingAndMoveDown,
 
-  /// When the Enter key is pressed, the cell is changed to the edit state,
-  /// or if it is already in the edit state, it moves to the right cell.
+  /// It switches to the editing state or if already in editing state, it moves to the cell on the right.
   editingAndMoveRight,
 
-  /// Pressing the Enter key toggles the editing status.
+  /// Toggles The editing state without changing the cell.
   toggleEditing,
 
-  /// Pressing the Enter key does nothing.
+  /// Selects current cell\row if [selectingMode] is not [TrinaGridSelectingMode.disabled].
+  select,
+
+  /// There is no action.
   none;
 
   bool get isEditingAndMoveDown =>
@@ -2030,6 +2023,8 @@ enum TrinaGridEnterKeyAction {
       this == TrinaGridEnterKeyAction.editingAndMoveRight;
 
   bool get isToggleEditing => this == TrinaGridEnterKeyAction.toggleEditing;
+
+  bool get isSelect => this == TrinaGridEnterKeyAction.select;
 
   bool get isNone => this == TrinaGridEnterKeyAction.none;
 }

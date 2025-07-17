@@ -88,6 +88,7 @@ TrinaColumn(
 | `endDate` | `DateTime?` | Maximum selectable date |
 | `firstDate` | `DateTime?` | First date visible in calendar |
 | `lastDate` | `DateTime?` | Last date visible in calendar |
+| `selectWithSingleTap` | `bool` | Whether to confirm the selection and close the popup with a single tap |
 
 ### Time Column
 
@@ -177,6 +178,7 @@ TrinaColumn(
 | `enableSearch` | `bool` | Whether to enable search in dropdown |
 | `enableFilter` | `bool` | Whether to enable filtering in dropdown |
 | `enableMultiSelect` | `bool` | Whether to allow selecting multiple items |
+| `selectWithSingleTap` | `bool` | Whether to confirm the selection and close the popup with a single tap |
 
 ### Boolean Column
 
@@ -213,6 +215,7 @@ TrinaColumn(
 | `popupIcon` | `IconData?` | Icon to display for opening the popup selector |
 | `builder` | `Widget Function(dynamic item)?` | Custom widget builder for rendering boolean values |
 | `onItemSelected` | `Function(TrinaGridOnSelectedEvent event)?` | Callback when a value is selected |
+| `selectWithSingleTap` | `bool` | Whether to confirm the selection and close the popup with a single tap |
 
 ### Currency Column
 

@@ -146,7 +146,6 @@ class _PercentageTypeColumnScreenState
         columns: columns,
         rows: rows,
         onLoaded: (event) {
-          event.stateManager.setSelectingMode(TrinaGridSelectingMode.cell);
           event.stateManager.setEditing(true);
           event.stateManager.setAutoEditing(true);
         },

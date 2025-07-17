@@ -53,9 +53,6 @@ class _ColumnFreezingScreenState extends State<ColumnFreezingScreen> {
         onChanged: (TrinaGridOnChangedEvent event) {
           print(event);
         },
-        onLoaded: (TrinaGridOnLoadedEvent event) {
-          event.stateManager.setSelectingMode(TrinaGridSelectingMode.cell);
-        },
       ),
     );
   }

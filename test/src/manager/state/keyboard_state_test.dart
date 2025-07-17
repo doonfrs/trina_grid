@@ -55,8 +55,8 @@ void main() {
       gridFocusNode: MockFocusNode(),
       scroll: scrollController,
     );
-
     stateManager.setEventManager(eventManager);
+    when(stateManager.eventManager?.stateManager).thenReturn(stateManager);
     stateManager.setLayout(const BoxConstraints(maxWidth: 500, maxHeight: 500));
   });
 
@@ -549,7 +549,7 @@ void main() {
     );
 
     withColumnAndRows.test(
-      'When currentCell is null, no cell should be selected',
+      'When currentSelectingPosition is null, no cell should be selected',
       (tester) async {
         stateManager.setEditing(false);
 

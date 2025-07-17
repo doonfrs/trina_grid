@@ -20,7 +20,7 @@ abstract class IGridState {
 
   TrinaOnRowCheckedEventCallback? get onRowChecked;
 
-  TrinaOnRowDoubleTapEventCallback? get onRowDoubleTap;
+  TrinaOnDoubleTapEventCallback? get onDoubleTap;
 
   TrinaOnRowSecondaryTapEventCallback? get onRowSecondaryTap;
 
@@ -155,12 +155,8 @@ mixin GridState implements ITrinaGridState {
       _state._configuration!.applyColumnFilter(refColumns.originalList);
     }
 
-    // Apply selectingMode from configuration for modes that allow it
-    if (mode == TrinaGridMode.normal ||
-        mode == TrinaGridMode.readOnly ||
-        mode == TrinaGridMode.popup) {
-      setSelectingMode(configuration.selectingMode, notify: false);
-    }
+    // Apply selectingMode from configuration
+    setSelectingMode(configuration.selectingMode, notify: false);
   }
 
   @override
@@ -168,25 +164,6 @@ mixin GridState implements ITrinaGridState {
     if (_state._mode == mode) return;
 
     _state._mode = mode;
-
-    TrinaGridSelectingMode selectingMode;
-
-    switch (mode) {
-      case TrinaGridMode.normal:
-      case TrinaGridMode.readOnly:
-      case TrinaGridMode.popup:
-        selectingMode = configuration.selectingMode;
-        break;
-      case TrinaGridMode.select:
-      case TrinaGridMode.selectWithOneTap:
-        selectingMode = TrinaGridSelectingMode.none;
-        break;
-      case TrinaGridMode.multiSelect:
-        selectingMode = TrinaGridSelectingMode.row;
-        break;
-    }
-
-    setSelectingMode(selectingMode);
 
     resetCurrentState();
   }
@@ -205,16 +182,26 @@ mixin GridState implements ITrinaGridState {
   @override
   void handleOnSelected() {
     _handleSelectCheckRowBehavior();
-    if (mode.isSelectMode == true && onSelected != null) {
+    if (onSelected != null) {
       onSelected!(
         TrinaGridOnSelectedEvent(
-          row: currentRow,
-          rowIdx: currentRowIdx,
-          cell: currentCell,
-          selectedRows: mode.isMultiSelectMode ? currentSelectingRows : null,
+          selectedCells: selectedCells,
+          selectedRows: selectedRows,
         ),
       );
     }
+  }
+
+  /// calls [handleOnSelected] if [mode] is not [TrinaGridMode.popup]
+  ///
+  /// Reason is that in [TrinaGridMode.popup] mode, selecting a row or a cell
+  /// will dismiss the popup grid which is not desired.
+  void handleOnSelectedIfNotPopup() {
+    if (mode.isPopup) {
+      return;
+    }
+
+    handleOnSelected();
   }
 
   void _handleSelectCheckRowBehavior() {

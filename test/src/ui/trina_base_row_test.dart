@@ -32,7 +32,7 @@ void main() {
     when(stateManager.isSelecting).thenReturn(true);
     when(stateManager.hasCurrentSelectingPosition).thenReturn(true);
     when(stateManager.isEditing).thenReturn(true);
-    when(stateManager.selectingMode).thenReturn(TrinaGridSelectingMode.cell);
+    when(stateManager.selectingMode).thenReturn(TrinaGridSelectingMode.row);
     when(stateManager.hasFocus).thenReturn(true);
     when(stateManager.canRowDrag).thenReturn(true);
     when(stateManager.showFrozenColumn).thenReturn(false);
@@ -70,8 +70,7 @@ void main() {
         when(stateManager.dragRows).thenReturn(dragRows);
         when(stateManager.isSelectedRow(any)).thenReturn(isSelectedRow);
         when(stateManager.isCurrentCell(any)).thenReturn(isCurrentCell);
-        when(stateManager.isSelectedCell(any, any, any))
-            .thenReturn(isSelectedCell);
+        when(stateManager.isSelectedCell(any)).thenReturn(isSelectedCell);
 
         // given
         columns = ColumnHelper.textColumn('header', count: 3);

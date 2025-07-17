@@ -417,7 +417,7 @@ class FilterPopupState {
   void onLoaded(TrinaGridOnLoadedEvent e) {
     _stateManager = e.stateManager;
 
-    _stateManager!.setSelectingMode(TrinaGridSelectingMode.row, notify: false);
+    _stateManager!.setSelectingMode(TrinaGridSelectingMode.cell, notify: false);
 
     if (_stateManager!.rows.isNotEmpty) {
       _stateManager!.setKeepFocus(true, notify: false);
@@ -546,10 +546,10 @@ class TrinaGridFilterPopupHeader extends StatelessWidget {
   }
 
   void handleRemoveButton() {
-    if (stateManager!.currentSelectingRows.isEmpty) {
+    if (stateManager!.selectedRows.isEmpty) {
       stateManager!.removeCurrentRow();
     } else {
-      stateManager!.removeRows(stateManager!.currentSelectingRows);
+      stateManager!.removeRows(stateManager!.selectedRows);
     }
   }
 
