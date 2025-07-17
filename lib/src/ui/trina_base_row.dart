@@ -364,11 +364,8 @@ class _RowContainerWidgetState extends TrinaStateWithChange<_RowContainerWidget>
 
     Color rowColor = _rowColor;
 
-    // A current row is considered active if we don't have any selected rows
-    final isActiveRow = (isCurrentRow &&
-            stateManager.hasFocus &&
-            stateManager.selectedRows.isEmpty) ||
-        isSelectedRow;
+    final isActiveRow = isCurrentRow || isSelectedRow;
+
     // Only apply non-transparent activated color here
     // For transparent colors, we'll overlay them in the build method
     if (isActiveRow && stateManager.configuration.style.activatedColor.a > 0) {

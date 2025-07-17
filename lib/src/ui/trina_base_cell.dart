@@ -241,7 +241,7 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
     );
   }
 
-  Color? _currentCellColor({
+  Color _currentCellColor({
     required bool readOnly,
     required bool hasFocus,
     required bool isEditing,
@@ -256,7 +256,7 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
     }
 
     if (!isEditing) {
-      return selectingMode.isRow ? activatedColor : null;
+      return gridBackgroundColor;
     }
 
     return readOnly == true ? cellColorInReadOnlyState : cellColorInEditState;
@@ -315,42 +315,29 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
     final bool isDirty = widget.cell.isDirty;
     final Color dirtyColor = stateManager.configuration.style.cellDirtyColor;
 
-    final bool isPrimaryCell = isCurrentCell &&
-        (stateManager.selectingMode.isCell
-            ? stateManager.selectedCells.isEmpty
-            : true);
-    Color cellColor;
+    Color? cellColor;
+
     if (isDirty) {
       cellColor = dirtyColor;
-    } else if (isPrimaryCell) {
-      return BoxDecoration(
-        color: isDirty
-            ? dirtyColor
-            : _currentCellColor(
-                hasFocus: hasFocus,
-                isEditing: isEditing,
-                readOnly: readOnly,
-                gridBackgroundColor: gridBackgroundColor,
-                activatedColor: activatedColor,
-                cellColorInReadOnlyState: cellColorInReadOnlyState,
-                cellColorInEditState: cellColorInEditState,
-                selectingMode: selectingMode,
-              ),
-        border: Border.all(
-          color: hasFocus ? activatedBorderColor : inactivatedBorderColor,
-          width: 1,
-        ),
+    } else if (isCurrentCell) {
+      cellColor = _currentCellColor(
+        hasFocus: hasFocus,
+        isEditing: isEditing,
+        readOnly: readOnly,
+        gridBackgroundColor: gridBackgroundColor,
+        activatedColor: activatedColor,
+        cellColorInReadOnlyState: cellColorInReadOnlyState,
+        cellColorInEditState: cellColorInEditState,
+        selectingMode: selectingMode,
       );
-    }
-
-    if (isSelectedCell) {
+    } else if (isSelectedCell) {
       cellColor = activatedColor;
     } else if (isGroupedRowCell) {
       cellColor = cellColorGroupedRow ?? gridBackgroundColor;
     } else if (readOnly) {
       cellColor = cellReadonlyColor ?? gridBackgroundColor;
     } else {
-      cellColor = cellDefaultColor ?? gridBackgroundColor;
+      cellColor = cellDefaultColor;
     }
 
     final border = _getMergedCellBorder(
