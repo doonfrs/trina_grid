@@ -192,9 +192,8 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
 
     // Movement and enter key, non-editable cell left and right movement, etc. key input is propagated to text field.
     if (skip) {
-      return widget.stateManager.keyManager!.eventResult.skip(
-        KeyEventResult.ignored,
-      );
+      widget.stateManager.keyManager!.eventResult.handled = false;
+      return KeyEventResult.ignored;
     }
 
     if (_debounce.isDebounced(

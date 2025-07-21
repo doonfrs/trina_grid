@@ -695,13 +695,13 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
       }
     }
 
-    if (_keyManager.eventResult.isSkip == false) {
-      _keyManager.subject.add(
-        TrinaKeyManagerEvent(focusNode: focusNode, event: event),
-      );
-    }
+    _keyManager.subject.add(
+      TrinaKeyManagerEvent(focusNode: focusNode, event: event),
+    );
 
-    return _keyManager.eventResult.consume(KeyEventResult.handled);
+    return _keyManager.eventResult.isHandled
+        ? KeyEventResult.handled
+        : KeyEventResult.ignored;
   }
 
   @override

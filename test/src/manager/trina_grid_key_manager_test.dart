@@ -31,6 +31,45 @@ void main() {
     keyboardFocusNode = FocusNode();
   });
 
+  group('Key Event Propagation', () {
+    testWidgets(
+      'should not handle an unregistered key event, allowing it to propagate.',
+      (WidgetTester tester) async {
+        // given
+        final TrinaGridKeyManager keyManager = TrinaGridKeyManager(
+          stateManager: stateManager,
+        );
+        keyManager.init();
+
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Material(
+              child: KeyboardListener(
+                onKeyEvent: (event) {
+                  keyManager.subject.add(TrinaKeyManagerEvent(
+                    focusNode: FocusNode(),
+                    event: event,
+                  ));
+                },
+                focusNode: keyboardFocusNode,
+                child: const TextField(),
+              ),
+            ),
+          ),
+        );
+
+        // when
+        keyboardFocusNode.requestFocus();
+        await tester.sendKeyEvent(LogicalKeyboardKey.f5);
+        await tester.pump();
+
+        // then
+        // The key manager should not handle the event, allowing it to propagate.
+        expect(keyManager.eventResult.isHandled, isFalse);
+      },
+    );
+  });
+
   testWidgets(
     'Ctrl + C',
     (WidgetTester tester) async {
