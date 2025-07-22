@@ -193,7 +193,7 @@ class TrinaCell {
   }
 }
 
-_assertUnInitializedCell(bool flag) {
+void _assertUnInitializedCell(bool flag) {
   assert(
     flag,
     'TrinaCell is not initialized.'

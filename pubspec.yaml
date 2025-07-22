@@ -28,15 +28,15 @@ dependencies:
     sdk: flutter
   # Follows the intl version included in Flutter.
   # https://github.com/flutter/flutter/blob/84a1e904f44f9b0e9c4510138010edcc653163f8/packages/flutter_localizations/pubspec.yaml#L11
-  intl: any
+  intl: ^0.20.2
   rxdart: ^0.28.0
-  collection: ^1.18.0
-  path: ^1.8.3
+  collection: ^1.19.1
+  path: ^1.9.1
   pdf: ^3.11.3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  mockito: ^5.4.3
-  build_runner: ^2.4.7
-  flutter_lints: ^5.0.0
+  mockito: ^5.5.0
+  build_runner: ^2.6.0
+  flutter_lints: ^6.0.0

@@ -410,7 +410,7 @@ class TrinaGrid extends TrinaStatefulWidget {
   /// initializeDateFormatting();
   /// ```
   /// {@endtemplate}
-  static setDefaultLocale(String locale) {
+  static void setDefaultLocale(String locale) {
     Intl.defaultLocale = locale;
   }
 
@@ -418,7 +418,7 @@ class TrinaGrid extends TrinaStatefulWidget {
   /// when you need to set date format when changing locale.
   ///
   /// {@macro intl_default_locale}
-  static initializeDateFormat() {
+  static void initializeDateFormat() {
     initializeDateFormatting();
   }
 

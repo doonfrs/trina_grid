@@ -70,7 +70,12 @@ class TrinaBaseRow extends StatelessWidget {
     );
   }
 
-  Widget _dragTargetBuilder(dragContext, candidate, rejected) {
+// BuildContext, List<TrinaRow<dynamic>?>,
+  Widget _dragTargetBuilder(
+    BuildContext dragContext,
+    List<TrinaRow<dynamic>?> candidate,
+    List<dynamic> rejected,
+  ) {
     return _RowContainerWidget(
       stateManager: stateManager,
       rowIdx: rowIdx,

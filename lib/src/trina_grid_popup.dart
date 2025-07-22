@@ -109,7 +109,7 @@ class TrinaGridPopup {
     open();
   }
 
-  setColumnConfig() {
+  List<TrinaColumn> setColumnConfig() {
     columns.map((element) {
       if (configuration.style.filterHeaderColor != null) {
         element.backgroundColor = configuration.style.filterHeaderColor!;

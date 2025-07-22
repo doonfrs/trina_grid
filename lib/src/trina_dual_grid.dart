@@ -81,7 +81,7 @@ class TrinaDualGrid extends StatefulWidget {
 }
 
 class TrinaDualGridResizeNotifier extends ChangeNotifier {
-  resize() {
+  void resize() {
     notifyListeners();
   }
 }
