@@ -1377,14 +1377,6 @@ class MockTrinaGridStateManager extends _i1.Mock
       ) as _i2.TrinaGridSelectingMode);
 
   @override
-  List<_i2.TrinaGridSelectingCellPosition> get currentSelectingPositionList =>
-      (super.noSuchMethod(
-        Invocation.getter(#currentSelectingPositionList),
-        returnValue: <_i2.TrinaGridSelectingCellPosition>[],
-        returnValueForMissingStub: <_i2.TrinaGridSelectingCellPosition>[],
-      ) as List<_i2.TrinaGridSelectingCellPosition>);
-
-  @override
   bool get hasCurrentSelectingPosition => (super.noSuchMethod(
         Invocation.getter(#hasCurrentSelectingPosition),
         returnValue: false,
@@ -1392,8 +1384,8 @@ class MockTrinaGridStateManager extends _i1.Mock
       ) as bool);
 
   @override
-  List<_i2.TrinaRow<dynamic>> get currentSelectingRows => (super.noSuchMethod(
-        Invocation.getter(#currentSelectingRows),
+  List<_i2.TrinaRow<dynamic>> get selectedRows => (super.noSuchMethod(
+        Invocation.getter(#selectedRows),
         returnValue: <_i2.TrinaRow<dynamic>>[],
         returnValueForMissingStub: <_i2.TrinaRow<dynamic>>[],
       ) as List<_i2.TrinaRow<dynamic>>);
@@ -1410,6 +1402,13 @@ class MockTrinaGridStateManager extends _i1.Mock
           Invocation.getter(#currentSelectingText),
         ),
       ) as String);
+
+  @override
+  List<_i2.TrinaCell> get selectedCells => (super.noSuchMethod(
+        Invocation.getter(#selectedCells),
+        returnValue: <_i2.TrinaCell>[],
+        returnValueForMissingStub: <_i2.TrinaCell>[],
+      ) as List<_i2.TrinaCell>);
 
   @override
   set headerHeight(double? value) => super.noSuchMethod(
@@ -3627,18 +3626,32 @@ class MockTrinaGridStateManager extends _i1.Mock
       );
 
   @override
-  void setCurrentSelectingRowsByRange(
+  void selectRowsInRange(
     int? from,
     int? to, {
     bool? notify = true,
   }) =>
       super.noSuchMethod(
         Invocation.method(
-          #setCurrentSelectingRowsByRange,
+          #selectRowsInRange,
           [
             from,
             to,
           ],
+          {#notify: notify},
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void setSelectedRows(
+    List<_i2.TrinaRow<dynamic>>? rows, {
+    bool? notify = true,
+  }) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #setSelectedRows,
+          [rows],
           {#notify: notify},
         ),
         returnValueForMissingStub: null,
@@ -3655,13 +3668,13 @@ class MockTrinaGridStateManager extends _i1.Mock
       );
 
   @override
-  void toggleSelectingRow(
+  void toggleRowSelection(
     int? rowIdx, {
     bool? notify = true,
   }) =>
       super.noSuchMethod(
         Invocation.method(
-          #toggleSelectingRow,
+          #toggleRowSelection,
           [rowIdx],
           {#notify: notify},
         ),
@@ -3689,19 +3702,42 @@ class MockTrinaGridStateManager extends _i1.Mock
       ) as bool);
 
   @override
-  bool isSelectedCell(
-    _i2.TrinaCell? cell,
-    _i2.TrinaColumn? column,
-    int? rowIdx,
-  ) =>
-      (super.noSuchMethod(
+  void toggleCellSelection(
+    _i2.TrinaCell? cell, {
+    bool? notify = true,
+  }) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #toggleCellSelection,
+          [cell],
+          {#notify: notify},
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void selectCellsInRange(
+    _i2.TrinaGridCellPosition? startPosition,
+    _i2.TrinaGridCellPosition? endPosition, {
+    bool? notify = true,
+  }) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #selectCellsInRange,
+          [
+            startPosition,
+            endPosition,
+          ],
+          {#notify: notify},
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  bool isSelectedCell(_i2.TrinaCell? cell) => (super.noSuchMethod(
         Invocation.method(
           #isSelectedCell,
-          [
-            cell,
-            column,
-            rowIdx,
-          ],
+          [cell],
         ),
         returnValue: false,
         returnValueForMissingStub: false,
@@ -3778,6 +3814,15 @@ class MockTrinaGridStateManager extends _i1.Mock
         ),
         returnValueForMissingStub: null,
       ) as String?);
+
+  @override
+  void handleOnSelectedIfNotPopup() => super.noSuchMethod(
+        Invocation.method(
+          #handleOnSelectedIfNotPopup,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
 }
 
 /// A class which mocks [TrinaGridEventManager].

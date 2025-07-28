@@ -48,31 +48,22 @@ class TrinaGridOnChangedEvent {
 }
 
 /// This is the argument value of the [TrinaGrid.onSelected] callback
-/// that is called when the [TrinaGrid.mode] value is in select mode.
-///
-/// If [row], [rowIdx], [cell] is [TrinaGridMode.select] or [TrinaGridMode.selectWithOneTap],
-/// Information of the row selected with the tab or enter key.
-/// If the Escape key is pressed, these values are null.
-///
-/// [selectedRows] is valid only in case of [TrinaGridMode.multiSelect].
-/// If rows are selected by tab or keyboard, the selected rows are included.
-/// If the Escape key is pressed, this value is null.
+
 class TrinaGridOnSelectedEvent {
-  final TrinaRow? row;
-  final int? rowIdx;
-  final TrinaCell? cell;
-  final List<TrinaRow>? selectedRows;
+  TrinaCell? get lastSelectedCell => selectedCells.lastOrNull;
+  TrinaRow? get lastSelectedRow => selectedRows.lastOrNull;
+
+  final List<TrinaRow> selectedRows;
+  final List<TrinaCell> selectedCells;
 
   const TrinaGridOnSelectedEvent({
-    this.row,
-    this.rowIdx,
-    this.cell,
-    this.selectedRows,
+    this.selectedRows = const [],
+    this.selectedCells = const [],
   });
 
   @override
   String toString() {
-    return '[TrinaGridOnSelectedEvent] rowIdx: $rowIdx, selectedRows: ${selectedRows?.length}';
+    return '[TrinaGridOnSelectedEvent] selectedRows: ${selectedRows.length}, selectedCells: ${selectedCells.length}';
   }
 }
 
@@ -131,14 +122,14 @@ class TrinaGridOnRowCheckedAllEvent extends TrinaGridOnRowCheckedEvent {
       : super(row: null, rowIdx: null);
 }
 
-/// The argument of the [TrinaGrid.onRowDoubleTap] callback
+/// The argument of the [TrinaGrid.onDoubleTap] callback
 /// to receive the event of double-tapping the row.
-class TrinaGridOnRowDoubleTapEvent {
+class TrinaGridOnDoubleTapEvent {
   final TrinaRow row;
   final int rowIdx;
   final TrinaCell cell;
 
-  const TrinaGridOnRowDoubleTapEvent({
+  const TrinaGridOnDoubleTapEvent({
     required this.row,
     required this.rowIdx,
     required this.cell,

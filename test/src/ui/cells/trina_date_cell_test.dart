@@ -402,4 +402,52 @@ void main() {
       },
     );
   });
+
+  group('Popup grid selection mode', () {
+    makeDateCell() {
+      TrinaColumn column = TrinaColumn(
+        title: 'column title',
+        field: 'column_field_name',
+        type: TrinaColumnType.date(
+          format: 'yyyy-MM-dd',
+        ),
+      );
+
+      TrinaCell cell = TrinaCell(value: '2020-01-01');
+
+      final TrinaRow row = TrinaRow(
+        cells: {
+          'column_field_name': cell,
+        },
+      );
+
+      return TrinaWidgetTestHelper('Create TrinaDateCell ', (tester) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Material(
+              child: TrinaDateCell(
+                stateManager: stateManager,
+                cell: cell,
+                column: column,
+                row: row,
+              ),
+            ),
+          ),
+        );
+      });
+    }
+
+    makeDateCell().test(
+      'grid selection mode should be cell',
+      (tester) async {
+        await tester.tap(find.byType(TextField));
+        await tester.pumpAndSettle();
+        final popupGrid = tester.widget<TrinaGrid>(find.byType(TrinaGrid));
+        expect(
+          popupGrid.configuration.selectingMode,
+          TrinaGridSelectingMode.cell,
+        );
+      },
+    );
+  });
 }

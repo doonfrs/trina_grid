@@ -7,8 +7,8 @@ Cell selection is a core feature in TrinaGrid that allows users to select indivi
 The cell selection feature enables you to:
 
 - Select individual cells with a single click
-- Select ranges of cells by dragging or using keyboard shortcuts
-- Select cells in different modes (cell, row, or column)
+- Select multiple cells by holding Ctrl key (Cmd on Mac) and clicking
+- Select a range of cells by dragging or using keyboard shortcuts
 - Perform operations on selected cells
 - Customize the appearance of selected cells
 - Programmatically control cell selection
@@ -17,7 +17,7 @@ Cell selection provides a foundation for many other features in TrinaGrid, such 
 
 ## Selection Modes
 
-TrinaGrid supports multiple selection modes that can be configured based on your requirements:
+To enable cell selection, set `selectingMode` as shown below: 
 
 ```dart
 TrinaGrid(
@@ -29,37 +29,36 @@ TrinaGrid(
 )
 ```
 
-### Available Selection Modes
-
-- `TrinaGridSelectingMode.cell`: Allows selection of individual cells or ranges of cells
-- `TrinaGridSelectingMode.row`: Selects entire rows when clicking on any cell
-- `TrinaGridSelectingMode.horizontal`: Allows selection of cells only in the horizontal direction
-
 ## Basic Usage
 
-### Single Cell Selection
+### Multiple Cells Selection
 
-To select a single cell, simply click on it:
-
-```dart
-// The cell will be selected when clicked
-// No additional code required
-```
+To select multiple disconnected cells, hold CTRL and tap on the cell you want to select.
 
 ### Range Selection
 
-To select a range of cells:
+You can select a range of cells using one of the following methods:
 
-1. Click on the first cell
-2. Drag to the last cell in the range
-3. Release to complete the selection
+*Note*: range selection is available by default when `selecingMode` is not disabled.
 
-Alternatively, you can use keyboard shortcuts:
+#### Drag Selection
 
-1. Click on the first cell
-2. Hold Shift
-3. Use arrow keys to extend the selection
-4. Release Shift when done
+1. Click and hold on the first cell.
+2. Drag the mouse to the last cell in the desired range.
+3. Release the mouse button to complete the selection.
+
+#### Keyboard (Shift + Arrow Keys)
+
+1. Select the starting cell.
+2. Hold down the **Shift** key.
+3. Use the **arrow keys** (Up, Down, Left, Right) to extend the selection.
+4. Release the **Shift** key when the desired range is selected.
+
+#### Keyboard (Shift + Click)
+
+1. Click on a cell to set the starting point of the selection.
+2. Hold down the **Shift** key.
+3. Click on another cell to select all cells between the starting point and the clicked cell.
 
 ## Styling Selected Cells
 
@@ -93,46 +92,35 @@ You can programmatically control cell selection through the state manager:
 
 ```dart
 // Select a specific cell
-stateManager.setCurrentCell(
-  cell,
-  rowIdx,
-  notify: true,
-);
+stateManager.toggleCellSelection(cell, notify: true);
 
 // Check if a cell is selected
-bool isSelected = stateManager.isSelectedCell(cell, column, rowIdx);
+bool isSelected = stateManager.isSelectedCell(cell);
 
 // Get current selection information
-TrinaGridCellPosition? currentPosition = stateManager.currentCellPosition;
-List<TrinaGridSelectingCellPosition> selectedPositions = 
-    stateManager.currentSelectingPositionList;
+TrinaCellPosition? currentPosition = stateManager.currentSelectingPosition;
 
 // Clear selection
 stateManager.clearCurrentCell(notify: true);
 
 // Set selection mode
-stateManager.setSelectingMode(TrinaGridSelectingMode.cell);
+stateManager.setSelectingMode(TrinaGridSelectingMode.cellWithCtrl);
 ```
 
 ## Handling Selection Events
 
-You can respond to cell selection events using the `onChanged` callback:
+You can respond to cell selection events using the `onSelected` callback:
 
 ```dart
 TrinaGrid(
   columns: columns,
   rows: rows,
-  onChanged: (PlutoGridOnChangedEvent event) {
-    // Check if this is a selection change event
-    if (event.type == PlutoGridEventType.selection) {
-      // Access the current selection
-      final currentCell = event.stateManager.currentCell;
-      final selectedPositions = event.stateManager.currentSelectingPositionList;
-      
-      // Perform actions based on selection
-      print('Selected cell: ${currentCell?.value}');
-      print('Number of cells in selection: ${selectedPositions.length}');
-    }
+  onSelected: (TrinaGridOnSelectedEvent event) {
+    final selectedCells = event.selectedCells;
+    
+    // Perform actions based on selection
+    print('Currently selected cell: ${event.lastSelectedCell?.value}');
+    print('Number of cells in selection: ${selectedCells.length}');
   },
 )
 ```
@@ -141,24 +129,6 @@ TrinaGrid(
 
 Cell selection integrates with other TrinaGrid features for enhanced functionality:
 
-### Cell Selection with Editing
-
-When a cell is selected, you can start editing by:
-
-- Double-clicking the cell
-- Pressing F2 or Enter
-- Starting to type (if configured)
-
-```dart
-TrinaGrid(
-  columns: columns,
-  rows: rows,
-  configuration: TrinaGridConfiguration(
-    enterKeyAction: PlutoGridEnterKeyAction.editingAndMoveDown,
-    enableMoveDownAfterSelecting: true,
-  ),
-)
-```
 
 ### Cell Selection with Copy & Paste
 
@@ -279,7 +249,7 @@ class _CellSelectionExampleState extends State<CellSelectionExample> {
             stateManager = event.stateManager;
           },
           onChanged: (TrinaGridOnChangedEvent event) {
-            if (event.type == TrinaGridEventType.selection) {
+            if (event is TrinaGridChangeSelection) {
               // Handle selection changes
               print('Selection changed');
               
@@ -291,7 +261,7 @@ class _CellSelectionExampleState extends State<CellSelectionExample> {
             }
           },
           configuration: TrinaGridConfiguration(
-            selectingMode: TrinaGridSelectingMode.cell,
+            selectingMode: TrinaGridSelectingMode.cellWithSingleTap,
             style: TrinaGridStyleConfig(
               activatedBorderColor: Colors.blue,
               activatedColor: Colors.lightBlue.withOpacity(0.2),

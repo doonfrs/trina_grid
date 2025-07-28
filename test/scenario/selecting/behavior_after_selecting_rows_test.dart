@@ -33,14 +33,16 @@ void main() {
                 onLoaded: (TrinaGridOnLoadedEvent event) {
                   stateManager = event.stateManager;
                   stateManager!.setSelectingMode(selectingMode);
-                  stateManager!.setCurrentSelectingRowsByRange(from, to);
                 },
               ),
             ),
           ),
         );
+        await tester.pumpAndSettle();
 
-        final selectingRows = stateManager!.currentSelectingRows;
+        stateManager!.selectRowsInRange(from, to);
+
+        final selectingRows = stateManager!.selectedRows;
 
         final int length = (from - to).abs() + 1;
 
@@ -66,14 +68,14 @@ void main() {
       }
 
       selectRowsFrom1To3().test(
-        'When row 0 is deleted, '
-        'rows 0 ~ 2 should be selected.',
+        'When row 0 is deleted and rows 1->3 are selected, '
+        'rows 0 -> 2 should be the new selected rows.',
         (tester) async {
           final rowToRemove = stateManager!.rows.first;
 
           stateManager!.removeRows([rowToRemove]);
 
-          final selectedRows = stateManager!.currentSelectingRows;
+          final selectedRows = stateManager!.selectedRows;
           final selectedRowKeys = selectedRows.map((e) => e.key);
 
           expect(selectedRows.length, countSelectedRows);
@@ -84,8 +86,8 @@ void main() {
       );
 
       selectRowsFrom1To3().test(
-        'When a new row is added to row 0, '
-        '2 ~ 4 rows should be selected.',
+        'When a new row is added after row 0, '
+        'rows 2->4 should be the new selected rows.',
         (tester) async {
           final rowToRemove = stateManager!.rows.first;
 
@@ -93,7 +95,7 @@ void main() {
 
           expect(stateManager!.rows.length, countTotalRows + 1);
 
-          final selectedRows = stateManager!.currentSelectingRows;
+          final selectedRows = stateManager!.selectedRows;
           final selectedRowKeys = selectedRows.map((e) => e.key);
 
           expect(selectedRows.length, countSelectedRows);

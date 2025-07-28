@@ -42,8 +42,8 @@ void main() {
     testWidgets(
         'WHEN'
         'currentCellPosition != null'
-        'selectingMode.Row'
-        'currentSelectingRows.length > 0'
+        'selectingMode.row'
+        'selectedRows.length > 0'
         'THEN'
         'Values should be filled in the selected rows by _pasteCellValueIntoSelectingRows.',
         (WidgetTester tester) async {
@@ -74,7 +74,7 @@ void main() {
 
       stateManager.setCurrentCell(currentCell, 2);
 
-      stateManager.setCurrentSelectingRowsByRange(2, 4);
+      stateManager.selectRowsInRange(2, 4);
 
       // when
       stateManager.pasteCellValue([
@@ -104,8 +104,8 @@ void main() {
     testWidgets(
         'WHEN'
         'currentCellPosition != null'
-        'selectingMode.Square'
-        'currentSelectingRows.length < 1'
+        'selectingMode.cell'
+        'selectedRows.length < 1'
         '_currentSelectingPosition != null'
         'THEN'
         'Values should be filled in the selected rows by _pasteCellValueInOrder.',
@@ -253,29 +253,6 @@ void main() {
     });
 
     test(
-      'TrinaMode = select, '
-      'enableEditingMode = true, '
-      'setCurrentCell = true, '
-      'setIsEditing = false, '
-      'notifyListener should not be called',
-      () {
-        // given
-        buildState(
-          mode: TrinaGridMode.select,
-          enableEditingMode: true,
-          setCurrentCell: true,
-          setIsEditing: false,
-        );
-
-        // when
-        stateManager.setEditing(true);
-
-        // then
-        verifyNever(mock!.noParamReturnVoid());
-      },
-    );
-
-    test(
       'TrinaMode = normal, '
       'enableEditingMode = true, '
       'setCurrentCell = true, '
@@ -353,7 +330,7 @@ void main() {
     List<TrinaRow> rows = RowHelper.count(10, columns);
 
     test(
-      'force is false (default) and canNotChangeCellValue is true, '
+      'force is false (default) and canNotChangeCellValue is true (grid mode is readOnly), '
       'onChanged callback should not be called',
       () {
         final mock = MockMethods();
@@ -363,7 +340,7 @@ void main() {
           rows: rows,
           gridFocusNode: null,
           scroll: null,
-          mode: TrinaGridMode.select,
+          mode: TrinaGridMode.readOnly,
           onChangedEventCallback: mock.oneParamReturnVoid,
         );
 
@@ -393,7 +370,7 @@ void main() {
     );
 
     test(
-      'force is true and canNotChangeCellValue is true, '
+      'force is true and canNotChangeCellValue is true (grid mode is readOnly), '
       'onChanged callback should be called',
       () {
         final mock = MockMethods();
@@ -403,7 +380,7 @@ void main() {
           rows: rows,
           gridFocusNode: null,
           scroll: null,
-          mode: TrinaGridMode.select,
+          mode: TrinaGridMode.readOnly,
           onChangedEventCallback: mock.oneParamReturnVoid,
           layout: const BoxConstraints(maxHeight: 300, maxWidth: 50),
         );

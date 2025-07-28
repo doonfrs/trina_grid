@@ -52,7 +52,7 @@ class TrinaBaseCell extends StatelessWidget
   void _handleOnTapUp(TapUpDetails details) {
     if (PlatformHelper.isDesktop &&
         TrinaDoubleTapDetector.isDoubleTap(cell) &&
-        stateManager.onRowDoubleTap != null) {
+        stateManager.onDoubleTap != null) {
       _handleOnDoubleTap();
       return;
     }
@@ -60,7 +60,7 @@ class TrinaBaseCell extends StatelessWidget
   }
 
   void _handleOnLongPressStart(LongPressStartDetails details) {
-    if (stateManager.selectingMode.isNone) {
+    if (stateManager.selectingMode.isDisabled) {
       return;
     }
 
@@ -71,7 +71,7 @@ class TrinaBaseCell extends StatelessWidget
   }
 
   void _handleOnLongPressMoveUpdate(LongPressMoveUpdateDetails details) {
-    if (stateManager.selectingMode.isNone) {
+    if (stateManager.selectingMode.isDisabled) {
       return;
     }
 
@@ -82,7 +82,7 @@ class TrinaBaseCell extends StatelessWidget
   }
 
   void _handleOnLongPressEnd(LongPressEndDetails details) {
-    if (stateManager.selectingMode.isNone) {
+    if (stateManager.selectingMode.isDisabled) {
       return;
     }
 
@@ -104,10 +104,10 @@ class TrinaBaseCell extends StatelessWidget
   }
 
   void Function()? _onDoubleTapOrNull() {
-    if (PlatformHelper.isDesktop) {
-      return null;
-    }
-    return stateManager.onRowDoubleTap == null ? null : _handleOnDoubleTap;
+    return stateManager.onDoubleTap == null &&
+            stateManager.mode.isPopup == false
+        ? null
+        : _handleOnDoubleTap;
   }
 
   void Function(TapDownDetails details)? _onSecondaryTapOrNull() {
@@ -222,11 +222,7 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
         readOnly: widget.column.checkReadOnly(widget.row, widget.cell),
         isEditing: stateManager.isEditing,
         isCurrentCell: isCurrentCell,
-        isSelectedCell: stateManager.isSelectedCell(
-          widget.cell,
-          widget.column,
-          widget.rowIdx,
-        ),
+        isSelectedCell: stateManager.isSelectedCell(widget.cell),
         isGroupedRowCell: stateManager.enabledRowGroups &&
             stateManager.rowGroupDelegate!.isExpandableCell(widget.cell),
         enableCellVerticalBorder: style.enableCellBorderVertical,
@@ -245,7 +241,7 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
     );
   }
 
-  Color? _currentCellColor({
+  Color _currentCellColor({
     required bool readOnly,
     required bool hasFocus,
     required bool isEditing,
@@ -260,7 +256,7 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
     }
 
     if (!isEditing) {
-      return selectingMode.isRow ? activatedColor : null;
+      return gridBackgroundColor;
     }
 
     return readOnly == true ? cellColorInReadOnlyState : cellColorInEditState;
@@ -316,26 +312,24 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
     required Color? cellDefaultColor,
     required TrinaGridSelectingMode selectingMode,
   }) {
-    // Check if the cell has uncommitted changes (is dirty)
     final bool isDirty = widget.cell.isDirty;
     final Color dirtyColor = stateManager.configuration.style.cellDirtyColor;
 
-    // Determine cell color
-    Color cellColor;
+    Color? cellColor;
+
     if (isDirty) {
       cellColor = dirtyColor;
     } else if (isCurrentCell) {
       cellColor = _currentCellColor(
-            hasFocus: hasFocus,
-            isEditing: isEditing,
-            readOnly: readOnly,
-            gridBackgroundColor: gridBackgroundColor,
-            activatedColor: activatedColor,
-            cellColorInReadOnlyState: cellColorInReadOnlyState,
-            cellColorInEditState: cellColorInEditState,
-            selectingMode: selectingMode,
-          ) ??
-          gridBackgroundColor;
+        hasFocus: hasFocus,
+        isEditing: isEditing,
+        readOnly: readOnly,
+        gridBackgroundColor: gridBackgroundColor,
+        activatedColor: activatedColor,
+        cellColorInReadOnlyState: cellColorInReadOnlyState,
+        cellColorInEditState: cellColorInEditState,
+        selectingMode: selectingMode,
+      );
     } else if (isSelectedCell) {
       cellColor = activatedColor;
     } else if (isGroupedRowCell) {
@@ -343,10 +337,9 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
     } else if (readOnly) {
       cellColor = cellReadonlyColor ?? gridBackgroundColor;
     } else {
-      cellColor = cellDefaultColor ?? gridBackgroundColor;
+      cellColor = cellDefaultColor;
     }
 
-    // Get appropriate border based on merge status
     final border = _getMergedCellBorder(
       enableCellVerticalBorder: enableCellVerticalBorder,
       borderColor: borderColor,
@@ -357,10 +350,7 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
       isSelectedCell: isSelectedCell,
     );
 
-    return BoxDecoration(
-      color: cellColor,
-      border: border,
-    );
+    return BoxDecoration(color: cellColor, border: border);
   }
 
   @override

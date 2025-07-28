@@ -50,6 +50,14 @@ By default, cells enter edit mode when:
 1. The user selects a cell and presses Enter
 2. The user double-clicks on a cell
 
+#### Note: when selectingMode is `cellWithSingleTap` or `rowWithSingleTap`:
+
+The user can edit the cell **only** by:
+
+1. Navigating with keyboard and pressing Enter.
+2. Right clicking on the cell.
+
+
 ### Auto Editing
 
 You can configure columns to automatically enter edit mode when selected:
@@ -69,6 +77,8 @@ Alternatively, you can set auto editing mode for the entire grid:
 ```dart
 stateManager.setAutoEditing(true);
 ```
+
+> Note: When using `cellWithSingleTap` or `rowWithSingleTap`, auto editing will not work because these selection modes works with single tap gestures, which would conflict with the automatic editing trigger.
 
 ## Customizing Edit Cell Renderer
 

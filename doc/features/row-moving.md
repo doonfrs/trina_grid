@@ -35,7 +35,7 @@ When row moving is enabled:
 
 When using row selection mode (`TrinaGridSelectingMode.row`), users can:
 
-1. Select multiple rows using Shift+Click or Ctrl/Cmd+Click.
+1. Select multiple rows.
 2. Drag any of the selected rows to move all selected rows together to a new position.
 
 ## Programmatic Row Moving

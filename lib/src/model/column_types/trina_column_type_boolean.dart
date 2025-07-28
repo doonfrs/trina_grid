@@ -14,6 +14,8 @@ class TrinaColumnTypeBoolean
   final Widget Function(dynamic item)? builder;
   final Function(TrinaGridOnSelectedEvent event) onItemSelected;
 
+  
+
   const TrinaColumnTypeBoolean({
     required this.defaultValue,
     required this.allowEmpty,

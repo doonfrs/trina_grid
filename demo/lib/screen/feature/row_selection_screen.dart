@@ -21,6 +21,8 @@ class _RowSelectionScreenState extends State<RowSelectionScreen> {
 
   TrinaGridStateManager? stateManager;
 
+  String selectedValues = '';
+
   @override
   void initState() {
     super.initState();
@@ -32,43 +34,16 @@ class _RowSelectionScreenState extends State<RowSelectionScreen> {
     rows.addAll(dummyData.rows);
   }
 
-  void handleSelected() async {
+  String _getSelectedValues(List<TrinaRow>? selectedRows) {
+    if (selectedRows == null || selectedRows.isEmpty) {
+      return 'No rows are selected.';
+    }
+
     String value = '';
-
-    for (var element in stateManager!.currentSelectingRows) {
-      final cellValue = element.cells.entries.first.value.value.toString();
-
-      value += 'first cell value of row: $cellValue\n';
+    for (var row in selectedRows) {
+      value += 'rowIdx: ${row.sortIdx}\n';
     }
-
-    if (value.isEmpty) {
-      value = 'No rows are selected.';
-    }
-
-    await showDialog<void>(
-        context: context,
-        builder: (BuildContext ctx) {
-          return Dialog(
-            child: LayoutBuilder(
-              builder: (ctx, size) {
-                return Container(
-                  padding: const EdgeInsets.all(15),
-                  width: 400,
-                  height: 500,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(value),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-          );
-        });
+    return value;
   }
 
   @override
@@ -76,9 +51,93 @@ class _RowSelectionScreenState extends State<RowSelectionScreen> {
     return TrinaExampleScreen(
       title: 'Row selection',
       topTitle: 'Row selection',
-      topContents: const [
-        Text(
-            'In Row selection mode, Shift + tap or long tap and then move or Control + tap to select a row.'),
+      topContents: [
+        OverflowBar(
+          overflowSpacing: 10,
+          alignment: MainAxisAlignment.start,
+          children: [
+            Text(
+              '• CTRL + Click to select multiple rows.\n'
+              '• Shift + Click to select a range of rows from the currently selected row to the clicked row.\n'
+              '• Long Press and Drag to select multiple consecutive rows.',
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * .2,
+            ),
+            SizedBox(
+              height: 120,
+              width: 300,
+              child: Column(
+                children: [
+                  if (stateManager != null)
+                    ListenableBuilder(
+                      listenable: stateManager!,
+                      builder: (context, asyncSnapshot) {
+                        return Text(
+                          'onSelected event - '
+                          'Total selected rows: ${stateManager!.selectedRows.length} \n',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        );
+                      },
+                    ),
+                  Flexible(
+                    child: SizedBox(
+                      width: 300,
+                      child: Scrollbar(
+                        thumbVisibility: true,
+                        child: SingleChildScrollView(
+                          primary: true,
+                          reverse: true,
+                          child: Text(selectedValues),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        if (stateManager != null)
+          OverflowBar(
+            alignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(width: 180, child: Text('Programmatic control:')),
+              ListenableBuilder(
+                listenable: stateManager!,
+                builder: (context, _) {
+                  return Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    spacing: 20,
+                    children: [
+                      SizedBox(
+                        width: 250,
+                        child: SwitchListTile(
+                          title: Text('Enable selection'),
+                          value: stateManager!.selectingMode.isRow,
+                          onChanged: (flag) {
+                            stateManager!.setSelectingMode(flag == true
+                                ? TrinaGridSelectingMode.row
+                                : TrinaGridSelectingMode.disabled);
+                          },
+                        ),
+                      ),
+                      FilledButton(
+                        onPressed: stateManager!.selectedRows.isEmpty
+                            ? null
+                            : () {
+                                stateManager!
+                                  ..clearCurrentSelecting()
+                                  ..handleOnSelected();
+                              },
+                        child: Text('Clear selection'),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ],
+          ),
       ],
       topButtons: [
         TrinaExampleButton(
@@ -88,17 +147,6 @@ class _RowSelectionScreenState extends State<RowSelectionScreen> {
       ],
       body: Column(
         children: [
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                TextButton(
-                  onPressed: handleSelected,
-                  child: const Text('Show selected rows.'),
-                ),
-              ],
-            ),
-          ),
           Expanded(
             child: TrinaGrid(
               columns: columns,
@@ -106,10 +154,16 @@ class _RowSelectionScreenState extends State<RowSelectionScreen> {
               onChanged: (TrinaGridOnChangedEvent event) {
                 print(event);
               },
+              onSelected: (event) => setState(() {
+                selectedValues = _getSelectedValues(event.selectedRows);
+              }),
+              configuration:
+                  TrinaGridConfiguration(autoSetFirstCellAsCurrent: true),
               onLoaded: (TrinaGridOnLoadedEvent event) {
                 event.stateManager.setSelectingMode(TrinaGridSelectingMode.row);
-
-                stateManager = event.stateManager;
+                setState(() {
+                  stateManager = event.stateManager;
+                });
               },
             ),
           ),

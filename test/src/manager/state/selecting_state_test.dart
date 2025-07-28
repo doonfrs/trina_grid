@@ -34,42 +34,10 @@ void main() {
     return stateManager;
   }
 
-  group('currentSelectingPositionList', () {
+  group('selectedCells', () {
     testWidgets(
-      'selectingMode.Row status'
-      'should return an empty array.',
-      (WidgetTester tester) async {
-        // given
-        List<TrinaColumn> columns = [
-          ...ColumnHelper.textColumn('text', count: 3, width: 150),
-        ];
-
-        List<TrinaRow> rows = RowHelper.count(5, columns);
-
-        TrinaGridStateManager stateManager = createStateManager(
-          columns: columns,
-          rows: rows,
-          gridFocusNode: null,
-          scroll: null,
-          layout: const BoxConstraints(maxHeight: 300, maxWidth: 50),
-        );
-
-        stateManager.setSelectingMode(TrinaGridSelectingMode.row);
-
-        stateManager.setCurrentSelectingRowsByRange(1, 2);
-
-        // when
-        final currentSelectingPositionList =
-            stateManager.currentSelectingPositionList;
-
-        // then
-        expect(currentSelectingPositionList.length, 0);
-      },
-    );
-
-    testWidgets(
-      'selectingMode.Square status'
-      '(1, 3) ~ (2, 4) selection should return 4 selected cells.',
+      'when selectingMode is TrinaGridSelectingMode.cell, '
+      'then (1, 3) ~ (2, 4) selection should return 4 selected cells.',
       (WidgetTester tester) async {
         // given
         List<TrinaColumn> columns = [
@@ -92,37 +60,62 @@ void main() {
 
         stateManager.setCurrentCell(currentCell, 3);
 
-        stateManager.setCurrentSelectingPosition(
-          cellPosition: const TrinaGridCellPosition(
+        // act
+        stateManager.selectCellsInRange(
+          const TrinaGridCellPosition(
+            columnIdx: 1,
+            rowIdx: 3,
+          ),
+          const TrinaGridCellPosition(
             columnIdx: 2,
             rowIdx: 4,
           ),
         );
 
-        // when
-        final currentSelectingPositionList =
-            stateManager.currentSelectingPositionList;
+        // assert
+        expect(stateManager.selectedCells.length, 4);
+        expect(stateManager.isSelectedCell(rows[3].cells['text1']!), isTrue);
+        expect(stateManager.isSelectedCell(rows[3].cells['text2']!), isTrue);
+        expect(stateManager.isSelectedCell(rows[4].cells['text1']!), isTrue);
+        expect(stateManager.isSelectedCell(rows[4].cells['text2']!), isTrue);
+      },
+    );
+
+    testWidgets(
+      'When selectingMode is row, '
+      'selectedCells should be empty.',
+      (WidgetTester tester) async {
+        // given
+        List<TrinaColumn> columns = [
+          ...ColumnHelper.textColumn('text', count: 3, width: 150),
+        ];
+
+        List<TrinaRow> rows = RowHelper.count(5, columns);
+
+        TrinaGridStateManager stateManager = createStateManager(
+          columns: columns,
+          rows: rows,
+          gridFocusNode: null,
+          scroll: null,
+          layout: const BoxConstraints(maxHeight: 300, maxWidth: 50),
+        );
+
+        stateManager.setSelectingMode(TrinaGridSelectingMode.row);
+
+        stateManager.selectRowsInRange(1, 2);
 
         // then
-        expect(currentSelectingPositionList.length, 4);
-        expect(currentSelectingPositionList[0].rowIdx, 3);
-        expect(currentSelectingPositionList[0].field, 'text1');
-        expect(currentSelectingPositionList[1].rowIdx, 3);
-        expect(currentSelectingPositionList[1].field, 'text2');
-        expect(currentSelectingPositionList[2].rowIdx, 4);
-        expect(currentSelectingPositionList[2].field, 'text1');
-        expect(currentSelectingPositionList[3].rowIdx, 4);
-        expect(currentSelectingPositionList[3].field, 'text2');
+        expect(stateManager.selectedCells.length, 0);
       },
     );
   });
 
   group('currentSelectingText', () {
     testWidgets(
-        'WHEN'
-        'selectingMode.Row'
-        'currentSelectingRows.length > 0'
-        'THEN'
+        'WHEN '
+        'selectingMode is row, '
+        'selectedRows.length > 0, '
+        'THEN '
         'The values of the selected rows should be returned.',
         (WidgetTester tester) async {
       // given
@@ -142,7 +135,7 @@ void main() {
 
       stateManager.setSelectingMode(TrinaGridSelectingMode.row);
 
-      stateManager.setCurrentSelectingRowsByRange(1, 2);
+      stateManager.selectRowsInRange(1, 2);
 
       // when
       final currentSelectingText = stateManager.currentSelectingText;
@@ -161,11 +154,11 @@ void main() {
     });
 
     testWidgets(
-        'WHEN'
-        'selectingMode.Row'
-        'currentSelectingRows.length > 0'
-        'THEN'
-        'The value of the row selected with toggleSelectingRow should be returned.',
+        'WHEN '
+        'selectingMode is row, '
+        'selectedRows.length > 0, '
+        'THEN '
+        'The value of the row selected with toggleRowSelection should be returned.',
         (WidgetTester tester) async {
       // given
       List<TrinaColumn> columns = [
@@ -184,8 +177,8 @@ void main() {
 
       stateManager.setSelectingMode(TrinaGridSelectingMode.row);
 
-      stateManager.toggleSelectingRow(1);
-      stateManager.toggleSelectingRow(3);
+      stateManager.toggleRowSelection(1);
+      stateManager.toggleRowSelection(3);
 
       // when
       final currentSelectingText = stateManager.currentSelectingText;
@@ -211,12 +204,12 @@ void main() {
     });
 
     testWidgets(
-        'WHEN'
-        'selectingMode.Row'
-        'currentSelectingRows.length == 0'
-        'currentCellPosition == null'
-        'currentSelectingPosition == null'
-        'THEN'
+        'WHEN '
+        'selectingMode is row, '
+        'selectedRows.length == 0, '
+        'currentCellPosition == null, '
+        'currentSelectingPosition == null, '
+        'THEN '
         'The values of the selected rows should be returned as an empty value.',
         (WidgetTester tester) async {
       // given
@@ -244,11 +237,11 @@ void main() {
     });
 
     testWidgets(
-        'WHEN'
-        'selectingMode.Row'
-        'currentSelectingRows.length > 0'
-        'has frozen column In a state of sufficient width'
-        'THEN'
+        'WHEN '
+        'selectingMode is row, '
+        'selectedRows.length > 0, '
+        'has frozen column In a state of sufficient width, '
+        'THEN '
         'The values of the selected rows should be returned.',
         (WidgetTester tester) async {
       // given
@@ -280,7 +273,7 @@ void main() {
 
       stateManager.setSelectingMode(TrinaGridSelectingMode.row);
 
-      stateManager.setCurrentSelectingRowsByRange(1, 2);
+      stateManager.selectRowsInRange(1, 2);
 
       // when
       final currentSelectingText = stateManager.currentSelectingText;
@@ -305,11 +298,11 @@ void main() {
     });
 
     testWidgets(
-        'WHEN'
-        'selectingMode.Row'
-        'currentSelectingRows.length > 0'
-        'has frozen column In a narrow area'
-        'THEN'
+        'WHEN '
+        'selectingMode is row, '
+        'selectedRows.length > 0, '
+        'has frozen column In a narrow area, '
+        'THEN '
         'The values of the selected rows should be returned.',
         (WidgetTester tester) async {
       // given
@@ -342,7 +335,7 @@ void main() {
 
       stateManager.setSelectingMode(TrinaGridSelectingMode.row);
 
-      stateManager.setCurrentSelectingRowsByRange(1, 2);
+      stateManager.selectRowsInRange(1, 2);
 
       // when
       final currentSelectingText = stateManager.currentSelectingText;
@@ -367,12 +360,12 @@ void main() {
     });
 
     testWidgets(
-        'WHEN'
-        'selectingMode.Square'
-        'currentSelectingRows.length == 0'
-        'currentCellPosition != null'
-        'currentSelectingPosition != null'
-        'THEN'
+        'WHEN '
+        'selectingMode is cell, '
+        'selectedRows.length == 0, '
+        'currentCellPosition != null, '
+        'currentSelectingPosition != null, '
+        'THEN '
         'The values of the selected cells should be returned.',
         (WidgetTester tester) async {
       // given
@@ -429,7 +422,7 @@ void main() {
           layout: const BoxConstraints(maxHeight: 500, maxWidth: 400),
         );
 
-        stateManager.setSelectingMode(TrinaGridSelectingMode.none);
+        stateManager.setSelectingMode(TrinaGridSelectingMode.disabled);
 
         expect(stateManager.isSelecting, false);
         // when
@@ -441,7 +434,7 @@ void main() {
     );
 
     testWidgets(
-      'When selectingMode is Square'
+      'When selectingMode is cell'
       'and currentCell is null'
       'then isSelecting should not change.',
       (WidgetTester tester) async {
@@ -471,7 +464,7 @@ void main() {
     );
 
     testWidgets(
-      'When selectingMode is Row'
+      'When selectingMode is row'
       'and currentCell is null'
       'then isSelecting should not change.',
       (WidgetTester tester) async {
@@ -501,7 +494,7 @@ void main() {
     );
 
     testWidgets(
-      'When selectingMode is Row'
+      'When selectingMode is row'
       'and currentCell is not null'
       'then isSelecting should change.',
       (WidgetTester tester) async {
@@ -534,7 +527,7 @@ void main() {
     );
 
     testWidgets(
-      'When selectingMode is Row'
+      'When selectingMode is row'
       'and currentCell is not null'
       'then isSelecting should change.'
       'isEditing is true then isEditing should change to false.',
@@ -611,10 +604,10 @@ void main() {
     );
   });
 
-  group('clearCurrentSelectingRows', () {
+  group('clearSelectedRows', () {
     testWidgets(
-      'When currentSelectingRows is not empty'
-      'then currentSelectingRows should be empty.',
+      'When selectedRows is not empty'
+      'then selectedRows should be cleared.',
       (WidgetTester tester) async {
         // given
         List<TrinaColumn> columns = [
@@ -634,14 +627,14 @@ void main() {
         // when
         stateManager.setSelectingMode(TrinaGridSelectingMode.row);
 
-        stateManager.toggleSelectingRow(1);
+        stateManager.toggleRowSelection(1);
 
-        expect(stateManager.currentSelectingRows.length, 1);
+        expect(stateManager.selectedRows.length, 1);
 
         stateManager.clearCurrentSelecting();
 
         // then
-        expect(stateManager.currentSelectingRows.length, 0);
+        expect(stateManager.selectedRows.length, 0);
       },
     );
   });
@@ -669,7 +662,7 @@ void main() {
       // then
       expect(stateManager.currentCell, null);
       expect(stateManager.currentSelectingPosition, null);
-      expect(stateManager.currentSelectingRows.length, 0);
+      expect(stateManager.selectedRows.length, 0);
     });
 
     testWidgets(
@@ -694,11 +687,11 @@ void main() {
       // then
       expect(stateManager.currentCell, null);
       expect(stateManager.currentSelectingPosition, null);
-      expect(stateManager.currentSelectingRows.length, 0);
+      expect(stateManager.selectedRows.length, 0);
     });
 
     testWidgets(
-        'When selectingMode is Square'
+        'When selectingMode is cell'
         'and rows.length > 0'
         'then current cell should be first cell, '
         'selected cell position should be last cell position.',
@@ -730,7 +723,7 @@ void main() {
     });
 
     testWidgets(
-        'When selectingMode is Row'
+        'When selectingMode is row'
         'and rows.length > 0'
         'then The number of selected rows should be correct.',
         (WidgetTester tester) async {
@@ -758,7 +751,7 @@ void main() {
       expect(stateManager.currentCell!.value, rows.first.cells['text0']!.value);
       expect(stateManager.currentSelectingPosition!.columnIdx, 2);
       expect(stateManager.currentSelectingPosition!.rowIdx, 4);
-      expect(stateManager.currentSelectingRows.length, 5);
+      expect(stateManager.selectedRows.length, 5);
     });
 
     testWidgets(
@@ -780,7 +773,7 @@ void main() {
         layout: const BoxConstraints(maxHeight: 500, maxWidth: 400),
       );
 
-      stateManager.setSelectingMode(TrinaGridSelectingMode.none);
+      stateManager.setSelectingMode(TrinaGridSelectingMode.disabled);
 
       // when
       stateManager.setAllCurrentSelecting();
@@ -788,57 +781,13 @@ void main() {
       // then
       expect(stateManager.currentCell, null);
       expect(stateManager.currentSelectingPosition, null);
-      expect(stateManager.currentSelectingRows.length, 0);
+      expect(stateManager.selectedRows.length, 0);
     });
   });
 
-  group('setCurrentSelectingPosition', () {
+  group('toggleRowSelection', () {
     testWidgets(
-      'When selectingMode is Row'
-      'then currentRowIdx, rowIdx should be set to currentSelectingRows.',
-      (WidgetTester tester) async {
-        // given
-        List<TrinaColumn> columns = [
-          ...ColumnHelper.textColumn('text', count: 3, width: 150),
-        ];
-
-        List<TrinaRow> rows = RowHelper.count(5, columns);
-
-        TrinaGridStateManager stateManager = createStateManager(
-          columns: columns,
-          rows: rows,
-          gridFocusNode: null,
-          scroll: null,
-          layout: const BoxConstraints(maxHeight: 500, maxWidth: 400),
-        );
-
-        stateManager.setSelectingMode(TrinaGridSelectingMode.row);
-
-        stateManager.setCurrentCell(rows[3].cells['text1'], 3);
-
-        stateManager.setCurrentSelectingPosition(
-          cellPosition: const TrinaGridCellPosition(
-            columnIdx: 1,
-            rowIdx: 4,
-          ),
-        );
-
-        // then
-        // Rows 3 and 4 are selected.
-        expect(stateManager.currentSelectingRows.length, 2);
-
-        final List<Key> keys =
-            stateManager.currentSelectingRows.map((e) => e.key).toList();
-
-        expect(keys.contains(rows[3].key), isTrue);
-        expect(keys.contains(rows[4].key), isTrue);
-      },
-    );
-  });
-
-  group('toggleSelectingRow', () {
-    testWidgets(
-      'When selectingMode is Row'
+      'When selectingMode is row'
       'and the row is already selected'
       'then it should be removed.',
       (WidgetTester tester) async {
@@ -854,19 +803,51 @@ void main() {
           rows: rows,
           gridFocusNode: null,
           scroll: null,
+          configuration:
+              TrinaGridConfiguration(selectingMode: TrinaGridSelectingMode.row),
+          layout: const BoxConstraints(maxHeight: 500, maxWidth: 400),
+        );
+
+        stateManager.toggleRowSelection(3);
+
+        expect(stateManager.isSelectedRow(rows[3].key), true);
+
+        stateManager.toggleRowSelection(3);
+        // then
+
+        expect(stateManager.isSelectedRow(rows[3].key), false);
+      },
+    );
+  });
+
+  group('setSelectedRows', () {
+    testWidgets(
+      'When selectingMode is row'
+      'then the rows should be selected.',
+      (WidgetTester tester) async {
+        // given
+        List<TrinaColumn> columns = [
+          ...ColumnHelper.textColumn('text', count: 3, width: 150),
+        ];
+
+        List<TrinaRow> rows = RowHelper.count(5, columns);
+
+        TrinaGridStateManager stateManager = createStateManager(
+          columns: columns,
+          rows: rows,
+          gridFocusNode: null,
+          scroll: null,
           layout: const BoxConstraints(maxHeight: 500, maxWidth: 400),
         );
 
         stateManager.setSelectingMode(TrinaGridSelectingMode.row);
 
-        stateManager.toggleSelectingRow(3);
+        stateManager.setSelectedRows([rows[1], rows[3]]);
 
-        expect(stateManager.isSelectedRow(rows[3].key), true);
-
-        stateManager.toggleSelectingRow(3);
         // then
-
-        expect(stateManager.isSelectedRow(rows[3].key), false);
+        expect(stateManager.selectedRows.length, 2);
+        expect(stateManager.isSelectedRow(rows[1].key), true);
+        expect(stateManager.isSelectedRow(rows[3].key), true);
       },
     );
   });
@@ -892,162 +873,192 @@ void main() {
         );
 
         // when
-        stateManager.setSelectingMode(TrinaGridSelectingMode.none);
+        stateManager.setSelectingMode(TrinaGridSelectingMode.disabled);
 
         // then
         expect(stateManager.isSelectingInteraction(), isFalse);
       },
     );
 
-    testWidgets(
-      'When selectingMode is not None'
-      'and shift or ctrl key is not pressed'
-      'then isSelectingInteraction should return false.',
-      (WidgetTester tester) async {
-        // given
-        List<TrinaColumn> columns = [
-          ...ColumnHelper.textColumn('text', count: 3, width: 150),
-        ];
+    testNotKeyPressed(TrinaGridSelectingMode selectingMode) {
+      return testWidgets(
+        'When selectingMode is ${selectingMode.name}'
+        'and shift or ctrl key is not pressed'
+        'then isSelectingInteraction should return false.',
+        (WidgetTester tester) async {
+          // given
+          List<TrinaColumn> columns = [
+            ...ColumnHelper.textColumn('text', count: 3, width: 150),
+          ];
 
-        List<TrinaRow> rows = RowHelper.count(5, columns);
+          List<TrinaRow> rows = RowHelper.count(5, columns);
 
-        TrinaGridStateManager stateManager = createStateManager(
-          columns: columns,
-          rows: rows,
-          gridFocusNode: null,
-          scroll: null,
-          layout: const BoxConstraints(maxHeight: 500, maxWidth: 400),
-        );
+          TrinaGridStateManager stateManager = createStateManager(
+            columns: columns,
+            rows: rows,
+            gridFocusNode: null,
+            scroll: null,
+            layout: const BoxConstraints(maxHeight: 500, maxWidth: 400),
+          );
 
-        // when
-        stateManager.setSelectingMode(TrinaGridSelectingMode.row);
+          // when
+          stateManager.setSelectingMode(selectingMode);
 
-        // then
-        expect(stateManager.isSelectingInteraction(), isFalse);
-      },
-    );
+          // then
+          expect(stateManager.isSelectingInteraction(), isFalse);
+        },
+      );
+    }
 
-    testWidgets(
-      'When selectingMode is not None'
-      'and shift key is pressed'
-      'and currentCell is null'
-      'then isSelectingInteraction should return false.',
-      (WidgetTester tester) async {
-        // given
-        List<TrinaColumn> columns = [
-          ...ColumnHelper.textColumn('text', count: 3, width: 150),
-        ];
+    testNotKeyPressed(TrinaGridSelectingMode.row);
+    testNotKeyPressed(TrinaGridSelectingMode.cell);
 
-        List<TrinaRow> rows = RowHelper.count(5, columns);
+    testShiftKeyPressed(TrinaGridSelectingMode selectingMode) {
+      return testWidgets(
+        'When selectingMode is ${selectingMode.name}'
+        'and shift key is pressed'
+        'and currentCellPosition is null'
+        'then isSelectingInteraction should return false.',
+        (WidgetTester tester) async {
+          // given
+          List<TrinaColumn> columns = [
+            ...ColumnHelper.textColumn('text', count: 3, width: 150),
+          ];
 
-        TrinaGridStateManager stateManager = createStateManager(
-          columns: columns,
-          rows: rows,
-          gridFocusNode: null,
-          scroll: null,
-          layout: const BoxConstraints(maxHeight: 500, maxWidth: 400),
-        );
+          List<TrinaRow> rows = RowHelper.count(5, columns);
 
-        // when
-        stateManager.setSelectingMode(TrinaGridSelectingMode.row);
-        await tester.sendKeyDownEvent(LogicalKeyboardKey.shift);
+          TrinaGridStateManager stateManager = createStateManager(
+            columns: columns,
+            rows: rows,
+            gridFocusNode: null,
+            scroll: null,
+            layout: const BoxConstraints(maxHeight: 500, maxWidth: 400),
+          );
 
-        // then
-        expect(stateManager.isSelectingInteraction(), isFalse);
-      },
-    );
+          // when
+          expect(stateManager.currentCellPosition, isNull);
 
-    testWidgets(
-      'When selectingMode is not None'
-      'and ctrl key is pressed'
-      'and currentCell is null'
-      'then isSelectingInteraction should return false.',
-      (WidgetTester tester) async {
-        // given
-        List<TrinaColumn> columns = [
-          ...ColumnHelper.textColumn('text', count: 3, width: 150),
-        ];
+          stateManager.setSelectingMode(selectingMode);
+          await tester.sendKeyDownEvent(LogicalKeyboardKey.shift);
 
-        List<TrinaRow> rows = RowHelper.count(5, columns);
+          // then
+          expect(stateManager.isSelectingInteraction(), isFalse);
+        },
+      );
+    }
 
-        TrinaGridStateManager stateManager = createStateManager(
-          columns: columns,
-          rows: rows,
-          gridFocusNode: null,
-          scroll: null,
-          layout: const BoxConstraints(maxHeight: 500, maxWidth: 400),
-        );
+    testShiftKeyPressed(TrinaGridSelectingMode.row);
+    testShiftKeyPressed(TrinaGridSelectingMode.cell);
 
-        // when
-        stateManager.setSelectingMode(TrinaGridSelectingMode.row);
-        await tester.sendKeyDownEvent(LogicalKeyboardKey.control);
+    testCtrlKeyPressed(TrinaGridSelectingMode selectingMode) {
+      return testWidgets(
+        'When selectingMode is ${selectingMode.name}'
+        'and ctrl key is pressed'
+        'and currentCellPosition is null'
+        'then isSelectingInteraction should return false.',
+        (WidgetTester tester) async {
+          // given
+          List<TrinaColumn> columns = [
+            ...ColumnHelper.textColumn('text', count: 3, width: 150),
+          ];
 
-        // then
-        expect(stateManager.isSelectingInteraction(), isFalse);
-      },
-    );
+          List<TrinaRow> rows = RowHelper.count(5, columns);
 
-    testWidgets(
-      'When selectingMode is not None'
-      'and shift key is pressed'
-      'and currentCell is not null'
-      'then isSelectingInteraction should return true.',
-      (WidgetTester tester) async {
-        // given
-        List<TrinaColumn> columns = [
-          ...ColumnHelper.textColumn('text', count: 3, width: 150),
-        ];
+          TrinaGridStateManager stateManager = createStateManager(
+            columns: columns,
+            rows: rows,
+            gridFocusNode: null,
+            scroll: null,
+            layout: const BoxConstraints(maxHeight: 500, maxWidth: 400),
+          );
+          expect(stateManager.currentCellPosition, isNull);
+          // when
+          stateManager.setSelectingMode(selectingMode);
+          await tester.sendKeyDownEvent(LogicalKeyboardKey.control);
 
-        List<TrinaRow> rows = RowHelper.count(5, columns);
+          // then
+          expect(stateManager.isSelectingInteraction(), isFalse);
+        },
+      );
+    }
 
-        TrinaGridStateManager stateManager = createStateManager(
-          columns: columns,
-          rows: rows,
-          gridFocusNode: null,
-          scroll: null,
-          layout: const BoxConstraints(maxHeight: 500, maxWidth: 400),
-        );
+    testCtrlKeyPressed(TrinaGridSelectingMode.row);
+    testCtrlKeyPressed(TrinaGridSelectingMode.cell);
 
-        // when
-        stateManager.setSelectingMode(TrinaGridSelectingMode.row);
-        await tester.sendKeyDownEvent(LogicalKeyboardKey.shift);
-        stateManager.setCurrentCell(rows.first.cells['text0'], 0);
+    testShiftKeyPressedNotNull(TrinaGridSelectingMode selectingMode) {
+      return testWidgets(
+        'When selectingMode is ${selectingMode.name}'
+        'and shift key is pressed'
+        'and currentCellPosition is not null'
+        'then isSelectingInteraction should return true.',
+        (WidgetTester tester) async {
+          // given
+          List<TrinaColumn> columns = [
+            ...ColumnHelper.textColumn('text', count: 3, width: 150),
+          ];
 
-        // then
-        expect(stateManager.isSelectingInteraction(), isTrue);
-      },
-    );
+          List<TrinaRow> rows = RowHelper.count(5, columns);
 
-    testWidgets(
-      'When selectingMode is not None'
-      'and ctrl key is pressed'
-      'and currentCell is not null'
-      'then isSelectingInteraction should return true.',
-      (WidgetTester tester) async {
-        // given
-        List<TrinaColumn> columns = [
-          ...ColumnHelper.textColumn('text', count: 3, width: 150),
-        ];
+          TrinaGridStateManager stateManager = createStateManager(
+            columns: columns,
+            rows: rows,
+            gridFocusNode: null,
+            scroll: null,
+            layout: const BoxConstraints(maxHeight: 500, maxWidth: 400),
+          );
 
-        List<TrinaRow> rows = RowHelper.count(5, columns);
+          // when
 
-        TrinaGridStateManager stateManager = createStateManager(
-          columns: columns,
-          rows: rows,
-          gridFocusNode: null,
-          scroll: null,
-          layout: const BoxConstraints(maxHeight: 500, maxWidth: 400),
-        );
+          stateManager.setSelectingMode(selectingMode);
+          await tester.sendKeyDownEvent(LogicalKeyboardKey.shift);
+          stateManager.setCurrentCell(rows.first.cells['text0'], 0);
 
-        // when
-        stateManager.setSelectingMode(TrinaGridSelectingMode.cell);
-        await tester.sendKeyDownEvent(LogicalKeyboardKey.control);
-        stateManager.setCurrentCell(rows.first.cells['text0'], 0);
+          expect(stateManager.currentCellPosition, isNotNull);
+          // then
+          expect(stateManager.isSelectingInteraction(), isTrue);
+        },
+      );
+    }
 
-        // then
-        expect(stateManager.isSelectingInteraction(), isTrue);
-      },
-    );
+    testShiftKeyPressedNotNull(TrinaGridSelectingMode.row);
+    testShiftKeyPressedNotNull(TrinaGridSelectingMode.cell);
+
+    testCtrlKeyPressedNotNull(TrinaGridSelectingMode selectingMode) {
+      return testWidgets(
+        'When selectingMode is ${selectingMode.name}'
+        'and ctrl key is pressed'
+        'and currentCellPosition is not null'
+        'then isSelectingInteraction should return true.',
+        (WidgetTester tester) async {
+          // given
+          List<TrinaColumn> columns = [
+            ...ColumnHelper.textColumn('text', count: 3, width: 150),
+          ];
+
+          List<TrinaRow> rows = RowHelper.count(5, columns);
+
+          TrinaGridStateManager stateManager = createStateManager(
+            columns: columns,
+            rows: rows,
+            gridFocusNode: null,
+            scroll: null,
+            layout: const BoxConstraints(maxHeight: 500, maxWidth: 400),
+          );
+
+          // when
+          stateManager.setSelectingMode(selectingMode);
+          await tester.sendKeyDownEvent(LogicalKeyboardKey.control);
+          stateManager.setCurrentCell(rows.first.cells['text0'], 0);
+          expect(stateManager.currentCellPosition, isNotNull);
+
+          // then
+          expect(stateManager.isSelectingInteraction(), isTrue);
+        },
+      );
+    }
+
+    testCtrlKeyPressedNotNull(TrinaGridSelectingMode.cell);
+    testCtrlKeyPressedNotNull(TrinaGridSelectingMode.row);
   });
 
   group('isSelectedCell', () {
@@ -1075,11 +1086,7 @@ void main() {
       for (var i = 0; i < rows.length; i += 1) {
         for (var column in columns) {
           expect(
-            stateManager.isSelectedCell(
-              rows[i].cells[column.field]!,
-              column,
-              i,
-            ),
+            stateManager.isSelectedCell(rows[i].cells[column.field]!),
             false,
           );
         }
@@ -1089,9 +1096,9 @@ void main() {
     testWidgets(
         'WHEN '
         'current cell is 0th row, 0th column, '
-        '0th row, 1st column is selected. '
+        'the cell at (0th row, 1st column) is selected. '
         'THEN '
-        'the cell should be true.', (WidgetTester tester) async {
+        'the cells should be true.', (WidgetTester tester) async {
       // given
       List<TrinaColumn> columns = [
         ...ColumnHelper.textColumn('text', count: 3, width: 150),
@@ -1108,12 +1115,9 @@ void main() {
       );
 
       stateManager.setCurrentCell(stateManager.firstCell, 0);
-
-      stateManager.setCurrentSelectingPosition(
-        cellPosition: const TrinaGridCellPosition(
-          columnIdx: 1,
-          rowIdx: 0,
-        ),
+      stateManager.selectCellsInRange(
+        const TrinaGridCellPosition(columnIdx: 0, rowIdx: 0),
+        const TrinaGridCellPosition(columnIdx: 1, rowIdx: 0),
       );
 
       // when
@@ -1124,20 +1128,12 @@ void main() {
         for (var column in columns) {
           if (i == 0 && (column.field == 'text0' || column.field == 'text1')) {
             expect(
-              stateManager.isSelectedCell(
-                rows[i].cells[column.field]!,
-                column,
-                i,
-              ),
+              stateManager.isSelectedCell(rows[i].cells[column.field]!),
               true,
             );
           } else {
             expect(
-              stateManager.isSelectedCell(
-                rows[i].cells[column.field]!,
-                column,
-                i,
-              ),
+              stateManager.isSelectedCell(rows[i].cells[column.field]!),
               false,
             );
           }
@@ -1148,7 +1144,7 @@ void main() {
     testWidgets(
         'WHEN '
         'current cell is 1st row, 1st column, '
-        '3rd row, 2nd column is selected. '
+        'the cell at (3rd row, 2nd column) is selected. '
         'THEN '
         'the cell should be true.', (WidgetTester tester) async {
       // given
@@ -1167,12 +1163,9 @@ void main() {
       );
 
       stateManager.setCurrentCell(rows[1].cells['text1'], 1);
-
-      stateManager.setCurrentSelectingPosition(
-        cellPosition: const TrinaGridCellPosition(
-          rowIdx: 3,
-          columnIdx: 2,
-        ),
+      stateManager.selectCellsInRange(
+        stateManager.currentCellPosition!,
+        const TrinaGridCellPosition(columnIdx: 2, rowIdx: 3),
       );
 
       // when
@@ -1184,20 +1177,12 @@ void main() {
           if ((i >= 1 && i <= 3) &&
               (column.field == 'text1' || column.field == 'text2')) {
             expect(
-              stateManager.isSelectedCell(
-                rows[i].cells[column.field]!,
-                column,
-                i,
-              ),
+              stateManager.isSelectedCell(rows[i].cells[column.field]!),
               true,
             );
           } else {
             expect(
-              stateManager.isSelectedCell(
-                rows[i].cells[column.field]!,
-                column,
-                i,
-              ),
+              stateManager.isSelectedCell(rows[i].cells[column.field]!),
               false,
             );
           }
@@ -1208,7 +1193,7 @@ void main() {
 
   group('handleAfterSelectingRow', () {
     testWidgets(
-      'When enableMoveDownAfterSelecting is false'
+      'When enableMoveDownAfterSelecting is false '
       'then cell value change should not move to the next row.',
       (WidgetTester tester) async {
         // given
@@ -1254,7 +1239,7 @@ void main() {
     );
 
     testWidgets(
-      'When enableMoveDownAfterSelecting is true'
+      'When enableMoveDownAfterSelecting is true, '
       'then cell value change should move to the next row.',
       (WidgetTester tester) async {
         // given

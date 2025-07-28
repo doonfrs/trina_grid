@@ -80,8 +80,8 @@ class TrinaGridDatePicker {
     final popupRows = _buildRows(days);
 
     TrinaGridPopup(
+      mode: TrinaGridMode.popup,
       context: context,
-      mode: TrinaGridMode.select,
       onLoaded: _onLoaded,
       onSelected: _onSelected,
       columns: popupColumns,
@@ -94,6 +94,7 @@ class TrinaGridDatePicker {
       createHeader: _createHeader,
       configuration: configuration.copyWith(
         tabKeyAction: TrinaGridTabKeyAction.normal,
+        enterKeyAction: TrinaGridEnterKeyAction.select,
         style: configuration.style.copyWith(
           enableColumnBorderVertical: false,
           enableColumnBorderHorizontal: false,
@@ -143,8 +144,6 @@ class TrinaGridDatePicker {
 
   void _onLoaded(TrinaGridOnLoadedEvent event) {
     datePickerStateManager = event.stateManager;
-
-    datePickerStateManager.setSelectingMode(TrinaGridSelectingMode.none);
 
     keyboardStream = datePickerStateManager.eventManager!.listener(
       keyboardListener,
@@ -364,6 +363,7 @@ class TrinaGridDatePicker {
         type: TrinaColumnType.text(),
         width: dateCellWidth,
         enableColumnDrag: false,
+        enableEditingMode: false,
         enableSorting: false,
         enableContextMenu: false,
         enableDropToResize: false,
