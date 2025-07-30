@@ -121,3 +121,24 @@ enum TrinaGridLoadingLevel {
   bool get isRowsBottomCircular =>
       this == TrinaGridLoadingLevel.rowsBottomCircular;
 }
+
+/// Controls which field is auto-focused in the time picker.
+enum TrinaTimePickerAutoFocusMode {
+  /// Auto-focus the hour field.
+  hourField,
+
+  /// Auto-focus the minute field.
+  minuteField,
+
+  /// No auto-focus.
+  none;
+
+  /// Returns true if the hour field should be focused.
+  bool get isHour => this == TrinaTimePickerAutoFocusMode.hourField;
+
+  /// Returns true if the minute field should be focused.
+  bool get isMinute => this == TrinaTimePickerAutoFocusMode.minuteField;
+
+  /// Returns true if any field should be focused.
+  bool get isEnabled => this != TrinaTimePickerAutoFocusMode.none;
+}
