@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:trina_grid/trina_grid.dart';
 
@@ -43,8 +44,37 @@ void main() {
   });
 
   group('time', () {
+    group('isValid', () {
+      test('should return true for valid time strings within range', () {
+        final columnType = TrinaColumnType.time(
+          minTime: const TimeOfDay(hour: 9, minute: 0),
+          maxTime: const TimeOfDay(hour: 17, minute: 0),
+        );
+        expect(columnType.time.isValid('10:30'), isTrue);
+        expect(columnType.time.isValid('09:00'), isTrue);
+        expect(columnType.time.isValid('17:00'), isTrue);
+      });
+
+      test('should return false for invalid time format', () {
+        final columnType = TrinaColumnType.time();
+        expect(columnType.time.isValid('1030'), isFalse);
+        expect(columnType.time.isValid('25:00'), isFalse);
+        expect(columnType.time.isValid('10:65'), isFalse);
+        expect(columnType.time.isValid('abc'), isFalse);
+        expect(columnType.time.isValid(null), isFalse);
+      });
+
+      test('should return false for time strings out of min/max range', () {
+        final columnType = TrinaColumnType.time(
+          minTime: const TimeOfDay(hour: 10, minute: 0),
+          maxTime: const TimeOfDay(hour: 12, minute: 0),
+        );
+        expect(columnType.time.isValid('09:59'), isFalse);
+        expect(columnType.time.isValid('12:01'), isFalse);
+      });
+    });
     group('compare', () {
-      const timeColumn = TrinaColumnTypeTime();
+      final timeColumn = TrinaColumnTypeTime();
 
       test('When the values are the same, 0 should be returned.', () {
         expect(timeColumn.compare('00:00', '00:00'), 0);
