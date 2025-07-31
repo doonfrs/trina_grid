@@ -147,12 +147,13 @@ class TrinaColumnTitleState extends TrinaStateWithChange<TrinaColumnTitle> {
         height: widget.height,
       );
     }
-
-    title = _SortableWidget(
-      stateManager: stateManager,
-      column: widget.column,
-      child: title,
-    );
+    if (widget.column.enableSorting) {
+      title = _SortableWidget(
+        stateManager: stateManager,
+        column: widget.column,
+        child: title,
+      );
+    }
 
     if (widget.column.enableColumnDrag) {
       // NOTE: The order is important; `Draggable` wraps `DragTarget`
@@ -363,16 +364,14 @@ class _SortableWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return column.enableSorting
-        ? MouseRegion(
-            cursor: SystemMouseCursors.click,
-            child: GestureDetector(
-              key: const ValueKey('ColumnTitleSortableGesture'),
-              onTap: _onTap,
-              child: child,
-            ),
-          )
-        : child;
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        key: const ValueKey('ColumnTitleSortableGesture'),
+        onTap: _onTap,
+        child: child,
+      ),
+    );
   }
 }
 
@@ -403,6 +402,8 @@ class _DefaultColumnTitleContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: padding,
+      height: height,
+      width: column.width,
       alignment: Alignment.centerLeft,
       decoration: BoxDecoration(
         color: column.backgroundColor,
