@@ -25,7 +25,8 @@ class _DateTimeColumnScreenState extends State<DateTimeColumnScreen> {
   void initState() {
     super.initState();
 
-    final now = DateTime.now();
+    var now = DateTime.now();
+    now = DateTime(now.year, now.month, now.day, now.hour, now.minute);
     final yesterday = now.subtract(const Duration(days: 1));
     final tomorrow = now.add(const Duration(days: 1));
     final nextWeek = now.add(const Duration(days: 7));
