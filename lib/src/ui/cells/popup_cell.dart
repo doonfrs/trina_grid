@@ -19,43 +19,44 @@ abstract class PopupCell extends StatefulWidget {
   });
 }
 
-abstract class GridPopupProps {
-  List<TrinaColumn> get popupColumns;
+abstract interface class PopupCellProps {
+  IconData? get popupMenuIcon;
 
-  List<TrinaRow> get popupRows;
+  void openPopup(BuildContext context);
+  void closePopup(BuildContext context);
 
-  IconData? get icon;
+  abstract final Widget defaultEditWidget;
 }
 
 mixin PopupCellState<T extends PopupCell> on State<T>
-    implements GridPopupProps {
-  bool isOpenedPopup = false;
-
-  /// If a column field name is specified,
-  /// the value of the field is returned even if another cell is selected.
-  ///
-  /// If the column field name is not specified,
-  /// the value of the selected cell is returned.
-  String? fieldOnSelected;
-
-  double? popupHeight;
-
-  int offsetOfScrollRowIdx = 0;
-
-  /// Callback function that returns Header to be inserted at the top of the popup
-  /// Implement a callback function that takes [TrinaGridStateManager] as a parameter.
-  CreateHeaderCallBack? createHeader;
-
-  /// Callback function that returns Footer to be inserted at the bottom of the popup
-  /// Implement a callback function that takes [TrinaGridStateManager] as a parameter.
-  CreateFooterCallBack? createFooter;
-
+    implements PopupCellProps {
   late final TextEditingController textController;
-
   late final FocusNode textFocus;
 
+  KeyEventResult handleOpeningPopupWithKeyboard(
+    FocusNode node,
+    KeyEvent event,
+    bool isPopupOpen,
+  ) {
+    final trinaKeyEvent = TrinaKeyManagerEvent(focusNode: node, event: event);
+
+    // If the column is readOnly, do not open the popup.
+    if (widget.column.readOnly) {
+      node.unfocus();
+      return KeyEventResult.ignored;
+    }
+
+    if (trinaKeyEvent.isF2 || trinaKeyEvent.isSpace) {
+      isPopupOpen ? null : openPopup(context);
+
+      return KeyEventResult.handled;
+    }
+
+    return KeyEventResult.ignored;
+  }
+
   @override
-  void initState() {
+  initState() {
     super.initState();
 
     textController = TextEditingController()
@@ -63,117 +64,14 @@ mixin PopupCellState<T extends PopupCell> on State<T>
         widget.cell.value,
       );
 
-    textFocus = FocusNode(onKeyEvent: _handleKeyboardFocusOnKey);
+    textFocus = FocusNode();
   }
 
   @override
   void dispose() {
     textController.dispose();
-
     textFocus.dispose();
-
     super.dispose();
-  }
-
-  void openPopup() {
-    if (widget.column.checkReadOnly(widget.row, widget.cell)) {
-      return;
-    }
-
-    isOpenedPopup = true;
-
-    // Use dark configuration if the current configuration is in dark mode
-    final baseConfiguration =
-        widget.stateManager.configuration.style.isDarkStyle
-            ? const TrinaGridConfiguration.dark()
-            : const TrinaGridConfiguration();
-
-    TrinaGridPopup(
-      context: context,
-      mode: TrinaGridMode.select,
-      onLoaded: onLoaded,
-      onSelected: onSelected,
-      columns: popupColumns,
-      rows: popupRows,
-      width: popupColumns.fold<double>(0, (previous, column) {
-            return previous + column.width;
-          }) +
-          1,
-      height: popupHeight,
-      createHeader: createHeader,
-      createFooter: createFooter,
-      configuration: baseConfiguration.copyWith(
-        tabKeyAction: TrinaGridTabKeyAction.normal,
-        style: baseConfiguration.style.copyWith(
-          oddRowColor: const TrinaOptional(null),
-          evenRowColor: const TrinaOptional(null),
-          gridBorderRadius:
-              widget.stateManager.configuration.style.gridPopupBorderRadius,
-          defaultColumnTitlePadding: TrinaGridSettings.columnTitlePadding,
-          defaultCellPadding: TrinaGridSettings.cellPadding,
-          rowHeight: widget.stateManager.configuration.style.rowHeight,
-          enableRowColorAnimation: false,
-        ),
-      ),
-    );
-  }
-
-  void onLoaded(TrinaGridOnLoadedEvent event) {
-    for (var i = 0; i < popupRows.length; i += 1) {
-      if (fieldOnSelected == null) {
-        for (var entry in popupRows[i].cells.entries) {
-          if (popupRows[i].cells[entry.key]!.value == widget.cell.value) {
-            event.stateManager.setCurrentCell(
-              event.stateManager.refRows[i].cells[entry.key],
-              i,
-            );
-            break;
-          }
-        }
-      } else {
-        if (popupRows[i].cells[fieldOnSelected!]!.value == widget.cell.value) {
-          event.stateManager.setCurrentCell(
-            event.stateManager.refRows[i].cells[fieldOnSelected!],
-            i,
-          );
-          break;
-        }
-      }
-    }
-
-    if (event.stateManager.currentRowIdx != null) {
-      final rowIdxToMove =
-          event.stateManager.currentRowIdx! + 1 + offsetOfScrollRowIdx;
-
-      if (rowIdxToMove < event.stateManager.refRows.length) {
-        event.stateManager.moveScrollByRow(TrinaMoveDirection.up, rowIdxToMove);
-      } else {
-        event.stateManager.moveScrollByRow(
-          TrinaMoveDirection.up,
-          event.stateManager.refRows.length,
-        );
-      }
-    }
-  }
-
-  void onSelected(TrinaGridOnSelectedEvent event) {
-    isOpenedPopup = false;
-
-    dynamic selectedValue;
-
-    if (event.row != null &&
-        fieldOnSelected != null &&
-        event.row!.cells.containsKey(fieldOnSelected)) {
-      selectedValue = event.row!.cells[fieldOnSelected!]!.value;
-    } else if (event.cell != null) {
-      selectedValue = event.cell!.value;
-    } else {
-      widget.stateManager.setKeepFocus(true);
-      textFocus.requestFocus();
-      return;
-    }
-
-    handleSelected(selectedValue);
   }
 
   void handleSelected(dynamic value) {
@@ -183,35 +81,11 @@ mixin PopupCellState<T extends PopupCell> on State<T>
       widget.cell.value,
     );
 
+    widget.stateManager.setEditing(false);
+
     if (!widget.stateManager.configuration.enableMoveDownAfterSelecting) {
       textFocus.requestFocus();
     }
-  }
-
-  KeyEventResult _handleKeyboardFocusOnKey(FocusNode node, KeyEvent event) {
-    var keyManager = TrinaKeyManagerEvent(focusNode: node, event: event);
-
-    if (keyManager.isKeyUpEvent) {
-      return KeyEventResult.handled;
-    }
-
-    if (keyManager.isF2 || keyManager.isCharacter) {
-      if (isOpenedPopup != true) {
-        openPopup();
-        return KeyEventResult.handled;
-      }
-    }
-
-// The Enter key is propagated to the grid focus handler.
-    if (keyManager.isEnter) {
-      return KeyEventResult.ignored;
-    }
-
-    // Delegate event processing to KeyManager.
-    widget.stateManager.keyManager!.subject.add(keyManager);
-
-    // Process all events and stop event propagation.
-    return KeyEventResult.handled;
   }
 
   @override
@@ -219,48 +93,23 @@ mixin PopupCellState<T extends PopupCell> on State<T>
     if (widget.stateManager.keepFocus) {
       textFocus.requestFocus();
     }
-
-    Widget w = TextField(
-      focusNode: textFocus,
-      controller: textController,
-      readOnly: true,
-      textInputAction: TextInputAction.none,
-      onTap: openPopup,
-      style: widget.stateManager.configuration.style.cellTextStyle,
-      decoration: InputDecoration(
-        border: const OutlineInputBorder(borderSide: BorderSide.none),
-        contentPadding: EdgeInsets.zero,
-        suffixIcon: icon == null
-            ? null
-            : IconButton(
-                icon: Icon(icon),
-                color: widget.stateManager.configuration.style.iconColor,
-                iconSize: widget.stateManager.configuration.style.iconSize,
-                onPressed: openPopup,
-              ),
-      ),
-      maxLines: 1,
-      textAlignVertical: TextAlignVertical.center,
-      textAlign: widget.column.textAlign.value,
-    );
-
     if (widget.column.editCellRenderer != null) {
-      w = widget.column.editCellRenderer!(
-        w,
+      return widget.column.editCellRenderer!(
+        defaultEditWidget,
         widget.cell,
         textController,
         textFocus,
         handleSelected,
       );
     } else if (widget.stateManager.editCellRenderer != null) {
-      w = widget.stateManager.editCellRenderer!(
-        w,
+      return widget.stateManager.editCellRenderer!(
+        defaultEditWidget,
         widget.cell,
         textController,
         textFocus,
         handleSelected,
       );
     }
-    return w;
+    return defaultEditWidget;
   }
 }

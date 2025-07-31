@@ -1,19 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:trina_grid/src/model/trina_column_type_has_menu_popup.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class TrinaColumnTypeBoolean
     with TrinaColumnTypeDefaultMixin
-    implements TrinaColumnType {
-  @override
-  final dynamic defaultValue;
-  final bool allowEmpty;
-  final String trueText;
-  final String falseText;
-  final double? width;
-  final IconData? popupIcon;
-  final Widget Function(dynamic item)? builder;
-  final Function(TrinaGridOnSelectedEvent event) onItemSelected;
-
+    implements TrinaColumnType, TrinaColumnTypeHasMenuPopup {
   const TrinaColumnTypeBoolean({
     required this.defaultValue,
     required this.allowEmpty,
@@ -25,7 +16,38 @@ class TrinaColumnTypeBoolean
     this.builder,
   });
 
+  @override
+  final dynamic defaultValue;
+
+  @override
+  final IconData? popupIcon;
+
+  final bool allowEmpty;
+  final String trueText;
+  final String falseText;
+  final double? width;
+  final Widget Function(dynamic item)? builder;
+  final Function(TrinaGridOnSelectedEvent event) onItemSelected;
+
   dynamic get value => defaultValue;
+
+  @override
+  bool get enableMenuFiltering => false;
+
+  @override
+  bool get enableMenuSearch => false;
+
+  @override
+  Widget Function(dynamic item)? get menuItemBuilder => builder;
+
+  @override
+  double get menuMaxHeight => 300;
+
+  @override
+  double get menuItemHeight => 40;
+
+  @override
+  List<TrinaSelectMenuFilter> get menuFilters => [];
 
   @override
   bool isValid(dynamic value) {

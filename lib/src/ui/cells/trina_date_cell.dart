@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:trina_grid/src/ui/widgets/trina_date_picker.dart';
+import 'package:trina_grid/src/ui/miscellaneous/trina_popup_cell_state_with_custom_popup.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 import 'popup_cell.dart';
@@ -28,49 +30,88 @@ class TrinaDateCell extends StatefulWidget implements PopupCell {
   TrinaDateCellState createState() => TrinaDateCellState();
 }
 
-class TrinaDateCellState extends State<TrinaDateCell>
-    with PopupCellState<TrinaDateCell> {
-  TrinaGridStateManager? popupStateManager;
+class TrinaDateCellState
+    extends TrinaPopupCellStateWithCustomPopup<TrinaDateCell> {
+  @override
+  IconData? get popupMenuIcon => widget.column.type.date.popupIcon;
+
+  TrinaColumnTypeDate get _column => widget.column.type.date;
+
+  late DateTime? selectedTime = _column.dateFormat.tryParse(widget.cell.value);
 
   @override
-  List<TrinaColumn> popupColumns = [];
+  Widget get popupContent {
+    return _PopupContent(
+      onDateChanged: (DateTime value) {
+        selectedTime = value;
+      },
+      onOkButtonPressed: () {
+        if (selectedTime != null) {
+          handleSelected(_column.dateFormat.format(selectedTime!));
+          closePopup(context);
+        }
+      },
+      initialDate: selectedTime,
+      firstDate: _column.startDate,
+      lastDate: _column.endDate,
+    );
+  }
+}
+
+class _PopupContent extends StatelessWidget {
+  final void Function() onOkButtonPressed;
+  final void Function(DateTime) onDateChanged;
+
+  final DateTime? initialDate;
+  final DateTime? firstDate;
+  final DateTime? lastDate;
+
+  const _PopupContent({
+    required this.onOkButtonPressed,
+    required this.onDateChanged,
+    this.initialDate,
+    this.firstDate,
+    this.lastDate,
+  });
 
   @override
-  List<TrinaRow> popupRows = [];
-
-  @override
-  IconData? get icon => widget.column.type.date.popupIcon;
-
-  @override
-  void openPopup() async {
-    if (widget.column.checkReadOnly(widget.row, widget.cell)) {
-      return;
-    }
-    isOpenedPopup = true;
-    if (widget.stateManager.selectDateCallback != null) {
-      final sm = widget.stateManager;
-      final date = await sm.selectDateCallback!(widget.cell, widget.column);
-      isOpenedPopup = false;
-      if (date != null) {
-        handleSelected(
-          widget.column.type.date.dateFormat.format(date),
-        ); // Consider call onSelected
-      }
-    } else {
-      TrinaGridDatePicker(
-        context: context,
-        initDate: TrinaDateTimeHelper.parseOrNullWithFormat(
-          widget.cell.value,
-          widget.column.type.date.format,
-        ),
-        startDate: widget.column.type.date.startDate,
-        endDate: widget.column.type.date.endDate,
-        dateFormat: widget.column.type.date.dateFormat,
-        headerDateFormat: widget.column.type.date.headerDateFormat,
-        onSelected: onSelected,
-        itemHeight: widget.stateManager.rowTotalHeight,
-        configuration: widget.stateManager.configuration,
-      );
-    }
+  Widget build(BuildContext context) {
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 320, maxHeight: 370),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Flexible(
+            child: TrinaDatePicker(
+              initialDate: initialDate,
+              firstDate: firstDate,
+              lastDate: lastDate,
+              onDateChanged: onDateChanged,
+            ),
+          ),
+          Flexible(
+            flex: 0,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(6, 0, 6, 12),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text('Cancel'),
+                  ),
+                  const SizedBox(width: 10),
+                  TextButton(
+                    onPressed: onOkButtonPressed,
+                    child: const Text('OK'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
