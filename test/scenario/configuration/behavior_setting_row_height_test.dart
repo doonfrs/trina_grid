@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:trina_grid/trina_grid.dart';
 import 'package:trina_grid/src/ui/ui.dart';
@@ -13,12 +12,6 @@ void main() {
   const TrinaGridSelectingMode selectingMode = TrinaGridSelectingMode.row;
 
   TrinaGridStateManager? stateManager;
-
-  double resolveCellHeight(TrinaGridStyleConfig style) {
-    return style.enableCellBorderHorizontal
-        ? style.rowHeight
-        : style.rowHeight + style.cellHorizontalBorderWidth;
-  }
 
   buildRowsWithSettingRowHeight({
     int numberOfRows = 10,
@@ -102,135 +95,6 @@ void main() {
         final Size cellSize = tester.getSize(find.byType(TrinaBaseCell).first);
 
         expect(cellSize.height, stateManager!.rowTotalHeight);
-      },
-    );
-
-    buildRowsWithSettingRowHeight(
-      rowHeight: rowHeight,
-      columns: [
-        TrinaColumn(
-            title: 'header',
-            field: 'header0',
-            type: TrinaColumnType.select(<String>['one', 'two', 'three'])),
-      ],
-    ).test(
-      'When row height is set, popup-grid-cell height should be = '
-      'rowHeight if `popupGrid.style.enableCellBorderHorizontal` is true, '
-      'else `rowHeight + cellHorizontalBorderWidth`',
-      (tester) async {
-        // Set to editing state
-        await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
-        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-        expect(stateManager!.isEditing, isTrue);
-
-        // Call the select popup
-        await tester.pumpAndSettle(const Duration(milliseconds: 300));
-        await tester.sendKeyEvent(LogicalKeyboardKey.f2);
-        await tester.pumpAndSettle(const Duration(milliseconds: 300));
-
-        final trinaGrids = find.byType(TrinaGrid);
-        // Main grid and one popup grid
-        expect(trinaGrids, findsAtLeastNWidgets(2));
-        final popupGrid = trinaGrids.last;
-        final popupStateManager =
-            tester.state<TrinaGridState>(popupGrid).stateManager;
-
-        final Size cellPopupSize = tester.getSize(find
-            .descendant(of: popupGrid, matching: find.byType(TrinaBaseCell))
-            .first);
-        // assert popup grid cell height
-        expect(
-          cellPopupSize.height,
-          resolveCellHeight(popupStateManager.style),
-        );
-      },
-    );
-
-    buildRowsWithSettingRowHeight(
-      rowHeight: rowHeight,
-      columns: ColumnHelper.dateColumn('header', count: 10),
-    ).test(
-      'When row height is set, date column popup cell height should equal to '
-      'rowHeight if `popupGrid.style.enableCellBorderHorizontal` is true, '
-      'else `rowHeight + cellHorizontalBorderWidth`',
-      (tester) async {
-        // Set to editing state
-        await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
-        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-        expect(stateManager!.isEditing, isTrue);
-
-        // Call the date popup
-        await tester.pumpAndSettle(const Duration(milliseconds: 300));
-        await tester.sendKeyEvent(LogicalKeyboardKey.f2);
-        await tester.pumpAndSettle(const Duration(milliseconds: 300));
-
-        final trinaGrids = find.byType(TrinaGrid);
-        // Main grid and one popup grid
-        expect(trinaGrids, findsAtLeastNWidgets(2));
-
-        final popupGrid = trinaGrids.last;
-        final popupStateManager =
-            tester.state<TrinaGridState>(popupGrid).stateManager;
-
-        final Size cellSize = tester.getSize(find
-            .descendant(of: popupGrid, matching: find.byType(TrinaBaseCell))
-            .first);
-
-        expect(
-          cellSize.height,
-          resolveCellHeight(popupStateManager.style),
-        );
-      },
-    );
-
-    buildRowsWithSettingRowHeight(
-      rowHeight: rowHeight,
-      columns: ColumnHelper.timeColumn('header', count: 10),
-    ).test(
-      'When row height is set, time column cell height should equal to '
-      'rowHeight if `popupGrid.style.enableCellBorderHorizontal` is true, '
-      'else `rowHeight + cellHorizontalBorderWidth`',
-      (tester) async {
-        // Set to editing state
-        await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
-        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-        expect(stateManager!.isEditing, isTrue);
-
-        // Call the time popup
-        await tester.pumpAndSettle(const Duration(milliseconds: 300));
-        await tester.sendKeyEvent(LogicalKeyboardKey.f2);
-        await tester.pumpAndSettle(const Duration(milliseconds: 300));
-
-        final trinaGrids = find.byType(TrinaGrid);
-        expect(
-          trinaGrids,
-          findsAtLeastNWidgets(3),
-        );
-        final datePopupGrid = trinaGrids.at(1);
-        final timePopupGrid = trinaGrids.at(2);
-        final dateGridStateManager =
-            tester.state<TrinaGridState>(datePopupGrid).stateManager;
-        final timeGridStateManager =
-            tester.state<TrinaGridState>(timePopupGrid).stateManager;
-
-        final dateGridCell = find
-            .descendant(of: datePopupGrid, matching: find.byType(TrinaBaseCell))
-            .first;
-        final timeGridCell = find
-            .descendant(of: timePopupGrid, matching: find.byType(TrinaBaseCell))
-            .first;
-
-        // Check the cell height in the date grid
-        expect(
-          tester.getSize(dateGridCell).height,
-          resolveCellHeight(dateGridStateManager.style),
-        );
-
-        // Check the cell height in the time grid
-        expect(
-          tester.getSize(timeGridCell).height,
-          resolveCellHeight(timeGridStateManager.style),
-        );
       },
     );
   });

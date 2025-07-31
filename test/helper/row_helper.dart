@@ -29,6 +29,8 @@ class RowHelper {
               return cellOfTimeColumn(column, rowIdx);
             } else if (column.type.isNumber || column.type.isCurrency) {
               return cellOfNumberColumn(column, rowIdx);
+            } else if (column.type.isDateTime) {
+              return cellOfDateTimeColumn(column, rowIdx);
             }
 
             throw Exception('Column is not implemented.');
@@ -62,6 +64,10 @@ class RowHelper {
 
   static TrinaCell cellOfNumberColumn(TrinaColumn column, int rowIdx) {
     return TrinaCell(value: Random().nextInt(10000));
+  }
+
+  static TrinaCell cellOfDateTimeColumn(TrinaColumn column, int rowIdx) {
+    return TrinaCell(value: DateTime.now().toString());
   }
 
   static double resolveRowTotalHeight(TrinaGridStyleConfig style) {
