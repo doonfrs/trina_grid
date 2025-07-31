@@ -37,7 +37,7 @@ class _SelectionTypeColumnScreenState extends State<SelectionTypeColumnScreen> {
         ),
       ),
       TrinaColumn(
-        title: 'Select B',
+        title: 'Select with search',
         field: 'select_b',
         type: TrinaColumnType.select(
           <String>[
@@ -50,20 +50,24 @@ class _SelectionTypeColumnScreenState extends State<SelectionTypeColumnScreen> {
             'Uranus',
             'Neptune',
             'Trina',
+            'Pluto',
+            'Haumea',
+            'Eris',
           ],
+          enableMenuSearch: true,
           enableColumnFilter: true,
         ),
       ),
       TrinaColumn(
-        title: 'Select C',
+        title: 'Select with filters',
         field: 'select_c',
         type: TrinaColumnType.select(
-          <String>[
-            '9.01',
-            '30.02',
-            '100.001',
+          <String>['100', '101', '5', '10', '50', '30', '20', '1000'],
+          menuFilters: [
+            TrinaSelectMenuFilter.equals,
+            TrinaSelectMenuFilter.greaterThan,
           ],
-          enableColumnFilter: true,
+          enableMenuFiltering: true,
         ),
       ),
       TrinaColumn(
@@ -91,7 +95,7 @@ class _SelectionTypeColumnScreenState extends State<SelectionTypeColumnScreen> {
         cells: {
           'select_a': TrinaCell(value: 'One'),
           'select_b': TrinaCell(value: 'Saturn'),
-          'select_c': TrinaCell(value: '100.001'),
+          'select_c': TrinaCell(value: '100'),
           'select_d': TrinaCell(value: '五'),
         },
       ),
@@ -99,7 +103,7 @@ class _SelectionTypeColumnScreenState extends State<SelectionTypeColumnScreen> {
         cells: {
           'select_a': TrinaCell(value: 'Two'),
           'select_b': TrinaCell(value: 'Trina'),
-          'select_c': TrinaCell(value: '9.01'),
+          'select_c': TrinaCell(value: '50'),
           'select_d': TrinaCell(value: '八'),
         },
       ),
@@ -107,7 +111,7 @@ class _SelectionTypeColumnScreenState extends State<SelectionTypeColumnScreen> {
         cells: {
           'select_a': TrinaCell(value: 'Three'),
           'select_b': TrinaCell(value: 'Mars'),
-          'select_c': TrinaCell(value: '30.02'),
+          'select_c': TrinaCell(value: '10'),
           'select_d': TrinaCell(value: '三'),
         },
       ),
