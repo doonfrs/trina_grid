@@ -8,6 +8,11 @@ import 'package:trina_grid/trina_grid.dart';
 typedef TrinaLazyPaginationFetch = Future<TrinaLazyPaginationResponse> Function(
     TrinaLazyPaginationRequest);
 
+/// Callback function to build a custom pagination widget.
+///
+typedef TrinaPaginationBuilder = Widget Function(
+    BuildContext context, TrinaLazyPaginationState paginationState);
+
 /// Request data for lazy pagination processing.
 class TrinaLazyPaginationRequest {
   TrinaLazyPaginationRequest({
@@ -137,6 +142,7 @@ class TrinaLazyPagination extends StatefulWidget {
     required this.fetch,
     required this.stateManager,
     this.onLazyFetchCompleted,
+    this.builder,
     super.key,
   }) : assert(
           !showPageSizeSelector || pageSizes.contains(initialPageSize),
@@ -197,6 +203,9 @@ class TrinaLazyPagination extends StatefulWidget {
   final void Function(int page, int totalPage, int? totalRecords)?
       onLazyFetchCompleted;
 
+  /// A callback function that returns a widget for custom pagination.
+  final TrinaPaginationBuilder? builder;
+
   @override
   State<TrinaLazyPagination> createState() => TrinaLazyPaginationState();
 }
@@ -217,6 +226,12 @@ class TrinaLazyPaginationState extends State<TrinaLazyPagination> {
   int get pageSize => _pageSize;
   int get totalPage => _totalPage;
   int? get totalRecords => _totalRecords;
+
+  bool get isFirstPage => _page < 2;
+
+  bool get isLastPage => _page >= _totalPage;
+
+  int get _pageSizeToMove => widget.pageSizeToMove ?? 1;
 
   @override
   void initState() {
@@ -319,8 +334,37 @@ class TrinaLazyPaginationState extends State<TrinaLazyPagination> {
     setPage(1);
   }
 
+  void firstPage() => setPage(1);
+
+  void lastPage() => setPage(_totalPage);
+
+  void previousPage() {
+    var beforePage = _page - _pageSizeToMove;
+    if (beforePage < 1) {
+      beforePage = 1;
+    }
+    setPage(beforePage);
+  }
+
+  void nextPage() {
+    var nextPage = _page + _pageSizeToMove;
+    if (nextPage > _totalPage) {
+      nextPage = _totalPage;
+    }
+    setPage(nextPage);
+  }
+
+  /// Triggers a re-fetch of the current page's data.
+  void refresh() {
+    setPage(_page);
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (widget.builder != null) {
+      return widget.builder!(context, this);
+    }
+
     return _PageSizeDropdownPaginationWidget(
       iconColor: stateManager.style.iconColor,
       disabledIconColor: stateManager.style.disabledIconColor,

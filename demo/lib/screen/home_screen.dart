@@ -37,6 +37,7 @@ import 'feature/column_resizing_screen.dart';
 import 'feature/column_sorting_screen.dart';
 import 'feature/copy_and_paste_screen.dart';
 import 'feature/currency_type_column_screen.dart';
+import 'feature/custom_pagination_screen.dart';
 import 'feature/dark_mode_screen.dart';
 import 'feature/date_type_column_screen.dart';
 import 'feature/dual_mode_screen.dart';
@@ -324,6 +325,14 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
         description: 'A column to enter a number as currency value.',
         onTapLiveDemo: () {
           Navigator.pushNamed(context, CurrencyTypeColumnScreen.routeName);
+        },
+        trailing: newIcon,
+      ),
+      TrinaListTile(
+        title: 'Custom Pagination UI',
+        description: 'Demonstrates how to customize the pagination UI.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, CustomPaginationScreen.routeName);
         },
         trailing: newIcon,
       ),
