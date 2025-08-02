@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:trina_grid/src/ui/miscellaneous/trina_popup_cell_state_with_custom_popup.dart';
+import 'package:trina_grid/src/ui/widgets/trina_time_picker.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 import 'popup_cell.dart';
@@ -28,220 +30,151 @@ class TrinaTimeCell extends StatefulWidget implements PopupCell {
   TrinaTimeCellState createState() => TrinaTimeCellState();
 }
 
-class TrinaTimeCellState extends State<TrinaTimeCell>
-    with PopupCellState<TrinaTimeCell> {
-  TrinaGridStateManager? popupStateManager;
-
+class TrinaTimeCellState
+    extends TrinaPopupCellStateWithCustomPopup<TrinaTimeCell> {
   @override
-  List<TrinaColumn> popupColumns = [];
+  IconData? get popupMenuIcon => _column.popupIcon;
 
-  @override
-  List<TrinaRow> popupRows = [];
+  late TimeOfDay selectedTime = TimeOfDay(
+    hour: int.tryParse(cellHour) ?? 0,
+    minute: int.tryParse(cellMinute) ?? 0,
+  );
 
-  @override
-  IconData? get icon => widget.column.type.time.popupIcon;
+  TrinaColumnTypeTime get _column => widget.column.type.time;
 
-  String get cellValue =>
-      widget.cell.value ?? widget.column.type.time.defaultValue;
-
-  String get cellHour => cellValue.toString().substring(0, 2);
-
-  String get cellMinute => cellValue.toString().substring(3, 5);
-
-  @override
-  void openPopup() {
-    if (widget.column.readOnly) {
-      return;
-    }
-
-    isOpenedPopup = true;
-
-    final localeText = widget.stateManager.localeText;
-
-    // Use dark configuration if the current configuration is in dark mode
-    final baseConfiguration =
-        widget.stateManager.configuration.style.isDarkStyle
-            ? const TrinaGridConfiguration.dark()
-            : const TrinaGridConfiguration();
-
-    final style = baseConfiguration.style;
-
-    final configuration = baseConfiguration.copyWith(
-      tabKeyAction: TrinaGridTabKeyAction.normal,
-      style: style.copyWith(
-        enableColumnBorderVertical: false,
-        enableColumnBorderHorizontal: false,
-        enableCellBorderVertical: false,
-        enableCellBorderHorizontal: false,
-        enableRowColorAnimation: false,
-        oddRowColor: const TrinaOptional(null),
-        evenRowColor: const TrinaOptional(null),
-        activatedColor: style.gridBackgroundColor,
-        gridBorderColor: style.gridBackgroundColor,
-        borderColor: style.gridBackgroundColor,
-        activatedBorderColor: style.gridBackgroundColor,
-        inactivatedBorderColor: style.gridBackgroundColor,
-        rowHeight: style.rowHeight,
-        defaultColumnTitlePadding: TrinaGridSettings.columnTitlePadding,
-        defaultCellPadding: const EdgeInsets.symmetric(horizontal: 3),
-        gridBorderRadius: style.gridPopupBorderRadius,
-      ),
-      columnSize: const TrinaGridColumnSizeConfig(
-        autoSizeMode: TrinaAutoSizeMode.none,
-        resizeMode: TrinaResizeMode.none,
-      ),
-    );
-
-    TrinaDualGridPopup(
-      context: context,
-      onSelected: (TrinaDualOnSelectedEvent event) {
-        isOpenedPopup = false;
-
-        if (event.gridA == null || event.gridB == null) {
-          widget.stateManager.setKeepFocus(true);
-          textFocus.requestFocus();
-          return;
-        }
-
-        super.handleSelected(
-          '${event.gridA!.cell!.value}:'
-          '${event.gridB!.cell!.value}',
-        );
-      },
-      gridPropsA: TrinaDualGridProps(
-        columns: [
-          TrinaColumn(
-            title: localeText.hour,
-            field: 'hour',
-            readOnly: true,
-            type: TrinaColumnType.text(),
-            enableSorting: false,
-            enableColumnDrag: false,
-            enableContextMenu: false,
-            enableDropToResize: false,
-            textAlign: TrinaColumnTextAlign.center,
-            titleTextAlign: TrinaColumnTextAlign.center,
-            width: 134,
-            renderer: _cellRenderer,
-          ),
-        ],
-        rows: Iterable<int>.generate(24)
-            .map(
-              (hour) => TrinaRow(
-                cells: {
-                  'hour': TrinaCell(value: hour.toString().padLeft(2, '0')),
-                },
-              ),
-            )
-            .toList(growable: false),
-        onLoaded: (TrinaGridOnLoadedEvent event) {
-          final stateManager = event.stateManager;
-          final rows = stateManager.refRows;
-          final length = rows.length;
-
-          stateManager.setSelectingMode(TrinaGridSelectingMode.none);
-
-          for (var i = 0; i < length; i += 1) {
-            if (rows[i].cells['hour']!.value == cellHour) {
-              stateManager.setCurrentCell(rows[i].cells['hour'], i);
-
-              stateManager.moveScrollByRow(
-                TrinaMoveDirection.up,
-                i + 1 + offsetOfScrollRowIdx,
-              );
-
-              return;
-            }
-          }
-        },
-        configuration: configuration,
-      ),
-      gridPropsB: TrinaDualGridProps(
-        columns: [
-          TrinaColumn(
-            title: localeText.minute,
-            field: 'minute',
-            readOnly: true,
-            type: TrinaColumnType.text(),
-            enableSorting: false,
-            enableColumnDrag: false,
-            enableContextMenu: false,
-            enableDropToResize: false,
-            textAlign: TrinaColumnTextAlign.center,
-            titleTextAlign: TrinaColumnTextAlign.center,
-            width: 134,
-            renderer: _cellRenderer,
-          ),
-        ],
-        rows: Iterable<int>.generate(60)
-            .map(
-              (minute) => TrinaRow(
-                cells: {
-                  'minute': TrinaCell(value: minute.toString().padLeft(2, '0')),
-                },
-              ),
-            )
-            .toList(growable: false),
-        onLoaded: (TrinaGridOnLoadedEvent event) {
-          final stateManager = event.stateManager;
-          final rows = stateManager.refRows;
-          final length = rows.length;
-
-          stateManager.setSelectingMode(TrinaGridSelectingMode.none);
-
-          for (var i = 0; i < length; i += 1) {
-            if (rows[i].cells['minute']!.value == cellMinute) {
-              stateManager.setCurrentCell(rows[i].cells['minute'], i);
-
-              stateManager.moveScrollByRow(
-                TrinaMoveDirection.up,
-                i + 1 + offsetOfScrollRowIdx,
-              );
-
-              return;
-            }
-          }
-        },
-        configuration: configuration,
-      ),
-      mode: TrinaGridMode.select,
-      width: 276,
-      height: 300,
-      divider: const TrinaDualGridDivider(show: false),
-    );
+  String _getTimeString(TimeOfDay time) {
+    return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
   }
 
-  Widget _cellRenderer(TrinaColumnRendererContext renderContext) {
-    final cell = renderContext.cell;
+  List<String> get timeDigits => (widget.cell.value ?? _column.defaultValue)
+      .toString()
+      .split(':')
+      .toList();
 
-    final isCurrentCell = renderContext.stateManager.isCurrentCell(cell);
+  String get cellHour => timeDigits.first.padLeft(2, '0');
 
-    final cellColor = isCurrentCell && renderContext.stateManager.hasFocus
-        ? widget.stateManager.style.activatedBorderColor
-        : widget.stateManager.style.gridBackgroundColor;
+  String get cellMinute => timeDigits.last.padLeft(2, '0');
 
-    final textColor = isCurrentCell && renderContext.stateManager.hasFocus
-        ? widget.stateManager.style.gridBackgroundColor
-        : widget.stateManager.style.cellTextStyle.color;
+  @override
+  late final Widget popupContent;
 
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: cellColor,
-        shape: BoxShape.circle,
-        border: !isCurrentCell
-            ? null
-            : !renderContext.stateManager.hasFocus
-                ? Border.all(
-                    color: widget.stateManager.style.activatedBorderColor,
-                    width: 1,
-                  )
-                : null,
+  late final selectedTimeIsValid = ValueNotifier<bool>(true);
+
+  @override
+  dispose() {
+    selectedTimeIsValid.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    popupContent = _PopupContent(
+      initialTime: selectedTime,
+      minTime: _column.minTime,
+      maxTime: _column.maxTime,
+      selectedTimeIsValid: selectedTimeIsValid,
+      onEnterKeyEvent: (time) {
+        if (_column.saveAndClosePopupWithEnter) {
+          handleSelected(_getTimeString(time));
+          Navigator.of(context).pop();
+        }
+      },
+      onOkButtonPressed: () {
+        handleSelected(_getTimeString(selectedTime));
+        Navigator.of(context).pop();
+      },
+      onChanged: (time) => selectedTime = time,
+      autoFocusMode: _column.autoFocusMode,
+    );
+    super.initState();
+  }
+}
+
+class _PopupContent extends StatelessWidget {
+  const _PopupContent({
+    this.onEnterKeyEvent,
+    required this.initialTime,
+    required this.minTime,
+    required this.maxTime,
+    required this.autoFocusMode,
+    required this.onChanged,
+    required this.onOkButtonPressed,
+    required this.selectedTimeIsValid,
+  });
+
+  /// {@macro TrinaTimePicker.initialTime}
+  final TimeOfDay initialTime;
+
+  /// {@macro TrinaTimePicker.minTime}
+  final TimeOfDay minTime;
+
+  /// {@macro TrinaTimePicker.maxTime}
+  final TimeOfDay maxTime;
+
+  /// {@macro TrinaTimePicker.autoFocusMode}
+  final TrinaTimePickerAutoFocusMode autoFocusMode;
+
+  /// {@macro TrinaTimePicker.onChanged}
+  final void Function(TimeOfDay time) onChanged;
+
+  /// {@macro TrinaTimePicker.onEnterKeyEvent}
+  final void Function(TimeOfDay time)? onEnterKeyEvent;
+
+  final void Function()? onOkButtonPressed;
+
+  final ValueNotifier<bool> selectedTimeIsValid;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      constraints: BoxConstraints(
+        maxWidth: 250,
+        maxHeight: 180,
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(5),
-        child: Center(
-          child: Text(cell.value, style: TextStyle(color: textColor)),
-        ),
+      padding: EdgeInsets.symmetric(vertical: 14, horizontal: 10),
+      child: Stack(
+        fit: StackFit.loose,
+        children: [
+          Positioned.fill(
+            bottom: 26,
+            child: TrinaTimePicker(
+              autoFocusMode: autoFocusMode,
+              initialTime: initialTime,
+              onEnterKeyEvent: onEnterKeyEvent,
+              onChanged: onChanged,
+              onValidationChanged: (isValid) =>
+                  selectedTimeIsValid.value = isValid,
+              minTime: minTime,
+              maxTime: maxTime,
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            right: 0,
+            child: Container(
+              alignment: Alignment.bottomCenter,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text('Cancel'),
+                  ),
+                  const SizedBox(width: 8),
+                  ValueListenableBuilder(
+                    valueListenable: selectedTimeIsValid,
+                    builder: (context, isValid, _) {
+                      return TextButton(
+                        onPressed: isValid ? onOkButtonPressed : null,
+                        child: const Text('OK'),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
