@@ -5,6 +5,7 @@ import 'package:demo/screen/feature/column_title_renderer_screen.dart';
 import 'package:demo/screen/feature/date_time_column_screen.dart';
 import 'package:demo/screen/feature/percentage_type_column_screen.dart';
 import 'package:demo/screen/feature/rtl_scrollbar_screen.dart';
+import 'package:demo/screen/feature/custom_pagination_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'constants/trina_grid_example_colors.dart';
@@ -107,6 +108,8 @@ class MyApp extends StatelessWidget {
         CopyAndPasteScreen.routeName: (context) => const CopyAndPasteScreen(),
         CurrencyTypeColumnScreen.routeName: (context) =>
             const CurrencyTypeColumnScreen(),
+        CustomPaginationScreen.routeName: (context) =>
+            const CustomPaginationScreen(),
         DarkModeScreen.routeName: (context) => const DarkModeScreen(),
         DateTypeColumnScreen.routeName: (context) =>
             const DateTypeColumnScreen(),

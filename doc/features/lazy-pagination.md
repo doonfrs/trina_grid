@@ -127,6 +127,69 @@ TrinaLazyPagination(
 );
 ```
 
+## Custom Pagination UI
+
+You can provide a custom UI for the pagination footer by using the `builder` property. This allows you to create a completely custom layout and set of controls for pagination.
+
+The `builder` function provides the `TrinaLazyPaginationState`, which gives you access to the current pagination status and methods to control it.
+
+### `TrinaLazyPaginationState` Properties and Methods
+
+- `page`: The current page number.
+- `pageSize`: The number of items per page.
+- `totalPage`: The total number of pages.
+- `totalRecords`: The total number of records in the dataset.
+- `isFirstPage`: Whether the current page is the first page.
+- `isLastPage`: Whether the current page is the last page.
+- `setPage(int page)`: Navigates to a specific page.
+- `nextPage()`: Navigates to the next page.
+- `previousPage()`: Navigates to the previous page.
+- `firstPage()`: Navigates to the first page.
+- `lastPage()`: Navigates to the last page.
+- `setPageSize(int size)`: Changes the page size and re-fetches data.
+- `refresh()`: Re-fetches the data for the current page.
+
+### Example
+
+```dart
+createFooter: (stateManager) {
+  return TrinaLazyPagination(
+    fetch: fetch,
+    stateManager: stateManager,
+    builder: (context, state) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.first_page),
+              onPressed: state.isFirstPage ? null : state.firstPage,
+            ),
+            IconButton(
+              icon: const Icon(Icons.navigate_before),
+              onPressed: state.isFirstPage ? null : state.previousPage,
+            ),
+            Text('Page ${state.page} of ${state.totalPage}'),
+            IconButton(
+              icon: const Icon(Icons.navigate_next),
+              onPressed: state.isLastPage ? null : state.nextPage,
+            ),
+            IconButton(
+              icon: const Icon(Icons.last_page),
+              onPressed: state.isLastPage ? null : state.lastPage,
+            ),
+            const Spacer(),
+            if (state.totalRecords != null)
+              Text('Total records: ${state.totalRecords}'),
+          ],
+        ),
+      );
+    },
+  );
+},
+```
+
 ## Complete Example
 
 Here's a complete example demonstrating lazy pagination:
