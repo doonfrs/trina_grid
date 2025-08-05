@@ -116,6 +116,7 @@ class TrinaPopupState<T> extends State<TrinaPopup<T>> {
     Navigator.of(context, rootNavigator: widget.rootNavigator)
         .push(
           _PopupRoute<T>(
+            context: context,
             targetRect: offset & renderBox.paintBounds.size,
             backgroundColor: widget.backgroundColor,
             arrowColor: widget.arrowColor,
@@ -253,11 +254,18 @@ class _PopupRoute<T> extends PopupRoute<T> {
 
   static const double _margin = 10;
   static const double _mobileWidthThreshold = 600;
-  static final Rect _viewportRect = Rect.fromLTWH(
+
+  late final ScreenUtil screenUtil =
+      ScreenUtil(mediaQuery: MediaQuery.of(context));
+
+  late final Rect _viewportRect = Rect.fromLTWH(
     _margin,
-    Screen.statusBar + _margin,
-    Screen.width - _margin * 2,
-    Screen.height - Screen.statusBar - Screen.bottomBar - _margin * 2,
+    screenUtil.statusBar + _margin,
+    screenUtil.width - _margin * 2,
+    screenUtil.height -
+        screenUtil.statusBar -
+        screenUtil.bottomBar -
+        _margin * 2,
   );
 
   final GlobalKey _childKey = GlobalKey();
@@ -269,8 +277,9 @@ class _PopupRoute<T> extends PopupRoute<T> {
   final EdgeInsets contentPadding;
   final double? contentRadius;
   final BoxDecoration? contentDecoration;
+  final BuildContext context;
 
-  double _maxHeight = _viewportRect.height;
+  late double _maxHeight = _viewportRect.height;
   _ArrowDirection _arrowDirection = _ArrowDirection.top;
   double _arrowHorizontal = 0;
   double _scaleAlignDx = 0.5;
@@ -293,6 +302,7 @@ class _PopupRoute<T> extends PopupRoute<T> {
     this.contentDecoration,
     this.position = TrinaPopupPosition.auto,
     required this.animationDuration,
+    required this.context,
     this.animationCurve = Curves.easeInOut,
   });
 
@@ -310,7 +320,7 @@ class _PopupRoute<T> extends PopupRoute<T> {
   TickerFuture didPush() {
     super.offstage = true;
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      if (Screen.width < _mobileWidthThreshold) {
+      if (screenUtil.width < _mobileWidthThreshold) {
         _isCentered = true;
       }
 
@@ -391,7 +401,7 @@ class _PopupRoute<T> extends PopupRoute<T> {
 
     if (position == TrinaPopupPosition.top ||
         (position == TrinaPopupPosition.auto && _maxHeight > bottomHeight)) {
-      _bottom = Screen.height - targetRect.top;
+      _bottom = screenUtil.height - targetRect.top;
       _arrowDirection = _ArrowDirection.bottom;
       _scaleAlignDy = 1;
     } else {
@@ -479,24 +489,23 @@ class _PopupRoute<T> extends PopupRoute<T> {
 }
 
 /// Utility class for screen metrics.
-abstract class Screen {
-  /// Returns the current [MediaQueryData].
-  static MediaQueryData get mediaQuery => MediaQueryData.fromView(
-        PlatformDispatcher.instance.views.first,
-      );
+class ScreenUtil {
+  final MediaQueryData mediaQuery;
+
+  const ScreenUtil({required this.mediaQuery});
 
   /// Screen width in logical pixels.
-  static double get width => mediaQuery.size.width;
+  double get width => mediaQuery.size.width;
 
   /// Screen height in logical pixels.
-  static double get height => mediaQuery.size.height;
+  double get height => mediaQuery.size.height;
 
   /// Device pixel ratio.
-  static double get scale => mediaQuery.devicePixelRatio;
+  double get scale => mediaQuery.devicePixelRatio;
 
   /// Top padding (status bar height).
-  static double get statusBar => mediaQuery.padding.top;
+  double get statusBar => mediaQuery.padding.top;
 
   /// Bottom padding (system navigation bar height).
-  static double get bottomBar => mediaQuery.padding.bottom;
+  double get bottomBar => mediaQuery.padding.bottom;
 }
