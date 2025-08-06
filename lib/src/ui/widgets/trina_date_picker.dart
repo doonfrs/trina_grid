@@ -34,7 +34,7 @@ class TrinaDatePicker extends StatelessWidget {
       data: Theme.of(context).copyWith(
         datePickerTheme: DatePickerThemeData(
           dayShape: WidgetStatePropertyAll(RoundedRectangleBorder(
-            borderRadius: BorderRadiusGeometry.circular(6),
+            borderRadius: BorderRadius.circular(6),
           )),
         ),
       ),

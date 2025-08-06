@@ -47,7 +47,9 @@ mixin PopupCellState<T extends PopupCell> on State<T>
     }
 
     if (trinaKeyEvent.isF2 || trinaKeyEvent.isSpace) {
-      isPopupOpen ? null : openPopup(context);
+      if (!isPopupOpen) {
+        openPopup(context);
+      }
 
       return KeyEventResult.handled;
     }
@@ -93,16 +95,10 @@ mixin PopupCellState<T extends PopupCell> on State<T>
     if (widget.stateManager.keepFocus) {
       textFocus.requestFocus();
     }
-    if (widget.column.editCellRenderer != null) {
-      return widget.column.editCellRenderer!(
-        defaultEditWidget,
-        widget.cell,
-        textController,
-        textFocus,
-        handleSelected,
-      );
-    } else if (widget.stateManager.editCellRenderer != null) {
-      return widget.stateManager.editCellRenderer!(
+    final customRenderer =
+        widget.column.editCellRenderer ?? widget.stateManager.editCellRenderer;
+    if (customRenderer != null) {
+      return customRenderer(
         defaultEditWidget,
         widget.cell,
         textController,

@@ -127,7 +127,7 @@ void main() {
         );
         await openPopup(tester);
 
-        // first tap to focus the current day in calendar
+        // first arrow key to focus the current day in calendar
         await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
         await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
         await tester.pumpAndSettle();
@@ -153,6 +153,7 @@ void main() {
         );
         await openPopup(tester);
 
+        // first arrow key to focus the current day in calendar
         await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
         await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
         await tester.pumpAndSettle();

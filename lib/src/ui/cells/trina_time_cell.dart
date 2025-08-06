@@ -76,13 +76,14 @@ class TrinaTimeCellState
       onEnterKeyEvent: (time) {
         if (_column.saveAndClosePopupWithEnter) {
           handleSelected(_getTimeString(time));
-          Navigator.of(context).pop();
+          closePopup(context);
         }
       },
       onOkButtonPressed: () {
         handleSelected(_getTimeString(selectedTime));
-        Navigator.of(context).pop();
+        closePopup(context);
       },
+      onCancelButtonPressed: () => closePopup(context),
       onChanged: (time) => selectedTime = time,
       autoFocusMode: _column.autoFocusMode,
     );
@@ -100,6 +101,7 @@ class _PopupContent extends StatelessWidget {
     required this.onChanged,
     required this.onOkButtonPressed,
     required this.selectedTimeIsValid,
+    required this.onCancelButtonPressed,
   });
 
   /// {@macro TrinaTimePicker.initialTime}
@@ -122,6 +124,8 @@ class _PopupContent extends StatelessWidget {
 
   final void Function()? onOkButtonPressed;
 
+  final void Function()? onCancelButtonPressed;
+
   final ValueNotifier<bool> selectedTimeIsValid;
 
   @override
@@ -131,12 +135,12 @@ class _PopupContent extends StatelessWidget {
         maxWidth: 250,
         maxHeight: 180,
       ),
-      padding: EdgeInsets.symmetric(vertical: 14, horizontal: 10),
       child: Stack(
         fit: StackFit.loose,
         children: [
           Positioned.fill(
-            bottom: 26,
+            bottom: 20,
+            top: 20,
             child: TrinaTimePicker(
               autoFocusMode: autoFocusMode,
               initialTime: initialTime,
@@ -149,7 +153,7 @@ class _PopupContent extends StatelessWidget {
             ),
           ),
           Positioned(
-            bottom: 0,
+            bottom: 10,
             right: 0,
             child: Container(
               alignment: Alignment.bottomCenter,
@@ -157,7 +161,7 @@ class _PopupContent extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
+                    onPressed: onCancelButtonPressed,
                     child: const Text('Cancel'),
                   ),
                   const SizedBox(width: 8),

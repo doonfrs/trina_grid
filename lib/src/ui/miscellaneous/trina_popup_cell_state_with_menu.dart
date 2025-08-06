@@ -99,8 +99,7 @@ abstract class TrinaPopupCellStateWithMenu<T extends PopupCell> extends State<T>
     );
   }
 
-  @override
-
   /// The default editing widget for the popup cell.
+  @override
   late final Widget defaultEditWidget;
 }

@@ -40,6 +40,12 @@ abstract class TrinaPopupCellStateWithCustomPopup<T extends PopupCell>
   }
 
   @override
+  void dispose() {
+    popupVisibilityNotifier.dispose();
+    super.dispose();
+  }
+
+  @override
   void closePopup(BuildContext context) {
     Navigator.maybePop(context);
   }
@@ -109,12 +115,9 @@ class _CustomPopup extends StatelessWidget {
           barrierColor: colorScheme.inverseSurface.withAlpha(10),
           onBeforePopup: onBeforePopup,
           onAfterPopup: onAfterPopup,
-          content: Theme(
-            data: themeData,
-            child: Material(
-              type: MaterialType.transparency,
-              child: popupContent,
-            ),
+          content: Material(
+            type: MaterialType.transparency,
+            child: popupContent,
           ),
           rootNavigator: true,
           child: TextFormField(

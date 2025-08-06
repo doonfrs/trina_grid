@@ -36,7 +36,8 @@ class TrinaSelectCellState
   IconData? get popupMenuIcon => widget.column.type.select.popupIcon;
 
   @override
-  List<TrinaSelectMenuItem> get menuItems => widget.column.type.select.items
+  late final List<TrinaSelectMenuItem> menuItems = widget
+      .column.type.select.items
       .map((item) => TrinaSelectMenuItem(value: item))
       .toList(growable: false);
 }

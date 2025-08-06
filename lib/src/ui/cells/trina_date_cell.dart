@@ -86,7 +86,7 @@ class TrinaDateCellState
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     TextButton(
-                      onPressed: () => Navigator.of(context).pop(),
+                      onPressed: () => closePopup(context),
                       child: const Text('Cancel'),
                     ),
                     const SizedBox(width: 10),

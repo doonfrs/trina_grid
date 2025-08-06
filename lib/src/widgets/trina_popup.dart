@@ -2,7 +2,6 @@
 // credits to the original author: https://github.com/herowws/flutter_popup
 
 import 'dart:math' as math;
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';

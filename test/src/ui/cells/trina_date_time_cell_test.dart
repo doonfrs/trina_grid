@@ -113,7 +113,6 @@ void main() {
     testWidgets('OK button should be disabled when hour is invalid', (
       tester,
     ) async {
-      final okButtonFinder = find.widgetWithText(TextButton, 'OK');
       final column = getColumn(
         startDate: DateTime(2023, 1, 10, 10, 0),
         endDate: DateTime(2023, 1, 12, 12, 0),
@@ -181,6 +180,7 @@ void main() {
     testWidgets('Tapping outside the popup should close popup', (tester) async {
       await buildCellAndEdit(tester);
       await openPopup(tester);
+      // Tap at the top-left corner of the screen, far from typical popup position
       await tester.tapAt(Offset(1, 1));
       await tester.pumpAndSettle();
 
