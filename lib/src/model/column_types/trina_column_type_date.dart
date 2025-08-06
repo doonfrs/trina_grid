@@ -12,12 +12,14 @@ class TrinaColumnTypeDate
         TrinaColumnTypeHasFormat<String>,
         TrinaColumnTypeHasDateFormat,
         TrinaColumnTypeHasPopupIcon {
-  @override
-  final dynamic defaultValue;
-
   final DateTime? startDate;
 
   final DateTime? endDate;
+
+  final bool closePopupOnSelection;
+
+  @override
+  final dynamic defaultValue;
 
   @override
   final String format;
@@ -39,6 +41,7 @@ class TrinaColumnTypeDate
     required this.headerFormat,
     required this.applyFormatOnInit,
     this.popupIcon,
+    this.closePopupOnSelection = false,
   })  : dateFormat = intl.DateFormat(format),
         headerDateFormat = intl.DateFormat(headerFormat);
 

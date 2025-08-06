@@ -62,6 +62,11 @@ class _DateTypeColumnScreenState extends State<DateTypeColumnScreen> {
         field: 'custom',
         type: TrinaColumnType.date(format: 'yyyy年 MM月 dd日'),
       ),
+      TrinaColumn(
+        title: 'Close popup on selection',
+        field: 'close_popup_on_selection',
+        type: TrinaColumnType.date(closePopupOnSelection: true),
+      ),
     ]);
 
     rows.addAll([
@@ -73,6 +78,7 @@ class _DateTypeColumnScreenState extends State<DateTypeColumnScreen> {
           'with_end_date': TrinaCell(value: '2020-01-01'),
           'with_both': TrinaCell(value: '2020-01-01'),
           'custom': TrinaCell(value: '2020-01-01'),
+          'close_popup_on_selection': TrinaCell(value: '2020-01-01'),
         },
       ),
       TrinaRow(
@@ -83,6 +89,7 @@ class _DateTypeColumnScreenState extends State<DateTypeColumnScreen> {
           'with_end_date': TrinaCell(value: '2020-01-01'),
           'with_both': TrinaCell(value: '2020-01-01'),
           'custom': TrinaCell(value: '2020-01-01'),
+          'close_popup_on_selection': TrinaCell(value: '2020-01-01'),
         },
       ),
       TrinaRow(
@@ -93,6 +100,7 @@ class _DateTypeColumnScreenState extends State<DateTypeColumnScreen> {
           'with_end_date': TrinaCell(value: '2020-01-01'),
           'with_both': TrinaCell(value: '2020-01-01'),
           'custom': TrinaCell(value: '2020-01-01'),
+          'close_popup_on_selection': TrinaCell(value: '2020-01-01'),
         },
       ),
     ]);

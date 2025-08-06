@@ -185,6 +185,8 @@ abstract interface class TrinaColumnType {
   ///
   /// Set the suffixIcon in the [popupIcon] cell. Tap this icon to open the date selection popup.
   /// The default icon is displayed, and if this value is set to null , the icon does not appear.
+  ///
+  /// [closePopupOnSelection] specify if the popup should be closed when a date is selected.
   factory TrinaColumnType.date({
     dynamic defaultValue = '',
     DateTime? startDate,
@@ -193,6 +195,7 @@ abstract interface class TrinaColumnType {
     String headerFormat = 'yyyy-MM',
     bool applyFormatOnInit = true,
     IconData? popupIcon = Icons.date_range,
+    bool closePopupOnSelection = false,
   }) {
     return TrinaColumnTypeDate(
       defaultValue: defaultValue,
@@ -202,6 +205,7 @@ abstract interface class TrinaColumnType {
       headerFormat: headerFormat,
       applyFormatOnInit: applyFormatOnInit,
       popupIcon: popupIcon,
+      closePopupOnSelection: closePopupOnSelection,
     );
   }
 

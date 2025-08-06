@@ -16,6 +16,7 @@ class TrinaDatePicker extends StatelessWidget {
 
   /// Callback when the date is changed by the user.
   final ValueChanged<DateTime> onDateChanged;
+  final ValueChanged<DateTime>? onDisplayedMonthChanged;
 
   /// Creates a [TrinaDatePicker].
   const TrinaDatePicker({
@@ -23,6 +24,7 @@ class TrinaDatePicker extends StatelessWidget {
     this.firstDate,
     this.lastDate,
     required this.onDateChanged,
+    this.onDisplayedMonthChanged,
     super.key,
   });
 
@@ -41,6 +43,7 @@ class TrinaDatePicker extends StatelessWidget {
         firstDate: firstDate ?? DateTime(2000),
         lastDate: lastDate ?? DateTime(2030),
         onDateChanged: onDateChanged,
+        onDisplayedMonthChanged: onDisplayedMonthChanged,
       ),
     );
   }

@@ -17,6 +17,7 @@ void main() {
     DateTime? startDate,
     DateTime? endDate,
     IconData? popupIcon = Icons.date_range,
+    bool closePopupOnSelection = false,
   }) async {
     column = TrinaColumn(
       title: 'column title',
@@ -27,6 +28,7 @@ void main() {
         format: dateFormat,
         startDate: startDate,
         endDate: endDate,
+        closePopupOnSelection: closePopupOnSelection,
       ),
     );
 
@@ -159,6 +161,77 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(cell.value, '2020-12-01');
+      },
+    );
+  });
+
+  group('closePopupOnSelection', () {
+    testWidgets(
+      'when closePopupOnSelection is true, '
+      'tapping a date should close the popup and update the cell value',
+      (tester) async {
+        await buildCellAndEdit(
+          tester,
+          initialCellValue: '2020-01-01',
+          closePopupOnSelection: true,
+        );
+        await openPopup(tester);
+
+        await tester.tap(find.text('3'));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(CalendarDatePicker), findsNothing);
+        expect(cell.value, '2020-01-03');
+      },
+    );
+
+    testWidgets(
+      'when closePopupOnSelection is true, '
+      'OK and Cancel buttons should not be rendered',
+      (tester) async {
+        await buildCellAndEdit(
+          tester,
+          initialCellValue: '2020-01-01',
+          closePopupOnSelection: true,
+        );
+        await openPopup(tester);
+
+        expect(okButtonFinder, findsNothing);
+        expect(find.widgetWithText(TextButton, 'Cancel'), findsNothing);
+      },
+    );
+
+    testWidgets(
+      'when closePopupOnSelection is false, '
+      'tapping a date should not close the popup',
+      (tester) async {
+        await buildCellAndEdit(
+          tester,
+          initialCellValue: '2020-01-01',
+          closePopupOnSelection: false,
+        );
+        await openPopup(tester);
+
+        await tester.tap(find.text('3'));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(CalendarDatePicker), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'when closePopupOnSelection is false, '
+      'OK and Cancel buttons should be rendered',
+      (tester) async {
+        await buildCellAndEdit(
+          tester,
+          initialCellValue: '2020-01-01',
+          closePopupOnSelection: false,
+        );
+        await openPopup(tester);
+
+        expect(okButtonFinder, findsOneWidget);
+        expect(find.widgetWithText(TextButton, 'Cancel'), findsOneWidget);
       },
     );
   });

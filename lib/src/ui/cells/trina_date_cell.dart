@@ -37,45 +37,32 @@ class TrinaDateCellState
 
   TrinaColumnTypeDate get _column => widget.column.type.date;
 
-  late DateTime? selectedTime = _column.dateFormat.tryParse(widget.cell.value);
+  late DateTime? selectedDate = _column.dateFormat.tryParse(widget.cell.value);
+
+  void onDateChanged(DateTime? value) {
+    final currentDate = selectedDate?.copyWith();
+    selectedDate = value;
+
+    final onlyYearWasChanged = currentDate?.year != value?.year &&
+        currentDate?.month == value?.month &&
+        currentDate?.day == value?.day;
+
+    if (onlyYearWasChanged) {
+      return;
+    }
+    if (_column.closePopupOnSelection) {
+      callHandleSelected(value);
+    }
+  }
+
+  void callHandleSelected(DateTime? value) {
+    if (value == null) return;
+    handleSelected(_column.dateFormat.format(value));
+    closePopup(context);
+  }
 
   @override
   Widget get popupContent {
-    return _PopupContent(
-      onDateChanged: (DateTime value) {
-        selectedTime = value;
-      },
-      onOkButtonPressed: () {
-        if (selectedTime != null) {
-          handleSelected(_column.dateFormat.format(selectedTime!));
-          closePopup(context);
-        }
-      },
-      initialDate: selectedTime,
-      firstDate: _column.startDate,
-      lastDate: _column.endDate,
-    );
-  }
-}
-
-class _PopupContent extends StatelessWidget {
-  final void Function() onOkButtonPressed;
-  final void Function(DateTime) onDateChanged;
-
-  final DateTime? initialDate;
-  final DateTime? firstDate;
-  final DateTime? lastDate;
-
-  const _PopupContent({
-    required this.onOkButtonPressed,
-    required this.onDateChanged,
-    this.initialDate,
-    this.firstDate,
-    this.lastDate,
-  });
-
-  @override
-  Widget build(BuildContext context) {
     return ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 320, maxHeight: 370),
       child: Column(
@@ -83,33 +70,34 @@ class _PopupContent extends StatelessWidget {
         children: [
           Flexible(
             child: TrinaDatePicker(
-              initialDate: initialDate,
-              firstDate: firstDate,
-              lastDate: lastDate,
+              initialDate: selectedDate,
+              firstDate: _column.startDate,
+              lastDate: _column.endDate,
               onDateChanged: onDateChanged,
             ),
           ),
-          Flexible(
-            flex: 0,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(6, 0, 6, 12),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('Cancel'),
-                  ),
-                  const SizedBox(width: 10),
-                  TextButton(
-                    onPressed: onOkButtonPressed,
-                    child: const Text('OK'),
-                  ),
-                ],
+          if (!_column.closePopupOnSelection)
+            Flexible(
+              flex: 0,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(6, 0, 6, 12),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: const Text('Cancel'),
+                    ),
+                    const SizedBox(width: 10),
+                    TextButton(
+                      onPressed: () => callHandleSelected(selectedDate),
+                      child: const Text('OK'),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
         ],
       ),
     );
