@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:trina_grid/src/model/trina_column_type_has_menu_popup.dart';
-import 'package:trina_grid/src/model/trina_select_menu_item.dart';
 import 'package:trina_grid/src/ui/cells/popup_cell.dart';
 import 'package:trina_grid/src/ui/widgets/trina_default_popup_cell_editing_widget.dart';
 import 'package:trina_grid/src/ui/widgets/trina_select_menu.dart';
@@ -9,7 +8,7 @@ import 'package:trina_grid/src/ui/widgets/trina_select_menu.dart';
 abstract class TrinaPopupCellStateWithMenu<T extends PopupCell> extends State<T>
     with PopupCellState<T> {
   /// The list of menu items to display in the menu.
-  List<TrinaSelectMenuItem> get menuItems;
+  List<dynamic> get menuItems;
 
   TrinaColumnTypeHasMenuPopup get _column =>
       widget.column.type as TrinaColumnTypeHasMenuPopup;
@@ -40,29 +39,9 @@ abstract class TrinaPopupCellStateWithMenu<T extends PopupCell> extends State<T>
     }
   }
 
-  /// Builds the widget to be displayed inside the menu.
-  ///
-  /// Subclasses can override this method to add custom widgets to the menu
-  /// or to replace the default [TrinaSelectMenu] entirely.
+  /// Builds a [TrinaSelectMenu] widget to be displayed inside the [MenuAnchor].
   @protected
-  Widget buildMenu() {
-    return TrinaSelectMenu(
-      menuItems: menuItems,
-      enableFiltering: _column.enableMenuFiltering,
-      itemHeight: _column.menuItemHeight,
-      maxHeight: _column.menuMaxHeight,
-      enableSearch: _column.enableMenuSearch,
-      onItemSelected: (value) {
-        handleSelected(value);
-        menuController.close();
-      },
-      itemBuilder: _column.menuItemBuilder,
-      width: widget.column.width,
-      currentValue: widget.cell.value,
-      isDarkMode: widget.stateManager.style.isDarkStyle,
-      filters: _column.menuFilters,
-    );
-  }
+  TrinaSelectMenu buildMenu();
 
   @override
   void initState() {

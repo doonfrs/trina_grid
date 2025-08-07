@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trina_grid/src/model/trina_select_menu_item.dart';
+import 'package:trina_grid/src/ui/widgets/trina_select_menu.dart';
 import 'package:trina_grid/trina_grid.dart';
 import 'package:trina_grid/src/ui/cells/popup_cell.dart';
 import 'package:trina_grid/src/ui/miscellaneous/trina_popup_cell_state_with_menu.dart';
@@ -31,18 +31,31 @@ class TrinaBooleanCell extends StatefulWidget implements PopupCell {
 
 class TrinaBooleanCellState
     extends TrinaPopupCellStateWithMenu<TrinaBooleanCell> {
+  TrinaColumnTypeBoolean get _column => widget.column.type.boolean;
+
   @override
   IconData? get popupMenuIcon => widget.column.type.boolean.popupIcon;
 
   @override
-  List<TrinaSelectMenuItem> get menuItems {
-    return [
-      if (widget.column.type.boolean.allowEmpty)
-        TrinaSelectMenuItem(value: null, label: '-'),
-      TrinaSelectMenuItem(
-          value: true, label: widget.column.type.boolean.trueText),
-      TrinaSelectMenuItem(
-          value: false, label: widget.column.type.boolean.falseText),
-    ];
+  List<dynamic> get menuItems {
+    return [if (_column.allowEmpty) null, true, false];
+  }
+
+  @override
+  TrinaSelectMenu buildMenu() {
+    return TrinaSelectMenu(
+      items: menuItems,
+      enableFiltering: false,
+      enableSearch: false,
+      itemHeight: _column.menuItemHeight,
+      maxHeight: _column.menuMaxHeight,
+      width: widget.column.width,
+      initialValue: widget.cell.value,
+      itemBuilder: _column.menuItemBuilder,
+      onItemSelected: (value) {
+        handleSelected(value);
+        menuController.close();
+      },
+    );
   }
 }

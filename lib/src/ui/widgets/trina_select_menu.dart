@@ -4,7 +4,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:trina_grid/src/helper/trina_key_manager_event.dart';
-import 'package:trina_grid/src/model/trina_select_menu_item.dart';
 import 'package:trina_grid/src/model/trina_select_popup_menu_filter.dart';
 
 /// A customizable select menu widget for TrinaGrid.
@@ -12,60 +11,99 @@ import 'package:trina_grid/src/model/trina_select_popup_menu_filter.dart';
 /// It provides a dropdown-style menu with options for searching, filtering,
 /// and custom item rendering. It is designed to be used within a cell of the grid
 /// to allow users to select a value from a predefined list.
-class TrinaSelectMenu extends StatefulWidget {
+class TrinaSelectMenu<T> extends StatefulWidget {
+  /// {@template TrinaSelectMenu.items}
   /// The list of items to display in the popup menu.
-  final List<TrinaSelectMenuItem> menuItems;
+  ///   {@endtemplate}
+  final List<T> items;
 
-  /// Enables a search field to filter the [menuItems].
+  /// {@template TrinaSelectMenu.enableSearch}
+  /// Enables a search field to filter the [items].
+  /// {@endtemplate}
   final bool enableSearch;
 
+  /// {@template TrinaSelectMenu.enableFiltering}
   /// Enables a filtering section based on the provided [filters].
+  /// {@endtemplate}
   final bool enableFiltering;
 
+  /// {@template TrinaSelectMenu.onItemSelected}
   /// Called when an item is selected.
-  final Function(dynamic) onItemSelected;
+  /// {@endtemplate}
+  final Function(T) onItemSelected;
 
-  /// The width of the popup menu.
+  /// {@template TrinaSelectMenu.width}
+  /// The width of the menu.
+  /// {@endtemplate}
   final double width;
 
-  /// The currently selected value.
-  final dynamic currentValue;
+  /// {@template TrinaSelectMenu.initialValue}
+  /// The initially selected value.
+  /// {@endtemplate}
+  final T initialValue;
 
-  /// Determines if the widget should use a dark or light theme.
-  final bool isDarkMode;
-
+  /// {@template TrinaSelectMenu.itemBuilder}
   /// A builder function to create a custom widget for each item.
-  final Widget Function(dynamic item)? itemBuilder;
+  /// {@endtemplate}
+  final Widget Function(T item)? itemBuilder;
 
+  /// {@template TrinaSelectMenu.itemHeight}
   /// The height of each item in the list.
+  /// {@endtemplate}
   final double itemHeight;
 
+  /// {@template TrinaSelectMenu.maxHeight}
   /// The maximum height of the popup menu.
+  /// {@endtemplate}
   final double maxHeight;
 
+  /// {@template TrinaSelectMenu.filters}
   /// A list of filters that can be applied to the items.
+  /// {@endtemplate}
   final List<TrinaSelectMenuFilter> filters;
 
+  /// {@template TrinaSelectMenu.itemToString}
+  /// A function that returns the string representation of an item.
+  /// Useful when T is a custom type.
+  ///
+  /// If not provided, will use [item.toString()].
+  /// Although, it's required when [enableSearch] is true so that the search
+  /// is applied correctly to the items.
+  /// {@endtemplate}
+  final String Function(T item)? itemToString;
+
+  /// {@template TrinaSelectMenu.itemToValue}
+  /// A function that returns a unique value for an item.
+  ///
+  /// Used to determine if an item is selected and for filtering.
+  /// If not provided, == is used.
+  /// {@endtemplate}
+  final dynamic Function(T item)? itemToValue;
+
   const TrinaSelectMenu({
-    required this.menuItems,
+    required this.items,
     required this.enableSearch,
     required this.onItemSelected,
     required this.width,
-    required this.currentValue,
-    required this.isDarkMode,
+    required this.initialValue,
     required this.itemHeight,
     required this.enableFiltering,
     required this.maxHeight,
     this.itemBuilder,
     this.filters = const [],
+    this.itemToString,
+    this.itemToValue,
     super.key,
-  });
+  }) : assert(
+          !enableSearch || itemToString != null,
+          'itemToString must be provided when enableSearch is true.',
+        );
 
   @override
-  State<TrinaSelectMenu> createState() => _TrinaSelectMenuState();
+  State<TrinaSelectMenu<T>> createState() => _TrinaSelectMenuState<T>();
 }
 
-class _TrinaSelectMenuState extends State<TrinaSelectMenu> {
+class _TrinaSelectMenuState<T> extends State<TrinaSelectMenu<T>> {
   late final TextEditingController searchFieldController;
   late final FocusNode searchFieldFocusNode = FocusNode();
 
@@ -73,8 +111,7 @@ class _TrinaSelectMenuState extends State<TrinaSelectMenu> {
   late final Map<TrinaSelectMenuFilter, TextEditingController>
       filterValueControllers;
 
-  late final ValueNotifier<List<TrinaSelectMenuItem>>
-      filteredPopupItemsNotifier;
+  late final ValueNotifier<List<T>> filteredPopupItemsNotifier;
 
   Timer? _debounce;
 
@@ -89,7 +126,7 @@ class _TrinaSelectMenuState extends State<TrinaSelectMenu> {
     searchFieldController = TextEditingController();
     searchFieldController.addListener(_onFilterChanged);
 
-    filteredPopupItemsNotifier = ValueNotifier(widget.menuItems);
+    filteredPopupItemsNotifier = ValueNotifier(widget.items);
   }
 
   /// Adds a filter to the active filters list and sets up its controller.
@@ -120,10 +157,10 @@ class _TrinaSelectMenuState extends State<TrinaSelectMenu> {
     final filtersEnabled = widget.enableFiltering && widget.filters.isNotEmpty;
     final searchText = searchFieldController.text.toLowerCase();
 
-    final tempItems = widget.menuItems.where((item) {
+    final tempItems = widget.items.where((item) {
       // Apply search
       if (widget.enableSearch && searchText.isNotEmpty) {
-        final itemText = (item.label ?? item.value.toString()).toLowerCase();
+        final itemText = widget.itemToString!(item).toLowerCase();
         if (!itemText.contains(searchText)) {
           return false;
         }
@@ -133,8 +170,11 @@ class _TrinaSelectMenuState extends State<TrinaSelectMenu> {
       if (filtersEnabled) {
         for (final filter in activeFiltersNotifier.value) {
           final filterText = filterValueControllers[filter]?.text ?? '';
-          if (filterText.isNotEmpty && !filter.filter(item.value, filterText)) {
-            return false; // Fails this filter
+          if (filterText.isNotEmpty) {
+            final valueToFilter = widget.itemToValue?.call(item) ?? item;
+            if (!filter.filter(valueToFilter, filterText)) {
+              return false; // Fails this filter
+            }
           }
         }
       }
@@ -165,88 +205,82 @@ class _TrinaSelectMenuState extends State<TrinaSelectMenu> {
   @override
   Widget build(BuildContext context) {
     final filtersEnabled = widget.enableFiltering && widget.filters.isNotEmpty;
-    final colorScheme =
-        widget.isDarkMode ? ColorScheme.dark() : ColorScheme.light();
-    final themeData = Theme.of(context).copyWith(
-      brightness: widget.isDarkMode ? Brightness.dark : Brightness.light,
-      colorScheme: colorScheme,
-    );
+    final colorScheme = Theme.of(context).colorScheme;
 
-    return Theme(
-      data: themeData,
-      child: Builder(
-        builder: (context) {
-          return FocusScope(
-            autofocus: filtersEnabled
-                ? false
-                : widget.enableSearch == true &&
-                    widget.menuItems.contains(widget.currentValue) == false,
-            onKeyEvent: filtersEnabled
-                ? null
-                : (node, event) {
-                    final trinaKeyEvent = TrinaKeyManagerEvent(
-                      focusNode: node,
-                      event: event,
-                    );
-                    if (trinaKeyEvent.isCharacter) {
-                      if (searchFieldFocusNode.hasFocus == false) {
-                        searchFieldFocusNode.requestFocus();
-                      }
+    return Builder(
+      builder: (context) {
+        return FocusScope(
+          autofocus: filtersEnabled
+              ? false
+              : widget.enableSearch == true &&
+                  widget.items.contains(widget.initialValue) == false,
+          onKeyEvent: filtersEnabled
+              ? null
+              : (node, event) {
+                  final trinaKeyEvent = TrinaKeyManagerEvent(
+                    focusNode: node,
+                    event: event,
+                  );
+                  if (trinaKeyEvent.isCharacter) {
+                    if (searchFieldFocusNode.hasFocus == false) {
+                      searchFieldFocusNode.requestFocus();
                     }
-                    return KeyEventResult.ignored;
-                  },
-            child: SizedBox(
-              width: widget.width,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (filtersEnabled)
-                    ValueListenableBuilder<List<TrinaSelectMenuFilter>>(
-                      valueListenable: activeFiltersNotifier,
-                      builder: (context, activeFilters, child) {
-                        return _FilterSection(
-                          filters: widget.filters,
-                          activeFilters: activeFilters,
-                          filterValueControllers: filterValueControllers,
-                          onAddFilter: _addFilter,
-                          onRemoveFilter: _removeFilter,
-                        );
-                      },
-                    ),
-                  if (widget.enableSearch) ...[
-                    Divider(
-                      height: 5,
-                      color: colorScheme.onSurface.withAlpha(50),
-                    ),
-                    _SearchSection(
-                      searchFieldController: searchFieldController,
-                      searchFieldFocusNode: searchFieldFocusNode,
-                    ),
-                  ],
+                  }
+                  return KeyEventResult.ignored;
+                },
+          child: SizedBox(
+            width: widget.width,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (filtersEnabled)
+                  ValueListenableBuilder<List<TrinaSelectMenuFilter>>(
+                    valueListenable: activeFiltersNotifier,
+                    builder: (context, activeFilters, child) {
+                      return _FilterSection(
+                        filters: widget.filters,
+                        activeFilters: activeFilters,
+                        filterValueControllers: filterValueControllers,
+                        onAddFilter: _addFilter,
+                        onRemoveFilter: _removeFilter,
+                      );
+                    },
+                  ),
+                if (widget.enableSearch) ...[
                   Divider(
                     height: 5,
                     color: colorScheme.onSurface.withAlpha(50),
                   ),
-                  ValueListenableBuilder<List<TrinaSelectMenuItem>>(
-                    valueListenable: filteredPopupItemsNotifier,
-                    builder: (context, filteredItems, child) {
-                      return _ItemListView(
-                        filteredItems: filteredItems,
-                        width: widget.width,
-                        maxHeight: widget.maxHeight,
-                        itemHeight: widget.itemHeight,
-                        currentValue: widget.currentValue,
-                        onItemSelected: widget.onItemSelected,
-                        itemBuilder: widget.itemBuilder,
-                      );
-                    },
+                  _SearchSection(
+                    searchFieldController: searchFieldController,
+                    searchFieldFocusNode: searchFieldFocusNode,
                   ),
                 ],
-              ),
+                Divider(
+                  height: 5,
+                  color: colorScheme.onSurface.withAlpha(50),
+                ),
+                ValueListenableBuilder<List<T>>(
+                  valueListenable: filteredPopupItemsNotifier,
+                  builder: (context, filteredItems, child) {
+                    return _ItemListView<T>(
+                      filteredItems: filteredItems,
+                      width: widget.width,
+                      maxHeight: widget.maxHeight,
+                      itemHeight: widget.itemHeight,
+                      initialValue: widget.initialValue,
+                      onItemSelected: widget.onItemSelected,
+                      itemBuilder: widget.itemBuilder,
+                      itemToString: widget.itemToString,
+                      itemToValue: widget.itemToValue,
+                    );
+                  },
+                ),
+              ],
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }
@@ -405,30 +439,34 @@ class _SearchSection extends StatelessWidget {
 }
 
 /// A widget that displays the list of selectable items.
-class _ItemListView extends StatefulWidget {
-  final List<TrinaSelectMenuItem> filteredItems;
+class _ItemListView<T> extends StatefulWidget {
+  final List<T> filteredItems;
   final double width;
   final double maxHeight;
   final double itemHeight;
-  final dynamic currentValue;
-  final Function(dynamic) onItemSelected;
-  final Widget Function(dynamic item)? itemBuilder;
+  final T initialValue;
+  final Function(T) onItemSelected;
+  final Widget Function(T item)? itemBuilder;
+  final String Function(T item)? itemToString;
+  final dynamic Function(T item)? itemToValue;
 
   const _ItemListView({
     required this.filteredItems,
     required this.width,
     required this.maxHeight,
     required this.itemHeight,
-    required this.currentValue,
+    required this.initialValue,
     required this.onItemSelected,
     this.itemBuilder,
+    this.itemToString,
+    this.itemToValue,
   });
 
   @override
-  State<_ItemListView> createState() => _ItemListViewState();
+  State<_ItemListView<T>> createState() => _ItemListViewState<T>();
 }
 
-class _ItemListViewState extends State<_ItemListView> {
+class _ItemListViewState<T> extends State<_ItemListView<T>> {
   late final ScrollController scrollController = ScrollController();
   late final ValueNotifier<bool> showScrollToBottom = ValueNotifier(false);
   late final ValueNotifier<bool> showScrollToTop = ValueNotifier(false);
@@ -450,7 +488,9 @@ class _ItemListViewState extends State<_ItemListView> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final selectedItemIndex = widget.filteredItems.indexWhere(
-        (element) => element.value == widget.currentValue,
+        (element) =>
+            (widget.itemToValue?.call(element) ?? element) ==
+            widget.initialValue,
       );
 
       if (selectedItemIndex != -1 && scrollController.hasClients) {
@@ -553,11 +593,12 @@ class _ItemListViewState extends State<_ItemListView> {
             itemCount: widget.filteredItems.length,
             itemBuilder: (context, index) {
               final item = widget.filteredItems[index];
-              final isSelected = item.value == widget.currentValue;
+              final isSelected = (widget.itemToValue?.call(item) ?? item) ==
+                  widget.initialValue;
               return CallbackShortcuts(
                 bindings: {
                   LogicalKeySet(LogicalKeyboardKey.enter): () {
-                    widget.onItemSelected(item.value);
+                    widget.onItemSelected(item);
                   },
                 },
                 child: ConstrainedBox(
@@ -566,13 +607,14 @@ class _ItemListViewState extends State<_ItemListView> {
                     closeOnActivate: false,
                     autofocus: isSelected,
                     onPressed: () {
-                      widget.onItemSelected(item.value);
+                      widget.onItemSelected(item);
                     },
                     trailingIcon:
                         isSelected ? const Icon(Icons.check, size: 20) : null,
                     child: widget.itemBuilder != null
-                        ? widget.itemBuilder!(item.value)
-                        : Text(item.label ?? item.value.toString()),
+                        ? widget.itemBuilder!(item)
+                        : Text(
+                            widget.itemToString?.call(item) ?? item.toString()),
                   ),
                 ),
               );
