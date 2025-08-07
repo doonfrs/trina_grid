@@ -512,7 +512,11 @@ class FilterPopupState {
       TrinaColumn(
         title: configuration.localeText.filterType,
         field: FilterHelper.filterFieldType,
-        type: TrinaColumnType.select(configuration.columnFilter.filters),
+        type: TrinaColumnType.select(
+          configuration.columnFilter.filters,
+          // item is a [TrinaFilterType]
+          builder: (item) => Text(item.title.toString()),
+        ),
         enableFilterMenuItem: false,
         applyFormatterInEditing: true,
         formatter: (dynamic value) {

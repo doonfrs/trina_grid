@@ -1,35 +1,69 @@
 import 'package:flutter/material.dart';
 import 'package:trina_grid/src/helper/trina_general_helper.dart';
-import 'package:trina_grid/src/model/trina_column_type_has_popup_icon.dart';
+import 'package:trina_grid/src/model/trina_column_type_has_menu_popup.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class TrinaColumnTypeSelect
     with TrinaColumnTypeDefaultMixin
-    implements TrinaColumnType, TrinaColumnTypeHasPopupIcon {
+    implements TrinaColumnType, TrinaColumnTypeHasMenuPopup {
+  const TrinaColumnTypeSelect({
+    required this.onItemSelected,
+    required this.items,
+    required this.enableColumnFilter,
+    this.defaultValue,
+    this.menuFilters = const [],
+    this.popupIcon,
+    this.menuItemBuilder,
+    this.width,
+    this.menuItemHeight = 40,
+    this.menuMaxHeight = 300,
+    this.enableMenuFiltering = true,
+    this.enableMenuSearch = true,
+    this.itemToString,
+    this.itemToValue,
+  });
+
   @override
   final dynamic defaultValue;
 
-  final List<dynamic> items;
-
-  final Widget Function(dynamic item)? builder;
-
-  final bool enableColumnFilter;
-  final Function(TrinaGridOnSelectedEvent event) onItemSelected;
-
-  final double? width;
+  @override
+  final List<TrinaSelectMenuFilter> menuFilters;
 
   @override
   final IconData? popupIcon;
 
-  const TrinaColumnTypeSelect({
-    required this.onItemSelected,
-    this.defaultValue,
-    required this.items,
-    required this.enableColumnFilter,
-    this.popupIcon,
-    this.builder,
-    this.width,
-  });
+  @override
+  final bool enableMenuFiltering;
+
+  @override
+  final bool enableMenuSearch;
+
+  @override
+  final double menuMaxHeight;
+
+  @override
+  final double menuItemHeight;
+
+  @override
+  final Widget Function(dynamic item)? menuItemBuilder;
+
+  @override
+  final List<dynamic> items;
+
+  final bool enableColumnFilter;
+
+  final Function(TrinaGridOnSelectedEvent event) onItemSelected;
+
+  /// The width of the popup menu.
+  ///
+  /// if null, the width of the column will be used.
+  final double? width;
+
+  @override
+  final String Function(dynamic item)? itemToString;
+
+  @override
+  final dynamic Function(dynamic item)? itemToValue;
 
   @override
   bool isValid(dynamic value) => items.contains(value) == true;

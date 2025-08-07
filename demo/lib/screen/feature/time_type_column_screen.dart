@@ -24,26 +24,73 @@ class _TimeTypeColumnScreenState extends State<TimeTypeColumnScreen> {
 
     columns.addAll([
       TrinaColumn(
-        title: 'Time',
-        field: 'time',
+        title: 'Time (No constraints)',
+        field: 'time_any',
         type: TrinaColumnType.time(),
+      ),
+      TrinaColumn(
+        title: 'Time (Min: 5:00 PM)',
+        field: 'min_time_at_5pm',
+        type: TrinaColumnType.time(
+          minTime: TimeOfDay(hour: 17, minute: 0),
+        ),
+      ),
+      TrinaColumn(
+        title: 'Time (Max: 9:00 AM)',
+        field: 'max_time_at_9am',
+        type: TrinaColumnType.time(
+          maxTime: const TimeOfDay(hour: 9, minute: 0),
+        ),
+      ),
+      TrinaColumn(
+        title: 'Time (Min: 9:00 AM, Max: 5:00 PM)',
+        field: 'min_9am_max_5pm',
+        type: TrinaColumnType.time(
+          minTime: const TimeOfDay(hour: 9, minute: 0),
+          maxTime: const TimeOfDay(hour: 17, minute: 0),
+        ),
       ),
     ]);
 
     rows.addAll([
       TrinaRow(
         cells: {
-          'time': TrinaCell(value: '00:00'),
+          'time_any': TrinaCell(value: '00:00'),
+          'min_time_at_5pm': TrinaCell(value: '17:20'),
+          'max_time_at_9am': TrinaCell(value: '09:00'),
+          'min_9am_max_5pm': TrinaCell(value: '10:00'),
         },
       ),
       TrinaRow(
         cells: {
-          'time': TrinaCell(value: '23:59'),
+          'time_any': TrinaCell(value: '23:59'),
+          'min_time_at_5pm': TrinaCell(value: '17:30'),
+          'max_time_at_9am': TrinaCell(value: '08:30'),
+          'min_9am_max_5pm': TrinaCell(value: '14:00'),
         },
       ),
       TrinaRow(
         cells: {
-          'time': TrinaCell(value: '12:30'),
+          'time_any': TrinaCell(value: '12:30'),
+          'min_time_at_5pm': TrinaCell(value: '17:00'),
+          'max_time_at_9am': TrinaCell(value: '06:30'),
+          'min_9am_max_5pm': TrinaCell(value: '09:00'),
+        },
+      ),
+      TrinaRow(
+        cells: {
+          'time_any': TrinaCell(value: '08:00'),
+          'min_time_at_5pm': TrinaCell(value: '17:00'),
+          'max_time_at_9am': TrinaCell(value: '04:00'),
+          'min_9am_max_5pm': TrinaCell(value: '17:00'),
+        },
+      ),
+      TrinaRow(
+        cells: {
+          'time_any': TrinaCell(value: '18:00'),
+          'min_time_at_5pm': TrinaCell(value: '18:00'),
+          'max_time_at_9am': TrinaCell(value: '06:00'),
+          'min_9am_max_5pm': TrinaCell(value: '12:00'),
         },
       ),
     ]);

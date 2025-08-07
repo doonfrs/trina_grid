@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:trina_grid/src/ui/widgets/trina_date_picker.dart';
+import 'package:trina_grid/src/ui/miscellaneous/trina_popup_cell_state_with_custom_popup.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 import 'popup_cell.dart';
@@ -28,49 +30,76 @@ class TrinaDateCell extends StatefulWidget implements PopupCell {
   TrinaDateCellState createState() => TrinaDateCellState();
 }
 
-class TrinaDateCellState extends State<TrinaDateCell>
-    with PopupCellState<TrinaDateCell> {
-  TrinaGridStateManager? popupStateManager;
-
+class TrinaDateCellState
+    extends TrinaPopupCellStateWithCustomPopup<TrinaDateCell> {
   @override
-  List<TrinaColumn> popupColumns = [];
+  IconData? get popupMenuIcon => widget.column.type.date.popupIcon;
 
-  @override
-  List<TrinaRow> popupRows = [];
+  TrinaColumnTypeDate get _column => widget.column.type.date;
 
-  @override
-  IconData? get icon => widget.column.type.date.popupIcon;
+  late DateTime? selectedDate = _column.dateFormat.tryParse(widget.cell.value);
 
-  @override
-  void openPopup() async {
-    if (widget.column.checkReadOnly(widget.row, widget.cell)) {
+  void onDateChanged(DateTime? value) {
+    final currentDate = selectedDate?.copyWith();
+    selectedDate = value;
+
+    final onlyYearWasChanged = currentDate?.year != value?.year &&
+        currentDate?.month == value?.month &&
+        currentDate?.day == value?.day;
+
+    if (onlyYearWasChanged) {
       return;
     }
-    isOpenedPopup = true;
-    if (widget.stateManager.selectDateCallback != null) {
-      final sm = widget.stateManager;
-      final date = await sm.selectDateCallback!(widget.cell, widget.column);
-      isOpenedPopup = false;
-      if (date != null) {
-        handleSelected(
-          widget.column.type.date.dateFormat.format(date),
-        ); // Consider call onSelected
-      }
-    } else {
-      TrinaGridDatePicker(
-        context: context,
-        initDate: TrinaDateTimeHelper.parseOrNullWithFormat(
-          widget.cell.value,
-          widget.column.type.date.format,
-        ),
-        startDate: widget.column.type.date.startDate,
-        endDate: widget.column.type.date.endDate,
-        dateFormat: widget.column.type.date.dateFormat,
-        headerDateFormat: widget.column.type.date.headerDateFormat,
-        onSelected: onSelected,
-        itemHeight: widget.stateManager.rowTotalHeight,
-        configuration: widget.stateManager.configuration,
-      );
+    if (_column.closePopupOnSelection) {
+      callHandleSelected(value);
     }
+  }
+
+  void callHandleSelected(DateTime? value) {
+    if (value == null) return;
+    handleSelected(_column.dateFormat.format(value));
+    closePopup(context);
+  }
+
+  @override
+  Widget get popupContent {
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 320, maxHeight: 370),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Flexible(
+            child: TrinaDatePicker(
+              initialDate: selectedDate,
+              firstDate: _column.startDate,
+              lastDate: _column.endDate,
+              onDateChanged: onDateChanged,
+            ),
+          ),
+          if (!_column.closePopupOnSelection)
+            Flexible(
+              flex: 0,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(6, 0, 6, 12),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () => closePopup(context),
+                      child: const Text('Cancel'),
+                    ),
+                    const SizedBox(width: 10),
+                    TextButton(
+                      onPressed: () => callHandleSelected(selectedDate),
+                      child: const Text('OK'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
   }
 }

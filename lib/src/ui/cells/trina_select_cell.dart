@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:trina_grid/src/ui/miscellaneous/trina_popup_cell_state_with_menu.dart';
+import 'package:trina_grid/src/ui/widgets/trina_select_menu.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 import 'popup_cell.dart';
@@ -28,81 +30,34 @@ class TrinaSelectCell extends StatefulWidget implements PopupCell {
   TrinaSelectCellState createState() => TrinaSelectCellState();
 }
 
-class TrinaSelectCellState extends State<TrinaSelectCell>
-    with PopupCellState<TrinaSelectCell> {
-  @override
-  List<TrinaColumn> popupColumns = [];
+class TrinaSelectCellState
+    extends TrinaPopupCellStateWithMenu<TrinaSelectCell> {
+  TrinaColumnTypeSelect get _column => widget.column.type.select;
 
   @override
-  List<TrinaRow> popupRows = [];
+  IconData? get popupMenuIcon => _column.popupIcon;
 
   @override
-  IconData? get icon => widget.column.type.select.popupIcon;
-
-  late bool enableColumnFilter;
+  late final List menuItems = _column.items;
 
   @override
-  void initState() {
-    super.initState();
-
-    enableColumnFilter = widget.column.type.select.enableColumnFilter;
-
-    final columnFilterHeight = enableColumnFilter
-        ? widget.stateManager.configuration.style.columnFilterHeight
-        : 0;
-
-    final rowsHeight = widget.column.type.select.items.length *
-        widget.stateManager.rowTotalHeight;
-
-    popupHeight = widget.stateManager.configuration.style.columnHeight +
-        columnFilterHeight +
-        rowsHeight +
-        TrinaGridSettings.gridInnerSpacing +
-        widget.stateManager.configuration.style.gridBorderWidth;
-
-    fieldOnSelected = widget.column.title;
-
-    popupColumns = [
-      TrinaColumn(
-        width: widget.column.type.select.width ?? TrinaGridSettings.columnWidth,
-        title: widget.column.title,
-        field: widget.column.title,
-        readOnly: true,
-        type: TrinaColumnType.text(),
-        formatter: widget.column.formatter,
-        enableFilterMenuItem: enableColumnFilter,
-        enableHideColumnMenuItem: false,
-        enableSetColumnsMenuItem: false,
-        renderer: widget.column.type.select.builder == null
-            ? null
-            : (rendererContext) {
-                var item =
-                    widget.column.type.select.items[rendererContext.rowIdx];
-
-                return widget.column.type.select.builder!(item);
-              },
-      ),
-    ];
-
-    popupRows = widget.column.type.select.items.map((dynamic item) {
-      return TrinaRow(cells: {widget.column.title: TrinaCell(value: item)});
-    }).toList();
-  }
-
-  @override
-  void onSelected(TrinaGridOnSelectedEvent event) {
-    widget.column.type.select.onItemSelected(event);
-    super.onSelected(event);
-  }
-
-  @override
-  void onLoaded(TrinaGridOnLoadedEvent event) {
-    super.onLoaded(event);
-
-    if (enableColumnFilter) {
-      event.stateManager.setShowColumnFilter(true, notify: false);
-    }
-
-    event.stateManager.setSelectingMode(TrinaGridSelectingMode.none);
+  TrinaSelectMenu buildMenu() {
+    return TrinaSelectMenu(
+      items: menuItems,
+      enableFiltering: _column.enableMenuFiltering,
+      itemHeight: _column.menuItemHeight,
+      maxHeight: _column.menuMaxHeight,
+      enableSearch: _column.enableMenuSearch,
+      itemBuilder: _column.menuItemBuilder,
+      width: widget.column.width,
+      initialValue: widget.cell.value,
+      filters: _column.menuFilters,
+      itemToString: _column.itemToString,
+      itemToValue: _column.itemToValue,
+      onItemSelected: (value) {
+        handleSelected(value);
+        menuController.close();
+      },
+    );
   }
 }

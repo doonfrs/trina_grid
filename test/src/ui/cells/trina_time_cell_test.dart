@@ -1,390 +1,322 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
-import 'package:trina_grid/trina_grid.dart';
 import 'package:trina_grid/src/ui/ui.dart';
+import 'package:trina_grid/src/ui/widgets/trina_time_picker.dart';
+import 'package:trina_grid/trina_grid.dart';
 
-import '../../../helper/trina_widget_test_helper.dart';
-import '../../../helper/row_helper.dart';
-import '../../../mock/shared_mocks.mocks.dart';
+import '../../../helper/column_helper.dart';
 
 void main() {
-  late MockTrinaGridStateManager stateManager;
+  final defaultCellValue = '12:30';
+  late TrinaGridStateManager stateManager;
+  late TrinaCell cell;
 
-  setUp(() {
-    const configuration = TrinaGridConfiguration();
-    stateManager = MockTrinaGridStateManager();
-    when(stateManager.configuration).thenReturn(configuration);
-    when(stateManager.style).thenReturn(configuration.style);
-    when(stateManager.keyPressed).thenReturn(TrinaGridKeyPressed());
-    when(stateManager.rowTotalHeight).thenReturn(
-        RowHelper.resolveRowTotalHeight(stateManager.configuration.style));
-    when(stateManager.localeText).thenReturn(const TrinaGridLocaleText());
-    when(stateManager.keepFocus).thenReturn(true);
-    when(stateManager.hasFocus).thenReturn(true);
-  });
-
-  BoxDecoration getCellDecoration(Finder cell) {
-    final container = find
-        .ancestor(
-          of: cell,
-          matching: find.byType(DecoratedBox),
-        )
-        .first
-        .evaluate()
-        .first
-        .widget as DecoratedBox;
-
-    return container.decoration as BoxDecoration;
+  TrinaColumn getColumn({
+    IconData? popupIcon = Icons.access_time,
+    TrinaTimePickerAutoFocusMode autoFocusMode =
+        TrinaTimePickerAutoFocusMode.hourField,
+    bool saveAndClosePopupWithEnter = true,
+    TimeOfDay minTime = const TimeOfDay(hour: 0, minute: 0),
+    TimeOfDay maxTime = const TimeOfDay(hour: 23, minute: 59),
+  }) {
+    return ColumnHelper.timeColumn(
+      'time_column',
+      autoFocusMode: autoFocusMode,
+      saveAndClosePopupWithEnter: saveAndClosePopupWithEnter,
+      minTime: minTime,
+      maxTime: maxTime,
+      popupIcon: popupIcon,
+      enableAutoEditing: true,
+    ).first;
   }
 
-  TextStyle getCellTextStyle(Finder cell) {
-    final text = cell.first.evaluate().first.widget as Text;
+  Future<void> buildCellAndEdit(
+    WidgetTester tester, {
+    TrinaColumn? column,
+    TrinaCell? trinaCell,
+  }) async {
+    column ??= getColumn();
 
-    return text.style as TextStyle;
-  }
+    cell = trinaCell ?? TrinaCell(value: defaultCellValue);
 
-  group('Suffix icon rendering', () {
-    final TrinaCell cell = TrinaCell(value: '12:30');
+    final TrinaRow row = TrinaRow(cells: {column.field: cell});
 
-    final TrinaRow row = TrinaRow(
-      cells: {
-        'column_field_name': cell,
-      },
-    );
-
-    testWidgets('Default time icon should be rendered', (tester) async {
-      final TrinaColumn column = TrinaColumn(
-        title: 'column title',
-        field: 'column_field_name',
-        type: TrinaColumnType.time(),
-      );
-
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Material(
-            child: TrinaTimeCell(
-              stateManager: stateManager,
-              cell: cell,
-              column: column,
-              row: row,
-            ),
-          ),
-        ),
-      );
-
-      expect(find.byIcon(Icons.access_time), findsOneWidget);
-    });
-
-    testWidgets('Custom icon should be rendered', (tester) async {
-      final TrinaColumn column = TrinaColumn(
-        title: 'column title',
-        field: 'column_field_name',
-        type: TrinaColumnType.time(
-          popupIcon: Icons.add,
-        ),
-      );
-
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Material(
-            child: TrinaTimeCell(
-              stateManager: stateManager,
-              cell: cell,
-              column: column,
-              row: row,
-            ),
-          ),
-        ),
-      );
-
-      expect(find.byIcon(Icons.add), findsOneWidget);
-    });
-
-    testWidgets('No icon should be rendered when popupIcon is null',
-        (tester) async {
-      final TrinaColumn column = TrinaColumn(
-        title: 'column title',
-        field: 'column_field_name',
-        type: TrinaColumnType.time(
-          popupIcon: null,
-        ),
-      );
-
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Material(
-            child: TrinaTimeCell(
-              stateManager: stateManager,
-              cell: cell,
-              column: column,
-              row: row,
-            ),
-          ),
-        ),
-      );
-
-      expect(find.byType(Icon), findsNothing);
-    });
-  });
-
-  testWidgets('Cell value should be displayed', (WidgetTester tester) async {
-    // given
-    final TrinaColumn column = TrinaColumn(
-      title: 'column title',
-      field: 'column_field_name',
-      type: TrinaColumnType.time(),
-    );
-
-    final TrinaCell cell = TrinaCell(value: '12:30');
-
-    final TrinaRow row = TrinaRow(
-      cells: {
-        'column_field_name': cell,
-      },
-    );
-
-    // when
     await tester.pumpWidget(
       MaterialApp(
-        home: Material(
-          child: TrinaTimeCell(
-            stateManager: stateManager,
-            cell: cell,
-            column: column,
-            row: row,
+        home: Scaffold(
+          body: TrinaGrid(
+            columns: [column],
+            rows: [row],
+            onLoaded: (event) {
+              stateManager = event.stateManager;
+            },
           ),
         ),
       ),
     );
 
-    // then
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(cell.value));
+    await tester.pump();
+  }
+
+  Future<void> openPopup(WidgetTester tester) async {
+    await tester.tap(find.byIcon(cell.column.type.time.popupIcon!));
+    await tester.pumpAndSettle();
+  }
+
+  group('Suffix icon rendering', () {
+    testWidgets('Default icon should be rendered', (tester) async {
+      await buildCellAndEdit(tester);
+      expect(find.byIcon(Icons.access_time), findsOneWidget);
+    });
+
+    testWidgets('Custom icon should be rendered', (tester) async {
+      final customIcon = Icons.add;
+      await buildCellAndEdit(tester, column: getColumn(popupIcon: customIcon));
+
+      expect(find.byIcon(customIcon), findsOneWidget);
+    });
+
+    testWidgets('No icon should be rendered when popupIcon is null', (
+      tester,
+    ) async {
+      await buildCellAndEdit(tester, column: getColumn(popupIcon: null));
+
+      expect(
+        find.descendant(
+            of: find.byType(TrinaTimeCell), matching: find.byType(Icon)),
+        findsNothing,
+      );
+    });
+  });
+
+  testWidgets('Cell value should be displayed', (WidgetTester tester) async {
+    // given
+    await buildCellAndEdit(tester, trinaCell: TrinaCell(value: '12:30'));
+    // assert
     expect(find.text('12:30'), findsOneWidget);
   });
 
-  group('When cell is editable', () {
-    final TrinaColumn column = TrinaColumn(
-      title: 'column title',
-      field: 'column_field_name',
-      type: TrinaColumnType.time(),
-    );
+  group('when popup is opened', () {
+    final okTextButtonFinder = find.widgetWithText(TextButton, 'OK');
+    final hourFieldFinder = find.byWidgetPredicate((widget) =>
+        widget is TextField && widget.decoration?.helperText == 'Hour');
+    final minuteFieldFinder = find.byWidgetPredicate((widget) =>
+        widget is TextField && widget.decoration?.helperText == 'Minute');
+    testWidgets('Tapping Cancel button should close popup', (tester) async {
+      final cancelTextButtonFinder = find.widgetWithText(TextButton, 'Cancel');
+      await buildCellAndEdit(tester);
+      await openPopup(tester);
+      await tester.tap(cancelTextButtonFinder);
+      await tester.pumpAndSettle();
 
-    final TrinaCell cell = TrinaCell(value: '12:30');
+      expect(find.byType(TrinaTimePicker), findsNothing);
+    });
+    group('Enter key event', () {
+      testWidgets(
+        'when saveAndClosePopupWithEnter is true, should save and close popup',
+        (tester) async {
+          final column = getColumn(saveAndClosePopupWithEnter: true);
+          await buildCellAndEdit(
+            tester,
+            column: column,
+          );
+          await openPopup(tester);
+          const newHour = '11';
+          const newMinute = '00';
 
-    final TrinaRow row = TrinaRow(cells: {'column_field_name': cell});
+          // act
 
-    final tapCell = TrinaWidgetTestHelper('Tap cell', (tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Material(
-            child: TrinaTimeCell(
-              stateManager: stateManager,
-              cell: cell,
-              column: column,
-              row: row,
-            ),
-          ),
-        ),
+          await tester.enterText(hourFieldFinder, newHour);
+          await tester.enterText(minuteFieldFinder, newMinute);
+          await tester.pump();
+
+          await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+          await tester.pumpAndSettle();
+          // assert
+
+          expect(stateManager.currentCell?.value, '$newHour:$newMinute');
+          expect(find.byType(TrinaTimePicker), findsNothing);
+        },
       );
+      testWidgets(
+          'when saveAndClosePopupWithEnter is false, should not save and close popup',
+          (tester) async {
+        final column = getColumn(
+          saveAndClosePopupWithEnter: false,
+        );
+        await buildCellAndEdit(
+          tester,
+          column: column,
+          trinaCell: TrinaCell(value: defaultCellValue),
+        );
+        await openPopup(tester);
 
-      await tester.tap(find.byType(TextField));
-    });
+        // act
 
-    tapCell.test('Hour and minute columns should be called', (tester) async {
-      expect(find.text('Hour'), findsOneWidget);
-      expect(find.text('Minute'), findsOneWidget);
-    });
+        await tester.enterText(hourFieldFinder, '11');
+        await tester.pump();
 
-    tapCell.test('Select 12:28', (tester) async {
-      await tester.sendKeyEvent(LogicalKeyboardKey.arrowUp);
-      await tester.pumpAndSettle();
-      await tester.sendKeyEvent(LogicalKeyboardKey.arrowUp);
-      await tester.pumpAndSettle();
-      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-
-      verify(stateManager.handleAfterSelectingRow(cell, '12:28')).called(1);
-    });
-
-    tapCell.test('Select 12:33', (tester) async {
-      await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
-      await tester.pumpAndSettle();
-      await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
-      await tester.pumpAndSettle();
-      await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
-      await tester.pumpAndSettle();
-      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-
-      verify(stateManager.handleAfterSelectingRow(cell, '12:33')).called(1);
-    });
-
-    tapCell.test('Select 12:29', (tester) async {
-      await tester.tap(find.text('29'));
-      await tester.tap(find.text('29'));
-
-      verify(stateManager.handleAfterSelectingRow(cell, '12:29')).called(1);
-    });
-
-    tapCell.test('Select 15:28', (tester) async {
-      await tester.sendKeyEvent(LogicalKeyboardKey.arrowUp);
-      await tester.pumpAndSettle();
-      await tester.sendKeyEvent(LogicalKeyboardKey.arrowUp);
-      await tester.pumpAndSettle();
-      await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
-      await tester.pumpAndSettle();
-      await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
-      await tester.pumpAndSettle();
-      await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
-      await tester.pumpAndSettle();
-      await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
-      await tester.pumpAndSettle();
-      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-
-      verify(stateManager.handleAfterSelectingRow(cell, '15:28')).called(1);
-    });
-
-    group('Active and inactive color check', () {
-      late Color activatedCellColor;
-      late Color activatedTextColor;
-      late Color inactivatedCellColor;
-      late Color inactivatedTextColor;
-
-      setUp(() {
-        activatedCellColor =
-            stateManager.configuration.style.activatedBorderColor;
-        activatedTextColor =
-            stateManager.configuration.style.gridBackgroundColor;
-        inactivatedCellColor =
-            stateManager.configuration.style.gridBackgroundColor;
-        inactivatedTextColor =
-            stateManager.configuration.style.cellTextStyle.color!;
+        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+        await tester.pumpAndSettle();
+        // assert
+        expect(stateManager.currentCell?.value, defaultCellValue);
+        expect(find.byType(TrinaTimePicker), findsOneWidget);
       });
-
-      tapCell.test(
-        'When 12:30 is selected, color should be inactive for 12 and active for 30',
+    });
+    group('Popup Buttons', () {
+      testWidgets(
+        'OK button should be disabled when time is invalid',
         (tester) async {
-          final hour = find.text('12');
-          final hourContainerDecoration = getCellDecoration(hour);
-          final hourTextStyle = getCellTextStyle(hour);
+          final column = getColumn(
+            minTime: const TimeOfDay(hour: 10, minute: 0),
+            maxTime: const TimeOfDay(hour: 12, minute: 0),
+          );
+          await buildCellAndEdit(
+            tester,
+            column: column,
+            trinaCell: TrinaCell(value: '11:00'),
+          );
+          await openPopup(tester);
 
-          final minute = find.text('30');
-          final minuteContainerDecoration = getCellDecoration(minute);
-          final minuteTextStyle = getCellTextStyle(minute);
+          // Enter an invalid hour
+          await tester.enterText(hourFieldFinder, '25');
+          await tester.pump();
 
-          expect(hourContainerDecoration.color, inactivatedCellColor);
-          expect(hourTextStyle.color, inactivatedTextColor);
+          // OK button should be disabled
+          expect(
+              tester.widget<TextButton>(okTextButtonFinder).onPressed, isNull);
 
-          expect(minuteContainerDecoration.color, activatedCellColor);
-          expect(minuteTextStyle.color, activatedTextColor);
+          // Enter a valid hour
+          await tester.enterText(hourFieldFinder, '11');
+          await tester.pump();
 
-          await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-          verify(stateManager.handleAfterSelectingRow(cell, '12:30')).called(1);
+          // OK button should be enabled
+          expect(
+            tester.widget<TextButton>(okTextButtonFinder).onPressed,
+            isNotNull,
+          );
         },
       );
-
-      tapCell.test(
-        'When 12:30 is selected and left arrow key is pressed, '
-        'color should be active for 12 and inactive for 30',
+      testWidgets(
+        'OK button should be disabled when minute is invalid',
         (tester) async {
-          await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
-          await tester.pumpAndSettle();
+          final column = getColumn(
+            minTime: const TimeOfDay(hour: 10, minute: 0),
+            maxTime: const TimeOfDay(hour: 12, minute: 0),
+          );
+          await buildCellAndEdit(
+            tester,
+            column: column,
+            trinaCell: TrinaCell(value: '11:00'),
+          );
+          await openPopup(tester);
 
-          final hour = find.text('12');
-          final hourTextStyle = getCellTextStyle(hour);
-          final hourContainerDecoration = getCellDecoration(hour);
+          // Enter an invalid minute
+          await tester.enterText(minuteFieldFinder, '65');
+          await tester.pump();
 
-          final minute = find.text('30');
-          final minuteContainerDecoration = getCellDecoration(minute);
-          final minuteTextStyle = getCellTextStyle(minute);
+          // OK button should be disabled
+          expect(
+            tester.widget<TextButton>(okTextButtonFinder).onPressed,
+            isNull,
+          );
 
-          expect(hourContainerDecoration.color, activatedCellColor);
-          expect(hourTextStyle.color, activatedTextColor);
+          // Enter a valid minute
+          await tester.enterText(minuteFieldFinder, '30');
+          await tester.pump();
 
-          expect(minuteContainerDecoration.color, inactivatedCellColor);
-          expect(minuteTextStyle.color, inactivatedTextColor);
-
-          await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-          verify(stateManager.handleAfterSelectingRow(cell, '12:30')).called(1);
+          // OK button should be enabled
+          expect(
+            tester.widget<TextButton>(okTextButtonFinder).onPressed,
+            isNotNull,
+          );
         },
       );
-
-      tapCell.test(
-        'When 12:30 is selected and down arrow key is pressed, '
-        'color should be inactive for 30 and active for 31',
+      testWidgets(
+        'OK button should be disabled when time is out of min/max range',
         (tester) async {
-          await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+          final column = getColumn(
+            minTime: const TimeOfDay(hour: 10, minute: 0),
+            maxTime: const TimeOfDay(hour: 12, minute: 0),
+          );
+          await buildCellAndEdit(
+            tester,
+            column: column,
+            trinaCell: TrinaCell(value: '11:00'),
+          );
+          await openPopup(tester);
+
+          // act
+
+          // Enter a time before minTime
+          await tester.enterText(hourFieldFinder, '09');
           await tester.pumpAndSettle();
 
-          final min30 = find.text('30');
-          final min30ContainerDecoration = getCellDecoration(min30);
-          final min30TextStyle = getCellTextStyle(min30);
+          // OK button should be disabled
+          expect(
+            tester.widget<TextButton>(okTextButtonFinder).onPressed,
+            isNull,
+          );
 
-          final min31 = find.text('31');
-          final min31ContainerDecoration = getCellDecoration(min31);
-          final min31TextStyle = getCellTextStyle(min31);
+          // Enter a time after maxTime
+          await tester.enterText(hourFieldFinder, '13');
+          await tester.pumpAndSettle();
 
-          expect(min30ContainerDecoration.color, inactivatedCellColor);
-          expect(min30TextStyle.color, inactivatedTextColor);
+          // OK button should be disabled
+          expect(
+            tester.widget<TextButton>(okTextButtonFinder).onPressed,
+            isNull,
+          );
 
-          expect(min31ContainerDecoration.color, activatedCellColor);
-          expect(min31TextStyle.color, activatedTextColor);
+          // Enter a valid time
+          await tester.enterText(hourFieldFinder, '11');
+          await tester.pump();
 
-          await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-          verify(stateManager.handleAfterSelectingRow(cell, '12:31')).called(1);
+          // OK button should be enabled again
+          expect(
+            tester.widget<TextButton>(okTextButtonFinder).onPressed,
+            isNotNull,
+          );
         },
       );
+      testWidgets('Pressing Ok button should close the popup', (tester) async {
+        await buildCellAndEdit(
+          tester,
+        );
+        await openPopup(tester);
 
-      tapCell.test(
-        'When 12:30 is selected and up arrow key is pressed, '
-        'color should be inactive for 30 and active for 29',
+        // act
+
+        await tester.tap(find.text('OK'));
+        await tester.pumpAndSettle();
+        // assert
+        expect(find.byType(TrinaTimePicker), findsNothing);
+      });
+      testWidgets(
+        'When new time is valid, pressing OK should update cell value',
         (tester) async {
-          await tester.sendKeyEvent(LogicalKeyboardKey.arrowUp);
+          await buildCellAndEdit(
+            tester,
+            trinaCell: TrinaCell(value: '10:00'),
+            column: getColumn(
+              minTime: const TimeOfDay(hour: 10, minute: 0),
+              maxTime: const TimeOfDay(hour: 12, minute: 0),
+            ),
+          );
+          await openPopup(tester);
+
+          // act
+
+          await tester.enterText(hourFieldFinder, '11');
+          await tester.pump();
+
+          await tester.tap(okTextButtonFinder);
           await tester.pumpAndSettle();
-
-          final min30 = find.text('30');
-          final min30ContainerDecoration = getCellDecoration(min30);
-          final min30TextStyle = getCellTextStyle(min30);
-
-          final min29 = find.text('29');
-          final min29ContainerDecoration = getCellDecoration(min29);
-          final min29TextStyle = getCellTextStyle(min29);
-
-          expect(min30ContainerDecoration.color, inactivatedCellColor);
-          expect(min30TextStyle.color, inactivatedTextColor);
-
-          expect(min29ContainerDecoration.color, activatedCellColor);
-          expect(min29TextStyle.color, activatedTextColor);
-
-          await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-          verify(stateManager.handleAfterSelectingRow(cell, '12:29')).called(1);
-        },
-      );
-
-      tapCell.test(
-        'When 12:30 is selected and left arrow then up arrow keys are pressed, '
-        'color should be inactive for 30 and active for 11 (11:30)',
-        (tester) async {
-          await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
-          await tester.pumpAndSettle();
-          await tester.sendKeyEvent(LogicalKeyboardKey.arrowUp);
-          await tester.pumpAndSettle();
-
-          final min30 = find.text('30');
-          final min30ContainerDecoration = getCellDecoration(min30);
-          final min30TextStyle = getCellTextStyle(min30);
-
-          final hour11 = find.text('11');
-          final hour11ContainerDecoration = getCellDecoration(hour11);
-          final hour11TextStyle = getCellTextStyle(hour11);
-
-          expect(min30ContainerDecoration.color, inactivatedCellColor);
-          expect(min30TextStyle.color, inactivatedTextColor);
-
-          expect(hour11ContainerDecoration.color, activatedCellColor);
-          expect(hour11TextStyle.color, activatedTextColor);
-
-          await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-          verify(stateManager.handleAfterSelectingRow(cell, '11:30')).called(1);
+          // assert
+          expect(stateManager.currentCell?.value, '11:00');
         },
       );
     });

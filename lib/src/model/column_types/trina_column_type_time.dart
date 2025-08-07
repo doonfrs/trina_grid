@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:trina_grid/src/helper/trina_general_helper.dart';
-import 'package:trina_grid/src/model/trina_column_type.dart';
 import 'package:trina_grid/src/model/trina_column_type_has_popup_icon.dart';
 import 'package:trina_grid/trina_grid.dart';
 
@@ -13,13 +12,53 @@ class TrinaColumnTypeTime
   @override
   final IconData? popupIcon;
 
-  const TrinaColumnTypeTime({this.defaultValue, this.popupIcon});
+  final TrinaTimePickerAutoFocusMode autoFocusMode;
+
+  final bool saveAndClosePopupWithEnter;
+
+  final TimeOfDay minTime;
+
+  final TimeOfDay maxTime;
+
+  static const defaultMinTime = TimeOfDay(hour: 0, minute: 0);
+
+  static const defaultMaxTime = TimeOfDay(hour: 23, minute: 59);
+
+  TrinaColumnTypeTime({
+    this.defaultValue,
+    this.popupIcon,
+    this.autoFocusMode = TrinaTimePickerAutoFocusMode.hourField,
+    this.saveAndClosePopupWithEnter = true,
+    this.minTime = defaultMinTime,
+    this.maxTime = defaultMaxTime,
+  }) : assert(
+          maxTime.isAfter(minTime) || maxTime.isAtSameTimeAs(minTime),
+          'minTime must be before or at the same time as maxTime',
+        );
 
   static final _timeFormat = RegExp(r'^([0-1]?\d|2[0-3]):[0-5]\d$');
 
   @override
   bool isValid(dynamic value) {
-    return _timeFormat.hasMatch(value.toString());
+    if (value == null) return false;
+    final String timeString = value.toString();
+    if (!_timeFormat.hasMatch(timeString)) {
+      return false;
+    }
+
+    final parts = timeString.split(':');
+    final hour = int.tryParse(parts[0]);
+    final minute = int.tryParse(parts[1]);
+
+    if (hour == null || minute == null) {
+      return false;
+    }
+
+    final TimeOfDay time = TimeOfDay(hour: hour, minute: minute);
+
+    return (time.isAfter(minTime) && time.isBefore(maxTime)) ||
+        time.isAtSameTimeAs(minTime) ||
+        time.isAtSameTimeAs(maxTime);
   }
 
   @override

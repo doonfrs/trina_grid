@@ -68,6 +68,8 @@ class TrinaKeyManagerEvent {
   bool get isBackspace =>
       event.logicalKey.keyId == LogicalKeyboardKey.backspace.keyId;
 
+  bool get isSpace => event.logicalKey.keyId == LogicalKeyboardKey.space.keyId;
+
   /// This can be:
   ///
   /// LogicalKeyboardKey.shift

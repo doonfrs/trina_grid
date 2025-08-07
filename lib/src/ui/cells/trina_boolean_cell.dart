@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:trina_grid/src/ui/cells/popup_cell.dart';
+import 'package:trina_grid/src/ui/widgets/trina_select_menu.dart';
 import 'package:trina_grid/trina_grid.dart';
+import 'package:trina_grid/src/ui/cells/popup_cell.dart';
+import 'package:trina_grid/src/ui/miscellaneous/trina_popup_cell_state_with_menu.dart';
 
 class TrinaBooleanCell extends StatefulWidget implements PopupCell {
   @override
@@ -27,84 +29,35 @@ class TrinaBooleanCell extends StatefulWidget implements PopupCell {
   TrinaBooleanCellState createState() => TrinaBooleanCellState();
 }
 
-class TrinaBooleanCellState extends State<TrinaBooleanCell>
-    with PopupCellState<TrinaBooleanCell> {
-  @override
-  List<TrinaColumn> popupColumns = [];
+class TrinaBooleanCellState
+    extends TrinaPopupCellStateWithMenu<TrinaBooleanCell> {
+  TrinaColumnTypeBoolean get _column => widget.column.type.boolean;
 
   @override
-  List<TrinaRow> popupRows = [];
+  IconData? get popupMenuIcon => widget.column.type.boolean.popupIcon;
 
   @override
-  IconData? get icon => widget.column.type.boolean.popupIcon;
-
-  final List<bool?> _items = [];
-
-  @override
-  void initState() {
-    super.initState();
-
-    _items.addAll([
-      if (widget.column.type.boolean.allowEmpty) null,
-      true,
-      false,
-    ]);
-
-    final rowsHeight = _items.length * widget.stateManager.rowTotalHeight;
-
-    popupHeight = widget.stateManager.configuration.style.columnHeight +
-        rowsHeight +
-        TrinaGridSettings.gridInnerSpacing +
-        widget.stateManager.configuration.style.gridBorderWidth;
-
-    fieldOnSelected = widget.column.title;
-
-    popupColumns = [
-      TrinaColumn(
-        width:
-            widget.column.type.boolean.width ?? TrinaGridSettings.columnWidth,
-        title: widget.column.title,
-        field: widget.column.title,
-        readOnly: true,
-        type: TrinaColumnType.text(),
-        formatter: widget.column.formatter,
-        enableFilterMenuItem: false,
-        enableHideColumnMenuItem: false,
-        enableSetColumnsMenuItem: false,
-        renderer: widget.column.type.boolean.builder == null
-            ? (rendererContext) {
-                switch (rendererContext.cell.value) {
-                  case true:
-                    return Text(widget.column.type.boolean.trueText);
-                  case false:
-                    return Text(widget.column.type.boolean.falseText);
-                  default:
-                    return const SizedBox.shrink();
-                }
-              }
-            : (rendererContext) {
-                var item = _items[rendererContext.rowIdx];
-
-                return widget.column.type.boolean.builder!(item);
-              },
-      ),
-    ];
-
-    popupRows = _items.map((dynamic item) {
-      return TrinaRow(cells: {widget.column.title: TrinaCell(value: item)});
-    }).toList();
+  List<dynamic> get menuItems {
+    return [if (_column.allowEmpty) null, true, false];
   }
 
   @override
-  void onSelected(TrinaGridOnSelectedEvent event) {
-    widget.column.type.boolean.onItemSelected(event);
-    super.onSelected(event);
-  }
-
-  @override
-  void onLoaded(TrinaGridOnLoadedEvent event) {
-    super.onLoaded(event);
-
-    event.stateManager.setSelectingMode(TrinaGridSelectingMode.none);
+  TrinaSelectMenu buildMenu() {
+    return TrinaSelectMenu(
+      items: menuItems,
+      enableFiltering: false,
+      enableSearch: false,
+      itemHeight: _column.menuItemHeight,
+      maxHeight: _column.menuMaxHeight,
+      width: widget.column.width,
+      initialValue: widget.cell.value,
+      itemBuilder: _column.menuItemBuilder,
+      itemToString: _column.itemToString,
+      itemToValue: _column.itemToValue,
+      onItemSelected: (value) {
+        handleSelected(value);
+        menuController.close();
+      },
+    );
   }
 }

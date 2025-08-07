@@ -1,404 +1,238 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:trina_grid/src/ui/cells/trina_date_cell.dart';
 import 'package:trina_grid/trina_grid.dart';
-import 'package:trina_grid/src/ui/ui.dart';
-
-import '../../../helper/trina_widget_test_helper.dart';
-import '../../../helper/row_helper.dart';
-import '../../../mock/shared_mocks.mocks.dart';
 
 void main() {
-  late MockTrinaGridStateManager stateManager;
+  late TrinaCell cell;
+  late TrinaColumn column;
 
-  setUp(() {
-    stateManager = MockTrinaGridStateManager();
-    when(stateManager.configuration).thenReturn(
-      const TrinaGridConfiguration(),
-    );
-    when(stateManager.keyPressed).thenReturn(TrinaGridKeyPressed());
-    when(stateManager.columnHeight).thenReturn(
-      stateManager.configuration.style.columnHeight,
-    );
-    when(stateManager.rowHeight).thenReturn(
-      stateManager.configuration.style.rowHeight,
-    );
-    when(stateManager.headerHeight).thenReturn(
-      stateManager.configuration.style.columnHeight,
-    );
-    when(stateManager.rowTotalHeight).thenReturn(
-      RowHelper.resolveRowTotalHeight(stateManager.configuration.style),
-    );
-    when(stateManager.localeText).thenReturn(const TrinaGridLocaleText());
-    when(stateManager.keepFocus).thenReturn(true);
-    when(stateManager.hasFocus).thenReturn(true);
-  });
+  final okButtonFinder = find.widgetWithText(TextButton, 'OK');
 
-  group('Suffix icon rendering', () {
-    final TrinaCell cell = TrinaCell(value: '2020-01-01');
-
-    final TrinaRow row = TrinaRow(
-      cells: {
-        'column_field_name': cell,
-      },
+  Future<void> buildCellAndEdit(
+    WidgetTester tester, {
+    String initialCellValue = '2020-01-01',
+    String dateFormat = 'yyyy-MM-dd',
+    DateTime? startDate,
+    DateTime? endDate,
+    IconData? popupIcon = Icons.date_range,
+    bool closePopupOnSelection = false,
+  }) async {
+    column = TrinaColumn(
+      title: 'column title',
+      field: 'column_field_name',
+      enableAutoEditing: true,
+      type: TrinaColumnType.date(
+        popupIcon: popupIcon,
+        format: dateFormat,
+        startDate: startDate,
+        endDate: endDate,
+        closePopupOnSelection: closePopupOnSelection,
+      ),
     );
 
-    testWidgets('Default date icon should be rendered', (tester) async {
-      final TrinaColumn column = TrinaColumn(
-        title: 'column title',
-        field: 'column_field_name',
-        type: TrinaColumnType.date(),
-      );
+    cell = TrinaCell(value: initialCellValue);
 
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Material(
-            child: TrinaDateCell(
-              stateManager: stateManager,
-              cell: cell,
-              column: column,
-              row: row,
-            ),
+    final TrinaRow row = TrinaRow(cells: {column.field: cell});
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: TrinaGrid(
+            columns: [column],
+            rows: [row],
           ),
         ),
-      );
+      ),
+    );
 
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(cell.value));
+    await tester.pump();
+  }
+
+  Future<void> openPopup(WidgetTester tester) async {
+    await tester.tap(find.text(cell.value));
+    await tester.pumpAndSettle();
+  }
+
+  group('Suffix icon rendering', () {
+    testWidgets('Default date icon should be rendered', (tester) async {
+      await buildCellAndEdit(tester);
       expect(find.byIcon(Icons.date_range), findsOneWidget);
     });
 
     testWidgets('Custom icon should be rendered', (tester) async {
-      final TrinaColumn column = TrinaColumn(
-        title: 'column title',
-        field: 'column_field_name',
-        type: TrinaColumnType.date(
-          popupIcon: Icons.add,
-        ),
+      await buildCellAndEdit(
+        tester,
+        initialCellValue: '2020-01-01',
+        popupIcon: Icons.add,
       );
-
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Material(
-            child: TrinaDateCell(
-              stateManager: stateManager,
-              cell: cell,
-              column: column,
-              row: row,
-            ),
-          ),
-        ),
-      );
-
       expect(find.byIcon(Icons.add), findsOneWidget);
     });
 
-    testWidgets('When popupIcon is null, icon should not be rendered',
-        (tester) async {
-      final TrinaColumn column = TrinaColumn(
-        title: 'column title',
-        field: 'column_field_name',
-        type: TrinaColumnType.date(
+    testWidgets(
+      'When popupIcon is null, icon should not be rendered',
+      (tester) async {
+        await buildCellAndEdit(
+          tester,
+          initialCellValue: '2020-01-01',
           popupIcon: null,
-        ),
-      );
-
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Material(
-            child: TrinaDateCell(
-              stateManager: stateManager,
-              cell: cell,
-              column: column,
-              row: row,
-            ),
-          ),
-        ),
-      );
-
-      expect(find.byType(Icon), findsNothing);
-    });
-  });
-
-  group('Default date column', () {
-    final TrinaColumn column = TrinaColumn(
-      title: 'column title',
-      field: 'column_field_name',
-      type: TrinaColumnType.date(),
-    );
-
-    final TrinaCell cell = TrinaCell(value: '2020-01-01');
-
-    final TrinaRow row = TrinaRow(
-      cells: {
-        'column_field_name': cell,
-      },
-    );
-
-    final tapCell = TrinaWidgetTestHelper('Tap cell', (tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Material(
-            child: TrinaDateCell(
-              stateManager: stateManager,
-              cell: cell,
-              column: column,
-              row: row,
-            ),
-          ),
-        ),
-      );
-    });
-
-    tapCell.test('Should display 2020-01-01', (tester) async {
-      expect(find.text('2020-01-01'), findsOneWidget);
-    });
-
-    tapCell.test('Tapping should open popup and display year, month, and day',
-        (tester) async {
-      await tester.tap(find.byType(TextField));
-
-      await tester.pumpAndSettle();
-
-      expect(find.byType(Dialog), findsOneWidget);
-
-      expect(find.text('2020-01-01'), findsOneWidget);
-
-      expect(find.text('2020-01'), findsOneWidget);
-    });
-
-    tapCell.test('Tapping should open popup and display day of week',
-        (tester) async {
-      await tester.tap(find.byType(TextField));
-
-      await tester.pumpAndSettle();
-
-      expect(find.byType(Dialog), findsOneWidget);
-
-      expect(find.text('Su'), findsOneWidget);
-      expect(find.text('Mo'), findsOneWidget);
-      expect(find.text('Tu'), findsOneWidget);
-      expect(find.text('We'), findsOneWidget);
-      expect(find.text('Th'), findsOneWidget);
-      expect(find.text('Fr'), findsOneWidget);
-      expect(find.text('Sa'), findsOneWidget);
-    });
-  });
-
-  group('Format MM/dd/yyyy', () {
-    makeDateCell(String date) {
-      TrinaColumn column = TrinaColumn(
-        title: 'column title',
-        field: 'column_field_name',
-        type: TrinaColumnType.date(format: 'MM/dd/yyyy'),
-      );
-
-      TrinaCell cell = TrinaCell(value: date);
-
-      final TrinaRow row = TrinaRow(
-        cells: {
-          'column_field_name': cell,
-        },
-      );
-
-      return TrinaWidgetTestHelper('Create DateCell', (tester) async {
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Material(
-              child: TrinaDateCell(
-                stateManager: stateManager,
-                cell: cell,
-                column: column,
-                row: row,
-              ),
-            ),
-          ),
         );
-      });
-    }
-
-    makeDateCell('01/30/2020').test(
-      'Should display 01/30/2020',
-      (tester) async {
-        expect(find.text('01/30/2020'), findsOneWidget);
+        expect(
+          find.descendant(
+            of: find.byType(TrinaDateCell),
+            matching: find.byType(Icon),
+          ),
+          findsNothing,
+        );
       },
     );
+  });
 
-    makeDateCell('06/15/2020').test(
-      'Should display 06/15/2020',
+  group('Selection with Keyboard ', () {
+    testWidgets(
+      'when initial date is 2020-01-01, '
+      'navigating to 2019-12-31 and pressing enter '
+      'then OK button,should update cell value to 2019-12-31',
       (tester) async {
-        expect(find.text('06/15/2020'), findsOneWidget);
-      },
-    );
+        await buildCellAndEdit(
+          tester,
+          initialCellValue: '2020-01-01',
+        );
+        await openPopup(tester);
 
-    makeDateCell('01/30/2020').test(
-      'Tapping should open popup and display year, month, and day',
-      (tester) async {
-        await tester.tap(find.byType(TextField));
-
-        await tester.pumpAndSettle();
-
-        expect(find.byType(Dialog), findsOneWidget);
-
-        expect(find.text('2020-01'), findsOneWidget);
-
-        expect(find.text('01/30/2020'), findsOneWidget);
-      },
-    );
-
-    makeDateCell('09/12/2020').test(
-      'Tapping should open popup and display year, month, and day',
-      (tester) async {
-        await tester.tap(find.byType(TextField));
-
-        await tester.pumpAndSettle();
-
-        expect(find.byType(Dialog), findsOneWidget);
-
-        expect(find.text('2020-09'), findsOneWidget);
-
-        expect(find.text('09/12/2020'), findsOneWidget);
-      },
-    );
-
-    makeDateCell('01/30/2020').test(
-      'Tapping should open popup and display day of week',
-      (tester) async {
-        await tester.tap(find.byType(TextField));
-
-        await tester.pumpAndSettle();
-
-        expect(find.byType(Dialog), findsOneWidget);
-
-        expect(find.text('Su'), findsOneWidget);
-        expect(find.text('Mo'), findsOneWidget);
-        expect(find.text('Tu'), findsOneWidget);
-        expect(find.text('We'), findsOneWidget);
-        expect(find.text('Th'), findsOneWidget);
-        expect(find.text('Fr'), findsOneWidget);
-        expect(find.text('Sa'), findsOneWidget);
-      },
-    );
-
-    makeDateCell('01/30/2020').test(
-      'Pressing up arrow and enter should select January 23',
-      (tester) async {
-        await tester.tap(find.byType(TextField));
-
-        await tester.pumpAndSettle();
-
-        expect(find.byType(Dialog), findsOneWidget);
-
-        await tester.sendKeyEvent(LogicalKeyboardKey.arrowUp);
-        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-
-        verify(stateManager.handleAfterSelectingRow(any, '01/23/2020'))
-            .called(1);
-      },
-    );
-
-    makeDateCell('01/30/2020').test(
-      'Pressing left arrow and enter should select January 29',
-      (tester) async {
-        await tester.tap(find.byType(TextField));
-
-        await tester.pumpAndSettle();
-
-        expect(find.byType(Dialog), findsOneWidget);
-
+        // first tap to focus the day widget
         await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+        await tester.pumpAndSettle();
         await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+        await tester.pump();
+        await tester.tap(okButtonFinder);
+        await tester.pumpAndSettle();
 
-        verify(stateManager.handleAfterSelectingRow(any, '01/29/2020'))
-            .called(1);
+        expect(cell.value, '2019-12-31');
       },
     );
 
-    makeDateCell('01/30/2020').test(
-      'Pressing right arrow and enter should select January 31',
+    testWidgets(
+      'when initial date is 2020-1-31, '
+      'navigating to 2020-2-1 and pressing enter '
+      'then OK button, should update cell value to 2020-2-1',
       (tester) async {
-        await tester.tap(find.byType(TextField));
+        await buildCellAndEdit(
+          tester,
+          initialCellValue: '2020-01-31',
+        );
+        await openPopup(tester);
 
+        // first arrow key to focus the current day in calendar
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
         await tester.pumpAndSettle();
 
-        expect(find.byType(Dialog), findsOneWidget);
-
-        await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
         await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+        await tester.pump();
+        await tester.tap(okButtonFinder);
+        await tester.pumpAndSettle();
 
-        verify(stateManager.handleAfterSelectingRow(any, '01/31/2020'))
-            .called(1);
+        expect(cell.value, '2020-02-01');
       },
     );
   });
 
   group('Format yyyy-MM-dd', () {
-    makeDateCell(
-      String date, {
-      DateTime? startDate,
-    }) {
-      TrinaColumn column = TrinaColumn(
-        title: 'column title',
-        field: 'column_field_name',
-        type: TrinaColumnType.date(
-          format: 'yyyy-MM-dd',
-          startDate: startDate,
-        ),
-      );
-
-      TrinaCell cell = TrinaCell(value: date);
-
-      final TrinaRow row = TrinaRow(
-        cells: {
-          'column_field_name': cell,
-        },
-      );
-
-      return TrinaWidgetTestHelper('Create DateCell', (tester) async {
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Material(
-              child: TrinaDateCell(
-                stateManager: stateManager,
-                cell: cell,
-                column: column,
-                row: row,
-              ),
-            ),
-          ),
-        );
-      });
-    }
-
-    makeDateCell('2020-12-01').test(
-      'Should display 2020-12-01',
+    testWidgets(
+      'Pressing left arrow and enter should not select a date before startDate',
       (tester) async {
-        expect(find.text('2020-12-01'), findsOneWidget);
+        await buildCellAndEdit(
+          tester,
+          initialCellValue: '2020-12-01',
+          startDate: DateTime.parse('2020-12-01'),
+        );
+        await openPopup(tester);
+
+        // first arrow key to focus the current day in calendar
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+        await tester.pumpAndSettle();
+        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+        await tester.tap(okButtonFinder);
+        await tester.pumpAndSettle();
+
+        expect(cell.value, '2020-12-01');
+      },
+    );
+  });
+
+  group('closePopupOnSelection', () {
+    testWidgets(
+      'when closePopupOnSelection is true, '
+      'tapping a date should close the popup and update the cell value',
+      (tester) async {
+        await buildCellAndEdit(
+          tester,
+          initialCellValue: '2020-01-01',
+          closePopupOnSelection: true,
+        );
+        await openPopup(tester);
+
+        await tester.tap(find.text('3'));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(CalendarDatePicker), findsNothing);
+        expect(cell.value, '2020-01-03');
       },
     );
 
-    makeDateCell(
-      '2020-12-01',
-      startDate: DateTime.parse('2020-12-01'),
-    ).test(
-      'Pressing left arrow and enter should not select a date before startDate',
+    testWidgets(
+      'when closePopupOnSelection is true, '
+      'OK and Cancel buttons should not be rendered',
       (tester) async {
-        await tester.tap(find.byType(TextField));
+        await buildCellAndEdit(
+          tester,
+          initialCellValue: '2020-01-01',
+          closePopupOnSelection: true,
+        );
+        await openPopup(tester);
 
+        expect(okButtonFinder, findsNothing);
+        expect(find.widgetWithText(TextButton, 'Cancel'), findsNothing);
+      },
+    );
+
+    testWidgets(
+      'when closePopupOnSelection is false, '
+      'tapping a date should not close the popup',
+      (tester) async {
+        await buildCellAndEdit(
+          tester,
+          initialCellValue: '2020-01-01',
+          closePopupOnSelection: false,
+        );
+        await openPopup(tester);
+
+        await tester.tap(find.text('3'));
         await tester.pumpAndSettle();
 
-        expect(find.byType(Dialog), findsOneWidget);
+        expect(find.byType(CalendarDatePicker), findsOneWidget);
+      },
+    );
 
-        await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
-        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+    testWidgets(
+      'when closePopupOnSelection is false, '
+      'OK and Cancel buttons should be rendered',
+      (tester) async {
+        await buildCellAndEdit(
+          tester,
+          initialCellValue: '2020-01-01',
+          closePopupOnSelection: false,
+        );
+        await openPopup(tester);
 
-        await tester.pumpAndSettle(const Duration(milliseconds: 300));
-
-        verifyNever(stateManager.handleAfterSelectingRow(
-          any,
-          '2020-11-30',
-        ));
-
-        expect(find.text('2020-12-01'), findsOneWidget);
+        expect(okButtonFinder, findsOneWidget);
+        expect(find.widgetWithText(TextButton, 'Cancel'), findsOneWidget);
       },
     );
   });
