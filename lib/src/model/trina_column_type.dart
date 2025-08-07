@@ -127,21 +127,22 @@ abstract interface class TrinaColumnType {
   /// Provides a selection list and sets it as a selection column.
   ///
   /// - [items] The list of values to be displayed in the popup menu.
-  ///   By default, each item is displayed as a `Text` widget with `item.toString()`.
-  /// - [builder] A widget builder to customize the appearance of each item in the popup menu.
   /// - [popupIcon] Set the suffixIcon in the cell. Tapping this icon will open a selection popup.
   ///   If this value is set to `null`, the icon does not appear.
   ///
   /// Properties of the default popup menu (ignored when [TrinaColumn.editCellRenderer] or [TrinaGridStateManager.editCellRenderer] is set):
   ///
+  /// - [builder] A widget builder to customize the appearance of each item in the popup menu.
   /// - [enableMenuFiltering] Enables a filtering section in the popup.
-  /// - [enableMenuSearch] Enables a search field to filter the items.
   /// - [menuFilters] A list of filters that can be applied to the items.
   /// - [menuItemHeight] The height of each item in the popup menu.
   /// - [menuMaxHeight] The maximum height of the popup menu.
   /// - [width] The width of the popup menu. If null, the column width is used.
-  factory TrinaColumnType.select(
-    List<dynamic> items, {
+  /// - [itemToString] A function that returns the string representation of an item.
+  /// - [itemToValue] A function that returns a unique value for an item.
+  ///   Used for filtering and for identifying the [currentValue]. If not provided, the item object itself is used.
+  static TrinaColumnType select(
+    List items, {
     final Function(TrinaGridOnSelectedEvent event)? onItemSelected,
     dynamic defaultValue = '',
     bool enableColumnFilter = false,
@@ -150,23 +151,77 @@ abstract interface class TrinaColumnType {
     double? width,
     double menuItemHeight = 40,
     double menuMaxHeight = 300,
-    bool enableMenuSearch = false,
     bool enableMenuFiltering = false,
     List<TrinaSelectMenuFilter> menuFilters = const [],
+    String Function(dynamic item)? itemToString,
+    dynamic Function(dynamic item)? itemToValue,
   }) {
     return TrinaColumnTypeSelect(
       onItemSelected: onItemSelected ?? (event) {},
       defaultValue: defaultValue,
       items: items,
       menuFilters: menuFilters,
-      enableMenuSearch: enableMenuSearch,
+      enableMenuSearch: false,
       enableMenuFiltering: enableMenuFiltering,
       enableColumnFilter: enableColumnFilter,
       popupIcon: popupIcon,
-      builder: builder,
+      menuItemBuilder: builder,
       width: width,
       menuItemHeight: menuItemHeight,
       menuMaxHeight: menuMaxHeight,
+      itemToString: itemToString,
+      itemToValue: itemToValue,
+    );
+  }
+
+  /// Provides a selection list with search.
+  ///
+  /// - [items] The list of values to be displayed in the popup menu.
+  /// - [popupIcon] Set the suffixIcon in the cell. Tapping this icon will open a selection popup.
+  ///   If this value is set to `null`, the icon does not appear.
+  ///
+  /// Properties of the default popup menu (ignored when [TrinaColumn.editCellRenderer] or [TrinaGridStateManager.editCellRenderer] is set):
+  ///
+  /// - [itemToString] A function that returns the string representation of an item, used for searching and default display.
+  ///   This parameter is required for search functionality.
+  /// - [menuItemBuilder] A widget builder to customize the appearance of each item in the popup menu.
+  /// - [enableMenuFiltering] Enables a filtering section in the popup.
+  /// - [menuFilters] A list of filters that can be applied to the items.
+  /// - [menuItemHeight] The height of each item in the popup menu.
+  /// - [menuMaxHeight] The maximum height of the popup menu.
+  /// - [menuWidth] The width of the popup menu. If null, the column width is used.
+  /// - [itemToValue] A function that returns a unique value for an item.
+  ///   Used for filtering and for identifying the [currentValue]. If not provided, the item object itself is used.
+  static TrinaColumnType selectWithSearch(
+    List items, {
+    required String Function(dynamic item) itemToString,
+    final Function(TrinaGridOnSelectedEvent event)? onItemSelected,
+    dynamic defaultValue = '',
+    bool enableColumnFilter = false,
+    IconData? popupIcon = Icons.arrow_drop_down,
+    Widget Function(dynamic item)? menuItemBuilder,
+    double? menuWidth,
+    double menuItemHeight = 40,
+    double menuMaxHeight = 300,
+    bool enableMenuFiltering = false,
+    List<TrinaSelectMenuFilter> menuFilters = const [],
+    dynamic Function(dynamic item)? itemToValue,
+  }) {
+    return TrinaColumnTypeSelect(
+      onItemSelected: onItemSelected ?? (event) {},
+      defaultValue: defaultValue,
+      items: items,
+      menuFilters: menuFilters,
+      enableMenuSearch: true,
+      enableMenuFiltering: enableMenuFiltering,
+      enableColumnFilter: enableColumnFilter,
+      popupIcon: popupIcon,
+      menuItemBuilder: menuItemBuilder,
+      width: menuWidth,
+      menuItemHeight: menuItemHeight,
+      menuMaxHeight: menuMaxHeight,
+      itemToString: itemToString,
+      itemToValue: itemToValue,
     );
   }
 
@@ -216,7 +271,7 @@ abstract interface class TrinaColumnType {
   ///
   /// - [autoFocusMode] Determines which field receives focus when the time picker opens.
   /// - [saveAndClosePopupWithEnter] When true, pressing Enter saves the time and closes the popup.
-  /// - [minTime] The minimum selectable time. Defaults to 00:00.
+  /// - [minTime] The minimum selectable time. Defaults to 0:00.
   /// - [maxTime] The maximum selectable time. Defaults to 23:59.
   factory TrinaColumnType.time({
     dynamic defaultValue = '00:00',
@@ -294,7 +349,7 @@ abstract interface class TrinaColumnType {
       falseText: falseText,
       width: width,
       popupIcon: popupIcon,
-      builder: builder,
+      menuItemBuilder: builder,
       onItemSelected: onItemSelected ?? (event) {},
     );
   }

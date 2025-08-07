@@ -52,6 +52,8 @@ class TrinaSelectCellState
       width: widget.column.width,
       initialValue: widget.cell.value,
       filters: _column.menuFilters,
+      itemToString: _column.itemToString,
+      itemToValue: _column.itemToValue,
       onItemSelected: (value) {
         handleSelected(value);
         menuController.close();

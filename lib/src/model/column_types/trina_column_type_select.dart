@@ -13,12 +13,14 @@ class TrinaColumnTypeSelect
     this.defaultValue,
     this.menuFilters = const [],
     this.popupIcon,
-    this.builder,
+    this.menuItemBuilder,
     this.width,
     this.menuItemHeight = 40,
     this.menuMaxHeight = 300,
     this.enableMenuFiltering = true,
     this.enableMenuSearch = true,
+    this.itemToString,
+    this.itemToValue,
   });
 
   @override
@@ -43,11 +45,10 @@ class TrinaColumnTypeSelect
   final double menuItemHeight;
 
   @override
-  Widget Function(dynamic item)? get menuItemBuilder => builder;
+  final Widget Function(dynamic item)? menuItemBuilder;
 
+  @override
   final List<dynamic> items;
-
-  final Widget Function(dynamic item)? builder;
 
   final bool enableColumnFilter;
 
@@ -57,6 +58,12 @@ class TrinaColumnTypeSelect
   ///
   /// if null, the width of the column will be used.
   final double? width;
+
+  @override
+  final String Function(dynamic item)? itemToString;
+
+  @override
+  final dynamic Function(dynamic item)? itemToValue;
 
   @override
   bool isValid(dynamic value) => items.contains(value) == true;

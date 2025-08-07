@@ -5,7 +5,7 @@ import 'package:trina_grid/trina_grid.dart';
 class TrinaColumnTypeBoolean
     with TrinaColumnTypeDefaultMixin
     implements TrinaColumnType, TrinaColumnTypeHasMenuPopup {
-  const TrinaColumnTypeBoolean({
+  TrinaColumnTypeBoolean({
     required this.defaultValue,
     required this.allowEmpty,
     required this.trueText,
@@ -13,7 +13,7 @@ class TrinaColumnTypeBoolean
     required this.onItemSelected,
     this.width,
     this.popupIcon,
-    this.builder,
+    this.menuItemBuilder,
   });
 
   @override
@@ -26,7 +26,6 @@ class TrinaColumnTypeBoolean
   final String trueText;
   final String falseText;
   final double? width;
-  final Widget Function(dynamic item)? builder;
   final Function(TrinaGridOnSelectedEvent event) onItemSelected;
 
   dynamic get value => defaultValue;
@@ -38,7 +37,7 @@ class TrinaColumnTypeBoolean
   bool get enableMenuSearch => false;
 
   @override
-  Widget Function(dynamic item)? get menuItemBuilder => builder;
+  final Widget Function(dynamic item)? menuItemBuilder;
 
   @override
   double get menuMaxHeight => 300;
@@ -48,6 +47,9 @@ class TrinaColumnTypeBoolean
 
   @override
   List<TrinaSelectMenuFilter> get menuFilters => [];
+
+  @override
+  List<bool> get items => [true, false];
 
   @override
   bool isValid(dynamic value) {
@@ -102,4 +104,14 @@ class TrinaColumnTypeBoolean
     if (boolValue == null) return '';
     return boolValue ? trueText : falseText;
   }
+
+  @override
+  // ignore: prefer_function_declarations_over_variables
+  late final String Function(dynamic item)? itemToString = (item) {
+    return switch (item) { true => trueText, false => falseText, _ => '-' };
+  };
+
+  @override
+  // ignore: prefer_function_declarations_over_variables
+  final Function(dynamic item)? itemToValue = (item) => item;
 }

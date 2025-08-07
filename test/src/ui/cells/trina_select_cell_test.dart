@@ -24,12 +24,18 @@ void main() {
       title: 'column title',
       field: 'column_field_name',
       enableAutoEditing: enableAutoEditing,
-      type: TrinaColumnType.select(
-        items,
-        popupIcon: popupIcon,
-        enableMenuSearch: enableSearch,
-        enableMenuFiltering: enableFiltering,
-      ),
+      type: enableSearch
+          ? TrinaColumnType.selectWithSearch(
+              items,
+              itemToString: (item) => item,
+              enableMenuFiltering: enableFiltering,
+              popupIcon: popupIcon,
+            )
+          : TrinaColumnType.select(
+              items,
+              popupIcon: popupIcon,
+              enableMenuFiltering: enableFiltering,
+            ),
     );
 
     cell = TrinaCell(value: initialCellValue ?? items.first);

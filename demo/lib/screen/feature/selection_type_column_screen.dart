@@ -39,7 +39,7 @@ class _SelectionTypeColumnScreenState extends State<SelectionTypeColumnScreen> {
       TrinaColumn(
         title: 'Select with search',
         field: 'select_b',
-        type: TrinaColumnType.select(
+        type: TrinaColumnType.selectWithSearch(
           <String>[
             'Mercury',
             'Venus',
@@ -54,7 +54,7 @@ class _SelectionTypeColumnScreenState extends State<SelectionTypeColumnScreen> {
             'Haumea',
             'Eris',
           ],
-          enableMenuSearch: true,
+          itemToString: (item) => item,
           enableColumnFilter: true,
         ),
       ),

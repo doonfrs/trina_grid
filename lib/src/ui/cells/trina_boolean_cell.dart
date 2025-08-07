@@ -52,6 +52,8 @@ class TrinaBooleanCellState
       width: widget.column.width,
       initialValue: widget.cell.value,
       itemBuilder: _column.menuItemBuilder,
+      itemToString: _column.itemToString,
+      itemToValue: _column.itemToValue,
       onItemSelected: (value) {
         handleSelected(value);
         menuController.close();
