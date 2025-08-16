@@ -187,29 +187,35 @@ class _TrinaDefaultCellState extends TrinaStateWithChange<TrinaDefaultCell> {
 
     return Row(children: [
       if (_canRowDrag)
-        _RowDragIconWidget(
-          column: widget.column,
-          row: widget.row,
-          rowIdx: widget.rowIdx,
-          stateManager: stateManager,
-          feedbackWidget: cellWidget,
-          dragIcon: Icon(
-            Icons.drag_indicator,
-            size: style.iconSize,
-            color: style.iconColor,
+        Flexible(
+          flex: 1,
+          child: _RowDragIconWidget(
+            column: widget.column,
+            row: widget.row,
+            rowIdx: widget.rowIdx,
+            stateManager: stateManager,
+            feedbackWidget: cellWidget,
+            dragIcon: Icon(
+              Icons.drag_indicator,
+              size: style.iconSize,
+              color: style.iconColor,
+            ),
           ),
         ),
       if (widget.column.enableRowChecked &&
           depth >= widget.column.rowCheckBoxGroupDepth)
-        CheckboxSelectionWidget(
-          column: widget.column,
-          row: widget.row,
-          rowIdx: widget.rowIdx,
-          stateManager: stateManager,
+        Flexible(
+          flex: 1,
+          child: CheckboxSelectionWidget(
+            column: widget.column,
+            row: widget.row,
+            rowIdx: widget.rowIdx,
+            stateManager: stateManager,
+          ),
         ),
       if (spacingWidget != null) spacingWidget,
       if (expandIcon != null) expandIcon,
-      Expanded(child: cellWidget),
+      Expanded(flex: 2, child: cellWidget),
       if (TrinaDefaultCell.showGroupCount(
           stateManager.rowGroupDelegate, widget.cell))
         Text(
@@ -317,7 +323,7 @@ class _RowDragIconWidget extends StatelessWidget {
                   stateManager.configuration.style.activatedBorderColor,
               child: Row(
                 children: [
-                  dragIcon,
+                  Flexible(flex: 0, child: dragIcon),
                   Expanded(
                     child: feedbackWidget,
                   ),

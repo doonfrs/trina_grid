@@ -423,6 +423,7 @@ class _DefaultColumnTitleContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: height,
       padding: padding,
       height: height,
       width: column.width,
@@ -440,7 +441,9 @@ class _DefaultColumnTitleContent extends StatelessWidget {
           if (column.enableRowChecked &&
               column.rowCheckBoxGroupDepth == 0 &&
               column.enableTitleChecked)
-            CheckboxAllSelectionWidget(stateManager: stateManager),
+            Flexible(
+              child: CheckboxAllSelectionWidget(stateManager: stateManager),
+            ),
           Expanded(
             child: _ColumnTextWidget(
               column: column,
