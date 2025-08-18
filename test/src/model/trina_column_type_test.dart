@@ -30,7 +30,7 @@ void main() {
     test(
       'When accessing the select property, a TypeError should be thrown.',
       () {
-        expect(() => textTypeColumn.select, throwsA(isA<TypeError>()));
+        expect(() => textTypeColumn.asSelect(), throwsA(isA<TypeError>()));
       },
     );
 

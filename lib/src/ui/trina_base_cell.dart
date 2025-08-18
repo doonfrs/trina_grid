@@ -1,11 +1,8 @@
+import 'ui.dart';
 import 'package:flutter/material.dart';
 import 'package:trina_grid/trina_grid.dart';
 import 'package:trina_grid/src/helper/platform_helper.dart';
 import 'package:trina_grid/src/helper/trina_double_tap_detector.dart';
-import 'package:trina_grid/src/ui/cells/trina_boolean_cell.dart';
-import 'package:trina_grid/src/ui/cells/trina_date_time_cell.dart';
-
-import 'ui.dart';
 
 class TrinaBaseCell extends StatelessWidget
     implements TrinaVisibilityLayoutChild {
@@ -393,70 +390,8 @@ class _CellState extends TrinaStateWithChange<_Cell> {
   @override
   Widget build(BuildContext context) {
     if (_showTypedCell && widget.column.enableEditingMode == true) {
-      if (widget.column.type.isSelect) {
-        return TrinaSelectCell(
-          stateManager: stateManager,
-          cell: widget.cell,
-          column: widget.column,
-          row: widget.row,
-        );
-      } else if (widget.column.type.isNumber) {
-        return TrinaNumberCell(
-          stateManager: stateManager,
-          cell: widget.cell,
-          column: widget.column,
-          row: widget.row,
-        );
-      } else if (widget.column.type.isPercentage) {
-        return TrinaPercentageCell(
-          stateManager: stateManager,
-          cell: widget.cell,
-          column: widget.column,
-          row: widget.row,
-        );
-      } else if (widget.column.type.isDate) {
-        return TrinaDateCell(
-          stateManager: stateManager,
-          cell: widget.cell,
-          column: widget.column,
-          row: widget.row,
-        );
-      } else if (widget.column.type.isDateTime) {
-        return TrinaDateTimeCell(
-          stateManager: stateManager,
-          cell: widget.cell,
-          column: widget.column,
-          row: widget.row,
-        );
-      } else if (widget.column.type.isTime) {
-        return TrinaTimeCell(
-          stateManager: stateManager,
-          cell: widget.cell,
-          column: widget.column,
-          row: widget.row,
-        );
-      } else if (widget.column.type.isText) {
-        return TrinaTextCell(
-          stateManager: stateManager,
-          cell: widget.cell,
-          column: widget.column,
-          row: widget.row,
-        );
-      } else if (widget.column.type.isCurrency) {
-        return TrinaCurrencyCell(
-          stateManager: stateManager,
-          cell: widget.cell,
-          column: widget.column,
-          row: widget.row,
-        );
-      } else if (widget.column.type.isBoolean) {
-        return TrinaBooleanCell(
-          stateManager: stateManager,
-          cell: widget.cell,
-          column: widget.column,
-          row: widget.row,
-        );
-      }
+      return widget.column.type
+          .buildCell(stateManager, widget.cell, widget.column, widget.row);
     }
 
     return TrinaDefaultCell(

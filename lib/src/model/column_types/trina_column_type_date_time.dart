@@ -3,6 +3,7 @@ import 'package:intl/intl.dart' as intl;
 import 'package:trina_grid/src/helper/trina_general_helper.dart';
 import 'package:trina_grid/src/model/trina_column_type_has_date_format.dart';
 import 'package:trina_grid/src/model/trina_column_type_has_popup_icon.dart';
+import 'package:trina_grid/src/ui/cells/trina_date_time_cell.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class TrinaColumnTypeDateTime
@@ -99,5 +100,20 @@ class TrinaColumnTypeDateTime
     if (date == null) return '';
 
     return dateFormat.format(date);
+  }
+
+  @override
+  Widget buildCell(
+    TrinaGridStateManager stateManager,
+    TrinaCell cell,
+    TrinaColumn column,
+    TrinaRow row,
+  ) {
+    return TrinaDateTimeCell(
+      stateManager: stateManager,
+      cell: cell,
+      column: column,
+      row: row,
+    );
   }
 }

@@ -129,7 +129,9 @@ class _SelectionTypeColumnScreenState extends State<SelectionTypeColumnScreen> {
           return DropdownButton<String>(
             value: cell.value,
             hint: Text(cell.value),
-            items: cell.column.type.select.items
+            items: cell.column.type
+                .asSelect()
+                .items
                 .map((e) => DropdownMenuItem<String>(value: e, child: Text(e)))
                 .toList(),
             onChanged: (value) {

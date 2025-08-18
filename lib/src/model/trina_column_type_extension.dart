@@ -47,11 +47,11 @@ extension TrinaColumnTypeExtension on TrinaColumnType {
     return this as TrinaColumnTypeBoolean;
   }
 
-  TrinaColumnTypeSelect get select {
+  TrinaColumnTypeSelect<T> asSelect<T>() {
     if (this is! TrinaColumnTypeSelect) {
       throw TypeError();
     }
-    return this as TrinaColumnTypeSelect;
+    return this as TrinaColumnTypeSelect<T>;
   }
 
   TrinaColumnTypeDate get date {

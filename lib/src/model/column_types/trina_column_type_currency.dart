@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl;
+import 'package:trina_grid/src/ui/cells/trina_currency_cell.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class TrinaColumnTypeCurrency
@@ -51,4 +53,19 @@ class TrinaColumnTypeCurrency
 
   @override
   late final int decimalPoint;
+
+  @override
+  Widget buildCell(
+    TrinaGridStateManager stateManager,
+    TrinaCell cell,
+    TrinaColumn column,
+    TrinaRow row,
+  ) {
+    return TrinaCurrencyCell(
+      stateManager: stateManager,
+      cell: cell,
+      column: column,
+      row: row,
+    );
+  }
 }

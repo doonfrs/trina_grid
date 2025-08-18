@@ -366,7 +366,7 @@ void main() {
     final TrinaColumn column = TrinaColumn(
       title: 'header',
       field: 'header',
-      type: TrinaColumnType.select(<String>['one', 'two', 'three']),
+      type: TrinaColumnType.select<String>(['one', 'two', 'three']),
     );
 
     final TrinaRow row = TrinaRow(
@@ -392,7 +392,7 @@ void main() {
 
     // then
     expect(find.text('one'), findsOneWidget);
-    expect(find.byType(TrinaSelectCell), findsOneWidget);
+    expect(find.byType(TrinaSelectCell<String>), findsOneWidget);
     expect(find.byType(TrinaNumberCell), findsNothing);
     expect(find.byType(TrinaDateCell), findsNothing);
     expect(find.byType(TrinaTimeCell), findsNothing);

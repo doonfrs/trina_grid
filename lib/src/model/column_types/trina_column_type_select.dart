@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trina_grid/src/helper/trina_general_helper.dart';
 import 'package:trina_grid/src/model/trina_column_type_has_menu_popup.dart';
+import 'package:trina_grid/src/ui/cells/trina_select_cell.dart';
 import 'package:trina_grid/src/ui/widgets/trina_dropdown_menu.dart';
 import 'package:trina_grid/trina_grid.dart';
 
@@ -10,9 +11,9 @@ import 'package:trina_grid/trina_grid.dart';
 /// to choose from options you provide. It is highly customizable, offering
 /// different menu styles (simple, with search, with filters) and allowing
 /// for custom rendering of the items in the list.
-class TrinaColumnTypeSelect
+class TrinaColumnTypeSelect<T>
     with TrinaColumnTypeDefaultMixin
-    implements TrinaColumnType, TrinaColumnTypeHasMenuPopup {
+    implements TrinaColumnType, TrinaColumnTypeHasMenuPopup<T> {
   /// Creates a select column type.
   const TrinaColumnTypeSelect({
     required this.items,
@@ -34,7 +35,7 @@ class TrinaColumnTypeSelect
   });
 
   @override
-  final dynamic defaultValue;
+  final T? defaultValue;
 
   @override
   final List<TrinaDropdownMenuFilter> menuFilters;
@@ -56,18 +57,18 @@ class TrinaColumnTypeSelect
 
   /// {@macro TrinaDropdownMenu.itemBuilder}
   @override
-  final ItemBuilder<dynamic>? menuItemBuilder;
+  final ItemBuilder<T>? menuItemBuilder;
 
   /// {@macro TrinaDropdownMenu.items}
   @override
-  final List<dynamic> items;
+  final List<T> items;
 
   /// Whether to enable the default column filtering UI for this column.
   final bool enableColumnFilter;
 
   /// {@macro TrinaDropdownMenu.onItemSelected}
   @override
-  final void Function(dynamic item)? onItemSelected;
+  final void Function(T item)? onItemSelected;
 
   /// {@macro TrinaDropdownMenu.filtersInitiallyExpanded}
   @override
@@ -81,11 +82,11 @@ class TrinaColumnTypeSelect
 
   /// {@macro TrinaDropdownMenu.itemToString}
   @override
-  final String Function(dynamic item)? itemToString;
+  final String Function(T item)? itemToString;
 
   /// {@macro TrinaDropdownMenu.itemToValue}
   @override
-  final dynamic Function(dynamic item)? itemToValue;
+  final dynamic Function(T item)? itemToValue;
 
   /// {@macro TrinaDropdownMenu.emptyFilterResultBuilder}
   @override
@@ -111,5 +112,20 @@ class TrinaColumnTypeSelect
   @override
   dynamic makeCompareValue(dynamic v) {
     return v;
+  }
+
+  @override
+  Widget buildCell(
+    TrinaGridStateManager stateManager,
+    TrinaCell cell,
+    TrinaColumn column,
+    TrinaRow row,
+  ) {
+    return TrinaSelectCell<T>(
+      stateManager: stateManager,
+      cell: cell,
+      column: column,
+      row: row,
+    );
   }
 }
