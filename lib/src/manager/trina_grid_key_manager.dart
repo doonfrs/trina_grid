@@ -91,6 +91,12 @@ class TrinaGridKeyManager {
     final hasAllowedModifier =
         !keyEvent.isModifierPressed || keyEvent.isShiftPressed;
 
+    // If grid has yielded focus (e.g., a column filter TextField is focused),
+    // do not start editing from character input.
+    if (!stateManager.keepFocus) {
+      return;
+    }
+
     if (keyEvent.isCharacter && hasAllowedModifier) {
       _handleCharacter(keyEvent);
     }
