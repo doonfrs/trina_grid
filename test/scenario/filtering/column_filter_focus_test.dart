@@ -5,8 +5,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:trina_grid/trina_grid.dart';
 import 'package:trina_grid/src/ui/ui.dart';
 
-// No helper imports needed; build explicit demo-like columns/rows
-
 void main() {
   late TrinaGridStateManager stateManager;
 
@@ -34,10 +32,6 @@ void main() {
       matching: find.byType(TextField),
     );
   }
-
-  //
-  // Removed legacy test
-
 
   testWidgets(
     'Filter focus + character key should NOT enable editing',
@@ -70,7 +64,6 @@ void main() {
 
       // Grid should NOT enter editing from a character key when filter has focus
       expect(stateManager.isEditing, isFalse);
-
     },
   );
 }
