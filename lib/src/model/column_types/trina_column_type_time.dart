@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trina_grid/src/helper/trina_general_helper.dart';
 import 'package:trina_grid/src/model/trina_column_type_has_popup_icon.dart';
+import 'package:trina_grid/src/ui/cells/trina_time_cell.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class TrinaColumnTypeTime
@@ -73,5 +74,20 @@ class TrinaColumnTypeTime
   @override
   dynamic makeCompareValue(dynamic v) {
     return v;
+  }
+
+  @override
+  Widget buildCell(
+    TrinaGridStateManager stateManager,
+    TrinaCell cell,
+    TrinaColumn column,
+    TrinaRow row,
+  ) {
+    return TrinaTimeCell(
+      stateManager: stateManager,
+      cell: cell,
+      column: column,
+      row: row,
+    );
   }
 }
