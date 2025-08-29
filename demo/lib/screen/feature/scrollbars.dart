@@ -94,6 +94,7 @@ class _ScrollbarsScreenState extends State<ScrollbarsScreen> {
               rows: rows,
               onLoaded: (TrinaGridOnLoadedEvent event) {
                 stateManager = event.stateManager;
+                stateManager.setShowColumnFilter(true);
               },
               configuration: TrinaGridConfiguration(
                 columnSize: const TrinaGridColumnSizeConfig(
