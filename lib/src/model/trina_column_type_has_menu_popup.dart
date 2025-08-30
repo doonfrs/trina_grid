@@ -6,12 +6,12 @@ import 'package:trina_grid/src/ui/widgets/trina_dropdown_menu.dart';
 ///
 /// This interface should be implemented by column types that want to use
 /// [TrinaPopupCellStateWithMenu] for their cell's state.
-abstract class TrinaColumnTypeHasMenuPopup {
+abstract class TrinaColumnTypeHasMenuPopup<T> {
   /// The icon to display in the popup cell.
   IconData? get popupIcon;
 
   /// {@macro TrinaDropdownMenu.items}
-  List<dynamic> get items;
+  List<T> get items;
 
   /// {@macro TrinaDropdownMenu.variant}
   TrinaDropdownMenuVariant get menuVariant;
@@ -26,19 +26,19 @@ abstract class TrinaColumnTypeHasMenuPopup {
   double? get menuWidth;
 
   /// {@macro TrinaDropdownMenu.itemBuilder}
-  ItemBuilder<dynamic>? get menuItemBuilder;
+  ItemBuilder<T>? get menuItemBuilder;
 
   /// {@macro TrinaDropdownMenu.filters}
   List<TrinaDropdownMenuFilter> get menuFilters;
 
   /// {@macro TrinaDropdownMenu.itemToString}
-  String Function(dynamic item)? get itemToString;
+  String Function(T item)? get itemToString;
 
   /// {@macro TrinaDropdownMenu.filtersInitiallyExpanded}
   bool get menuFiltersInitiallyExpanded;
 
   /// {@macro TrinaDropdownMenu.itemToValue}
-  dynamic Function(dynamic item)? get itemToValue;
+  dynamic Function(T item)? get itemToValue;
 
   /// {@macro TrinaDropdownMenu.emptyFilterResultBuilder}
   WidgetBuilder? get menuEmptyFilterResultBuilder;
@@ -49,5 +49,5 @@ abstract class TrinaColumnTypeHasMenuPopup {
   /// A callback invoked when a value is selected from the popup menu.
   ///
   /// The callback receives the newly selected value.
-  void Function(dynamic item)? get onItemSelected;
+  void Function(T item)? get onItemSelected;
 }

@@ -168,29 +168,29 @@ void main() {
       // Open popup
       await tester.sendKeyEvent(LogicalKeyboardKey.f2);
       await tester.pumpAndSettle();
-      expect(find.byType(TrinaDropdownMenu), findsOneWidget);
+      expect(find.byType(TrinaDropdownMenu<String>), findsOneWidget);
 
       // Close popup with escape
       await tester.sendKeyEvent(LogicalKeyboardKey.escape);
       await tester.pumpAndSettle();
-      expect(find.byType(TrinaDropdownMenu), findsNothing);
+      expect(find.byType(TrinaDropdownMenu<String>), findsNothing);
 
       // Reopen popup
       await tester.sendKeyEvent(LogicalKeyboardKey.f2);
       await tester.pumpAndSettle();
-      expect(find.byType(TrinaDropdownMenu), findsOneWidget);
+      expect(find.byType(TrinaDropdownMenu<String>), findsOneWidget);
     });
 
     testWidgets(
       'After selecting an item with arrow keys and enter, value should be updated',
       (tester) async {
         await buildCellAndEdit(tester);
-        expect(find.byType(TrinaDropdownMenu), findsNothing);
+        expect(find.byType(TrinaDropdownMenu<String>), findsNothing);
 
         // Open popup
         await tester.sendKeyEvent(LogicalKeyboardKey.f2);
         await tester.pumpAndSettle();
-        expect(find.byType(TrinaDropdownMenu), findsOneWidget);
+        expect(find.byType(TrinaDropdownMenu<String>), findsOneWidget);
 
         // Select next item and press enter
         await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
@@ -198,7 +198,7 @@ void main() {
         await tester.pumpAndSettle();
 
         // Verify popup is closed and value is updated
-        expect(find.byType(TrinaDropdownMenu), findsNothing);
+        expect(find.byType(TrinaDropdownMenu<String>), findsNothing);
         expect(cell.value, selectItems[1]);
       },
     );

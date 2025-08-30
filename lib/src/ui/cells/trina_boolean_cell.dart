@@ -37,12 +37,12 @@ class TrinaBooleanCellState
   IconData? get popupMenuIcon => widget.column.type.boolean.popupIcon;
 
   @override
-  List<dynamic> get menuItems {
+  List<bool?> get menuItems {
     return [if (_column.allowEmpty) null, true, false];
   }
 
   @override
-  TrinaDropdownMenu buildMenu() {
+  TrinaDropdownMenu<bool?> buildMenu() {
     return TrinaDropdownMenu(
       items: menuItems,
       itemHeight: _column.menuItemHeight,

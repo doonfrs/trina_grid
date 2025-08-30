@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trina_grid/src/model/trina_column_type_has_menu_popup.dart';
+import 'package:trina_grid/src/ui/cells/trina_boolean_cell.dart';
 import 'package:trina_grid/src/ui/widgets/trina_dropdown_menu.dart';
 import 'package:trina_grid/trina_grid.dart';
 
@@ -10,7 +11,7 @@ import 'package:trina_grid/trina_grid.dart';
 /// `false`, `1`, `0`, 'true', 'false', and empty values.
 class TrinaColumnTypeBoolean
     with TrinaColumnTypeDefaultMixin
-    implements TrinaColumnType, TrinaColumnTypeHasMenuPopup {
+    implements TrinaColumnType, TrinaColumnTypeHasMenuPopup<bool?> {
   /// Creates a boolean column type with customizable behavior.
   TrinaColumnTypeBoolean({
     required this.defaultValue,
@@ -40,7 +41,7 @@ class TrinaColumnTypeBoolean
 
   /// {@macro TrinaColumnTypeHasMenuPopup.onItemSelected}
   @override
-  final void Function(dynamic)? onItemSelected;
+  final void Function(bool?)? onItemSelected;
 
   dynamic get value => defaultValue;
 
@@ -54,7 +55,7 @@ class TrinaColumnTypeBoolean
   TrinaDropdownMenuVariant get menuVariant => TrinaDropdownMenuVariant.select;
 
   @override
-  final ItemBuilder? menuItemBuilder;
+  final ItemBuilder<bool?>? menuItemBuilder;
 
   @override
   double get menuMaxHeight => 300;
@@ -161,4 +162,19 @@ class TrinaColumnTypeBoolean
 
   @override
   final Function(dynamic item)? itemToValue = null;
+
+  @override
+  Widget buildCell(
+    TrinaGridStateManager stateManager,
+    TrinaCell cell,
+    TrinaColumn column,
+    TrinaRow row,
+  ) {
+    return TrinaBooleanCell(
+      stateManager: stateManager,
+      cell: cell,
+      column: column,
+      row: row,
+    );
+  }
 }

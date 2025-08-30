@@ -148,20 +148,20 @@ abstract interface class TrinaColumnType {
   /// - [itemToValue]:
   ///   {@macro TrinaDropdownMenu.itemToValue}
   ///
-  factory TrinaColumnType.select(
-    List items, {
-    void Function(dynamic item)? onItemSelected,
-    dynamic defaultValue = '',
+  static TrinaColumnType select<T>(
+    List<T> items, {
+    void Function(T item)? onItemSelected,
+    T? defaultValue,
     bool enableColumnFilter = false,
     IconData? popupIcon = Icons.arrow_drop_down,
     double? menuWidth,
     double menuItemHeight = 40,
     double menuMaxHeight = 300,
-    ItemBuilder<dynamic>? menuItemBuilder,
-    String Function(dynamic item)? itemToString,
-    dynamic Function(dynamic item)? itemToValue,
+    ItemBuilder<T>? menuItemBuilder,
+    String Function(T item)? itemToString,
+    dynamic Function(T item)? itemToValue,
   }) {
-    return TrinaColumnTypeSelect(
+    return TrinaColumnTypeSelect<T>(
       menuVariant: TrinaDropdownMenuVariant.select,
       onItemSelected: onItemSelected,
       defaultValue: defaultValue,
@@ -204,21 +204,21 @@ abstract interface class TrinaColumnType {
   ///   {@macro TrinaDropdownMenu.itemToString}
   /// - [itemToValue]:
   ///   {@macro TrinaDropdownMenu.itemToValue}
-  factory TrinaColumnType.selectWithSearch(
-    List items, {
-    required String Function(dynamic item) itemToString,
-    dynamic defaultValue = '',
+  static TrinaColumnType selectWithSearch<T>(
+    List<T> items, {
+    required String Function(T item) itemToString,
+    T? defaultValue,
     bool enableColumnFilter = false,
     IconData? popupIcon = Icons.arrow_drop_down,
-    ItemBuilder<dynamic>? menuItemBuilder,
+    ItemBuilder<T>? menuItemBuilder,
     double? menuWidth,
     double menuItemHeight = 40,
     double menuMaxHeight = 300,
-    void Function(dynamic item)? onItemSelected,
+    void Function(T item)? onItemSelected,
     WidgetBuilder? menuEmptySearchResultBuilder,
-    dynamic Function(dynamic item)? itemToValue,
+    dynamic Function(T item)? itemToValue,
   }) {
-    return TrinaColumnTypeSelect(
+    return TrinaColumnTypeSelect<T>(
       onItemSelected: onItemSelected,
       defaultValue: defaultValue,
       items: items,
@@ -263,23 +263,23 @@ abstract interface class TrinaColumnType {
   ///   {@macro TrinaDropdownMenu.itemToString}
   /// - [itemToValue]:
   ///   {@macro TrinaDropdownMenu.itemToValue}
-  factory TrinaColumnType.selectWithFilters(
-    List items, {
+  static TrinaColumnType selectWithFilters<T>(
+    List<T> items, {
     required List<TrinaDropdownMenuFilter> menuFilters,
-    dynamic defaultValue = '',
+    T? defaultValue,
     bool enableColumnFilter = false,
     IconData? popupIcon = Icons.arrow_drop_down,
-    ItemBuilder<dynamic>? menuItemBuilder,
+    ItemBuilder<T>? menuItemBuilder,
     WidgetBuilder? menuEmptyFilterResultBuilder,
     double? menuWidth,
     double menuItemHeight = 40,
     double menuMaxHeight = 300,
     bool menuFiltersInitiallyExpanded = true,
-    void Function(dynamic item)? onItemSelected,
-    String Function(dynamic item)? itemToString,
-    dynamic Function(dynamic item)? itemToValue,
+    void Function(T item)? onItemSelected,
+    String Function(T item)? itemToString,
+    dynamic Function(T item)? itemToValue,
   }) {
-    return TrinaColumnTypeSelect(
+    return TrinaColumnTypeSelect<T>(
       items: items,
       menuVariant: TrinaDropdownMenuVariant.selectWithFilters,
       defaultValue: defaultValue,
@@ -438,6 +438,13 @@ abstract interface class TrinaColumnType {
   /// new cell value.
   /// If `false`, the original `newValue` is used.
   (bool, dynamic) filteredValue({dynamic newValue, dynamic oldValue});
+
+  Widget buildCell(
+    TrinaGridStateManager stateManager,
+    TrinaCell cell,
+    TrinaColumn column,
+    TrinaRow row,
+  );
 }
 
 /// A mixin that provides a default implementation for [TrinaColumnType.filteredValue].
