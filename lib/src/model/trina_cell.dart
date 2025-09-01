@@ -32,7 +32,7 @@ class TrinaCell {
   /// The [renderer] parameter allows for custom rendering of the cell.
   /// The [onChanged] parameter allows for cell-level control over value changes.
   /// The [onKeyPressed] parameter allows for capturing keyboard events in the cell.
-  TrinaCell({dynamic value, Key? key, this.renderer, this.onChanged, this.onKeyPressed})
+  TrinaCell({dynamic value, Key? key, this.renderer, this.onChanged, this.onKeyPressed, this.padding})
       : _key = key ?? UniqueKey(),
         _value = value,
         _originalValue = value,
@@ -63,6 +63,10 @@ class TrinaCell {
   /// Callback that is triggered when a key is pressed in this specific cell.
   /// This allows for capturing keyboard events like Enter, Tab, Escape, etc.
   final TrinaOnKeyPressedEventCallback? onKeyPressed;
+
+  /// Custom padding for this specific cell.
+  /// If provided, this will override the column padding and default padding.
+  final EdgeInsets? padding;
 
   /// Returns true if this cell has a custom renderer.
   bool get hasRenderer => renderer != null;

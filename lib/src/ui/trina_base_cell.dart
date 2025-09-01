@@ -133,7 +133,8 @@ class TrinaBaseCell extends StatelessWidget
         rowIdx: rowIdx,
         row: row,
         column: column,
-        cellPadding: column.cellPadding ??
+        cellPadding: cell.padding ??
+            column.cellPadding ??
             stateManager.configuration.style.defaultCellPadding,
         stateManager: stateManager,
         child: _Cell(
