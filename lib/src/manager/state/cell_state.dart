@@ -290,7 +290,7 @@ mixin CellState implements ITrinaGridState {
     if (typeResult.$1) return typeResult.$2;
 
     if (column.type.isSelect) {
-      return column.type.select.items.contains(newValue) == true
+      return column.type.asSelect().items.contains(newValue) == true
           ? newValue
           : oldValue;
     }

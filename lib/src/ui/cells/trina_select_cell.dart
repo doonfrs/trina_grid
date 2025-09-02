@@ -5,7 +5,7 @@ import 'package:trina_grid/trina_grid.dart';
 
 import 'popup_cell.dart';
 
-class TrinaSelectCell extends StatefulWidget implements PopupCell {
+class TrinaSelectCell<T> extends StatefulWidget implements PopupCell {
   @override
   final TrinaGridStateManager stateManager;
 
@@ -27,21 +27,21 @@ class TrinaSelectCell extends StatefulWidget implements PopupCell {
   });
 
   @override
-  TrinaSelectCellState createState() => TrinaSelectCellState();
+  TrinaSelectCellState<T> createState() => TrinaSelectCellState<T>();
 }
 
-class TrinaSelectCellState
-    extends TrinaPopupCellStateWithMenu<TrinaSelectCell> {
-  TrinaColumnTypeSelect get _column => widget.column.type.select;
+class TrinaSelectCellState<T>
+    extends TrinaPopupCellStateWithMenu<TrinaSelectCell<T>> {
+  TrinaColumnTypeSelect<T> get _column => widget.column.type.asSelect();
 
   @override
   IconData? get popupMenuIcon => _column.popupIcon;
 
   @override
-  List get menuItems => _column.items;
+  List<T> get menuItems => _column.items;
 
   @override
-  TrinaDropdownMenu buildMenu() {
+  TrinaDropdownMenu<T> buildMenu() {
     return TrinaDropdownMenu.variant(
       _column.menuVariant,
       items: menuItems,

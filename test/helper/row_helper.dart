@@ -58,7 +58,7 @@ class RowHelper {
 
   static TrinaCell cellOfSelectColumn(TrinaColumn column, int rowIdx) {
     return TrinaCell(
-      value: (column.type.select.items.toList()..shuffle()).first,
+      value: (column.type.asSelect().items.toList()..shuffle()).first,
     );
   }
 

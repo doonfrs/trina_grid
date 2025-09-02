@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl;
+import 'package:trina_grid/src/ui/cells/trina_percentage_cell.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class TrinaColumnTypePercentage
@@ -127,6 +129,21 @@ class TrinaColumnTypePercentage
     } else {
       return formattedNumber / 100;
     }
+  }
+
+  @override
+  Widget buildCell(
+    TrinaGridStateManager stateManager,
+    TrinaCell cell,
+    TrinaColumn column,
+    TrinaRow row,
+  ) {
+    return TrinaPercentageCell(
+      stateManager: stateManager,
+      cell: cell,
+      column: column,
+      row: row,
+    );
   }
 }
 
