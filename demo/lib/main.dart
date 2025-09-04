@@ -1,6 +1,7 @@
 import 'package:demo/screen/feature/boolean_type_column_screen.dart';
 import 'package:demo/screen/feature/change_tracking_screen.dart';
 import 'package:demo/screen/feature/check_view_port_visible_columns_screen.dart';
+import 'package:demo/screen/feature/column_filtering_popup_screen.dart';
 import 'package:demo/screen/feature/column_title_renderer_screen.dart';
 import 'package:demo/screen/feature/date_time_column_screen.dart';
 import 'package:demo/screen/feature/percentage_type_column_screen.dart';
@@ -99,6 +100,8 @@ class MyApp extends StatelessWidget {
         RTLScreen.routeName: (context) => const RTLScreen(),
         ColumnFilteringScreen.routeName: (context) =>
             const ColumnFilteringScreen(),
+        ColumnFilteringPopupScreen.routeName: (context) =>
+            const ColumnFilteringPopupScreen(),
         ColumnFooterScreen.routeName: (context) => const ColumnFooterScreen(),
         ColumnFreezingScreen.routeName: (context) =>
             const ColumnFreezingScreen(),
