@@ -3,6 +3,8 @@ import 'package:trina_grid/trina_grid.dart';
 
 enum TrinaRowFrozen {
   none,
+  beforeTitle,
+  beforeFilter,
   start,
   end;
 }
@@ -29,9 +31,11 @@ class TrinaRow<T> {
 
   T? data;
 
-  /// Indicates if the row should be frozen at the top or bottom of the grid
+  /// Indicates if the row should be frozen at specific positions in the grid
   /// TrinaRowFrozen.none means the row is not frozen
-  /// TrinaRowFrozen.start means the row is frozen at the top
+  /// TrinaRowFrozen.beforeTitle means the row is frozen before column titles
+  /// TrinaRowFrozen.beforeFilter means the row is frozen between titles and filters
+  /// TrinaRowFrozen.start means the row is frozen at the top of the data area
   /// TrinaRowFrozen.end means the row is frozen at the bottom
   final TrinaRowFrozen frozen;
 

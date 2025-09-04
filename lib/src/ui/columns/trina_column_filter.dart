@@ -69,7 +69,8 @@ class TrinaColumnFilterState extends TrinaStateWithChange<TrinaColumnFilter> {
         borderRadius: BorderRadius.zero,
       );
 
-  Color get _textFieldColor => stateManager.configuration.style.filterHeaderColor ??
+  Color get _textFieldColor =>
+      stateManager.configuration.style.filterHeaderColor ??
       (_enabled
           ? stateManager.configuration.style.cellColorInEditState
           : stateManager.configuration.style.cellColorInReadOnlyState);
@@ -334,20 +335,17 @@ class TrinaColumnFilterState extends TrinaStateWithChange<TrinaColumnFilter> {
       );
     }
 
-    return SizedBox(
-      height: stateManager.columnFilterHeight,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: style.filterHeaderColor,
-          border: BorderDirectional(
-            top: BorderSide(color: style.borderColor),
-            end: style.enableColumnBorderVertical
-                ? BorderSide(color: style.borderColor)
-                : BorderSide.none,
-          ),
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: style.filterHeaderColor,
+        border: BorderDirectional(
+          top: BorderSide(color: style.borderColor),
+          end: style.enableColumnBorderVertical
+              ? BorderSide(color: style.borderColor)
+              : BorderSide.none,
         ),
-        child: Padding(padding: _padding, child: w),
       ),
+      child: w,
     );
   }
 }

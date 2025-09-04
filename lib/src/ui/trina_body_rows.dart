@@ -125,6 +125,8 @@ class TrinaBodyRowsState extends TrinaStateWithChange<TrinaBodyRows> {
     _columns = _getColumns();
 
     // Get frozen rows from the original list to keep them across pagination
+    // Only handle start and end frozen rows here
+    // beforeTitle and beforeFilter are handled separately in the layout
     _frozenTopRows = stateManager.refRows.originalList
         .where((row) => row.frozen == TrinaRowFrozen.start)
         .toList();
@@ -133,6 +135,7 @@ class TrinaBodyRowsState extends TrinaStateWithChange<TrinaBodyRows> {
         .toList();
 
     // Get non-frozen rows from the current page
+    // Exclude all frozen types (only show TrinaRowFrozen.none rows)
     _rows = stateManager.refRows;
     _scrollableRows =
         _rows.where((row) => row.frozen == TrinaRowFrozen.none).toList();

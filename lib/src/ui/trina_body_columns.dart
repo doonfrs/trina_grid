@@ -7,9 +7,11 @@ import 'ui.dart';
 
 class TrinaBodyColumns extends TrinaStatefulWidget {
   final TrinaGridStateManager stateManager;
+  final TrinaColumnRenderMode renderMode;
 
   const TrinaBodyColumns(
     this.stateManager, {
+    this.renderMode = TrinaColumnRenderMode.titleAndFilter,
     super.key,
   });
 
@@ -128,36 +130,54 @@ class TrinaBodyColumnsState extends TrinaStateWithChange<TrinaBodyColumns> {
       child: TrinaBaseColumn(
         stateManager: stateManager,
         column: e,
+        renderMode: widget.renderMode,
       ),
     );
   }
 
+  double _getWidgetHeight() {
+    switch (widget.renderMode) {
+      case TrinaColumnRenderMode.titleOnly:
+        return stateManager.columnHeight + 
+               (_showColumnGroups ? stateManager.columnGroupHeight : 0);
+      case TrinaColumnRenderMode.filterOnly:
+        return stateManager.columnFilterHeight;
+      case TrinaColumnRenderMode.titleAndFilter:
+        return stateManager.columnHeight + 
+               (stateManager.showColumnFilter ? stateManager.columnFilterHeight : 0) +
+               (_showColumnGroups ? stateManager.columnGroupHeight : 0);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      controller: _scroll,
-      scrollDirection: Axis.horizontal,
-      physics: const ClampingScrollPhysics(),
-      child: Row(
-        children: [
-          TrinaVisibilityLayout(
-            delegate: MainColumnLayoutDelegate(
-              stateManager: stateManager,
-              columns: _columns,
-              columnGroups: _columnGroups,
-              frozen: TrinaColumnFrozen.none,
-              textDirection: stateManager.textDirection,
+    return SizedBox(
+      height: _getWidgetHeight(),
+      child: SingleChildScrollView(
+        controller: _scroll,
+        scrollDirection: Axis.horizontal,
+        physics: const ClampingScrollPhysics(),
+        child: Row(
+          children: [
+            TrinaVisibilityLayout(
+              delegate: MainColumnLayoutDelegate(
+                stateManager: stateManager,
+                columns: _columns,
+                columnGroups: _columnGroups,
+                frozen: TrinaColumnFrozen.none,
+                textDirection: stateManager.textDirection,
+              ),
+              scrollController: _scroll,
+              initialViewportDimension:
+                  MediaQuery.of(context).size.width - _verticalScrollbarWidth,
+              children: _showColumnGroups == true
+                  ? _columnGroups.map(_makeColumnGroup).toList(growable: false)
+                  : _columns.map(_makeColumn).toList(growable: false),
             ),
-            scrollController: _scroll,
-            initialViewportDimension:
-                MediaQuery.of(context).size.width - _verticalScrollbarWidth,
-            children: _showColumnGroups == true
-                ? _columnGroups.map(_makeColumnGroup).toList(growable: false)
-                : _columns.map(_makeColumn).toList(growable: false),
-          ),
-          // Add a spacer with the same width as the vertical scrollbar
-          SizedBox(width: _verticalScrollbarWidth),
-        ],
+            // Add a spacer with the same width as the vertical scrollbar
+            SizedBox(width: _verticalScrollbarWidth),
+          ],
+        ),
       ),
     );
   }

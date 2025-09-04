@@ -8,6 +8,7 @@ import 'package:intl/intl.dart' show Intl;
 import 'package:trina_grid/trina_grid.dart';
 
 import 'helper/platform_helper.dart';
+import 'ui/trina_frozen_rows_before_header.dart';
 import 'ui/ui.dart';
 
 typedef TrinaOnLoadedEventCallback = void Function(
@@ -777,14 +778,70 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
                 Directionality.of(context),
               ),
               children: [
-                /// Body columns and rows.
+                /// Frozen rows before title
+                LayoutId(
+                  id: _StackName.frozenBeforeTitleRows,
+                  child: TrinaFrozenRowsBeforeHeader(
+                    stateManager: _stateManager,
+                    frozenType: TrinaRowFrozen.beforeTitle,
+                  ),
+                ),
+                
+                /// Divider after frozen rows before title
+                if (_stateManager.refRows.originalList
+                    .any((row) => row.frozen == TrinaRowFrozen.beforeTitle))
+                  LayoutId(
+                    id: _StackName.frozenBeforeTitleDivider,
+                    child: TrinaShadowLine(
+                      axis: Axis.horizontal,
+                      color: style.gridBorderColor,
+                      shadow: style.enableGridBorderShadow,
+                    ),
+                  ),
+                
+                /// Body rows
                 LayoutId(
                   id: _StackName.bodyRows,
                   child: TrinaBodyRows(_stateManager),
                 ),
+                
+                /// Body column titles only
                 LayoutId(
-                  id: _StackName.bodyColumns,
-                  child: TrinaBodyColumns(_stateManager),
+                  id: _StackName.bodyColumnTitles,
+                  child: TrinaBodyColumns(
+                    _stateManager,
+                    renderMode: TrinaColumnRenderMode.titleOnly,
+                  ),
+                ),
+                
+                /// Frozen rows before filter (positioned between titles and filters)
+                LayoutId(
+                  id: _StackName.frozenBeforeFilterRows,
+                  child: TrinaFrozenRowsBeforeHeader(
+                    stateManager: _stateManager,
+                    frozenType: TrinaRowFrozen.beforeFilter,
+                  ),
+                ),
+                
+                /// Divider after frozen rows before filter
+                if (_stateManager.refRows.originalList
+                    .any((row) => row.frozen == TrinaRowFrozen.beforeFilter))
+                  LayoutId(
+                    id: _StackName.frozenBeforeFilterDivider,
+                    child: TrinaShadowLine(
+                      axis: Axis.horizontal,
+                      color: style.gridBorderColor,
+                      shadow: style.enableGridBorderShadow,
+                    ),
+                  ),
+                
+                /// Body column filters only
+                LayoutId(
+                  id: _StackName.bodyColumnFilters,
+                  child: TrinaBodyColumns(
+                    _stateManager,
+                    renderMode: TrinaColumnRenderMode.filterOnly,
+                  ),
                 ),
 
                 /// Body columns footer.
@@ -946,6 +1003,32 @@ class TrinaGridLayoutDelegate extends MultiChildLayoutDelegate {
     double bodyLeftOffset = 0;
     double bodyRightOffset = 0;
 
+    final gridBorderWidth = _stateManager.configuration.style.gridBorderWidth;
+
+    // Layout frozen rows before title (these appear above everything including column titles)
+    if (hasChild(_StackName.frozenBeforeTitleRows)) {
+      var s = layoutChild(
+        _StackName.frozenBeforeTitleRows,
+        BoxConstraints.loose(Size(size.width, size.height)),
+      );
+
+      positionChild(_StackName.frozenBeforeTitleRows, Offset(0, bodyRowsTopOffset));
+      
+      bodyRowsTopOffset += s.height;
+      columnsTopOffset += s.height;
+    }
+    
+    if (hasChild(_StackName.frozenBeforeTitleDivider)) {
+      layoutChild(
+        _StackName.frozenBeforeTitleDivider,
+        BoxConstraints.tight(Size(size.width, gridBorderWidth)),
+      );
+      
+      positionChild(_StackName.frozenBeforeTitleDivider, Offset(0, bodyRowsTopOffset));
+      bodyRowsTopOffset += gridBorderWidth;
+      columnsTopOffset += gridBorderWidth;
+    }
+    
     // first layout header and footer and see what remains for the scrolling part
     if (hasChild(_StackName.header)) {
       // maximum 40% of the height
@@ -960,8 +1043,6 @@ class TrinaGridLayoutDelegate extends MultiChildLayoutDelegate {
 
       columnsTopOffset += s.height;
     }
-
-    final gridBorderWidth = _stateManager.configuration.style.gridBorderWidth;
 
     if (hasChild(_StackName.headerDivider)) {
       layoutChild(
@@ -1096,9 +1177,9 @@ class TrinaGridLayoutDelegate extends MultiChildLayoutDelegate {
       }
     }
 
-    if (hasChild(_StackName.bodyColumns)) {
+    if (hasChild(_StackName.bodyColumnTitles)) {
       var s = layoutChild(
-        _StackName.bodyColumns,
+        _StackName.bodyColumnTitles,
         BoxConstraints.loose(
           Size(
             _safe(size.width - bodyLeftOffset - bodyRightOffset),
@@ -1110,7 +1191,48 @@ class TrinaGridLayoutDelegate extends MultiChildLayoutDelegate {
       final double posX =
           isLTR ? bodyLeftOffset : size.width - s.width - bodyRightOffset;
 
-      positionChild(_StackName.bodyColumns, Offset(posX, columnsTopOffset));
+      positionChild(_StackName.bodyColumnTitles, Offset(posX, columnsTopOffset));
+
+      bodyRowsTopOffset += s.height;
+    }
+    
+    // Layout frozen rows before filter (these appear between column titles and filters)
+    if (hasChild(_StackName.frozenBeforeFilterRows)) {
+      var s = layoutChild(
+        _StackName.frozenBeforeFilterRows,
+        BoxConstraints.loose(Size(size.width, size.height)),
+      );
+
+      positionChild(_StackName.frozenBeforeFilterRows, Offset(0, bodyRowsTopOffset));
+      
+      bodyRowsTopOffset += s.height;
+    }
+    
+    if (hasChild(_StackName.frozenBeforeFilterDivider)) {
+      layoutChild(
+        _StackName.frozenBeforeFilterDivider,
+        BoxConstraints.tight(Size(size.width, gridBorderWidth)),
+      );
+      
+      positionChild(_StackName.frozenBeforeFilterDivider, Offset(0, bodyRowsTopOffset));
+      bodyRowsTopOffset += gridBorderWidth;
+    }
+    
+    if (hasChild(_StackName.bodyColumnFilters)) {
+      var s = layoutChild(
+        _StackName.bodyColumnFilters,
+        BoxConstraints.loose(
+          Size(
+            _safe(size.width - bodyLeftOffset - bodyRightOffset),
+            size.height,
+          ),
+        ),
+      );
+
+      final double posX =
+          isLTR ? bodyLeftOffset : size.width - s.width - bodyRightOffset;
+
+      positionChild(_StackName.bodyColumnFilters, Offset(posX, bodyRowsTopOffset));
 
       bodyRowsTopOffset += s.height;
     }
@@ -1431,11 +1553,16 @@ class TrinaOptional<T> {
 enum _StackName {
   header,
   headerDivider,
+  frozenBeforeTitleRows,
+  frozenBeforeTitleDivider,
   leftFrozenColumns,
   leftFrozenColumnFooters,
   leftFrozenRows,
   leftFrozenDivider,
-  bodyColumns,
+  bodyColumnTitles,
+  frozenBeforeFilterRows,
+  frozenBeforeFilterDivider,
+  bodyColumnFilters,
   bodyColumnFooters,
   bodyRows,
   rightFrozenColumns,

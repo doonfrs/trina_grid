@@ -13,7 +13,8 @@
       "Bash(flutter analyze:*)",
       "Bash(flutter test:*)",
       "Bash(gh pr view:*)",
-      "Bash(git log:*)"
+      "Bash(git log:*)",
+      "Bash(flutter build:*)"
     ],
     "deny": [],
     "ask": []

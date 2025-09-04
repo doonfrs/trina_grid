@@ -57,6 +57,7 @@ import 'screen/feature/pages_list_screen.dart';
 import 'screen/feature/frozen_rows_screen.dart';
 import 'screen/feature/scrollbars.dart';
 import 'screen/feature/row_wrapper_screen.dart';
+import 'screen/feature/frozen_rows_positions_screen.dart';
 import 'screen/feature/multiitems_delegate_demo_screen.dart';
 import 'screen/feature/custom_footer_screen.dart';
 import 'screen/feature/dynamic_row_height_demo.dart';
@@ -156,6 +157,8 @@ class MyApp extends StatelessWidget {
         LoadingOptionsScreen.routeName: (context) =>
             const LoadingOptionsScreen(),
         RowWrapperScreen.routeName: (context) => const RowWrapperScreen(),
+        FrozenRowsPositionsScreen.routeName: (context) =>
+            const FrozenRowsPositionsScreen(),
         MultiItemsDelegateDemoScreen.routeName: (context) =>
             const MultiItemsDelegateDemoScreen(),
         DynamicRowHeightDemo.routeName: (context) =>

@@ -9,6 +9,7 @@ import 'package:demo/screen/feature/filter_icon_customization_screen.dart';
 import 'package:demo/screen/feature/loading_options_screen.dart';
 import 'package:demo/screen/feature/edit_cell_renderer_screen.dart';
 import 'package:demo/screen/feature/frozen_rows_screen.dart';
+import 'package:demo/screen/feature/frozen_rows_positions_screen.dart';
 import 'package:demo/screen/feature/grid_export_screen.dart';
 import 'package:demo/screen/feature/percentage_type_column_screen.dart';
 import 'package:demo/screen/feature/rtl_scrollbar_screen.dart';
@@ -632,6 +633,15 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
             'Wrap each row with your own widget for custom styling or interactivity.',
         onTapLiveDemo: () {
           Navigator.pushNamed(context, RowWrapperScreen.routeName);
+        },
+        trailing: newIcon,
+      ),
+      TrinaListTile(
+        title: 'Frozen Rows Positions',
+        description:
+            'Freeze rows at different positions: before title, before filter, or traditional start/end positions.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, FrozenRowsPositionsScreen.routeName);
         },
         trailing: newIcon,
       ),
