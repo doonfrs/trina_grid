@@ -567,30 +567,35 @@ class TrinaGridFilterPopupHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          IconButton(
-            icon: const Icon(Icons.add),
+    return Row(
+      spacing:  configuration!.filterPopupConfig.headerIconSpacing,
+      children: [
+        IconButton(
+          icon: configuration!.filterPopupConfig.headerAddIconBuilder?.call(context) ?? Icon(
+            Icons.add,
             color: configuration!.style.iconColor,
-            iconSize: configuration!.style.iconSize,
-            onPressed: handleAddButton,
+            size: configuration!.style.iconSize,
           ),
-          IconButton(
-            icon: const Icon(Icons.remove),
+          onPressed: handleAddButton,
+        ),
+        IconButton(
+          icon: configuration!.filterPopupConfig.headerRemoveIconBuilder?.call(context) ?? Icon(
+            Icons.remove,
             color: configuration!.style.iconColor,
-            iconSize: configuration!.style.iconSize,
-            onPressed: handleRemoveButton,
+            size: configuration!.style.iconSize,
           ),
-          IconButton(
-            icon: const Icon(Icons.clear_sharp),
+          onPressed: handleRemoveButton,
+        ),
+        IconButton(
+          icon: configuration!.filterPopupConfig.headerClearIconBuilder?.call(context) ?? Icon(
+            Icons.clear_sharp,
             color: Colors.red,
-            iconSize: configuration!.style.iconSize,
-            onPressed: handleClearButton,
+            size: configuration!.style.iconSize,
           ),
-        ],
-      ),
+          onPressed: handleClearButton,
+        ),
+        Expanded(child: configuration!.filterPopupConfig.headerAppendBuilder?.call(context) ?? const SizedBox.shrink()),
+      ],
     );
   }
 }

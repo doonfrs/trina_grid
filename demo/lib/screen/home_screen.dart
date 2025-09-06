@@ -4,6 +4,7 @@ import 'package:demo/screen/empty_screen.dart';
 import 'package:demo/screen/feature/boolean_type_column_screen.dart';
 import 'package:demo/screen/feature/change_tracking_screen.dart';
 import 'package:demo/screen/feature/check_view_port_visible_columns_screen.dart';
+import 'package:demo/screen/feature/column_filtering_popup_screen.dart';
 import 'package:demo/screen/feature/column_title_renderer_screen.dart';
 import 'package:demo/screen/feature/filter_icon_customization_screen.dart';
 import 'package:demo/screen/feature/loading_options_screen.dart';
@@ -276,6 +277,14 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
         onTapLiveDemo: () {
           Navigator.pushNamed(context, ColumnFilteringScreen.routeName);
         },
+      ),
+      TrinaListTile(
+        title: 'Column Filtering Popup',
+        description: 'Custom Column Filtering Popup',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, ColumnFilteringPopupScreen.routeName);
+        },
+        trailing: newIcon,
       ),
       TrinaListTile(
         title: 'Filter Icon Customization',
