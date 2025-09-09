@@ -2,8 +2,10 @@
 
 ## [2.1.0] - 2025. 09. 01
 
+* Feature: Added simplified column filter API methods for programmatic filter management. @doonfrs
 * Fix: Restored mouse scrolling/dragging functionality that was broken since v1.6.11. @doonfrs
 * Breaking Change: Enhanced rowWrapper callback to include TrinaRow data parameter and renamed row widget parameter to rowWidget for clarity. @doonfrs
+* refactor: use polymorphism to build cell widgets (#167) @DMouayad
 
 
 ## [2.0.1] - 2025. 09. 01
