@@ -59,6 +59,7 @@ import 'feature/row_with_checkbox_screen.dart';
 import 'feature/rtl_screen.dart';
 import 'feature/selection_type_column_screen.dart';
 import 'feature/text_type_column_screen.dart';
+import 'feature/theme_switching_screen.dart';
 import 'feature/time_type_column_screen.dart';
 import 'feature/value_formatter_screen.dart';
 import 'feature/pages_list_screen.dart';
@@ -616,6 +617,14 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
         onTapLiveDemo: () {
           Navigator.pushNamed(context, DarkModeScreen.routeName);
         },
+      ),
+      TrinaListTile(
+        title: 'Dark mode Switching',
+        description: 'Test live theme switching with pagination controls.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, ThemeSwitchingScreen.routeName);
+        },
+        trailing: newIcon,
       ),
       TrinaListTile.amber(
         title: 'Empty',

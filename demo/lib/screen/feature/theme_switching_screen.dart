@@ -4,25 +4,25 @@ import 'package:trina_grid/trina_grid.dart';
 import '../../widget/trina_example_button.dart';
 import '../../widget/trina_example_screen.dart';
 
-class DarkModeScreen extends StatefulWidget {
-  static const routeName = 'feature/dark-mode';
+class ThemeSwitchingScreen extends StatefulWidget {
+  static const routeName = 'feature/theme-switching';
 
-  const DarkModeScreen({super.key});
+  const ThemeSwitchingScreen({super.key});
 
   @override
-  _DarkModeScreenState createState() => _DarkModeScreenState();
+  _ThemeSwitchingScreenState createState() => _ThemeSwitchingScreenState();
 }
 
-class _DarkModeScreenState extends State<DarkModeScreen> {
+class _ThemeSwitchingScreenState extends State<ThemeSwitchingScreen> {
   final List<TrinaColumn> columns = [];
-
   final List<TrinaRow> rows = [];
+  bool isDarkMode = false;
 
   @override
   void initState() {
     super.initState();
 
-    // Create columns with selection and date/time types for testing popups
+    // Create columns
     columns.addAll([
       TrinaColumn(
         title: 'ID',
@@ -34,7 +34,7 @@ class _DarkModeScreenState extends State<DarkModeScreen> {
         title: 'Name',
         field: 'name',
         type: TrinaColumnType.text(),
-        width: 150,
+        width: 200,
       ),
       TrinaColumn(
         title: 'Status',
@@ -66,12 +66,6 @@ class _DarkModeScreenState extends State<DarkModeScreen> {
         width: 120,
       ),
       TrinaColumn(
-        title: 'Time',
-        field: 'time',
-        type: TrinaColumnType.time(),
-        width: 100,
-      ),
-      TrinaColumn(
         title: 'Amount',
         field: 'amount',
         type: TrinaColumnType.currency(),
@@ -79,28 +73,26 @@ class _DarkModeScreenState extends State<DarkModeScreen> {
       ),
     ]);
 
-    // Create sample rows - enough to trigger pagination
+    // Create many rows to trigger pagination
     final statuses = ['Active', 'Inactive', 'Pending', 'Completed', 'Cancelled'];
     final priorities = ['Low', 'Medium', 'High', 'Critical'];
-    final projectNames = [
-      'Alpha', 'Beta', 'Gamma', 'Delta', 'Epsilon', 'Zeta', 'Eta', 'Theta',
-      'Iota', 'Kappa', 'Lambda', 'Mu', 'Nu', 'Xi', 'Omicron', 'Pi', 'Rho',
-      'Sigma', 'Tau', 'Upsilon', 'Phi', 'Chi', 'Psi', 'Omega'
+    final departments = [
+      'Engineering', 'Marketing', 'Sales', 'Support', 'Finance', 'HR',
+      'Operations', 'Legal', 'Design', 'Product', 'Research', 'Quality'
     ];
 
-    for (int i = 1; i <= 150; i++) {
+    for (int i = 1; i <= 200; i++) {
       final status = statuses[i % statuses.length];
       final priority = priorities[i % priorities.length];
-      final projectName = projectNames[i % projectNames.length];
+      final department = departments[i % departments.length];
 
       rows.add(TrinaRow(cells: {
         'id': TrinaCell(value: i),
-        'name': TrinaCell(value: 'Project $projectName $i'),
+        'name': TrinaCell(value: '$department Task #$i'),
         'status': TrinaCell(value: status),
         'priority': TrinaCell(value: priority),
-        'date': TrinaCell(value: DateTime.now().add(Duration(days: i % 30 - 15))),
-        'time': TrinaCell(value: '${(8 + (i % 10)).toString().padLeft(2, '0')}:${(i % 6 * 10).toString().padLeft(2, '0')}'),
-        'amount': TrinaCell(value: (5000 + (i * 123.45)) % 50000),
+        'date': TrinaCell(value: DateTime.now().add(Duration(days: i % 60 - 30))),
+        'amount': TrinaCell(value: (1000 + (i * 87.32)) % 25000),
       }));
     }
   }
@@ -108,34 +100,49 @@ class _DarkModeScreenState extends State<DarkModeScreen> {
   @override
   Widget build(BuildContext context) {
     return TrinaExampleScreen(
-      title: 'Dark mode',
-      topTitle: 'Dark mode',
-      topContents: const [
-        Text('Change the entire theme of the grid to Dark.'),
-        SizedBox(height: 8),
-        Text(
-            'Click on Status, Priority, Date, or Time columns to test dark mode popups.'),
-        SizedBox(height: 8),
-        Text(
-            'This demo shows 150 rows with pagination (20 rows per page) to test theme switching with pagination controls.'),
+      title: 'Theme Switching Demo',
+      topTitle: 'Live Theme Switching with Pagination',
+      topContents: [
+        const Text('Test live theme switching with pagination controls.'),
+        const SizedBox(height: 8),
+        const Text('Toggle between light and dark mode to see pagination theme updates in real-time.'),
+        const SizedBox(height: 8),
+        const Text('This demo shows 200 rows with pagination (25 rows per page).'),
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            const Text('Current Theme: '),
+            Switch(
+              value: isDarkMode,
+              onChanged: (value) {
+                setState(() {
+                  isDarkMode = value;
+                });
+              },
+            ),
+            Text(isDarkMode ? 'Dark Mode' : 'Light Mode'),
+          ],
+        ),
       ],
       topButtons: [
         TrinaExampleButton(
-          url:
-              'https://github.com/doonfrs/trina_grid/blob/master/demo/lib/screen/feature/dark_mode_screen.dart',
+          url: 'https://github.com/doonfrs/trina_grid/blob/master/demo/lib/screen/feature/theme_switching_screen.dart',
         ),
       ],
-      body: Theme(
-        data: ThemeData.dark(),
+      body: AnimatedTheme(
+        data: isDarkMode ? ThemeData.dark() : ThemeData.light(),
+        duration: const Duration(milliseconds: 300),
         child: TrinaGrid(
           columns: columns,
           rows: rows,
           onChanged: (TrinaGridOnChangedEvent event) {
-            print(event);
+            print('Grid changed: $event');
           },
-          configuration: const TrinaGridConfiguration.dark(),
+          configuration: isDarkMode
+            ? const TrinaGridConfiguration.dark()
+            : const TrinaGridConfiguration(),
           createFooter: (stateManager) {
-            stateManager.setPageSize(20);
+            stateManager.setPageSize(25);
             return TrinaPagination(stateManager);
           },
         ),

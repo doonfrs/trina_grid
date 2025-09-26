@@ -235,7 +235,7 @@ class TrinaPaginationState extends _TrinaPaginationStateWithChange {
 
         return SizedBox(
           width: _maxWidth,
-          height: stateManager.footerHeight,
+          height: TrinaGridSettings.rowHeight + 20,
           child: Align(
             alignment: Alignment.center,
             child: SingleChildScrollView(

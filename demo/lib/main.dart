@@ -51,6 +51,7 @@ import 'screen/feature/row_with_checkbox_screen.dart';
 import 'screen/feature/rtl_screen.dart';
 import 'screen/feature/selection_type_column_screen.dart';
 import 'screen/feature/text_type_column_screen.dart';
+import 'screen/feature/theme_switching_screen.dart';
 import 'screen/feature/time_type_column_screen.dart';
 import 'screen/feature/value_formatter_screen.dart';
 import 'screen/home_screen.dart';
@@ -147,6 +148,8 @@ class MyApp extends StatelessWidget {
             const SelectionTypeColumnScreen(),
         TextTypeColumnScreen.routeName: (context) =>
             const TextTypeColumnScreen(),
+        ThemeSwitchingScreen.routeName: (context) =>
+            const ThemeSwitchingScreen(),
         TimeTypeColumnScreen.routeName: (context) =>
             const TimeTypeColumnScreen(),
         ValueFormatterScreen.routeName: (context) =>
