@@ -41,6 +41,36 @@ TrinaColumn(
 )
 ```
 
+### Dynamic Cell Read-Only Control
+
+For more advanced scenarios, you can make individual cells read-only dynamically using the `checkReadOnly` callback function. This allows you to control cell editability based on the row's data or other conditions:
+
+```dart
+TrinaColumn(
+  title: 'Name',
+  field: 'name',
+  type: TrinaColumnType.text(),
+  enableEditingMode: true,
+  checkReadOnly: (TrinaRow row, TrinaCell cell) {
+    // Return true to make the cell read-only, false to allow editing
+    // Example: Make cell read-only based on another cell's value
+    return row.cells['status']?.value == 'locked';
+  },
+)
+```
+
+The `checkReadOnly` function provides:
+- `row`: The current row containing the cell
+- `cell`: The current cell being evaluated
+
+This callback is evaluated dynamically each time the grid needs to determine if a cell is editable, and it takes precedence over the static `readOnly` property. This allows for real-time updates when the underlying data changes.
+
+**Common use cases:**
+- Make cells read-only based on row status
+- Conditional editing based on user permissions
+- Time-based restrictions
+- Complex business logic for field editability
+
 ## Editing Modes
 
 ### Manual Editing
