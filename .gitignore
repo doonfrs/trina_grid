@@ -83,3 +83,6 @@ example/windows/flutter/generated_plugin_registrant.h
 example/windows/flutter/generated_plugins.cmake
 demo/linux/flutter/ephemeral/.plugin_symlinks
 GEMINI.md
+
+# Terminal Paste Image folder
+.cp-images/

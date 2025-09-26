@@ -60,11 +60,46 @@ abstract class _TrinaPaginationStateWithChange
 class TrinaPaginationState extends _TrinaPaginationStateWithChange {
   late double _maxWidth;
 
+  late Color _iconColor;
+  late Color _disabledIconColor;
+  late Color _activatedBorderColor;
+
   final _iconSplashRadius = TrinaGridSettings.rowHeight / 2;
 
   bool get _isFirstPage => page < 2;
 
   bool get _isLastPage => page > totalPage - 1;
+
+  @override
+  void initState() {
+    // Initialize color values before calling super.initState()
+    // because super.initState() calls updateState which needs these values
+    _iconColor = widget.stateManager.configuration.style.iconColor;
+    _disabledIconColor = widget.stateManager.configuration.style.disabledIconColor;
+    _activatedBorderColor = widget.stateManager.configuration.style.activatedBorderColor;
+
+    super.initState();
+  }
+
+  @override
+  void updateState(TrinaNotifierEvent event) {
+    super.updateState(event);
+
+    _iconColor = update<Color>(
+      _iconColor,
+      stateManager.configuration.style.iconColor,
+    );
+
+    _disabledIconColor = update<Color>(
+      _disabledIconColor,
+      stateManager.configuration.style.disabledIconColor,
+    );
+
+    _activatedBorderColor = update<Color>(
+      _activatedBorderColor,
+      stateManager.configuration.style.activatedBorderColor,
+    );
+  }
 
   /// maxWidth < 450 : 1
   /// maxWidth >= 450 : 3
@@ -166,8 +201,8 @@ class TrinaPaginationState extends _TrinaPaginationStateWithChange {
       fontSize:
           isCurrentIndex ? stateManager.configuration.style.iconSize : null,
       color: isCurrentIndex
-          ? stateManager.configuration.style.activatedBorderColor
-          : stateManager.configuration.style.iconColor,
+          ? _activatedBorderColor
+          : _iconColor,
     );
   }
 
@@ -194,10 +229,9 @@ class TrinaPaginationState extends _TrinaPaginationStateWithChange {
       builder: (_, size) {
         _maxWidth = size.maxWidth;
 
-        final Color iconColor = stateManager.configuration.style.iconColor;
+        final Color iconColor = _iconColor;
 
-        final Color disabledIconColor =
-            stateManager.configuration.style.disabledIconColor;
+        final Color disabledIconColor = _disabledIconColor;
 
         return SizedBox(
           width: _maxWidth,
