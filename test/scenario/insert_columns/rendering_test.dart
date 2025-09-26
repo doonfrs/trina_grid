@@ -31,8 +31,9 @@ void main() {
     );
   }
 
-  testWidgets('When the left fixed column is added, it should be rendered.',
-      (tester) async {
+  testWidgets('When the left fixed column is added, it should be rendered.', (
+    tester,
+  ) async {
     final columns = ColumnHelper.textColumn('column', count: 10);
 
     final rows = RowHelper.count(10, columns);
@@ -41,9 +42,7 @@ void main() {
       title: 'column10',
       field: 'column10',
       frozen: TrinaColumnFrozen.start,
-      type: TrinaColumnType.text(
-        defaultValue: 'column10 value new',
-      ),
+      type: TrinaColumnType.text(defaultValue: 'column10 value new'),
     );
 
     await buildGrid(tester: tester, columns: columns, rows: rows);
@@ -56,8 +55,9 @@ void main() {
     expect(find.text('column10 value new'), findsWidgets);
   });
 
-  testWidgets('When the right fixed column is added, it should be rendered.',
-      (tester) async {
+  testWidgets('When the right fixed column is added, it should be rendered.', (
+    tester,
+  ) async {
     final columns = ColumnHelper.textColumn('column', count: 10);
 
     final rows = RowHelper.count(10, columns);
@@ -66,9 +66,7 @@ void main() {
       title: 'column10',
       field: 'column10',
       frozen: TrinaColumnFrozen.end,
-      type: TrinaColumnType.text(
-        defaultValue: 'column10 value new',
-      ),
+      type: TrinaColumnType.text(defaultValue: 'column10 value new'),
     );
 
     await buildGrid(tester: tester, columns: columns, rows: rows);
@@ -82,61 +80,59 @@ void main() {
   });
 
   testWidgets(
-      'When the left fixed column is added, it should be rendered at the left end.',
-      (tester) async {
-    final columns = ColumnHelper.textColumn('column', count: 10);
+    'When the left fixed column is added, it should be rendered at the left end.',
+    (tester) async {
+      final columns = ColumnHelper.textColumn('column', count: 10);
 
-    final rows = RowHelper.count(10, columns);
+      final rows = RowHelper.count(10, columns);
 
-    final columnToInsert = TrinaColumn(
-      title: 'column10',
-      field: 'column10',
-      frozen: TrinaColumnFrozen.start,
-      type: TrinaColumnType.text(
-        defaultValue: 'column10 value new',
-      ),
-    );
+      final columnToInsert = TrinaColumn(
+        title: 'column10',
+        field: 'column10',
+        frozen: TrinaColumnFrozen.start,
+        type: TrinaColumnType.text(defaultValue: 'column10 value new'),
+      );
 
-    await buildGrid(tester: tester, columns: columns, rows: rows);
+      await buildGrid(tester: tester, columns: columns, rows: rows);
 
-    stateManager.insertColumns(5, [columnToInsert]);
+      stateManager.insertColumns(5, [columnToInsert]);
 
-    await tester.pump();
+      await tester.pump();
 
-    final Offset position = tester.getTopLeft(find.text('column10'));
+      final Offset position = tester.getTopLeft(find.text('column10'));
 
-    final Offset firstPosition = tester.getTopLeft(find.text('column0'));
+      final Offset firstPosition = tester.getTopLeft(find.text('column0'));
 
-    expect(position.dx, lessThan(firstPosition.dx));
-  });
+      expect(position.dx, lessThan(firstPosition.dx));
+    },
+  );
 
   testWidgets(
-      'When the right fixed column is added, it should be rendered at the right end.',
-      (tester) async {
-    final columns = ColumnHelper.textColumn('column', count: 10);
+    'When the right fixed column is added, it should be rendered at the right end.',
+    (tester) async {
+      final columns = ColumnHelper.textColumn('column', count: 10);
 
-    final rows = RowHelper.count(10, columns);
+      final rows = RowHelper.count(10, columns);
 
-    final columnToInsert = TrinaColumn(
-      title: 'column10',
-      field: 'column10',
-      frozen: TrinaColumnFrozen.end,
-      type: TrinaColumnType.text(
-        defaultValue: 'column10 value new',
-      ),
-    );
+      final columnToInsert = TrinaColumn(
+        title: 'column10',
+        field: 'column10',
+        frozen: TrinaColumnFrozen.end,
+        type: TrinaColumnType.text(defaultValue: 'column10 value new'),
+      );
 
-    await buildGrid(tester: tester, columns: columns, rows: rows);
+      await buildGrid(tester: tester, columns: columns, rows: rows);
 
-    stateManager.insertColumns(5, [columnToInsert]);
+      stateManager.insertColumns(5, [columnToInsert]);
 
-    await tester.pump();
+      await tester.pump();
 
-    final Offset position = tester.getTopLeft(find.text('column10'));
+      final Offset position = tester.getTopLeft(find.text('column10'));
 
-    // screen size 1200, column 5 is the last column shown.
-    final Offset lastPosition = tester.getTopLeft(find.text('column4'));
+      // screen size 1200, column 5 is the last column shown.
+      final Offset lastPosition = tester.getTopLeft(find.text('column4'));
 
-    expect(position.dx, greaterThan(lastPosition.dx));
-  });
+      expect(position.dx, greaterThan(lastPosition.dx));
+    },
+  );
 }

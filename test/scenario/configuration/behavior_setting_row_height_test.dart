@@ -26,40 +26,39 @@ void main() {
         columns ?? ColumnHelper.textColumn('header', count: 10);
     final rows = RowHelper.count(numberOfRows, safetyColumns);
 
-    return TrinaWidgetTestHelper(
-      'build with setting row height.',
-      (tester) async {
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Material(
-              child: TrinaGrid(
-                columns: safetyColumns,
-                rows: rows,
-                onLoaded: (TrinaGridOnLoadedEvent event) {
-                  stateManager = event.stateManager;
-                  stateManager!.setSelectingMode(selectingMode);
+    return TrinaWidgetTestHelper('build with setting row height.', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Material(
+            child: TrinaGrid(
+              columns: safetyColumns,
+              rows: rows,
+              onLoaded: (TrinaGridOnLoadedEvent event) {
+                stateManager = event.stateManager;
+                stateManager!.setSelectingMode(selectingMode);
 
-                  stateManager!.setCurrentCell(
-                    stateManager!.rows[rowIdx].cells['header$columnIdx'],
-                    rowIdx,
-                  );
-                },
-                configuration: TrinaGridConfiguration(
-                  style: TrinaGridStyleConfig(
-                    rowHeight: rowHeight,
-                    enableCellBorderHorizontal: enableCellBorderHorizontal,
-                  ),
+                stateManager!.setCurrentCell(
+                  stateManager!.rows[rowIdx].cells['header$columnIdx'],
+                  rowIdx,
+                );
+              },
+              configuration: TrinaGridConfiguration(
+                style: TrinaGridStyleConfig(
+                  rowHeight: rowHeight,
+                  enableCellBorderHorizontal: enableCellBorderHorizontal,
                 ),
               ),
             ),
           ),
-        );
+        ),
+      );
 
-        expect(stateManager!.currentCell, isNotNull);
-        expect(stateManager!.currentCellPosition!.columnIdx, columnIdx);
-        expect(stateManager!.currentCellPosition!.rowIdx, rowIdx);
-      },
-    );
+      expect(stateManager!.currentCell, isNotNull);
+      expect(stateManager!.currentCellPosition!.columnIdx, columnIdx);
+      expect(stateManager!.currentCellPosition!.rowIdx, rowIdx);
+    });
   }
 
   group('state', () {

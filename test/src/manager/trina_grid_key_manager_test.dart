@@ -31,57 +31,55 @@ void main() {
     keyboardFocusNode = FocusNode();
   });
 
-  testWidgets(
-    'Ctrl + C',
-    (WidgetTester tester) async {
-      // given
-      final TrinaGridKeyManager keyManager = TrinaGridKeyManager(
-        stateManager: stateManager,
-      );
+  testWidgets('Ctrl + C', (WidgetTester tester) async {
+    // given
+    final TrinaGridKeyManager keyManager = TrinaGridKeyManager(
+      stateManager: stateManager,
+    );
 
-      keyManager.init();
+    keyManager.init();
 
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Material(
-            child: KeyboardListener(
-              onKeyEvent: (event) {
-                keyManager.subject.add(TrinaKeyManagerEvent(
-                  focusNode: FocusNode(),
-                  event: event,
-                ));
-              },
-              focusNode: keyboardFocusNode,
-              child: const TextField(),
-            ),
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Material(
+          child: KeyboardListener(
+            onKeyEvent: (event) {
+              keyManager.subject.add(
+                TrinaKeyManagerEvent(focusNode: FocusNode(), event: event),
+              );
+            },
+            focusNode: keyboardFocusNode,
+            child: const TextField(),
           ),
         ),
-      );
+      ),
+    );
 
-      when(stateManager.isEditing).thenReturn(false);
-      when(stateManager.currentSelectingText).thenReturn('copied');
+    when(stateManager.isEditing).thenReturn(false);
+    when(stateManager.currentSelectingText).thenReturn('copied');
 
-      String? copied;
+    String? copied;
 
-      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
-          SystemChannels.platform, (MethodCall methodCall) async {
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+      SystemChannels.platform,
+      (MethodCall methodCall) async {
         if (methodCall.method == 'Clipboard.setData') {
           copied = (await methodCall.arguments['text']).toString();
         }
         return null;
-      });
+      },
+    );
 
-      // when
-      keyboardFocusNode.requestFocus();
+    // when
+    keyboardFocusNode.requestFocus();
 
-      await tester.sendKeyDownEvent(LogicalKeyboardKey.control);
-      await tester.sendKeyEvent(LogicalKeyboardKey.keyC);
-      await tester.sendKeyUpEvent(LogicalKeyboardKey.control);
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.control);
+    await tester.sendKeyEvent(LogicalKeyboardKey.keyC);
+    await tester.sendKeyUpEvent(LogicalKeyboardKey.control);
 
-      // then
-      expect(copied, 'copied');
-    },
-  );
+    // then
+    expect(copied, 'copied');
+  });
 
   testWidgets(
     'Ctrl + C - when isEditing is true, the currentSelectingText value is not copied to the clipboard.',
@@ -98,10 +96,9 @@ void main() {
           home: Material(
             child: KeyboardListener(
               onKeyEvent: (event) {
-                keyManager.subject.add(TrinaKeyManagerEvent(
-                  focusNode: FocusNode(),
-                  event: event,
-                ));
+                keyManager.subject.add(
+                  TrinaKeyManagerEvent(focusNode: FocusNode(), event: event),
+                );
               },
               focusNode: keyboardFocusNode,
               child: const TextField(),
@@ -118,12 +115,14 @@ void main() {
       String? copied;
 
       tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
-          SystemChannels.platform, (MethodCall methodCall) async {
-        if (methodCall.method == 'Clipboard.setData') {
-          copied = (await methodCall.arguments['text']).toString();
-        }
-        return null;
-      });
+        SystemChannels.platform,
+        (MethodCall methodCall) async {
+          if (methodCall.method == 'Clipboard.setData') {
+            copied = (await methodCall.arguments['text']).toString();
+          }
+          return null;
+        },
+      );
 
       // when
       await tester.sendKeyDownEvent(LogicalKeyboardKey.control);
@@ -135,59 +134,61 @@ void main() {
     },
   );
 
-  testWidgets(
-    'Ctrl + V - pasteCellValue should be called.',
-    (WidgetTester tester) async {
-      // given
-      final TrinaGridKeyManager keyManager = TrinaGridKeyManager(
-        stateManager: stateManager,
-      );
+  testWidgets('Ctrl + V - pasteCellValue should be called.', (
+    WidgetTester tester,
+  ) async {
+    // given
+    final TrinaGridKeyManager keyManager = TrinaGridKeyManager(
+      stateManager: stateManager,
+    );
 
-      keyManager.init();
+    keyManager.init();
 
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Material(
-            child: KeyboardListener(
-              onKeyEvent: (event) {
-                keyManager.subject.add(TrinaKeyManagerEvent(
-                  focusNode: FocusNode(),
-                  event: event,
-                ));
-              },
-              focusNode: keyboardFocusNode,
-              child: const TextField(),
-            ),
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Material(
+          child: KeyboardListener(
+            onKeyEvent: (event) {
+              keyManager.subject.add(
+                TrinaKeyManagerEvent(focusNode: FocusNode(), event: event),
+              );
+            },
+            focusNode: keyboardFocusNode,
+            child: const TextField(),
           ),
         ),
-      );
+      ),
+    );
 
-      when(stateManager.currentCell).thenReturn(TrinaCell(value: 'test'));
-      when(stateManager.isEditing).thenReturn(false);
+    when(stateManager.currentCell).thenReturn(TrinaCell(value: 'test'));
+    when(stateManager.isEditing).thenReturn(false);
 
-      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
-          SystemChannels.platform, (MethodCall methodCall) async {
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+      SystemChannels.platform,
+      (MethodCall methodCall) async {
         if (methodCall.method == 'Clipboard.getData') {
           return const <String, dynamic>{'text': 'pasted'};
         }
         return null;
-      });
+      },
+    );
 
-      // when
-      keyboardFocusNode.requestFocus();
+    // when
+    keyboardFocusNode.requestFocus();
 
-      await tester.sendKeyDownEvent(LogicalKeyboardKey.control);
-      await tester.sendKeyEvent(LogicalKeyboardKey.keyV);
-      await tester.sendKeyUpEvent(LogicalKeyboardKey.control);
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.control);
+    await tester.sendKeyEvent(LogicalKeyboardKey.keyV);
+    await tester.sendKeyUpEvent(LogicalKeyboardKey.control);
 
-      // then
-      expect(stateManager.currentCell, isNotNull);
-      expect(stateManager.isEditing, false);
-      verify(stateManager.pasteCellValue([
-        ['pasted']
-      ])).called(1);
-    },
-  );
+    // then
+    expect(stateManager.currentCell, isNotNull);
+    expect(stateManager.isEditing, false);
+    verify(
+      stateManager.pasteCellValue([
+        ['pasted'],
+      ]),
+    ).called(1);
+  });
 
   testWidgets(
     'Ctrl + V - currentCell is null, pasteCellValue should not be called.',
@@ -204,10 +205,9 @@ void main() {
           home: Material(
             child: KeyboardListener(
               onKeyEvent: (event) {
-                keyManager.subject.add(TrinaKeyManagerEvent(
-                  focusNode: FocusNode(),
-                  event: event,
-                ));
+                keyManager.subject.add(
+                  TrinaKeyManagerEvent(focusNode: FocusNode(), event: event),
+                );
               },
               focusNode: keyboardFocusNode,
               child: const TextField(),
@@ -220,12 +220,14 @@ void main() {
       when(stateManager.isEditing).thenReturn(false);
 
       tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
-          SystemChannels.platform, (MethodCall methodCall) async {
-        if (methodCall.method == 'Clipboard.getData') {
-          return const <String, dynamic>{'text': 'pasted'};
-        }
-        return null;
-      });
+        SystemChannels.platform,
+        (MethodCall methodCall) async {
+          if (methodCall.method == 'Clipboard.getData') {
+            return const <String, dynamic>{'text': 'pasted'};
+          }
+          return null;
+        },
+      );
 
       // when
       keyboardFocusNode.requestFocus();
@@ -237,9 +239,11 @@ void main() {
       // then
       expect(stateManager.currentCell, null);
       expect(stateManager.isEditing, false);
-      verifyNever(stateManager.pasteCellValue([
-        ['pasted']
-      ]));
+      verifyNever(
+        stateManager.pasteCellValue([
+          ['pasted'],
+        ]),
+      );
     },
   );
 
@@ -258,10 +262,9 @@ void main() {
           home: Material(
             child: KeyboardListener(
               onKeyEvent: (event) {
-                keyManager.subject.add(TrinaKeyManagerEvent(
-                  focusNode: FocusNode(),
-                  event: event,
-                ));
+                keyManager.subject.add(
+                  TrinaKeyManagerEvent(focusNode: FocusNode(), event: event),
+                );
               },
               focusNode: keyboardFocusNode,
               child: const TextField(),
@@ -274,12 +277,14 @@ void main() {
       when(stateManager.isEditing).thenReturn(true);
 
       tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
-          SystemChannels.platform, (MethodCall methodCall) async {
-        if (methodCall.method == 'Clipboard.getData') {
-          return const <String, dynamic>{'text': 'pasted'};
-        }
-        return null;
-      });
+        SystemChannels.platform,
+        (MethodCall methodCall) async {
+          if (methodCall.method == 'Clipboard.getData') {
+            return const <String, dynamic>{'text': 'pasted'};
+          }
+          return null;
+        },
+      );
 
       // when
       keyboardFocusNode.requestFocus();
@@ -291,15 +296,18 @@ void main() {
       // then
       expect(stateManager.currentCell, isNotNull);
       expect(stateManager.isEditing, true);
-      verifyNever(stateManager.pasteCellValue([
-        ['pasted']
-      ]));
+      verifyNever(
+        stateManager.pasteCellValue([
+          ['pasted'],
+        ]),
+      );
     },
   );
 
   group('_handleHomeEnd', () {
-    final withKeyboardListener =
-        TrinaWidgetTestHelper('Key input test', (tester) async {
+    final withKeyboardListener = TrinaWidgetTestHelper('Key input test', (
+      tester,
+    ) async {
       final TrinaGridKeyManager keyManager = TrinaGridKeyManager(
         stateManager: stateManager,
       );
@@ -311,10 +319,9 @@ void main() {
           home: Material(
             child: KeyboardListener(
               onKeyEvent: (event) {
-                keyManager.subject.add(TrinaKeyManagerEvent(
-                  focusNode: FocusNode(),
-                  event: event,
-                ));
+                keyManager.subject.add(
+                  TrinaKeyManagerEvent(focusNode: FocusNode(), event: event),
+                );
               },
               focusNode: keyboardFocusNode,
               child: const TextField(),
@@ -334,9 +341,9 @@ void main() {
       await tester.sendKeyUpEvent(LogicalKeyboardKey.home);
 
       // then
-      verify(stateManager
-              .moveCurrentCellToEdgeOfColumns(TrinaMoveDirection.left))
-          .called(1);
+      verify(
+        stateManager.moveCurrentCellToEdgeOfColumns(TrinaMoveDirection.left),
+      ).called(1);
     });
 
     withKeyboardListener.test('home + shift', (tester) async {
@@ -346,9 +353,9 @@ void main() {
       await tester.sendKeyUpEvent(LogicalKeyboardKey.shift);
 
       // then
-      verify(stateManager
-              .moveSelectingCellToEdgeOfColumns(TrinaMoveDirection.left))
-          .called(1);
+      verify(
+        stateManager.moveSelectingCellToEdgeOfColumns(TrinaMoveDirection.left),
+      ).called(1);
     });
 
     withKeyboardListener.test('home + ctrl', (tester) async {
@@ -358,8 +365,9 @@ void main() {
       await tester.sendKeyUpEvent(LogicalKeyboardKey.control);
 
       // then
-      verify(stateManager.moveCurrentCellToEdgeOfRows(TrinaMoveDirection.up))
-          .called(1);
+      verify(
+        stateManager.moveCurrentCellToEdgeOfRows(TrinaMoveDirection.up),
+      ).called(1);
     });
 
     withKeyboardListener.test('home + ctrl + shift', (tester) async {
@@ -371,8 +379,9 @@ void main() {
       await tester.sendKeyUpEvent(LogicalKeyboardKey.shift);
 
       // then
-      verify(stateManager.moveSelectingCellToEdgeOfRows(TrinaMoveDirection.up))
-          .called(1);
+      verify(
+        stateManager.moveSelectingCellToEdgeOfRows(TrinaMoveDirection.up),
+      ).called(1);
     });
 
     withKeyboardListener.test('end', (tester) async {
@@ -380,9 +389,9 @@ void main() {
       await tester.sendKeyUpEvent(LogicalKeyboardKey.end);
 
       // then
-      verify(stateManager
-              .moveCurrentCellToEdgeOfColumns(TrinaMoveDirection.right))
-          .called(1);
+      verify(
+        stateManager.moveCurrentCellToEdgeOfColumns(TrinaMoveDirection.right),
+      ).called(1);
     });
 
     withKeyboardListener.test('end + shift', (tester) async {
@@ -392,9 +401,9 @@ void main() {
       await tester.sendKeyUpEvent(LogicalKeyboardKey.shift);
 
       // then
-      verify(stateManager
-              .moveSelectingCellToEdgeOfColumns(TrinaMoveDirection.right))
-          .called(1);
+      verify(
+        stateManager.moveSelectingCellToEdgeOfColumns(TrinaMoveDirection.right),
+      ).called(1);
     });
 
     withKeyboardListener.test('end + ctrl', (tester) async {
@@ -404,8 +413,9 @@ void main() {
       await tester.sendKeyUpEvent(LogicalKeyboardKey.control);
 
       // then
-      verify(stateManager.moveCurrentCellToEdgeOfRows(TrinaMoveDirection.down))
-          .called(1);
+      verify(
+        stateManager.moveCurrentCellToEdgeOfRows(TrinaMoveDirection.down),
+      ).called(1);
     });
 
     withKeyboardListener.test('end + ctrl + shift', (tester) async {
@@ -417,15 +427,16 @@ void main() {
       await tester.sendKeyUpEvent(LogicalKeyboardKey.shift);
 
       // then
-      verify(stateManager
-              .moveSelectingCellToEdgeOfRows(TrinaMoveDirection.down))
-          .called(1);
+      verify(
+        stateManager.moveSelectingCellToEdgeOfRows(TrinaMoveDirection.down),
+      ).called(1);
     });
   });
 
   group('_handlePageUpDown', () {
-    final withKeyboardListener =
-        TrinaWidgetTestHelper('Key sinput test', (tester) async {
+    final withKeyboardListener = TrinaWidgetTestHelper('Key sinput test', (
+      tester,
+    ) async {
       final TrinaGridKeyManager keyManager = TrinaGridKeyManager(
         stateManager: stateManager,
       );
@@ -440,10 +451,9 @@ void main() {
           home: Material(
             child: KeyboardListener(
               onKeyEvent: (event) {
-                keyManager.subject.add(TrinaKeyManagerEvent(
-                  focusNode: FocusNode(),
-                  event: event,
-                ));
+                keyManager.subject.add(
+                  TrinaKeyManagerEvent(focusNode: FocusNode(), event: event),
+                );
               },
               focusNode: keyboardFocusNode,
               child: const TextField(),
@@ -463,8 +473,9 @@ void main() {
       await tester.sendKeyUpEvent(LogicalKeyboardKey.pageUp);
 
       // then
-      verify(stateManager.moveCurrentCellByRowIdx(-5, TrinaMoveDirection.up))
-          .called(1);
+      verify(
+        stateManager.moveCurrentCellByRowIdx(-5, TrinaMoveDirection.up),
+      ).called(1);
     });
 
     withKeyboardListener.test('pageUp + shift', (tester) async {
@@ -474,8 +485,9 @@ void main() {
       await tester.sendKeyUpEvent(LogicalKeyboardKey.shift);
 
       // then
-      verify(stateManager.moveSelectingCellByRowIdx(-5, TrinaMoveDirection.up))
-          .called(1);
+      verify(
+        stateManager.moveSelectingCellByRowIdx(-5, TrinaMoveDirection.up),
+      ).called(1);
     });
 
     withKeyboardListener.test('pageDown', (tester) async {
@@ -483,8 +495,9 @@ void main() {
       await tester.sendKeyUpEvent(LogicalKeyboardKey.pageDown);
 
       // then
-      verify(stateManager.moveCurrentCellByRowIdx(5, TrinaMoveDirection.down))
-          .called(1);
+      verify(
+        stateManager.moveCurrentCellByRowIdx(5, TrinaMoveDirection.down),
+      ).called(1);
     });
 
     withKeyboardListener.test('pageDown + shift', (tester) async {
@@ -494,8 +507,9 @@ void main() {
       await tester.sendKeyUpEvent(LogicalKeyboardKey.shift);
 
       // then
-      verify(stateManager.moveSelectingCellByRowIdx(5, TrinaMoveDirection.down))
-          .called(1);
+      verify(
+        stateManager.moveSelectingCellByRowIdx(5, TrinaMoveDirection.down),
+      ).called(1);
     });
   });
   group('_handleDefaultActions', () {
@@ -510,10 +524,9 @@ void main() {
           home: Material(
             child: KeyboardListener(
               onKeyEvent: (event) {
-                keyManager.subject.add(TrinaKeyManagerEvent(
-                  focusNode: FocusNode(),
-                  event: event,
-                ));
+                keyManager.subject.add(
+                  TrinaKeyManagerEvent(focusNode: FocusNode(), event: event),
+                );
               },
               focusNode: keyboardFocusNode,
               child: const TextField(),
@@ -527,115 +540,94 @@ void main() {
     }
 
     group('_handleCharacter', () {
-      testWidgets(
-        'When isEditing is false and currentCell != null, '
-        'setEditing(true) should be called',
-        (WidgetTester tester) async {
-          await tester.runAsync(() async {
-            await buildAndFocus(tester);
-
-            // given
-            when(stateManager.isEditing).thenReturn(false);
-            when(stateManager.currentCell).thenReturn(TrinaCell(value: 'test'));
-
-            // when
-            await tester.sendKeyEvent(LogicalKeyboardKey.keyA);
-            await tester.pump();
-
-            // then
-            verify(stateManager.setEditing(true)).called(1);
-          });
-        },
-      );
-      testWidgets(
-        'When isEditing is true, '
-        'CurrentCell != null, '
-        'setEditing should not be called',
-        (WidgetTester tester) async {
-          await buildAndFocus(tester); // setup
+      testWidgets('When isEditing is false and currentCell != null, '
+          'setEditing(true) should be called', (WidgetTester tester) async {
+        await tester.runAsync(() async {
+          await buildAndFocus(tester);
 
           // given
-          when(stateManager.isEditing).thenReturn(true);
+          when(stateManager.isEditing).thenReturn(false);
           when(stateManager.currentCell).thenReturn(TrinaCell(value: 'test'));
 
           // when
           await tester.sendKeyEvent(LogicalKeyboardKey.keyA);
+          await tester.pump();
 
           // then
-          verifyNever(stateManager.setEditing(any));
-        },
-      );
-      testWidgets(
-        'When CurrentCell is null, '
-        'no calls should be made',
-        (WidgetTester tester) async {
-          await buildAndFocus(tester); // setup
+          verify(stateManager.setEditing(true)).called(1);
+        });
+      });
+      testWidgets('When isEditing is true, '
+          'CurrentCell != null, '
+          'setEditing should not be called', (WidgetTester tester) async {
+        await buildAndFocus(tester); // setup
 
-          // given
-          when(stateManager.currentCell).thenReturn(null);
+        // given
+        when(stateManager.isEditing).thenReturn(true);
+        when(stateManager.currentCell).thenReturn(TrinaCell(value: 'test'));
 
-          // when
-          await tester.sendKeyEvent(LogicalKeyboardKey.keyA);
-          // then
-          verifyNever(stateManager.setEditing(any));
-          verifyNever(stateManager.textEditingController);
-        },
-      );
+        // when
+        await tester.sendKeyEvent(LogicalKeyboardKey.keyA);
+
+        // then
+        verifyNever(stateManager.setEditing(any));
+      });
+      testWidgets('When CurrentCell is null, '
+          'no calls should be made', (WidgetTester tester) async {
+        await buildAndFocus(tester); // setup
+
+        // given
+        when(stateManager.currentCell).thenReturn(null);
+
+        // when
+        await tester.sendKeyEvent(LogicalKeyboardKey.keyA);
+        // then
+        verifyNever(stateManager.setEditing(any));
+        verifyNever(stateManager.textEditingController);
+      });
     });
     group('when a modifier key is pressed with a character', () {
-      testWidgets(
-        'When alt is pressed, '
-        'no calls should be made',
-        (WidgetTester tester) async {
+      testWidgets('When alt is pressed, '
+          'no calls should be made', (WidgetTester tester) async {
+        await buildAndFocus(tester); // setup
+
+        // when
+        await tester.sendKeyDownEvent(LogicalKeyboardKey.alt);
+        await tester.sendKeyEvent(LogicalKeyboardKey.keyA);
+        await tester.sendKeyUpEvent(LogicalKeyboardKey.alt);
+        await tester.pump();
+        // then
+        verifyNever(stateManager.setEditing(any));
+      });
+      testWidgets('When ctrl is pressed, '
+          'no calls should be made', (WidgetTester tester) async {
+        await buildAndFocus(tester); // setup
+
+        // when
+        await tester.sendKeyDownEvent(LogicalKeyboardKey.control);
+        await tester.sendKeyEvent(LogicalKeyboardKey.keyA);
+        await tester.sendKeyUpEvent(LogicalKeyboardKey.control);
+        await tester.pump();
+
+        // then
+        verifyNever(stateManager.setEditing(any));
+      });
+      testWidgets('When shift is pressed, '
+          'event should be handled', (WidgetTester tester) async {
+        await tester.runAsync(() async {
           await buildAndFocus(tester); // setup
 
+          when(stateManager.isEditing).thenReturn(false);
+          when(stateManager.currentCell).thenReturn(TrinaCell(value: 'test'));
           // when
-          await tester.sendKeyDownEvent(LogicalKeyboardKey.alt);
+          await tester.sendKeyDownEvent(LogicalKeyboardKey.shift);
           await tester.sendKeyEvent(LogicalKeyboardKey.keyA);
-          await tester.sendKeyUpEvent(LogicalKeyboardKey.alt);
-          await tester.pump();
+          await tester.sendKeyUpEvent(LogicalKeyboardKey.shift);
+          await tester.pumpAndSettle();
           // then
-          verifyNever(stateManager.setEditing(any));
-        },
-      );
-      testWidgets(
-        'When ctrl is pressed, '
-        'no calls should be made',
-        (WidgetTester tester) async {
-          await buildAndFocus(tester); // setup
-
-          // when
-          await tester.sendKeyDownEvent(LogicalKeyboardKey.control);
-          await tester.sendKeyEvent(LogicalKeyboardKey.keyA);
-          await tester.sendKeyUpEvent(LogicalKeyboardKey.control);
-          await tester.pump();
-
-          // then
-          verifyNever(stateManager.setEditing(any));
-        },
-      );
-      testWidgets(
-        'When shift is pressed, '
-        'event should be handled',
-        (WidgetTester tester) async {
-          await tester.runAsync(
-            () async {
-              await buildAndFocus(tester); // setup
-
-              when(stateManager.isEditing).thenReturn(false);
-              when(stateManager.currentCell)
-                  .thenReturn(TrinaCell(value: 'test'));
-              // when
-              await tester.sendKeyDownEvent(LogicalKeyboardKey.shift);
-              await tester.sendKeyEvent(LogicalKeyboardKey.keyA);
-              await tester.sendKeyUpEvent(LogicalKeyboardKey.shift);
-              await tester.pumpAndSettle();
-              // then
-              verify(stateManager.setEditing(true)).called(1);
-            },
-          );
-        },
-      );
+          verify(stateManager.setEditing(true)).called(1);
+        });
+      });
     });
   });
 }

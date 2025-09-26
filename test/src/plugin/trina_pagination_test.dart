@@ -17,9 +17,7 @@ void main() {
     stateManager = MockTrinaGridStateManager();
     subject = PublishSubject<TrinaNotifierEvent>();
 
-    when(stateManager.configuration).thenReturn(
-      const TrinaGridConfiguration(),
-    );
+    when(stateManager.configuration).thenReturn(const TrinaGridConfiguration());
 
     when(stateManager.footerHeight).thenReturn(45);
 
@@ -31,11 +29,7 @@ void main() {
   });
 
   group('Rendering', () {
-    buildWidget({
-      int page = 1,
-      int totalPage = 1,
-      int? pageSizeToMove,
-    }) {
+    buildWidget({int page = 1, int totalPage = 1, int? pageSizeToMove}) {
       return TrinaWidgetTestHelper('Tap cell', (tester) async {
         when(stateManager.page).thenReturn(page);
         when(stateManager.totalPage).thenReturn(totalPage);
@@ -53,12 +47,9 @@ void main() {
       });
     }
 
-    buildWidget().test(
-      'The page number should be rendered.',
-      (tester) async {
-        expect(find.text('1'), findsOneWidget);
-      },
-    );
+    buildWidget().test('The page number should be rendered.', (tester) async {
+      expect(find.text('1'), findsOneWidget);
+    });
 
     buildWidget().test(
       'Four IconButton should be rendered. (First, Previous, Next, Last buttons)',
@@ -77,9 +68,7 @@ void main() {
       },
     );
 
-    buildWidget(
-      totalPage: 10,
-    ).test(
+    buildWidget(totalPage: 10).test(
       'When width is 449, 1 TextButton should be rendered.',
       (tester) async {
         await TestHelperUtil.changeWidth(
@@ -93,9 +82,7 @@ void main() {
       },
     );
 
-    buildWidget(
-      totalPage: 10,
-    ).test(
+    buildWidget(totalPage: 10).test(
       'When width is 450, 3 TextButtons should be rendered.',
       (tester) async {
         await TestHelperUtil.changeWidth(
@@ -111,9 +98,7 @@ void main() {
       },
     );
 
-    buildWidget(
-      totalPage: 10,
-    ).test(
+    buildWidget(totalPage: 10).test(
       'When width is 549, 3 TextButtons should be rendered.',
       (tester) async {
         await TestHelperUtil.changeWidth(
@@ -129,9 +114,7 @@ void main() {
       },
     );
 
-    buildWidget(
-      totalPage: 10,
-    ).test(
+    buildWidget(totalPage: 10).test(
       'When width is 550, 5 TextButtons should be rendered.',
       (tester) async {
         await TestHelperUtil.changeWidth(
@@ -149,9 +132,7 @@ void main() {
       },
     );
 
-    buildWidget(
-      totalPage: 10,
-    ).test(
+    buildWidget(totalPage: 10).test(
       'When width is 649, 5 TextButtons should be rendered.',
       (tester) async {
         await TestHelperUtil.changeWidth(
@@ -169,9 +150,7 @@ void main() {
       },
     );
 
-    buildWidget(
-      totalPage: 10,
-    ).test(
+    buildWidget(totalPage: 10).test(
       'When width is 650, 7 TextButtons should be rendered.',
       (tester) async {
         await TestHelperUtil.changeWidth(
@@ -191,9 +170,7 @@ void main() {
       },
     );
 
-    buildWidget(
-      totalPage: 10,
-    ).test(
+    buildWidget(totalPage: 10).test(
       'When width is 1280, 7 TextButtons should be rendered.',
       (tester) async {
         await TestHelperUtil.changeWidth(
@@ -213,9 +190,7 @@ void main() {
       },
     );
 
-    buildWidget(
-      totalPage: 10,
-    ).test(
+    buildWidget(totalPage: 10).test(
       'When the next page button is tapped, setPage should be called with 8.',
       (tester) async {
         await TestHelperUtil.changeWidth(
@@ -230,10 +205,7 @@ void main() {
       },
     );
 
-    buildWidget(
-      totalPage: 10,
-      pageSizeToMove: 1,
-    ).test(
+    buildWidget(totalPage: 10, pageSizeToMove: 1).test(
       'When pageSizeToMove is 1, the next page button is tapped, setPage should be called with 2.',
       (tester) async {
         await TestHelperUtil.changeWidth(
@@ -248,11 +220,7 @@ void main() {
       },
     );
 
-    buildWidget(
-      page: 5,
-      totalPage: 10,
-      pageSizeToMove: 1,
-    ).test(
+    buildWidget(page: 5, totalPage: 10, pageSizeToMove: 1).test(
       'When pageSizeToMove is 1, the previous page button is tapped, setPage should be called with 4.',
       (tester) async {
         await TestHelperUtil.changeWidth(

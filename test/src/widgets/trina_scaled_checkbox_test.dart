@@ -3,59 +3,55 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 void main() {
-  testWidgets(
-    'Checkbox should be rendered',
-    (WidgetTester tester) async {
-      // given
-      const bool value = false;
+  testWidgets('Checkbox should be rendered', (WidgetTester tester) async {
+    // given
+    const bool value = false;
 
-      handleOnChanged(bool? changed) {}
+    handleOnChanged(bool? changed) {}
 
-      // when
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Material(
-            child: TrinaScaledCheckbox(
-              value: value,
-              handleOnChanged: handleOnChanged,
-            ),
+    // when
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Material(
+          child: TrinaScaledCheckbox(
+            value: value,
+            handleOnChanged: handleOnChanged,
           ),
         ),
-      );
+      ),
+    );
 
-      // then
-      expect(find.byType(Checkbox), findsOneWidget);
-    },
-  );
+    // then
+    expect(find.byType(Checkbox), findsOneWidget);
+  });
 
-  testWidgets(
-    'Tapping checkbox should call handleOnChanged',
-    (WidgetTester tester) async {
-      // given
-      bool? value = false;
+  testWidgets('Tapping checkbox should call handleOnChanged', (
+    WidgetTester tester,
+  ) async {
+    // given
+    bool? value = false;
 
-      handleOnChanged(bool? changed) {
-        value = changed;
-      }
+    handleOnChanged(bool? changed) {
+      value = changed;
+    }
 
-      // when
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Material(
-            child: TrinaScaledCheckbox(
-              value: value,
-              handleOnChanged: handleOnChanged,
-            ),
+    // when
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Material(
+          child: TrinaScaledCheckbox(
+            value: value,
+            handleOnChanged: handleOnChanged,
           ),
         ),
-      );
+      ),
+    );
 
-      expect(value, isFalse);
+    expect(value, isFalse);
 
-      // then
-      await tester.tap(find.byType(Checkbox));
+    // then
+    await tester.tap(find.byType(Checkbox));
 
-      expect(value, isTrue);
-    },
-  );
+    expect(value, isTrue);
+  });
 }

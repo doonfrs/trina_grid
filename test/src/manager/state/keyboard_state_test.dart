@@ -23,42 +23,44 @@ void main() {
 
   late TrinaGridStateManager stateManager;
 
-  final withColumnAndRows =
-      TrinaWidgetTestHelper('With 10 columns and 10 rows, ', (tester) async {
-    columns = [
-      ...ColumnHelper.textColumn('column', count: 10, width: 100),
-    ];
+  final withColumnAndRows = TrinaWidgetTestHelper(
+    'With 10 columns and 10 rows, ',
+    (tester) async {
+      columns = [...ColumnHelper.textColumn('column', count: 10, width: 100)];
 
-    rows = RowHelper.count(10, columns);
+      rows = RowHelper.count(10, columns);
 
-    scrollController = MockTrinaGridScrollController();
+      scrollController = MockTrinaGridScrollController();
 
-    eventManager = MockTrinaGridEventManager();
+      eventManager = MockTrinaGridEventManager();
 
-    horizontal = MockLinkedScrollControllerGroup();
+      horizontal = MockLinkedScrollControllerGroup();
 
-    vertical = MockLinkedScrollControllerGroup();
+      vertical = MockLinkedScrollControllerGroup();
 
-    when(scrollController.verticalOffset).thenReturn(100);
+      when(scrollController.verticalOffset).thenReturn(100);
 
-    when(scrollController.maxScrollHorizontal).thenReturn(0);
+      when(scrollController.maxScrollHorizontal).thenReturn(0);
 
-    when(scrollController.maxScrollVertical).thenReturn(0);
+      when(scrollController.maxScrollVertical).thenReturn(0);
 
-    when(scrollController.horizontal).thenReturn(horizontal);
+      when(scrollController.horizontal).thenReturn(horizontal);
 
-    when(scrollController.vertical).thenReturn(vertical);
+      when(scrollController.vertical).thenReturn(vertical);
 
-    stateManager = TrinaGridStateManager(
-      columns: columns,
-      rows: rows,
-      gridFocusNode: MockFocusNode(),
-      scroll: scrollController,
-    );
+      stateManager = TrinaGridStateManager(
+        columns: columns,
+        rows: rows,
+        gridFocusNode: MockFocusNode(),
+        scroll: scrollController,
+      );
 
-    stateManager.setEventManager(eventManager);
-    stateManager.setLayout(const BoxConstraints(maxWidth: 500, maxHeight: 500));
-  });
+      stateManager.setEventManager(eventManager);
+      stateManager.setLayout(
+        const BoxConstraints(maxWidth: 500, maxHeight: 500),
+      );
+    },
+  );
 
   group('moveCurrentCellToEdgeOfColumns', () {
     withColumnAndRows.test(
@@ -90,24 +92,23 @@ void main() {
       },
     );
 
-    withColumnAndRows.test(
-      'When isEditing is true, cell should not move',
-      (tester) async {
-        stateManager.setCurrentCell(stateManager.firstCell, 0);
+    withColumnAndRows.test('When isEditing is true, cell should not move', (
+      tester,
+    ) async {
+      stateManager.setCurrentCell(stateManager.firstCell, 0);
 
-        stateManager.setEditing(true);
+      stateManager.setEditing(true);
 
-        expect(stateManager.isEditing, isTrue);
+      expect(stateManager.isEditing, isTrue);
 
-        expect(stateManager.currentCellPosition!.columnIdx, 0);
-        expect(stateManager.currentCellPosition!.rowIdx, 0);
+      expect(stateManager.currentCellPosition!.columnIdx, 0);
+      expect(stateManager.currentCellPosition!.rowIdx, 0);
 
-        stateManager.moveCurrentCellToEdgeOfColumns(TrinaMoveDirection.right);
+      stateManager.moveCurrentCellToEdgeOfColumns(TrinaMoveDirection.right);
 
-        expect(stateManager.currentCellPosition!.columnIdx, 0);
-        expect(stateManager.currentCellPosition!.rowIdx, 0);
-      },
-    );
+      expect(stateManager.currentCellPosition!.columnIdx, 0);
+      expect(stateManager.currentCellPosition!.rowIdx, 0);
+    });
 
     withColumnAndRows.test(
       'When isEditing is true but force is true, cell should move',
@@ -143,9 +144,7 @@ void main() {
         expect(stateManager.currentCellPosition!.columnIdx, 3);
         expect(stateManager.currentCellPosition!.rowIdx, 0);
 
-        stateManager.moveCurrentCellToEdgeOfColumns(
-          TrinaMoveDirection.left,
-        );
+        stateManager.moveCurrentCellToEdgeOfColumns(TrinaMoveDirection.left);
 
         expect(stateManager.currentCellPosition!.columnIdx, 0);
         expect(stateManager.currentCellPosition!.rowIdx, 0);
@@ -164,9 +163,7 @@ void main() {
         expect(stateManager.currentCellPosition!.columnIdx, 3);
         expect(stateManager.currentCellPosition!.rowIdx, 0);
 
-        stateManager.moveCurrentCellToEdgeOfColumns(
-          TrinaMoveDirection.right,
-        );
+        stateManager.moveCurrentCellToEdgeOfColumns(TrinaMoveDirection.right);
 
         expect(stateManager.currentCellPosition!.columnIdx, 9);
         expect(stateManager.currentCellPosition!.rowIdx, 0);
@@ -193,24 +190,23 @@ void main() {
       },
     );
 
-    withColumnAndRows.test(
-      'When isEditing is true, cell should not move',
-      (tester) async {
-        stateManager.setCurrentCell(stateManager.firstCell, 0);
+    withColumnAndRows.test('When isEditing is true, cell should not move', (
+      tester,
+    ) async {
+      stateManager.setCurrentCell(stateManager.firstCell, 0);
 
-        stateManager.setEditing(true);
+      stateManager.setEditing(true);
 
-        expect(stateManager.isEditing, isTrue);
+      expect(stateManager.isEditing, isTrue);
 
-        expect(stateManager.currentCellPosition!.columnIdx, 0);
-        expect(stateManager.currentCellPosition!.rowIdx, 0);
+      expect(stateManager.currentCellPosition!.columnIdx, 0);
+      expect(stateManager.currentCellPosition!.rowIdx, 0);
 
-        stateManager.moveCurrentCellToEdgeOfRows(TrinaMoveDirection.down);
+      stateManager.moveCurrentCellToEdgeOfRows(TrinaMoveDirection.down);
 
-        expect(stateManager.currentCellPosition!.columnIdx, 0);
-        expect(stateManager.currentCellPosition!.rowIdx, 0);
-      },
-    );
+      expect(stateManager.currentCellPosition!.columnIdx, 0);
+      expect(stateManager.currentCellPosition!.rowIdx, 0);
+    });
 
     withColumnAndRows.test(
       'When isEditing is true but force is true, cell should move',
@@ -246,9 +242,7 @@ void main() {
         expect(stateManager.currentCellPosition!.columnIdx, 7);
         expect(stateManager.currentCellPosition!.rowIdx, 4);
 
-        stateManager.moveCurrentCellToEdgeOfRows(
-          TrinaMoveDirection.up,
-        );
+        stateManager.moveCurrentCellToEdgeOfRows(TrinaMoveDirection.up);
 
         expect(stateManager.currentCellPosition!.columnIdx, 7);
         expect(stateManager.currentCellPosition!.rowIdx, 0);
@@ -267,9 +261,7 @@ void main() {
         expect(stateManager.currentCellPosition!.columnIdx, 7);
         expect(stateManager.currentCellPosition!.rowIdx, 4);
 
-        stateManager.moveCurrentCellToEdgeOfRows(
-          TrinaMoveDirection.down,
-        );
+        stateManager.moveCurrentCellToEdgeOfRows(TrinaMoveDirection.down);
 
         expect(stateManager.currentCellPosition!.columnIdx, 7);
         expect(stateManager.currentCellPosition!.rowIdx, 9);
@@ -296,15 +288,14 @@ void main() {
       },
     );
 
-    withColumnAndRows.test(
-      'When rowIdx is less than 0, should move to row 0',
-      (tester) async {
-        stateManager.moveCurrentCellByRowIdx(-1, TrinaMoveDirection.down);
+    withColumnAndRows.test('When rowIdx is less than 0, should move to row 0', (
+      tester,
+    ) async {
+      stateManager.moveCurrentCellByRowIdx(-1, TrinaMoveDirection.down);
 
-        expect(stateManager.currentCellPosition!.rowIdx, 0);
-        expect(stateManager.currentCellPosition!.columnIdx, 0);
-      },
-    );
+      expect(stateManager.currentCellPosition!.rowIdx, 0);
+      expect(stateManager.currentCellPosition!.columnIdx, 0);
+    });
 
     withColumnAndRows.test(
       'When rowIdx is greater than total rows, should move to last row',
@@ -386,9 +377,7 @@ void main() {
 
         expect(stateManager.currentSelectingPosition, isNull);
 
-        stateManager.moveSelectingCellToEdgeOfColumns(
-          TrinaMoveDirection.left,
-        );
+        stateManager.moveSelectingCellToEdgeOfColumns(TrinaMoveDirection.left);
 
         expect(stateManager.currentCellPosition!.rowIdx, 0);
         expect(stateManager.currentCellPosition!.columnIdx, 3);
@@ -409,19 +398,14 @@ void main() {
         expect(stateManager.isEditing, isFalse);
 
         stateManager.setCurrentSelectingPosition(
-          cellPosition: const TrinaGridCellPosition(
-            columnIdx: 2,
-            rowIdx: 0,
-          ),
+          cellPosition: const TrinaGridCellPosition(columnIdx: 2, rowIdx: 0),
         );
 
         expect(stateManager.currentSelectingPosition, isNotNull);
         expect(stateManager.currentSelectingPosition!.columnIdx, 2);
         expect(stateManager.currentSelectingPosition!.rowIdx, 0);
 
-        stateManager.moveSelectingCellToEdgeOfColumns(
-          TrinaMoveDirection.left,
-        );
+        stateManager.moveSelectingCellToEdgeOfColumns(TrinaMoveDirection.left);
 
         expect(stateManager.currentCellPosition!.rowIdx, 0);
         expect(stateManager.currentCellPosition!.columnIdx, 3);
@@ -443,9 +427,7 @@ void main() {
 
         expect(stateManager.currentSelectingPosition, isNull);
 
-        stateManager.moveSelectingCellToEdgeOfColumns(
-          TrinaMoveDirection.right,
-        );
+        stateManager.moveSelectingCellToEdgeOfColumns(TrinaMoveDirection.right);
 
         expect(stateManager.currentCellPosition!.rowIdx, 0);
         expect(stateManager.currentCellPosition!.columnIdx, 3);
@@ -466,19 +448,14 @@ void main() {
         expect(stateManager.isEditing, isFalse);
 
         stateManager.setCurrentSelectingPosition(
-          cellPosition: const TrinaGridCellPosition(
-            columnIdx: 2,
-            rowIdx: 0,
-          ),
+          cellPosition: const TrinaGridCellPosition(columnIdx: 2, rowIdx: 0),
         );
 
         expect(stateManager.currentSelectingPosition, isNotNull);
         expect(stateManager.currentSelectingPosition!.columnIdx, 2);
         expect(stateManager.currentSelectingPosition!.rowIdx, 0);
 
-        stateManager.moveSelectingCellToEdgeOfColumns(
-          TrinaMoveDirection.right,
-        );
+        stateManager.moveSelectingCellToEdgeOfColumns(TrinaMoveDirection.right);
 
         expect(stateManager.currentCellPosition!.rowIdx, 0);
         expect(stateManager.currentCellPosition!.columnIdx, 3);
@@ -509,22 +486,21 @@ void main() {
       },
     );
 
-    withColumnAndRows.test(
-      'When isEditing is true, cell should not move',
-      (tester) async {
-        stateManager.setCurrentCell(stateManager.firstCell, 0);
+    withColumnAndRows.test('When isEditing is true, cell should not move', (
+      tester,
+    ) async {
+      stateManager.setCurrentCell(stateManager.firstCell, 0);
 
-        stateManager.setEditing(true);
+      stateManager.setEditing(true);
 
-        expect(stateManager.isEditing, isTrue);
+      expect(stateManager.isEditing, isTrue);
 
-        expect(stateManager.currentSelectingPosition, isNull);
+      expect(stateManager.currentSelectingPosition, isNull);
 
-        stateManager.moveSelectingCellToEdgeOfRows(TrinaMoveDirection.down);
+      stateManager.moveSelectingCellToEdgeOfRows(TrinaMoveDirection.down);
 
-        expect(stateManager.currentSelectingPosition, isNull);
-      },
-    );
+      expect(stateManager.currentSelectingPosition, isNull);
+    });
 
     withColumnAndRows.test(
       'When isEditing is true but force is true, cell should move',
@@ -557,9 +533,7 @@ void main() {
 
         expect(stateManager.currentSelectingPosition, isNull);
 
-        stateManager.moveSelectingCellToEdgeOfRows(
-          TrinaMoveDirection.down,
-        );
+        stateManager.moveSelectingCellToEdgeOfRows(TrinaMoveDirection.down);
 
         expect(stateManager.currentSelectingPosition, isNull);
       },
@@ -576,9 +550,7 @@ void main() {
 
         expect(stateManager.currentSelectingPosition, isNull);
 
-        stateManager.moveSelectingCellToEdgeOfRows(
-          TrinaMoveDirection.down,
-        );
+        stateManager.moveSelectingCellToEdgeOfRows(TrinaMoveDirection.down);
 
         expect(stateManager.currentSelectingPosition, isNotNull);
         expect(stateManager.currentSelectingPosition!.columnIdx, 0);
@@ -597,9 +569,7 @@ void main() {
 
         expect(stateManager.currentSelectingPosition, isNull);
 
-        stateManager.moveSelectingCellToEdgeOfRows(
-          TrinaMoveDirection.up,
-        );
+        stateManager.moveSelectingCellToEdgeOfRows(TrinaMoveDirection.up);
 
         expect(stateManager.currentSelectingPosition, isNotNull);
         expect(stateManager.currentSelectingPosition!.columnIdx, 3);
@@ -617,18 +587,13 @@ void main() {
         expect(stateManager.isEditing, isFalse);
 
         stateManager.setCurrentSelectingPosition(
-          cellPosition: const TrinaGridCellPosition(
-            columnIdx: 3,
-            rowIdx: 2,
-          ),
+          cellPosition: const TrinaGridCellPosition(columnIdx: 3, rowIdx: 2),
         );
 
         expect(stateManager.currentSelectingPosition!.columnIdx, 3);
         expect(stateManager.currentSelectingPosition!.rowIdx, 2);
 
-        stateManager.moveSelectingCellToEdgeOfRows(
-          TrinaMoveDirection.down,
-        );
+        stateManager.moveSelectingCellToEdgeOfRows(TrinaMoveDirection.down);
 
         expect(stateManager.currentSelectingPosition, isNotNull);
         expect(stateManager.currentSelectingPosition!.columnIdx, 3);
@@ -728,10 +693,7 @@ void main() {
         expect(stateManager.currentCell, isNotNull);
 
         stateManager.setCurrentSelectingPosition(
-          cellPosition: const TrinaGridCellPosition(
-            columnIdx: 5,
-            rowIdx: 3,
-          ),
+          cellPosition: const TrinaGridCellPosition(columnIdx: 5, rowIdx: 3),
         );
 
         expect(stateManager.currentSelectingPosition!.columnIdx, 5);

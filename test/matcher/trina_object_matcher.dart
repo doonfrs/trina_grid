@@ -1,9 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
 class TrinaObjectMatcher<T> extends Matcher {
-  TrinaObjectMatcher({
-    this.rule,
-  });
+  TrinaObjectMatcher({this.rule});
 
   bool Function(T object)? rule;
 

@@ -63,9 +63,7 @@ class _TextTypeColumnScreenState extends State<TextTypeColumnScreen> {
     return TrinaExampleScreen(
       title: 'Text type column',
       topTitle: 'Text type column',
-      topContents: const [
-        Text('A column to enter a character value.'),
-      ],
+      topContents: const [Text('A column to enter a character value.')],
       topButtons: [
         TrinaExampleButton(
           url:

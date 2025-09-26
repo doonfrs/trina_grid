@@ -222,14 +222,14 @@ class _TrinaVerticalScrollBarState extends State<TrinaVerticalScrollBar>
                 builder: (context, viewportExtent, _) {
                   final double thumbHeight =
                       (viewportExtent / (viewportExtent + scrollExtent)) *
-                          widget.height;
+                      widget.height;
 
                   return ValueListenableBuilder<double>(
                     valueListenable: widget.verticalScrollOffsetNotifier,
                     builder: (context, scrollOffset, _) {
                       final double thumbPosition =
                           (scrollOffset / scrollExtent) *
-                              (widget.height - thumbHeight);
+                          (widget.height - thumbHeight);
 
                       return SizedBox(
                         width: scrollConfig.thickness + 4, // Add padding
@@ -287,14 +287,14 @@ class _TrinaVerticalScrollBarState extends State<TrinaVerticalScrollBar>
                                   child: GestureDetector(
                                     onVerticalDragStart:
                                         scrollConfig.isDraggable
-                                            ? (details) {
-                                                setState(() {
-                                                  _isDragging = true;
-                                                });
-                                              }
-                                            : null,
-                                    onVerticalDragUpdate: scrollConfig
-                                            .isDraggable
+                                        ? (details) {
+                                            setState(() {
+                                              _isDragging = true;
+                                            });
+                                          }
+                                        : null,
+                                    onVerticalDragUpdate:
+                                        scrollConfig.isDraggable
                                         ? (details) {
                                             // Direct thumb manipulation approach
                                             final double dragDelta =
@@ -305,8 +305,7 @@ class _TrinaVerticalScrollBarState extends State<TrinaVerticalScrollBar>
                                             // The total scrollable content is scrollExtent
                                             final double scrollableRatio =
                                                 scrollExtent /
-                                                    (widget.height -
-                                                        thumbHeight);
+                                                (widget.height - thumbHeight);
                                             final double scrollDelta =
                                                 dragDelta * scrollableRatio;
 
@@ -322,10 +321,11 @@ class _TrinaVerticalScrollBarState extends State<TrinaVerticalScrollBar>
                                               final newOffset =
                                                   (currentOffset + scrollDelta)
                                                       .clamp(
-                                                0.0,
-                                                scrollController
-                                                    .position.maxScrollExtent,
-                                              );
+                                                        0.0,
+                                                        scrollController
+                                                            .position
+                                                            .maxScrollExtent,
+                                                      );
 
                                               // Jump to the new position
                                               scrollController.jumpTo(
@@ -349,7 +349,7 @@ class _TrinaVerticalScrollBarState extends State<TrinaVerticalScrollBar>
                                       decoration: BoxDecoration(
                                         color: _isThumbHovered || _isDragging
                                             ? scrollConfig
-                                                .effectiveThumbHoverColor
+                                                  .effectiveThumbHoverColor
                                             : scrollConfig.effectiveThumbColor,
                                         borderRadius: BorderRadius.circular(
                                           scrollConfig.effectiveRadius,

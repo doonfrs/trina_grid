@@ -74,11 +74,27 @@ class _ThemeSwitchingScreenState extends State<ThemeSwitchingScreen> {
     ]);
 
     // Create many rows to trigger pagination
-    final statuses = ['Active', 'Inactive', 'Pending', 'Completed', 'Cancelled'];
+    final statuses = [
+      'Active',
+      'Inactive',
+      'Pending',
+      'Completed',
+      'Cancelled',
+    ];
     final priorities = ['Low', 'Medium', 'High', 'Critical'];
     final departments = [
-      'Engineering', 'Marketing', 'Sales', 'Support', 'Finance', 'HR',
-      'Operations', 'Legal', 'Design', 'Product', 'Research', 'Quality'
+      'Engineering',
+      'Marketing',
+      'Sales',
+      'Support',
+      'Finance',
+      'HR',
+      'Operations',
+      'Legal',
+      'Design',
+      'Product',
+      'Research',
+      'Quality',
     ];
 
     for (int i = 1; i <= 200; i++) {
@@ -86,14 +102,20 @@ class _ThemeSwitchingScreenState extends State<ThemeSwitchingScreen> {
       final priority = priorities[i % priorities.length];
       final department = departments[i % departments.length];
 
-      rows.add(TrinaRow(cells: {
-        'id': TrinaCell(value: i),
-        'name': TrinaCell(value: '$department Task #$i'),
-        'status': TrinaCell(value: status),
-        'priority': TrinaCell(value: priority),
-        'date': TrinaCell(value: DateTime.now().add(Duration(days: i % 60 - 30))),
-        'amount': TrinaCell(value: (1000 + (i * 87.32)) % 25000),
-      }));
+      rows.add(
+        TrinaRow(
+          cells: {
+            'id': TrinaCell(value: i),
+            'name': TrinaCell(value: '$department Task #$i'),
+            'status': TrinaCell(value: status),
+            'priority': TrinaCell(value: priority),
+            'date': TrinaCell(
+              value: DateTime.now().add(Duration(days: i % 60 - 30)),
+            ),
+            'amount': TrinaCell(value: (1000 + (i * 87.32)) % 25000),
+          },
+        ),
+      );
     }
   }
 
@@ -105,9 +127,13 @@ class _ThemeSwitchingScreenState extends State<ThemeSwitchingScreen> {
       topContents: [
         const Text('Test live theme switching with pagination controls.'),
         const SizedBox(height: 8),
-        const Text('Toggle between light and dark mode to see pagination theme updates in real-time.'),
+        const Text(
+          'Toggle between light and dark mode to see pagination theme updates in real-time.',
+        ),
         const SizedBox(height: 8),
-        const Text('This demo shows 200 rows with pagination (25 rows per page).'),
+        const Text(
+          'This demo shows 200 rows with pagination (25 rows per page).',
+        ),
         const SizedBox(height: 16),
         Row(
           children: [
@@ -126,7 +152,8 @@ class _ThemeSwitchingScreenState extends State<ThemeSwitchingScreen> {
       ],
       topButtons: [
         TrinaExampleButton(
-          url: 'https://github.com/doonfrs/trina_grid/blob/master/demo/lib/screen/feature/theme_switching_screen.dart',
+          url:
+              'https://github.com/doonfrs/trina_grid/blob/master/demo/lib/screen/feature/theme_switching_screen.dart',
         ),
       ],
       body: AnimatedTheme(
@@ -139,8 +166,8 @@ class _ThemeSwitchingScreenState extends State<ThemeSwitchingScreen> {
             print('Grid changed: $event');
           },
           configuration: isDarkMode
-            ? const TrinaGridConfiguration.dark()
-            : const TrinaGridConfiguration(),
+              ? const TrinaGridConfiguration.dark()
+              : const TrinaGridConfiguration(),
           createFooter: (stateManager) {
             stateManager.setPageSize(25);
             return TrinaPagination(stateManager);

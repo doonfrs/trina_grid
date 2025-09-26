@@ -31,14 +31,11 @@ class _SelectionTypeColumnScreenState extends State<SelectionTypeColumnScreen> {
       TrinaColumn(
         title: 'Basic',
         field: 'select_a',
-        type: TrinaColumnType.select(
-          <String>[
-            'One',
-            'Two',
-            'Three',
-          ],
-          enableColumnFilter: true,
-        ),
+        type: TrinaColumnType.select(<String>[
+          'One',
+          'Two',
+          'Three',
+        ], enableColumnFilter: true),
       ),
       // A select column that includes a search field in its dropdown menu.
       TrinaColumn(
@@ -119,26 +116,29 @@ class _SelectionTypeColumnScreenState extends State<SelectionTypeColumnScreen> {
       TrinaColumn(
         title: 'With editCellRenderer',
         field: 'select_f',
-        editCellRenderer: (
-          defaultEditCellWidget,
-          cell,
-          controller,
-          focusNode,
-          handleSelected,
-        ) {
-          return DropdownButton<String>(
-            value: cell.value,
-            hint: Text(cell.value),
-            items: cell.column.type
-                .asSelect()
-                .items
-                .map((e) => DropdownMenuItem<String>(value: e, child: Text(e)))
-                .toList(),
-            onChanged: (value) {
-              handleSelected?.call(value);
+        editCellRenderer:
+            (
+              defaultEditCellWidget,
+              cell,
+              controller,
+              focusNode,
+              handleSelected,
+            ) {
+              return DropdownButton<String>(
+                value: cell.value,
+                hint: Text(cell.value),
+                items: cell.column.type
+                    .asSelect()
+                    .items
+                    .map(
+                      (e) => DropdownMenuItem<String>(value: e, child: Text(e)),
+                    )
+                    .toList(),
+                onChanged: (value) {
+                  handleSelected?.call(value);
+                },
+              );
             },
-          );
-        },
         type: TrinaColumnType.select(<String>['One', 'Two', 'Three']),
       ),
     ]);
@@ -185,7 +185,8 @@ class _SelectionTypeColumnScreenState extends State<SelectionTypeColumnScreen> {
       topContents: const [
         Text('A column to enter a selection value.'),
         Text(
-            'The sorting of the Selection column is based on the order of the Select items.'),
+          'The sorting of the Selection column is based on the order of the Select items.',
+        ),
       ],
       topButtons: [
         TrinaExampleButton(
@@ -200,9 +201,9 @@ class _SelectionTypeColumnScreenState extends State<SelectionTypeColumnScreen> {
           print(event);
         },
         configuration: const TrinaGridConfiguration(
-            // If you don't want to move to the next line after selecting the pop-up item, uncomment it.
-            // enableMoveDownAfterSelecting: false,
-            ),
+          // If you don't want to move to the next line after selecting the pop-up item, uncomment it.
+          // enableMoveDownAfterSelecting: false,
+        ),
       ),
     );
   }

@@ -31,31 +31,22 @@ class _NumberTypeColumnScreenState extends State<NumberTypeColumnScreen> {
       TrinaColumn(
         title: 'Negative false',
         field: 'negative_false',
-        type: TrinaColumnType.number(
-          negative: false,
-        ),
+        type: TrinaColumnType.number(negative: false),
       ),
       TrinaColumn(
         title: '2 decimal places',
         field: 'two_decimal',
-        type: TrinaColumnType.number(
-          format: '#,###.##',
-        ),
+        type: TrinaColumnType.number(format: '#,###.##'),
       ),
       TrinaColumn(
         title: '3 decimal places',
         field: 'three_decimal',
-        type: TrinaColumnType.number(
-          format: '#,###.###',
-        ),
+        type: TrinaColumnType.number(format: '#,###.###'),
       ),
       TrinaColumn(
         title: '3 decimal places with denmark locale',
         field: 'three_decimal_with_denmark_locale',
-        type: TrinaColumnType.number(
-          format: '#,###.###',
-          locale: 'da_DK',
-        ),
+        type: TrinaColumnType.number(format: '#,###.###', locale: 'da_DK'),
       ),
     ]);
 
@@ -95,9 +86,7 @@ class _NumberTypeColumnScreenState extends State<NumberTypeColumnScreen> {
     return TrinaExampleScreen(
       title: 'Number type column',
       topTitle: 'Number type column',
-      topContents: const [
-        Text('A column to enter a number value.'),
-      ],
+      topContents: const [Text('A column to enter a number value.')],
       topButtons: [
         TrinaExampleButton(
           url:

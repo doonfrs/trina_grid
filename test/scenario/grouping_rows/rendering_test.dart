@@ -99,15 +99,30 @@ void main() {
     setUp(() {
       columns = [
         TrinaColumn(
-            title: 'column1', field: 'column1', type: TrinaColumnType.text()),
+          title: 'column1',
+          field: 'column1',
+          type: TrinaColumnType.text(),
+        ),
         TrinaColumn(
-            title: 'column2', field: 'column2', type: TrinaColumnType.text()),
+          title: 'column2',
+          field: 'column2',
+          type: TrinaColumnType.text(),
+        ),
         TrinaColumn(
-            title: 'column3', field: 'column3', type: TrinaColumnType.text()),
+          title: 'column3',
+          field: 'column3',
+          type: TrinaColumnType.text(),
+        ),
         TrinaColumn(
-            title: 'column4', field: 'column4', type: TrinaColumnType.text()),
+          title: 'column4',
+          field: 'column4',
+          type: TrinaColumnType.text(),
+        ),
         TrinaColumn(
-            title: 'column5', field: 'column5', type: TrinaColumnType.text()),
+          title: 'column5',
+          field: 'column5',
+          type: TrinaColumnType.text(),
+        ),
       ];
 
       rows = [
@@ -121,9 +136,21 @@ void main() {
             createRow('B42', 'b42-1', 'b42-2', 'b42-3', 'b42-4', columns),
             createGroup('B43', 'b43-1', 'b43-2', 'b43-3', 'b43-4', columns, [
               createRow(
-                  'B431', 'b431-1', 'b431-2', 'b431-3', 'b431-4', columns),
+                'B431',
+                'b431-1',
+                'b431-2',
+                'b431-3',
+                'b431-4',
+                columns,
+              ),
               createRow(
-                  'B432', 'b432-1', 'b432-2', 'b432-3', 'b432-4', columns),
+                'B432',
+                'b432-1',
+                'b432-2',
+                'b432-3',
+                'b432-4',
+                columns,
+              ),
             ]),
           ]),
         ]),
@@ -193,10 +220,7 @@ void main() {
           );
 
           final B1_SIZED_BOX = find
-              .descendant(
-                of: B1_CELL,
-                matching: find.byType(SizedBox),
-              )
+              .descendant(of: B1_CELL, matching: find.byType(SizedBox))
               .first;
 
           final B1_SIZED_BOX_WIDGET =
@@ -227,10 +251,7 @@ void main() {
           );
 
           final B4_SIZED_BOX = find
-              .descendant(
-                of: B4_CELL,
-                matching: find.byType(SizedBox),
-              )
+              .descendant(of: B4_CELL, matching: find.byType(SizedBox))
               .first;
 
           final B4_SIZED_BOX_WIDGET =
@@ -246,8 +267,9 @@ void main() {
       },
     );
 
-    testWidgets('When B row is expanded, child rows should be rendered',
-        (tester) async {
+    testWidgets('When B row is expanded, child rows should be rendered', (
+      tester,
+    ) async {
       rows[1].type.group.setExpanded(true);
 
       await buildGrid(
@@ -269,32 +291,33 @@ void main() {
     });
 
     testWidgets(
-        'When B and B4 rows are expanded, child rows should be rendered',
-        (tester) async {
-      rows[1].type.group.setExpanded(true);
-      rows[1].type.group.children[3].type.group.setExpanded(true);
+      'When B and B4 rows are expanded, child rows should be rendered',
+      (tester) async {
+        rows[1].type.group.setExpanded(true);
+        rows[1].type.group.children[3].type.group.setExpanded(true);
 
-      await buildGrid(
-        tester: tester,
-        columns: columns,
-        rows: rows,
-        delegate: TrinaRowGroupTreeDelegate(
-          resolveColumnDepth: (column) =>
-              int.parse(column.field.replaceAll('column', '')) - 1,
-          showText: (cell) => true,
-          showFirstExpandableIcon: true,
-        ),
-      );
+        await buildGrid(
+          tester: tester,
+          columns: columns,
+          rows: rows,
+          delegate: TrinaRowGroupTreeDelegate(
+            resolveColumnDepth: (column) =>
+                int.parse(column.field.replaceAll('column', '')) - 1,
+            showText: (cell) => true,
+            showFirstExpandableIcon: true,
+          ),
+        );
 
-      expect(find.text('B1'), findsOneWidget);
-      expect(find.text('B2'), findsOneWidget);
-      expect(find.text('B3'), findsOneWidget);
-      expect(find.text('B4'), findsOneWidget);
+        expect(find.text('B1'), findsOneWidget);
+        expect(find.text('B2'), findsOneWidget);
+        expect(find.text('B3'), findsOneWidget);
+        expect(find.text('B4'), findsOneWidget);
 
-      expect(find.text('B41'), findsOneWidget);
-      expect(find.text('B42'), findsOneWidget);
-      expect(find.text('B43'), findsOneWidget);
-    });
+        expect(find.text('B41'), findsOneWidget);
+        expect(find.text('B42'), findsOneWidget);
+        expect(find.text('B43'), findsOneWidget);
+      },
+    );
   });
 
   group('Row Grouping by Column Test', () {

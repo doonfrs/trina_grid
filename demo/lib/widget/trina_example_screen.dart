@@ -26,16 +26,12 @@ class TrinaExampleScreen extends StatelessWidget {
       content: const SizedBox(
         width: 300,
         child: Text(
-            'Have you found the problem? Or do you have any questions?\n(Selecting Yes will open the Github issue.)'),
+          'Have you found the problem? Or do you have any questions?\n(Selecting Yes will open the Github issue.)',
+        ),
       ),
       actions: [
         TextButton(
-          child: const Text(
-            'No',
-            style: TextStyle(
-              color: Colors.deepOrange,
-            ),
-          ),
+          child: const Text('No', style: TextStyle(color: Colors.deepOrange)),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -58,14 +54,9 @@ class TrinaExampleScreen extends StatelessWidget {
         actions: [
           ElevatedButton.icon(
             label: const Text('Report'),
-            icon: const FaIcon(
-              FontAwesomeIcons.exclamation,
-            ),
+            icon: const FaIcon(FontAwesomeIcons.exclamation),
             onPressed: () {
-              showDialog<void>(
-                context: context,
-                builder: reportingDialog,
-              );
+              showDialog<void>(context: context, builder: reportingDialog);
             },
           ),
         ],
@@ -78,11 +69,11 @@ class TrinaExampleScreen extends StatelessWidget {
               child: Container(
                 width: size.maxWidth,
                 height: size.maxHeight,
-                constraints: const BoxConstraints(
-                  minHeight: 750,
+                constraints: const BoxConstraints(minHeight: 750),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 30,
+                  vertical: 10,
                 ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                 child: Column(
                   children: [
                     TrinaExpansionTile(
@@ -90,12 +81,8 @@ class TrinaExampleScreen extends StatelessWidget {
                       buttons: topButtons,
                       children: topContents,
                     ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Expanded(
-                      child: body!,
-                    ),
+                    const SizedBox(height: 10),
+                    Expanded(child: body!),
                   ],
                 ),
               ),

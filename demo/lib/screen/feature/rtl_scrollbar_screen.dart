@@ -55,9 +55,7 @@ class _RTLScrollbarScreenState extends State<RTLScrollbarScreen> {
             _buildDirectionalitySelector(),
             const SizedBox(height: 16),
             // Main grid that takes the rest of the space
-            Expanded(
-              child: _buildGrid(),
-            ),
+            Expanded(child: _buildGrid()),
           ],
         ),
       ),

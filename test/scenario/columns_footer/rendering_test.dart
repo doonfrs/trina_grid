@@ -43,10 +43,7 @@ void main() {
           count: 2,
           frozen: TrinaColumnFrozen.start,
         ),
-        ...ColumnHelper.textColumn(
-          'body',
-          count: 2,
-        ),
+        ...ColumnHelper.textColumn('body', count: 2),
         ...ColumnHelper.textColumn(
           'right',
           count: 2,
@@ -75,10 +72,7 @@ void main() {
           count: 2,
           frozen: TrinaColumnFrozen.start,
         ),
-        ...ColumnHelper.textColumn(
-          'body',
-          count: 2,
-        ),
+        ...ColumnHelper.textColumn('body', count: 2),
         ...ColumnHelper.textColumn(
           'right',
           count: 2,
@@ -111,10 +105,7 @@ void main() {
           frozen: TrinaColumnFrozen.start,
           footerRenderer: (ctx) => Text(ctx.column.title),
         ),
-        ...ColumnHelper.textColumn(
-          'body',
-          count: 2,
-        ),
+        ...ColumnHelper.textColumn('body', count: 2),
         ...ColumnHelper.textColumn(
           'right',
           count: 2,

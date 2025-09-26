@@ -11,10 +11,7 @@ abstract class IFocusState {
 
   void setKeepFocus(bool flag, {bool notify = true});
 
-  void nextFocusOfColumnFilter(
-    TrinaColumn column, {
-    bool reversed = false,
-  });
+  void nextFocusOfColumnFilter(TrinaColumn column, {bool reversed = false});
 }
 
 class _State {
@@ -52,10 +49,7 @@ mixin FocusState implements ITrinaGridState {
   }
 
   @override
-  void nextFocusOfColumnFilter(
-    TrinaColumn column, {
-    bool reversed = false,
-  }) {
+  void nextFocusOfColumnFilter(TrinaColumn column, {bool reversed = false}) {
     if (!column.enableFilterMenuItem) {
       return;
     }

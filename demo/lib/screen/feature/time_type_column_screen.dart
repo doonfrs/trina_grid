@@ -31,9 +31,7 @@ class _TimeTypeColumnScreenState extends State<TimeTypeColumnScreen> {
       TrinaColumn(
         title: 'Time (Min: 5:00 PM)',
         field: 'min_time_at_5pm',
-        type: TrinaColumnType.time(
-          minTime: TimeOfDay(hour: 17, minute: 0),
-        ),
+        type: TrinaColumnType.time(minTime: TimeOfDay(hour: 17, minute: 0)),
       ),
       TrinaColumn(
         title: 'Time (Max: 9:00 AM)',

@@ -285,8 +285,10 @@ mixin CellState implements ITrinaGridState {
     dynamic newValue,
     dynamic oldValue,
   }) {
-    final typeResult =
-        column.type.filteredValue(oldValue: oldValue, newValue: newValue);
+    final typeResult = column.type.filteredValue(
+      oldValue: oldValue,
+      newValue: newValue,
+    );
     if (typeResult.$1) return typeResult.$2;
 
     if (column.type.isSelect) {
@@ -302,10 +304,10 @@ mixin CellState implements ITrinaGridState {
         );
 
         return TrinaDateTimeHelper.isValidRange(
-          date: parseNewValue,
-          start: column.type.date.startDate,
-          end: column.type.date.endDate,
-        )
+              date: parseNewValue,
+              start: column.type.date.startDate,
+              end: column.type.date.endDate,
+            )
             ? column.type.date.dateFormat.format(parseNewValue)
             : oldValue;
       } catch (e) {

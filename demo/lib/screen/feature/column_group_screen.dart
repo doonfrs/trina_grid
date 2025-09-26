@@ -100,14 +100,8 @@ class _ColumnGroupScreenState extends State<ColumnGroupScreen> {
             title: 'A - 2',
             backgroundColor: Colors.greenAccent,
             children: [
-              TrinaColumnGroup(
-                title: 'A - 2 - 1',
-                fields: ['column4'],
-              ),
-              TrinaColumnGroup(
-                title: 'A - 2 - 2',
-                fields: ['column5'],
-              ),
+              TrinaColumnGroup(title: 'A - 2 - 1', fields: ['column4']),
+              TrinaColumnGroup(title: 'A - 2 - 2', fields: ['column5']),
             ],
           ),
         ],
@@ -121,14 +115,8 @@ class _ColumnGroupScreenState extends State<ColumnGroupScreen> {
               TrinaColumnGroup(
                 title: 'B - 1 - 1',
                 children: [
-                  TrinaColumnGroup(
-                    title: 'B - 1 - 1 - 1',
-                    fields: ['column6'],
-                  ),
-                  TrinaColumnGroup(
-                    title: 'B - 1 - 1 - 2',
-                    fields: ['column7'],
-                  ),
+                  TrinaColumnGroup(title: 'B - 1 - 1 - 1', fields: ['column6']),
+                  TrinaColumnGroup(title: 'B - 1 - 1 - 2', fields: ['column7']),
                 ],
               ),
               TrinaColumnGroup(
@@ -151,7 +139,8 @@ class _ColumnGroupScreenState extends State<ColumnGroupScreen> {
       topContents: const [
         Text('You can group columns by any depth you want.'),
         Text(
-            'You can also separate grouped columns by dragging and dropping columns.'),
+          'You can also separate grouped columns by dragging and dropping columns.',
+        ),
       ],
       topButtons: [
         TrinaExampleButton(

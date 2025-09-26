@@ -59,7 +59,8 @@ class TrinaGridDatePicker {
     double rowsHeight = 6 * itemHeight;
 
     // itemHeight * 2 = Header Height + Column Height
-    double popupHeight = (itemHeight * 2) +
+    double popupHeight =
+        (itemHeight * 2) +
         rowsHeight +
         TrinaGridSettings.totalShadowLineWidth +
         TrinaGridSettings.gridInnerSpacing;
@@ -86,7 +87,8 @@ class TrinaGridDatePicker {
       onSelected: _onSelected,
       columns: popupColumns,
       rows: popupRows,
-      width: popupColumns.fold<double>(0, (previous, column) {
+      width:
+          popupColumns.fold<double>(0, (previous, column) {
             return previous + column.width;
           }) +
           1,
@@ -238,15 +240,19 @@ class TrinaGridDatePicker {
       case -12:
         cellPosition = TrinaGridCellPosition(
           columnIdx: datePickerStateManager.refColumns.length - 1,
-          rowIdx: min(currentCellPosition?.rowIdx ?? 0,
-              datePickerStateManager.refRows.length - 1),
+          rowIdx: min(
+            currentCellPosition?.rowIdx ?? 0,
+            datePickerStateManager.refRows.length - 1,
+          ),
         );
         break;
       case 12:
         cellPosition = TrinaGridCellPosition(
           columnIdx: 0,
-          rowIdx: min(currentCellPosition?.rowIdx ?? 0,
-              datePickerStateManager.refRows.length - 1),
+          rowIdx: min(
+            currentCellPosition?.rowIdx ?? 0,
+            datePickerStateManager.refRows.length - 1,
+          ),
         );
         break;
       case -1:
@@ -265,7 +271,9 @@ class TrinaGridDatePicker {
 
     if (cellPosition != null) {
       final TrinaCell cell = datePickerStateManager
-          .refRows[cellPosition.rowIdx!].cells.entries
+          .refRows[cellPosition.rowIdx!]
+          .cells
+          .entries
           .elementAt(cellPosition.columnIdx!)
           .value;
 
@@ -293,9 +301,7 @@ class TrinaGridDatePicker {
       return '';
     }
 
-    var dateTime = dateFormat.parse(
-      value.toString(),
-    );
+    var dateTime = dateFormat.parse(value.toString());
 
     return dateTime.day.toString();
   }
@@ -313,26 +319,24 @@ class TrinaGridDatePicker {
 
     final isCurrentCell = renderContext.stateManager.isCurrentCell(cell);
 
-    final isValidDate = cell.value.toString().isNotEmpty &&
+    final isValidDate =
+        cell.value.toString().isNotEmpty &&
         _isValidRange(dateFormat.parse(cell.value));
 
     final cellColor = isCurrentCell
         ? isValidDate
-            ? configuration.style.activatedBorderColor
-            : configuration.style.cellColorInReadOnlyState
+              ? configuration.style.activatedBorderColor
+              : configuration.style.cellColorInReadOnlyState
         : configuration.style.gridBackgroundColor;
 
     final textColor = isCurrentCell
         ? configuration.style.gridBackgroundColor
         : isValidDate
-            ? configuration.style.cellTextStyle.color
-            : configuration.style.cellColorInReadOnlyState;
+        ? configuration.style.cellTextStyle.color
+        : configuration.style.cellColorInReadOnlyState;
 
     return DecoratedBox(
-      decoration: BoxDecoration(
-        color: cellColor,
-        shape: BoxShape.circle,
-      ),
+      decoration: BoxDecoration(color: cellColor, shape: BoxShape.circle),
       child: Padding(
         padding: const EdgeInsets.all(5),
         child: Center(
@@ -349,29 +353,31 @@ class TrinaGridDatePicker {
     final localeText = configuration.localeText;
 
     return [
-      [localeText.sunday, '7'],
-      [localeText.monday, '1'],
-      [localeText.tuesday, '2'],
-      [localeText.wednesday, '3'],
-      [localeText.thursday, '4'],
-      [localeText.friday, '5'],
-      [localeText.saturday, '6'],
-    ].map((e) {
-      return TrinaColumn(
-        title: e[0],
-        field: e[1],
-        readOnly: true,
-        type: TrinaColumnType.text(),
-        width: dateCellWidth,
-        enableColumnDrag: false,
-        enableSorting: false,
-        enableContextMenu: false,
-        enableDropToResize: false,
-        textAlign: TrinaColumnTextAlign.center,
-        titleTextAlign: TrinaColumnTextAlign.center,
-        renderer: _cellRenderer,
-      );
-    }).toList(growable: false);
+          [localeText.sunday, '7'],
+          [localeText.monday, '1'],
+          [localeText.tuesday, '2'],
+          [localeText.wednesday, '3'],
+          [localeText.thursday, '4'],
+          [localeText.friday, '5'],
+          [localeText.saturday, '6'],
+        ]
+        .map((e) {
+          return TrinaColumn(
+            title: e[0],
+            field: e[1],
+            readOnly: true,
+            type: TrinaColumnType.text(),
+            width: dateCellWidth,
+            enableColumnDrag: false,
+            enableSorting: false,
+            enableContextMenu: false,
+            enableDropToResize: false,
+            textAlign: TrinaColumnTextAlign.center,
+            titleTextAlign: TrinaColumnTextAlign.center,
+            renderer: _cellRenderer,
+          );
+        })
+        .toList(growable: false);
   }
 
   List<TrinaRow> _buildRows(List<DateTime> days) {
@@ -392,9 +398,7 @@ class TrinaGridDatePicker {
 
           final DateTime day = days.removeAt(0);
 
-          return TrinaCell(
-            value: dateFormat.format(day),
-          );
+          return TrinaCell(value: dateFormat.format(day));
         },
       );
 
@@ -466,15 +470,9 @@ abstract class _DateCellHeaderStateWithChange
       stateManager.rows[1].cells.entries.first.value.value,
     );
 
-    _currentYear = update<int>(
-      _currentYear,
-      date.year,
-    );
+    _currentYear = update<int>(_currentYear, date.year);
 
-    _currentMonth = update<int>(
-      _currentMonth,
-      date.month,
-    );
+    _currentMonth = update<int>(_currentMonth, date.month);
   }
 }
 
@@ -522,9 +520,15 @@ class _DateCellHeaderState extends _DateCellHeaderStateWithChange {
                   style: TextStyle(
                     color: textColor,
                     fontSize: stateManager
-                        .configuration.style.columnTextStyle.fontSize,
+                        .configuration
+                        .style
+                        .columnTextStyle
+                        .fontSize,
                     fontWeight: stateManager
-                        .configuration.style.columnTextStyle.fontWeight,
+                        .configuration
+                        .style
+                        .columnTextStyle
+                        .fontWeight,
                   ),
                   textAlign: TextAlign.center,
                 ),

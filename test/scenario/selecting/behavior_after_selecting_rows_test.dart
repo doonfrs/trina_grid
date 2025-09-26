@@ -21,87 +21,75 @@ void main() {
     final columns = ColumnHelper.textColumn('header');
     final rows = RowHelper.count(numberOfRows, columns);
 
-    return TrinaWidgetTestHelper(
-      'build with selecting rows.',
-      (tester) async {
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Material(
-              child: TrinaGrid(
-                columns: columns,
-                rows: rows,
-                onLoaded: (TrinaGridOnLoadedEvent event) {
-                  stateManager = event.stateManager;
-                  stateManager!.setSelectingMode(selectingMode);
-                  stateManager!.setCurrentSelectingRowsByRange(from, to);
-                },
-              ),
+    return TrinaWidgetTestHelper('build with selecting rows.', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Material(
+            child: TrinaGrid(
+              columns: columns,
+              rows: rows,
+              onLoaded: (TrinaGridOnLoadedEvent event) {
+                stateManager = event.stateManager;
+                stateManager!.setSelectingMode(selectingMode);
+                stateManager!.setCurrentSelectingRowsByRange(from, to);
+              },
             ),
           ),
-        );
+        ),
+      );
 
-        final selectingRows = stateManager!.currentSelectingRows;
+      final selectingRows = stateManager!.currentSelectingRows;
 
-        final int length = (from - to).abs() + 1;
+      final int length = (from - to).abs() + 1;
 
-        expect(selectingRows.length, length);
-      },
-    );
+      expect(selectingRows.length, length);
+    });
   }
 
-  group(
-    'Select 3 rows from 1 to 3',
-    () {
-      const countTotalRows = 10;
-      const countSelectedRows = 3;
-      const from = 1;
-      const to = 3;
+  group('Select 3 rows from 1 to 3', () {
+    const countTotalRows = 10;
+    const countSelectedRows = 3;
+    const from = 1;
+    const to = 3;
 
-      selectRowsFrom1To3() {
-        return buildRowsWithSelectingRows(
-          numberOfRows: countTotalRows,
-          from: from,
-          to: to,
-        );
-      }
-
-      selectRowsFrom1To3().test(
-        'When row 0 is deleted, '
-        'rows 0 ~ 2 should be selected.',
-        (tester) async {
-          final rowToRemove = stateManager!.rows.first;
-
-          stateManager!.removeRows([rowToRemove]);
-
-          final selectedRows = stateManager!.currentSelectingRows;
-          final selectedRowKeys = selectedRows.map((e) => e.key);
-
-          expect(selectedRows.length, countSelectedRows);
-          expect(selectedRowKeys.contains(stateManager!.rows[0].key), isTrue);
-          expect(selectedRowKeys.contains(stateManager!.rows[1].key), isTrue);
-          expect(selectedRowKeys.contains(stateManager!.rows[2].key), isTrue);
-        },
+    selectRowsFrom1To3() {
+      return buildRowsWithSelectingRows(
+        numberOfRows: countTotalRows,
+        from: from,
+        to: to,
       );
+    }
 
-      selectRowsFrom1To3().test(
-        'When a new row is added to row 0, '
-        '2 ~ 4 rows should be selected.',
-        (tester) async {
-          final rowToRemove = stateManager!.rows.first;
+    selectRowsFrom1To3().test('When row 0 is deleted, '
+        'rows 0 ~ 2 should be selected.', (tester) async {
+      final rowToRemove = stateManager!.rows.first;
 
-          stateManager!.insertRows(1, [rowToRemove]);
+      stateManager!.removeRows([rowToRemove]);
 
-          expect(stateManager!.rows.length, countTotalRows + 1);
+      final selectedRows = stateManager!.currentSelectingRows;
+      final selectedRowKeys = selectedRows.map((e) => e.key);
 
-          final selectedRows = stateManager!.currentSelectingRows;
-          final selectedRowKeys = selectedRows.map((e) => e.key);
+      expect(selectedRows.length, countSelectedRows);
+      expect(selectedRowKeys.contains(stateManager!.rows[0].key), isTrue);
+      expect(selectedRowKeys.contains(stateManager!.rows[1].key), isTrue);
+      expect(selectedRowKeys.contains(stateManager!.rows[2].key), isTrue);
+    });
 
-          expect(selectedRows.length, countSelectedRows);
-          expect(selectedRowKeys.contains(stateManager!.rows[2].key), isTrue);
-          expect(selectedRowKeys.contains(stateManager!.rows[3].key), isTrue);
-          expect(selectedRowKeys.contains(stateManager!.rows[4].key), isTrue);
-        },
-      );
-    },
-  );
+    selectRowsFrom1To3().test('When a new row is added to row 0, '
+        '2 ~ 4 rows should be selected.', (tester) async {
+      final rowToRemove = stateManager!.rows.first;
+
+      stateManager!.insertRows(1, [rowToRemove]);
+
+      expect(stateManager!.rows.length, countTotalRows + 1);
+
+      final selectedRows = stateManager!.currentSelectingRows;
+      final selectedRowKeys = selectedRows.map((e) => e.key);
+
+      expect(selectedRows.length, countSelectedRows);
+      expect(selectedRowKeys.contains(stateManager!.rows[2].key), isTrue);
+      expect(selectedRowKeys.contains(stateManager!.rows[3].key), isTrue);
+      expect(selectedRowKeys.contains(stateManager!.rows[4].key), isTrue);
+    });
+  });
 }

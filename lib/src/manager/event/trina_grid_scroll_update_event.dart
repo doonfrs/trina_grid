@@ -35,9 +35,9 @@ class TrinaGridScrollUpdateEvent extends TrinaGridEvent {
     required this.offset,
     this.scrollDirection = TrinaGridScrollUpdateDirection.all,
   }) : super(
-          type: TrinaGridEventType.throttleLeading,
-          duration: const Duration(milliseconds: 10),
-        );
+         type: TrinaGridEventType.throttleLeading,
+         duration: const Duration(milliseconds: 10),
+       );
 
   late final Offset _directionalOffset;
 
@@ -133,16 +133,17 @@ class TrinaGridScrollUpdateEvent extends TrinaGridEvent {
       return;
     }
 
-    final double offsetToReachEndOfScroll =
-        move.isLeft || move.isUp ? 0 : scroll.position.maxScrollExtent;
+    final double offsetToReachEndOfScroll = move.isLeft || move.isUp
+        ? 0
+        : scroll.position.maxScrollExtent;
 
-    final double remainingOffset =
-        (offsetToReachEndOfScroll - scroll.offset).abs();
+    final double remainingOffset = (offsetToReachEndOfScroll - scroll.offset)
+        .abs();
 
     final double offsetInSecond = stateManager.maxWidth! / 2;
 
-    int msToReachEndOfScroll =
-        (remainingOffset / offsetInSecond * 1000).toInt();
+    int msToReachEndOfScroll = (remainingOffset / offsetInSecond * 1000)
+        .toInt();
 
     if (msToReachEndOfScroll < 1) {
       msToReachEndOfScroll = 1;

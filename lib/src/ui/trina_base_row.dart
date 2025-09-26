@@ -27,8 +27,8 @@ class TrinaBaseRow extends StatelessWidget {
   bool _checkSameDragRows(DragTargetDetails<TrinaRow> draggingRow) {
     final List<TrinaRow> selectedRows =
         stateManager.currentSelectingRows.isNotEmpty
-            ? stateManager.currentSelectingRows
-            : [draggingRow.data];
+        ? stateManager.currentSelectingRows
+        : [draggingRow.data];
 
     final end = rowIdx + selectedRows.length;
 
@@ -70,7 +70,7 @@ class TrinaBaseRow extends StatelessWidget {
     );
   }
 
-// BuildContext, List<TrinaRow<dynamic>?>,
+  // BuildContext, List<TrinaRow<dynamic>?>,
   Widget _dragTargetBuilder(
     BuildContext dragContext,
     List<TrinaRow<dynamic>?> candidate,
@@ -186,8 +186,7 @@ class _RowCellsLayoutDelegate extends MultiChildLayoutDelegate {
                 ? rowHeight
                 // we add `cellHorizontalBorderWidth` to the row height so the cells are not
                 // vertically-separated by the disabled horizontal border
-                : rowHeight +
-                    stateManager.style.cellHorizontalBorderWidth,
+                : rowHeight + stateManager.style.cellHorizontalBorderWidth,
           ),
         );
 
@@ -243,8 +242,8 @@ class _RowContainerWidgetState extends TrinaStateWithChange<_RowContainerWidget>
 
   Color get _evenRowColor =>
       stateManager.configuration.style.evenRowColor == null
-          ? stateManager.configuration.style.rowColor
-          : stateManager.configuration.style.evenRowColor!;
+      ? stateManager.configuration.style.rowColor
+      : stateManager.configuration.style.evenRowColor!;
 
   Color get _rowColor {
     if (widget.row.frozen != TrinaRowFrozen.none) {
@@ -325,7 +324,8 @@ class _RowContainerWidgetState extends TrinaStateWithChange<_RowContainerWidget>
 
     return BoxDecoration(
       color: rowColor,
-      border: frozenBorder ??
+      border:
+          frozenBorder ??
           Border(
             top: isTopDragTarget
                 ? BorderSide(
@@ -340,11 +340,11 @@ class _RowContainerWidgetState extends TrinaStateWithChange<_RowContainerWidget>
                     color: stateManager.style.activatedBorderColor,
                   )
                 : stateManager.style.enableCellBorderHorizontal
-                    ? BorderSide(
-                        width: stateManager.style.cellHorizontalBorderWidth,
-                        color: stateManager.style.borderColor,
-                      )
-                    : BorderSide.none,
+                ? BorderSide(
+                    width: stateManager.style.cellHorizontalBorderWidth,
+                    color: stateManager.style.borderColor,
+                  )
+                : BorderSide.none,
           ),
     );
   }

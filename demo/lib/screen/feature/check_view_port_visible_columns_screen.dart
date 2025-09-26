@@ -38,10 +38,12 @@ class _CheckViewPortVisibleColumnsScreenState
 
     rows.addAll([
       for (var i = 1; i < 50; i++)
-        TrinaRow(cells: {
-          for (var column in columns)
-            column.field: TrinaCell(value: faker.lorem.sentence()),
-        }),
+        TrinaRow(
+          cells: {
+            for (var column in columns)
+              column.field: TrinaCell(value: faker.lorem.sentence()),
+          },
+        ),
     ]);
   }
 
@@ -50,9 +52,7 @@ class _CheckViewPortVisibleColumnsScreenState
     return TrinaExampleScreen(
       title: 'Check view port visible columns',
       topTitle: 'Check view port visible columns',
-      topContents: const [
-        Text('You can check view port visible columns.'),
-      ],
+      topContents: const [Text('You can check view port visible columns.')],
       body: TrinaGrid(
         columns: columns,
         rows: rows,
@@ -66,9 +66,7 @@ class _CheckViewPortVisibleColumnsScreenState
 }
 
 class _Header extends StatefulWidget {
-  const _Header({
-    required this.stateManager,
-  });
+  const _Header({required this.stateManager});
 
   final TrinaGridStateManager stateManager;
 
@@ -86,66 +84,70 @@ class _HeaderState extends State<_Header> {
 
   void _showViewPortVisibleColumns() {
     showDialog(
-        context: context,
-        builder: (context) => SimpleDialog(
-              title: const Text('View port visible columns'),
-              children: [
-                for (var element
-                    in widget.stateManager.getViewPortVisibleColumns())
-                  SimpleDialogOption(
-                    onPressed: () {},
-                    child: Text(element.title),
-                  )
-              ],
-            ));
+      context: context,
+      builder: (context) => SimpleDialog(
+        title: const Text('View port visible columns'),
+        children: [
+          for (var element in widget.stateManager.getViewPortVisibleColumns())
+            SimpleDialogOption(onPressed: () {}, child: Text(element.title)),
+        ],
+      ),
+    );
   }
 
   void _isColumnVisibleInViewport() {
     int? columnIndex;
 
     showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-            title: const Text('Is column visible?'),
-            content: StatefulBuilder(builder: (context, setState) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 200,
-                        child: TextField(
-                          onChanged: (value) {
-                            columnIndex = int.tryParse(value);
-                          },
-                          keyboardType: TextInputType.number,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly
-                          ],
-                          decoration: const InputDecoration(
-                            labelText: 'Column index',
-                          ),
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Is column visible?'),
+        content: StatefulBuilder(
+          builder: (context, setState) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 200,
+                      child: TextField(
+                        onChanged: (value) {
+                          columnIndex = int.tryParse(value);
+                        },
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
+                        decoration: const InputDecoration(
+                          labelText: 'Column index',
                         ),
                       ),
-                      const SizedBox(width: 10),
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() {});
-                        },
-                        child: const Text('Check'),
-                      )
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  if (columnIndex != null)
-                    Text(widget.stateManager.isColumnVisibleInViewport(
-                            widget.stateManager.refColumns[columnIndex!])
+                    ),
+                    const SizedBox(width: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {});
+                      },
+                      child: const Text('Check'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                if (columnIndex != null)
+                  Text(
+                    widget.stateManager.isColumnVisibleInViewport(
+                          widget.stateManager.refColumns[columnIndex!],
+                        )
                         ? 'Visible'
-                        : 'Hidden')
-                ],
-              );
-            })));
+                        : 'Hidden',
+                  ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
   }
 
   @override
@@ -159,11 +161,13 @@ class _HeaderState extends State<_Header> {
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             ElevatedButton(
-                onPressed: _showViewPortVisibleColumns,
-                child: const Text('Show view port visible columns')),
+              onPressed: _showViewPortVisibleColumns,
+              child: const Text('Show view port visible columns'),
+            ),
             ElevatedButton(
-                onPressed: _isColumnVisibleInViewport,
-                child: const Text('Is column visible?')),
+              onPressed: _isColumnVisibleInViewport,
+              child: const Text('Is column visible?'),
+            ),
           ],
         ),
       ),

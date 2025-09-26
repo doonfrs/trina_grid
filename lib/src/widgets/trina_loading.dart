@@ -63,9 +63,7 @@ class _GridLoading extends StatelessWidget {
         Positioned.fill(
           child: Opacity(
             opacity: 0.7,
-            child: ColoredBox(
-              color: backgroundColor ?? Colors.white,
-            ),
+            child: ColoredBox(color: backgroundColor ?? Colors.white),
           ),
         ),
         Align(
@@ -81,12 +79,10 @@ class _GridLoading extends StatelessWidget {
               const SizedBox(height: 10),
               Text(
                 text ?? 'Loading',
-                style: textStyle ??
-                    const TextStyle(
-                      color: Colors.black,
-                      fontSize: 14,
-                    ),
-              )
+                style:
+                    textStyle ??
+                    const TextStyle(color: Colors.black, fontSize: 14),
+              ),
             ],
           ),
         ),

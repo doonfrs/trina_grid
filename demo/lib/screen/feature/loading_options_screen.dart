@@ -37,11 +37,7 @@ class _LoadingOptionsScreenState extends State<LoadingOptionsScreen> {
           const CircleAvatar(
             radius: 40,
             backgroundColor: Colors.blue,
-            child: Icon(
-              Icons.grid_on,
-              color: Colors.white,
-              size: 40,
-            ),
+            child: Icon(Icons.grid_on, color: Colors.white, size: 40),
           ),
           const SizedBox(height: 20),
           const Text(
@@ -110,9 +106,7 @@ class _LoadingOptionsScreenState extends State<LoadingOptionsScreen> {
           height: 100,
           child: CircularProgressIndicator(
             strokeWidth: 8,
-            valueColor: AlwaysStoppedAnimation<Color>(
-              Colors.purple.shade400,
-            ),
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.purple.shade400),
           ),
         ),
       ),
@@ -161,8 +155,9 @@ class _LoadingOptionsScreenState extends State<LoadingOptionsScreen> {
 
   void _showLoading() {
     // Determine the effective loading level
-    final effectiveLevel =
-        _useCustomWidget ? TrinaGridLoadingLevel.grid : _loadingLevel;
+    final effectiveLevel = _useCustomWidget
+        ? TrinaGridLoadingLevel.grid
+        : _loadingLevel;
 
     // Display what's actually being used
     ScaffoldMessenger.of(context).showSnackBar(
@@ -205,7 +200,8 @@ class _LoadingOptionsScreenState extends State<LoadingOptionsScreen> {
         Text('• Provide a custom loading widget for complete UI control'),
         SizedBox(height: 8),
         Text(
-            'Note: When using a custom loading widget, the level is always treated as grid level.'),
+          'Note: When using a custom loading widget, the level is always treated as grid level.',
+        ),
       ],
       topButtons: [
         TrinaExampleButton(
@@ -254,7 +250,8 @@ class _LoadingOptionsScreenState extends State<LoadingOptionsScreen> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text(
-                            'When using a custom widget, level is always set to grid'),
+                          'When using a custom widget, level is always set to grid',
+                        ),
                         duration: Duration(seconds: 3),
                       ),
                     );
@@ -270,18 +267,9 @@ class _LoadingOptionsScreenState extends State<LoadingOptionsScreen> {
               DropdownButton<int>(
                 value: _selectedLoadingWidget,
                 items: const [
-                  DropdownMenuItem(
-                    value: 0,
-                    child: Text('Branded Loading'),
-                  ),
-                  DropdownMenuItem(
-                    value: 1,
-                    child: Text('Shimmer Effect'),
-                  ),
-                  DropdownMenuItem(
-                    value: 2,
-                    child: Text('Simple Spinner'),
-                  ),
+                  DropdownMenuItem(value: 0, child: Text('Branded Loading')),
+                  DropdownMenuItem(value: 1, child: Text('Shimmer Effect')),
+                  DropdownMenuItem(value: 2, child: Text('Simple Spinner')),
                 ],
                 onChanged: (value) {
                   setState(() {

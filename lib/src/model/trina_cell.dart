@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:trina_grid/trina_grid.dart';
 
-typedef TrinaCellRenderer = Widget Function(
-    TrinaCellRendererContext rendererContext);
+typedef TrinaCellRenderer =
+    Widget Function(TrinaCellRendererContext rendererContext);
 
 class TrinaCellRendererContext {
   final TrinaColumn column;
@@ -32,11 +32,17 @@ class TrinaCell {
   /// The [renderer] parameter allows for custom rendering of the cell.
   /// The [onChanged] parameter allows for cell-level control over value changes.
   /// The [onKeyPressed] parameter allows for capturing keyboard events in the cell.
-  TrinaCell({dynamic value, Key? key, this.renderer, this.onChanged, this.onKeyPressed, this.padding})
-      : _key = key ?? UniqueKey(),
-        _value = value,
-        _originalValue = value,
-        _oldValue = null;
+  TrinaCell({
+    dynamic value,
+    Key? key,
+    this.renderer,
+    this.onChanged,
+    this.onKeyPressed,
+    this.padding,
+  }) : _key = key ?? UniqueKey(),
+       _value = value,
+       _originalValue = value,
+       _oldValue = null;
 
   final Key _key;
 

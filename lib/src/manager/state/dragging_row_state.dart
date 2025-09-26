@@ -11,20 +11,11 @@ abstract class IDraggingRowState {
 
   bool get canRowDrag;
 
-  void setIsDraggingRow(
-    bool flag, {
-    bool notify = true,
-  });
+  void setIsDraggingRow(bool flag, {bool notify = true});
 
-  void setDragRows(
-    List<TrinaRow> rows, {
-    bool notify = true,
-  });
+  void setDragRows(List<TrinaRow> rows, {bool notify = true});
 
-  void setDragTargetRowIdx(
-    int rowIdx, {
-    bool notify = true,
-  });
+  void setDragTargetRowIdx(int rowIdx, {bool notify = true});
 
   bool isRowIdxDragTarget(int rowIdx);
 
@@ -59,10 +50,7 @@ mixin DraggingRowState implements ITrinaGridState {
   bool get canRowDrag => !hasFilter && !hasSortedColumn && !enabledRowGroups;
 
   @override
-  void setIsDraggingRow(
-    bool flag, {
-    bool notify = true,
-  }) {
+  void setIsDraggingRow(bool flag, {bool notify = true}) {
     if (isDraggingRow == flag) {
       return;
     }
@@ -75,20 +63,14 @@ mixin DraggingRowState implements ITrinaGridState {
   }
 
   @override
-  void setDragRows(
-    List<TrinaRow> rows, {
-    bool notify = true,
-  }) {
+  void setDragRows(List<TrinaRow> rows, {bool notify = true}) {
     _state._dragRows = rows;
 
     notifyListeners(notify, setDragRows.hashCode);
   }
 
   @override
-  void setDragTargetRowIdx(
-    int? rowIdx, {
-    bool notify = true,
-  }) {
+  void setDragTargetRowIdx(int? rowIdx, {bool notify = true}) {
     if (dragTargetRowIdx == rowIdx) {
       return;
     }

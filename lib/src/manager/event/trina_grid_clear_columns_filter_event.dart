@@ -11,11 +11,13 @@ class TrinaGridClearColumnsFilterEvent extends TrinaGridEvent {
     this.debounceMilliseconds,
     this.eventType,
   }) : super(
-          type: eventType ?? TrinaGridEventType.normal,
-          duration: Duration(
-              milliseconds: debounceMilliseconds?.abs() ??
-                  TrinaGridSettings.debounceMillisecondsForColumnFilter),
-        );
+         type: eventType ?? TrinaGridEventType.normal,
+         duration: Duration(
+           milliseconds:
+               debounceMilliseconds?.abs() ??
+               TrinaGridSettings.debounceMillisecondsForColumnFilter,
+         ),
+       );
 
   @override
   void handler(TrinaGridStateManager stateManager) {

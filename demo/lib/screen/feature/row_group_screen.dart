@@ -58,8 +58,9 @@ class _RowGroupScreenState extends State<RowGroupScreen> {
         field: 'files',
         type: TrinaColumnType.text(),
         renderer: (c) {
-          IconData icon =
-              c.row.type.isGroup ? Icons.folder : Icons.file_present;
+          IconData icon = c.row.type.isGroup
+              ? Icons.folder
+              : Icons.file_present;
           return Row(
             children: [
               Icon(icon, size: 18, color: Colors.grey),
@@ -75,47 +76,55 @@ class _RowGroupScreenState extends State<RowGroupScreen> {
       TrinaRow(
         cells: {'files': TrinaCell(value: 'TrinaGrid')},
         type: TrinaRowType.group(
-            children: FilteredList<TrinaRow>(
-          initialList: [
-            TrinaRow(
-              cells: {'files': TrinaCell(value: 'lib')},
-              type: TrinaRowType.group(
-                children: FilteredList<TrinaRow>(
-                  initialList: [
-                    TrinaRow(
-                      cells: {'files': TrinaCell(value: 'src')},
-                      type: TrinaRowType.group(
+          children: FilteredList<TrinaRow>(
+            initialList: [
+              TrinaRow(
+                cells: {'files': TrinaCell(value: 'lib')},
+                type: TrinaRowType.group(
+                  children: FilteredList<TrinaRow>(
+                    initialList: [
+                      TrinaRow(
+                        cells: {'files': TrinaCell(value: 'src')},
+                        type: TrinaRowType.group(
                           children: FilteredList<TrinaRow>(
-                        initialList: [
-                          TrinaRow(cells: {
-                            'files': TrinaCell(value: 'trina_grid.dart')
-                          }),
-                          TrinaRow(cells: {
-                            'files': TrinaCell(value: 'trina_dual_grid.dart')
-                          }),
-                        ],
-                      )),
-                    ),
-                  ],
+                            initialList: [
+                              TrinaRow(
+                                cells: {
+                                  'files': TrinaCell(value: 'trina_grid.dart'),
+                                },
+                              ),
+                              TrinaRow(
+                                cells: {
+                                  'files': TrinaCell(
+                                    value: 'trina_dual_grid.dart',
+                                  ),
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            TrinaRow(
-              cells: {'files': TrinaCell(value: 'test')},
-              type: TrinaRowType.group(
-                children: FilteredList<TrinaRow>(
-                  initialList: [
-                    TrinaRow(
-                      cells: {
-                        'files': TrinaCell(value: 'trina_grid_test.dart')
-                      },
-                    ),
-                  ],
+              TrinaRow(
+                cells: {'files': TrinaCell(value: 'test')},
+                type: TrinaRowType.group(
+                  children: FilteredList<TrinaRow>(
+                    initialList: [
+                      TrinaRow(
+                        cells: {
+                          'files': TrinaCell(value: 'trina_grid_test.dart'),
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
-        )),
+            ],
+          ),
+        ),
       ),
     ]);
   }
@@ -125,9 +134,7 @@ class _RowGroupScreenState extends State<RowGroupScreen> {
     return TrinaExampleScreen(
       title: 'Row group',
       topTitle: 'Row group',
-      topContents: const [
-        Text('Grouping rows in a column or tree structure.'),
-      ],
+      topContents: const [Text('Grouping rows in a column or tree structure.')],
       topButtons: [
         ElevatedButton.icon(
           onPressed: () {
@@ -156,11 +163,13 @@ class _RowGroupScreenState extends State<RowGroupScreen> {
             if (mounted) {
               if (stateManagerA.currentRow != null) {
                 stateManagerA.toggleExpandedRowGroup(
-                    rowGroup: stateManagerA.currentRow!);
+                  rowGroup: stateManagerA.currentRow!,
+                );
               }
               if (stateManagerB.currentRow != null) {
                 stateManagerB.toggleExpandedRowGroup(
-                    rowGroup: stateManagerB.currentRow!);
+                  rowGroup: stateManagerB.currentRow!,
+                );
               }
             }
           },
@@ -173,18 +182,13 @@ class _RowGroupScreenState extends State<RowGroupScreen> {
           columns: columnsA,
           rows: rowsA,
           configuration: const TrinaGridConfiguration(
-            style: TrinaGridStyleConfig(
-              cellColorGroupedRow: Color(0x80F6F6F6),
-            ),
+            style: TrinaGridStyleConfig(cellColorGroupedRow: Color(0x80F6F6F6)),
           ),
           onLoaded: (e) {
             stateManagerA = e.stateManager;
             e.stateManager.setRowGroup(
               TrinaRowGroupByColumnDelegate(
-                columns: [
-                  columnsA[0],
-                  columnsA[1],
-                ],
+                columns: [columnsA[0], columnsA[1]],
                 showFirstExpandableIcon: false,
               ),
             );
@@ -194,21 +198,21 @@ class _RowGroupScreenState extends State<RowGroupScreen> {
           columns: columnsB,
           rows: rowsB,
           configuration: const TrinaGridConfiguration(
-            style: TrinaGridStyleConfig(
-              cellColorGroupedRow: Color(0x80F6F6F6),
-            ),
+            style: TrinaGridStyleConfig(cellColorGroupedRow: Color(0x80F6F6F6)),
             columnSize: TrinaGridColumnSizeConfig(
               autoSizeMode: TrinaAutoSizeMode.equal,
             ),
           ),
           onLoaded: (e) {
             stateManagerB = e.stateManager;
-            e.stateManager.setRowGroup(TrinaRowGroupTreeDelegate(
-              resolveColumnDepth: (column) =>
-                  e.stateManager.columnIndex(column),
-              showText: (cell) => true,
-              showFirstExpandableIcon: true,
-            ));
+            e.stateManager.setRowGroup(
+              TrinaRowGroupTreeDelegate(
+                resolveColumnDepth: (column) =>
+                    e.stateManager.columnIndex(column),
+                showText: (cell) => true,
+                showFirstExpandableIcon: true,
+              ),
+            );
           },
         ),
       ),

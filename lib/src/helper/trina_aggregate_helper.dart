@@ -19,8 +19,9 @@ class TrinaAggregateHelper {
         ? rows.where((row) => filter(row.cells[column.field]!))
         : rows;
 
-    final Iterable<num> numbers =
-        foundItems.map((e) => e.cells[column.field]?.value as num?).nonNulls;
+    final Iterable<num> numbers = foundItems
+        .map((e) => e.cells[column.field]?.value as num?)
+        .nonNulls;
 
     return numbers.isNotEmpty
         ? numberColumn.toNumber(numberColumn.applyFormat(numbers.sum))
@@ -43,8 +44,9 @@ class TrinaAggregateHelper {
         ? rows.where((row) => filter(row.cells[column.field]!))
         : rows;
 
-    final Iterable<num> numbers =
-        foundItems.map((e) => e.cells[column.field]?.value as num?).nonNulls;
+    final Iterable<num> numbers = foundItems
+        .map((e) => e.cells[column.field]?.value as num?)
+        .nonNulls;
 
     return numbers.isNotEmpty
         ? numberColumn.toNumber(numberColumn.applyFormat(numbers.average))

@@ -213,8 +213,10 @@ mixin GridState implements ITrinaGridState {
           rowIdx: currentRowIdx,
           cell: currentCell,
           // Include currentSelectingRows when we have row selection in any mode
-          selectedRows: (mode.isMultiSelectMode || (mode.isNormal && selectingMode.isRow)) 
-                       ? currentSelectingRows : null,
+          selectedRows:
+              (mode.isMultiSelectMode || (mode.isNormal && selectingMode.isRow))
+              ? currentSelectingRows
+              : null,
         ),
       );
     }

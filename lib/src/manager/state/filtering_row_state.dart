@@ -22,10 +22,7 @@ abstract class IFilteringRowState {
     bool notify = true,
   });
 
-  void showFilterPopup(
-    BuildContext context, {
-    TrinaColumn? calledColumn,
-  });
+  void showFilterPopup(BuildContext context, {TrinaColumn? calledColumn});
 
   /// Set or update a column filter value programmatically
   void setColumnFilter({
@@ -104,8 +101,9 @@ mixin FilteringRowState implements ITrinaGridState {
   void setFilterWithFilterRows(List<TrinaRow> rows, {bool notify = true}) {
     setFilterRows(rows);
 
-    var enabledFilterColumnFields =
-        refColumns.where((element) => element.enableFilterMenuItem).toList();
+    var enabledFilterColumnFields = refColumns
+        .where((element) => element.enableFilterMenuItem)
+        .toList();
 
     setFilter(
       FilterHelper.convertRowsToFilter(filterRows, enabledFilterColumnFields),
@@ -119,12 +117,10 @@ mixin FilteringRowState implements ITrinaGridState {
 
   @override
   void setFilterRows(List<TrinaRow> rows) {
-    _state._filterRows = rows.where(
-      (element) {
-        final value = element.cells[FilterHelper.filterFieldValue]!.value;
-        return value != null && value.toString().isNotEmpty;
-      },
-    ).toList();
+    _state._filterRows = rows.where((element) {
+      final value = element.cells[FilterHelper.filterFieldValue]!.value;
+      return value != null && value.toString().isNotEmpty;
+    }).toList();
   }
 
   @override
@@ -154,13 +150,11 @@ mixin FilteringRowState implements ITrinaGridState {
 
     final Set<String> columnFields = Set.from(columns.map((e) => e.field));
 
-    filterRows.removeWhere(
-      (filterRow) {
-        return columnFields.contains(
-          filterRow.cells[FilterHelper.filterFieldColumn]!.value,
-        );
-      },
-    );
+    filterRows.removeWhere((filterRow) {
+      return columnFields.contains(
+        filterRow.cells[FilterHelper.filterFieldColumn]!.value,
+      );
+    });
 
     setFilterWithFilterRows(filterRows, notify: notify);
   }
@@ -218,15 +212,22 @@ mixin FilteringRowState implements ITrinaGridState {
     bool notify = true,
   }) {
     List<TrinaRow> updatedFilterRows = List.from(filterRows);
-    
+
     // Find existing filter row for this column
-    int existingIndex = updatedFilterRows.indexWhere((row) => 
-      row.cells[FilterHelper.filterFieldColumn]?.value == columnField);
-    
+    int existingIndex = updatedFilterRows.indexWhere(
+      (row) => row.cells[FilterHelper.filterFieldColumn]?.value == columnField,
+    );
+
     if (existingIndex != -1) {
       // Update existing filter
-      updatedFilterRows[existingIndex].cells[FilterHelper.filterFieldValue]!.value = filterValue;
-      updatedFilterRows[existingIndex].cells[FilterHelper.filterFieldType]!.value = filterType;
+      updatedFilterRows[existingIndex]
+              .cells[FilterHelper.filterFieldValue]!
+              .value =
+          filterValue;
+      updatedFilterRows[existingIndex]
+              .cells[FilterHelper.filterFieldType]!
+              .value =
+          filterType;
     } else {
       // Add new filter
       updatedFilterRows.add(
@@ -237,16 +238,19 @@ mixin FilteringRowState implements ITrinaGridState {
         ),
       );
     }
-    
+
     setFilterWithFilterRows(updatedFilterRows, notify: notify);
   }
 
   @override
   void removeColumnFilter(String columnField, {bool notify = true}) {
     List<TrinaRow> updatedFilterRows = filterRows
-        .where((row) => row.cells[FilterHelper.filterFieldColumn]?.value != columnField)
+        .where(
+          (row) =>
+              row.cells[FilterHelper.filterFieldColumn]?.value != columnField,
+        )
         .toList();
-    
+
     setFilterWithFilterRows(updatedFilterRows, notify: notify);
   }
 
@@ -261,11 +265,11 @@ mixin FilteringRowState implements ITrinaGridState {
       (row) => row.cells[FilterHelper.filterFieldColumn]?.value == columnField,
       orElse: () => TrinaRow(cells: {}),
     );
-    
+
     if (filterRow.cells.isEmpty) {
       return null;
     }
-    
+
     return filterRow.cells[FilterHelper.filterFieldValue]?.value;
   }
 
@@ -275,11 +279,12 @@ mixin FilteringRowState implements ITrinaGridState {
       (row) => row.cells[FilterHelper.filterFieldColumn]?.value == columnField,
       orElse: () => TrinaRow(cells: {}),
     );
-    
+
     if (filterRow.cells.isEmpty) {
       return null;
     }
-    
-    return filterRow.cells[FilterHelper.filterFieldType]?.value as TrinaFilterType?;
+
+    return filterRow.cells[FilterHelper.filterFieldType]?.value
+        as TrinaFilterType?;
   }
 }

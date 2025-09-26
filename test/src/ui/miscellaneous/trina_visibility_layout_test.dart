@@ -9,9 +9,7 @@ const double childHeight = 50;
 const double defaultChildWidth = 200;
 
 class _TestWidgetWrapper extends StatefulWidget {
-  const _TestWidgetWrapper({
-    required this.child,
-  });
+  const _TestWidgetWrapper({required this.child});
 
   final Widget child;
 
@@ -30,10 +28,7 @@ class _TestWidgetWrapperState extends State<_TestWidgetWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    return Visibility(
-      visible: visible,
-      child: widget.child,
-    );
+    return Visibility(visible: visible, child: widget.child);
   }
 }
 
@@ -141,44 +136,42 @@ void main() {
   });
 
   group('horizontal', () {
-    testWidgets(
-      'scrollController.addListener should be called',
-      (tester) async {
-        when(scrollPosition.viewportDimension).thenReturn(
-          tester.view.physicalSize.width,
-        );
+    testWidgets('scrollController.addListener should be called', (
+      tester,
+    ) async {
+      when(
+        scrollPosition.viewportDimension,
+      ).thenReturn(tester.view.physicalSize.width);
 
-        final children = <TrinaVisibilityLayoutId>[
-          TrinaVisibilityLayoutId(id: 'id', child: createChildren()),
-        ];
+      final children = <TrinaVisibilityLayoutId>[
+        TrinaVisibilityLayoutId(id: 'id', child: createChildren()),
+      ];
 
-        await tester.pumpWidget(buildWidget(
-          scrollController: scrollController,
-          children: children,
-        ));
+      await tester.pumpWidget(
+        buildWidget(scrollController: scrollController, children: children),
+      );
 
-        verify(scrollController.addListener(argThat(isA<Function>())));
-      },
-    );
+      verify(scrollController.addListener(argThat(isA<Function>())));
+    });
 
     testWidgets(
       'scrollController.removeListener should be called when widget disappears',
       (tester) async {
-        when(scrollPosition.viewportDimension).thenReturn(
-          tester.view.physicalSize.width,
-        );
+        when(
+          scrollPosition.viewportDimension,
+        ).thenReturn(tester.view.physicalSize.width);
 
         final children = <TrinaVisibilityLayoutId>[
           TrinaVisibilityLayoutId(id: 'id', child: createChildren()),
         ];
 
-        await tester.pumpWidget(buildWidget(
-          scrollController: scrollController,
-          children: children,
-        ));
+        await tester.pumpWidget(
+          buildWidget(scrollController: scrollController, children: children),
+        );
 
-        final wrapperState = tester.state(find.byType(_TestWidgetWrapper))
-            as _TestWidgetWrapperState;
+        final wrapperState =
+            tester.state(find.byType(_TestWidgetWrapper))
+                as _TestWidgetWrapperState;
 
         wrapperState.setVisible(false);
 
@@ -188,42 +181,38 @@ void main() {
       },
     );
 
-    testWidgets(
-      '_TestLayoutChild should be visible',
-      (tester) async {
-        when(scrollPosition.viewportDimension).thenReturn(
-          tester.view.physicalSize.width,
-        );
+    testWidgets('_TestLayoutChild should be visible', (tester) async {
+      when(
+        scrollPosition.viewportDimension,
+      ).thenReturn(tester.view.physicalSize.width);
 
-        final children = <TrinaVisibilityLayoutId>[
-          TrinaVisibilityLayoutId(id: 'id', child: createChildren()),
-        ];
+      final children = <TrinaVisibilityLayoutId>[
+        TrinaVisibilityLayoutId(id: 'id', child: createChildren()),
+      ];
 
-        await tester.pumpWidget(buildWidget(
-          scrollController: scrollController,
-          children: children,
-        ));
+      await tester.pumpWidget(
+        buildWidget(scrollController: scrollController, children: children),
+      );
 
-        final found = find.byType(_TestLayoutChild);
+      final found = find.byType(_TestLayoutChild);
 
-        final Size size = tester.getSize(found);
+      final Size size = tester.getSize(found);
 
-        final Offset position = tester.getTopLeft(found);
+      final Offset position = tester.getTopLeft(found);
 
-        expect(found, findsOneWidget);
+      expect(found, findsOneWidget);
 
-        expect(size, const Size(defaultChildWidth, childHeight));
+      expect(size, const Size(defaultChildWidth, childHeight));
 
-        expect(position, const Offset(0, 0));
-      },
-    );
+      expect(position, const Offset(0, 0));
+    });
 
     testWidgets(
       'Three _TestLayoutChild widgets should be displayed in sequence',
       (tester) async {
-        when(scrollPosition.viewportDimension).thenReturn(
-          tester.view.physicalSize.width,
-        );
+        when(
+          scrollPosition.viewportDimension,
+        ).thenReturn(tester.view.physicalSize.width);
 
         final children = <TrinaVisibilityLayoutId>[
           TrinaVisibilityLayoutId(id: 'id1', child: createChildren()),
@@ -231,10 +220,9 @@ void main() {
           TrinaVisibilityLayoutId(id: 'id3', child: createChildren()),
         ];
 
-        await tester.pumpWidget(buildWidget(
-          scrollController: scrollController,
-          children: children,
-        ));
+        await tester.pumpWidget(
+          buildWidget(scrollController: scrollController, children: children),
+        );
 
         final found = find.byType(_TestLayoutChild);
 

@@ -19,9 +19,9 @@ class TrinaTimePicker extends StatefulWidget {
     this.maxTimeErrorText,
     this.minTimeErrorText,
   }) : assert(
-          minTime.isBefore(maxTime) || maxTime.isAtSameTimeAs(minTime),
-          'minTime must be before or at the same time as maxTime',
-        );
+         minTime.isBefore(maxTime) || maxTime.isAtSameTimeAs(minTime),
+         'minTime must be before or at the same time as maxTime',
+       );
 
   /// {@template TrinaTimePicker.initialTime}
   ///
@@ -184,8 +184,8 @@ class _TrinaTimePickerState extends State<TrinaTimePicker> {
             onEnterKeyEvent: (_) => _onEnterKeyEvent(),
             textInputAction: widget.autoFocusMode.isEnabled
                 ? widget.autoFocusMode.isHour
-                    ? TextInputAction.next
-                    : TextInputAction.done
+                      ? TextInputAction.next
+                      : TextInputAction.done
                 : null,
             isValidTime: (hour) {
               return _isTimeInRange(currentTime.tryReplacing(hour: hour));
@@ -220,8 +220,8 @@ class _TrinaTimePickerState extends State<TrinaTimePicker> {
             onEnterKeyEvent: (_) => _onEnterKeyEvent(),
             textInputAction: widget.autoFocusMode.isEnabled
                 ? widget.autoFocusMode.isMinute
-                    ? TextInputAction.next
-                    : TextInputAction.done
+                      ? TextInputAction.next
+                      : TextInputAction.done
                 : null,
             isValidTime: (minute) =>
                 _isTimeInRange(currentTime.tryReplacing(minute: minute)),
@@ -361,8 +361,9 @@ class _TimeDigitInputState extends State<_TimeDigitInput> {
                 bindings: {
                   LogicalKeySet(LogicalKeyboardKey.enter): () {
                     FocusScope.of(context).nextFocus();
-                    widget.onEnterKeyEvent
-                        ?.call(controller.text.padLeft(2, '0'));
+                    widget.onEnterKeyEvent?.call(
+                      controller.text.padLeft(2, '0'),
+                    );
                   },
                   LogicalKeySet(LogicalKeyboardKey.arrowUp): _increment,
                   LogicalKeySet(LogicalKeyboardKey.arrowDown): _decrement,
@@ -392,25 +393,29 @@ class _TimeDigitInputState extends State<_TimeDigitInput> {
                   autofocus: widget.autoFocus,
                   canRequestFocus: true,
                   errorBuilder: (context, errorText) => const SizedBox.shrink(),
-                  buildCounter: (
-                    context, {
-                    required currentLength,
-                    required isFocused,
-                    required maxLength,
-                  }) {
-                    return null;
-                  },
+                  buildCounter:
+                      (
+                        context, {
+                        required currentLength,
+                        required isFocused,
+                        required maxLength,
+                      }) {
+                        return null;
+                      },
                   keyboardType: TextInputType.number,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   textAlign: TextAlign.center,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: InputDecoration(
                     helperText: widget.label,
-                    border:
-                        const OutlineInputBorder(borderSide: BorderSide.none),
+                    border: const OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                    ),
                     focusedBorder: const OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Colors.blueAccent, width: 2),
+                      borderSide: BorderSide(
+                        color: Colors.blueAccent,
+                        width: 2,
+                      ),
                     ),
                     filled: true,
                     isDense: false,
@@ -438,7 +443,9 @@ class _TimeDigitInputState extends State<_TimeDigitInput> {
                           ? Text(
                               errorText,
                               style: const TextStyle(
-                                  color: Colors.red, fontSize: 12),
+                                color: Colors.red,
+                                fontSize: 12,
+                              ),
                               textAlign: TextAlign.center,
                             )
                           : const SizedBox.shrink(),

@@ -9,10 +9,8 @@ class TrinaBaseColumnFooter extends StatelessWidget
 
   final TrinaColumn column;
 
-  TrinaBaseColumnFooter({
-    required this.stateManager,
-    required this.column,
-  }) : super(key: column.key);
+  TrinaBaseColumnFooter({required this.stateManager, required this.column})
+    : super(key: column.key);
 
   @override
   double get width => column.width;

@@ -50,59 +50,53 @@ void main() {
     }
   }
 
-  testWidgets(
-    'When filtering with "contains" condition and value "value 1", '
-    'only rows containing "value 1" should be shown',
-    (tester) async {
-      final columns = ColumnHelper.textColumn('column');
+  testWidgets('When filtering with "contains" condition and value "value 1", '
+      'only rows containing "value 1" should be shown', (tester) async {
+    final columns = ColumnHelper.textColumn('column');
 
-      final rows = RowHelper.count(20, columns);
+    final rows = RowHelper.count(20, columns);
 
-      await tester.pumpWidget(buildGrid(columns: columns, rows: rows));
+    await tester.pumpWidget(buildGrid(columns: columns, rows: rows));
 
-      await tester.pump();
+    await tester.pump();
 
-      await tapAndEnterTextColumnFilter(tester, 'value 1');
+    await tapAndEnterTextColumnFilter(tester, 'value 1');
 
-      await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
 
-      expect(stateManager.refRows.length, 11);
+    expect(stateManager.refRows.length, 11);
 
-      expect(find.text('column0 value 1'), findsOneWidget);
-      expect(find.text('column0 value 10'), findsOneWidget);
-      expect(find.text('column0 value 11'), findsOneWidget);
-      expect(find.text('column0 value 12'), findsOneWidget);
-      expect(find.text('column0 value 13'), findsOneWidget);
-      expect(find.text('column0 value 14'), findsOneWidget);
-      expect(find.text('column0 value 15'), findsOneWidget);
-      expect(find.text('column0 value 16'), findsOneWidget);
-      expect(find.text('column0 value 17'), findsOneWidget);
-      expect(find.text('column0 value 18'), findsOneWidget);
-      expect(find.text('column0 value 19'), findsOneWidget);
-    },
-  );
+    expect(find.text('column0 value 1'), findsOneWidget);
+    expect(find.text('column0 value 10'), findsOneWidget);
+    expect(find.text('column0 value 11'), findsOneWidget);
+    expect(find.text('column0 value 12'), findsOneWidget);
+    expect(find.text('column0 value 13'), findsOneWidget);
+    expect(find.text('column0 value 14'), findsOneWidget);
+    expect(find.text('column0 value 15'), findsOneWidget);
+    expect(find.text('column0 value 16'), findsOneWidget);
+    expect(find.text('column0 value 17'), findsOneWidget);
+    expect(find.text('column0 value 18'), findsOneWidget);
+    expect(find.text('column0 value 19'), findsOneWidget);
+  });
 
-  testWidgets(
-    'When filtering with "equals" condition and value "value 11", '
-    'only rows with exact match should be shown',
-    (tester) async {
-      final columns = ColumnHelper.textColumn('column');
+  testWidgets('When filtering with "equals" condition and value "value 11", '
+      'only rows with exact match should be shown', (tester) async {
+    final columns = ColumnHelper.textColumn('column');
 
-      final rows = RowHelper.count(20, columns);
+    final rows = RowHelper.count(20, columns);
 
-      await tester.pumpWidget(buildGrid(columns: columns, rows: rows));
+    await tester.pumpWidget(buildGrid(columns: columns, rows: rows));
 
-      await tester.pump();
+    await tester.pump();
 
-      await tapAndEnterTextColumnFilter(tester, 'value 11');
+    await tapAndEnterTextColumnFilter(tester, 'value 11');
 
-      await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
 
-      expect(stateManager.refRows.length, 1);
+    expect(stateManager.refRows.length, 1);
 
-      expect(find.text('column0 value 11'), findsOneWidget);
-    },
-  );
+    expect(find.text('column0 value 11'), findsOneWidget);
+  });
 
   testWidgets(
     'When filtering with "starts with" condition and value "value 11", '

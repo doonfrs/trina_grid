@@ -228,28 +228,32 @@ class TrinaGridConfiguration {
 
   @override
   int get hashCode => Object.hash(
-        enableMoveDownAfterSelecting,
-        enableMoveHorizontalInEditing,
-        enableAutoSelectFirstRow,
-        rowSelectionCheckBoxBehavior,
-        enterKeyAction,
-        tabKeyAction,
-        selectingMode,
-        shortcut,
-        style,
-        scrollbar,
-        columnFilter,
-        columnSize,
-        localeText,
-      );
+    enableMoveDownAfterSelecting,
+    enableMoveHorizontalInEditing,
+    enableAutoSelectFirstRow,
+    rowSelectionCheckBoxBehavior,
+    enterKeyAction,
+    tabKeyAction,
+    selectingMode,
+    shortcut,
+    style,
+    scrollbar,
+    columnFilter,
+    columnSize,
+    localeText,
+  );
 }
 
 class TrinaGridStyleConfig {
-  static const TextStyle defaultLightCellTextStyle =
-      TextStyle(fontSize: 14, color: Colors.black);
+  static const TextStyle defaultLightCellTextStyle = TextStyle(
+    fontSize: 14,
+    color: Colors.black,
+  );
 
-  static const TextStyle defaultDarkCellTextStyle =
-      TextStyle(fontSize: 14, color: Colors.white);
+  static const TextStyle defaultDarkCellTextStyle = TextStyle(
+    fontSize: 14,
+    color: Colors.white,
+  );
 
   const TrinaGridStyleConfig({
     this.enableGridBorderShadow = false,
@@ -326,13 +330,13 @@ class TrinaGridStyleConfig {
     this.filterHeaderColor,
     this.filterPopupHeaderColor,
     this.filterHeaderIconColor,
-  })  : columnCheckedColor = (columnCheckedColor ?? activatedColor),
-        cellCheckedColor = (cellCheckedColor ?? activatedColor),
-        columnUnselectedColor = (columnUnselectedColor ?? iconColor),
-        columnActiveColor = (columnActiveColor ?? activatedBorderColor),
-        cellUnselectedColor = (cellUnselectedColor ?? iconColor),
-        cellActiveColor = (cellActiveColor ?? activatedBorderColor),
-        isDarkStyle = false;
+  }) : columnCheckedColor = (columnCheckedColor ?? activatedColor),
+       cellCheckedColor = (cellCheckedColor ?? activatedColor),
+       columnUnselectedColor = (columnUnselectedColor ?? iconColor),
+       columnActiveColor = (columnActiveColor ?? activatedBorderColor),
+       cellUnselectedColor = (cellUnselectedColor ?? iconColor),
+       cellActiveColor = (cellActiveColor ?? activatedBorderColor),
+       isDarkStyle = false;
 
   const TrinaGridStyleConfig.dark({
     this.enableGridBorderShadow = false,
@@ -409,13 +413,13 @@ class TrinaGridStyleConfig {
     this.filterHeaderColor,
     this.filterPopupHeaderColor,
     this.filterHeaderIconColor,
-  })  : columnCheckedColor = (columnCheckedColor ?? activatedColor),
-        cellCheckedColor = (cellCheckedColor ?? activatedColor),
-        columnUnselectedColor = (columnUnselectedColor ?? iconColor),
-        columnActiveColor = (columnActiveColor ?? activatedBorderColor),
-        cellUnselectedColor = (cellUnselectedColor ?? iconColor),
-        cellActiveColor = (cellActiveColor ?? activatedBorderColor),
-        isDarkStyle = true;
+  }) : columnCheckedColor = (columnCheckedColor ?? activatedColor),
+       cellCheckedColor = (cellCheckedColor ?? activatedColor),
+       columnUnselectedColor = (columnUnselectedColor ?? iconColor),
+       columnActiveColor = (columnActiveColor ?? activatedBorderColor),
+       cellUnselectedColor = (cellUnselectedColor ?? iconColor),
+       cellActiveColor = (cellActiveColor ?? activatedBorderColor),
+       isDarkStyle = true;
 
   /// Enable borderShadow in [TrinaGrid].
   final bool enableGridBorderShadow;
@@ -722,8 +726,9 @@ class TrinaGridStyleConfig {
         gridBackgroundColor: gridBackgroundColor ?? this.gridBackgroundColor,
         rowColor: rowColor ?? this.rowColor,
         oddRowColor: oddRowColor == null ? this.oddRowColor : oddRowColor.value,
-        evenRowColor:
-            evenRowColor == null ? this.evenRowColor : evenRowColor.value,
+        evenRowColor: evenRowColor == null
+            ? this.evenRowColor
+            : evenRowColor.value,
         activatedColor: activatedColor ?? this.activatedColor,
         columnCheckedColor: columnCheckedColor ?? this.columnCheckedColor,
         columnCheckedSide: columnCheckedSide ?? this.columnCheckedSide,
@@ -807,8 +812,9 @@ class TrinaGridStyleConfig {
         gridBackgroundColor: gridBackgroundColor ?? this.gridBackgroundColor,
         rowColor: rowColor ?? this.rowColor,
         oddRowColor: oddRowColor == null ? this.oddRowColor : oddRowColor.value,
-        evenRowColor:
-            evenRowColor == null ? this.evenRowColor : evenRowColor.value,
+        evenRowColor: evenRowColor == null
+            ? this.evenRowColor
+            : evenRowColor.value,
         activatedColor: activatedColor ?? this.activatedColor,
         columnCheckedColor: columnCheckedColor ?? this.columnCheckedColor,
         columnCheckedSide: columnCheckedSide ?? this.columnCheckedSide,
@@ -941,65 +947,65 @@ class TrinaGridStyleConfig {
 
   @override
   int get hashCode => Object.hashAll([
-        enableGridBorderShadow,
-        enableColumnBorderVertical,
-        enableColumnBorderHorizontal,
-        enableCellBorderVertical,
-        enableCellBorderHorizontal,
-        enableRowColorAnimation,
-        filterIcon,
-        gridBackgroundColor,
-        rowColor,
-        oddRowColor,
-        evenRowColor,
-        activatedColor,
-        columnCheckedColor,
-        columnCheckedSide,
-        cellCheckedColor,
-        cellCheckedSide,
-        cellColorInEditState,
-        cellColorInReadOnlyState,
-        cellReadonlyColor,
-        cellColorGroupedRow,
-        dragTargetColumnColor,
-        iconColor,
-        disabledIconColor,
-        menuBackgroundColor,
-        gridBorderColor,
-        borderColor,
-        activatedBorderColor,
-        inactivatedBorderColor,
-        iconSize,
-        rowHeight,
-        columnHeight,
-        columnFilterHeight,
-        defaultColumnTitlePadding,
-        defaultColumnFilterPadding,
-        defaultCellPadding,
-        columnTextStyle,
-        columnUnselectedColor,
-        columnActiveColor,
-        cellUnselectedColor,
-        cellActiveColor,
-        cellTextStyle,
-        columnContextIcon,
-        columnResizeIcon,
-        columnAscendingIcon,
-        columnDescendingIcon,
-        rowGroupExpandedIcon,
-        rowGroupCollapsedIcon,
-        rowGroupEmptyIcon,
-        gridBorderRadius,
-        gridPopupBorderRadius,
-        gridPadding,
-        gridBorderWidth,
-        cellVerticalBorderWidth,
-        cellHorizontalBorderWidth,
-        filterPopupHeaderColor,
-        filterHeaderColor,
-        filterHeaderIconColor,
-        isDarkStyle
-      ]);
+    enableGridBorderShadow,
+    enableColumnBorderVertical,
+    enableColumnBorderHorizontal,
+    enableCellBorderVertical,
+    enableCellBorderHorizontal,
+    enableRowColorAnimation,
+    filterIcon,
+    gridBackgroundColor,
+    rowColor,
+    oddRowColor,
+    evenRowColor,
+    activatedColor,
+    columnCheckedColor,
+    columnCheckedSide,
+    cellCheckedColor,
+    cellCheckedSide,
+    cellColorInEditState,
+    cellColorInReadOnlyState,
+    cellReadonlyColor,
+    cellColorGroupedRow,
+    dragTargetColumnColor,
+    iconColor,
+    disabledIconColor,
+    menuBackgroundColor,
+    gridBorderColor,
+    borderColor,
+    activatedBorderColor,
+    inactivatedBorderColor,
+    iconSize,
+    rowHeight,
+    columnHeight,
+    columnFilterHeight,
+    defaultColumnTitlePadding,
+    defaultColumnFilterPadding,
+    defaultCellPadding,
+    columnTextStyle,
+    columnUnselectedColor,
+    columnActiveColor,
+    cellUnselectedColor,
+    cellActiveColor,
+    cellTextStyle,
+    columnContextIcon,
+    columnResizeIcon,
+    columnAscendingIcon,
+    columnDescendingIcon,
+    rowGroupExpandedIcon,
+    rowGroupCollapsedIcon,
+    rowGroupEmptyIcon,
+    gridBorderRadius,
+    gridPopupBorderRadius,
+    gridPadding,
+    gridBorderWidth,
+    cellVerticalBorderWidth,
+    cellHorizontalBorderWidth,
+    filterPopupHeaderColor,
+    filterHeaderColor,
+    filterHeaderIconColor,
+    isDarkStyle,
+  ]);
 }
 
 /// Allows to customise scrollbars "look and feel"
@@ -1047,8 +1053,8 @@ class TrinaGridScrollbarConfig {
 
   /// Set of devices that can interact with the scrollbar
   ///
-  /// By default [PointerDeviceKind.mouse], [PointerDeviceKind.touch], 
-  /// [PointerDeviceKind.stylus], [PointerDeviceKind.invertedStylus], 
+  /// By default [PointerDeviceKind.mouse], [PointerDeviceKind.touch],
+  /// [PointerDeviceKind.stylus], [PointerDeviceKind.invertedStylus],
   /// and [PointerDeviceKind.trackpad] are configured to create drag gestures.
   ///
   /// See [ScrollBehavior.dragDevices] for more information.
@@ -1135,22 +1141,22 @@ class TrinaGridScrollbarConfig {
 
   @override
   int get hashCode => Object.hashAll([
-        isAlwaysShown,
-        dragDevices,
-        isDraggable,
-        thumbVisible,
-        showTrack,
-        showHorizontal,
-        showVertical,
-        thickness,
-        minThumbLength,
-        radius,
-        thumbColor,
-        trackColor,
-        thumbHoverColor,
-        trackHoverColor,
-        columnShowScrollWidth
-      ]);
+    isAlwaysShown,
+    dragDevices,
+    isDraggable,
+    thumbVisible,
+    showTrack,
+    showHorizontal,
+    showVertical,
+    thickness,
+    minThumbLength,
+    radius,
+    thumbColor,
+    trackColor,
+    thumbHoverColor,
+    trackHoverColor,
+    columnShowScrollWidth,
+  ]);
 }
 
 extension TrinaGridConfigurationScrollbarExtension on TrinaGridConfiguration {
@@ -1161,10 +1167,11 @@ extension TrinaGridConfigurationScrollbarExtension on TrinaGridConfiguration {
 
 typedef TrinaGridColumnFilterResolver = Function<T>();
 
-typedef TrinaGridResolveDefaultColumnFilter = TrinaFilterType Function(
-  TrinaColumn column,
-  TrinaGridColumnFilterResolver resolver,
-);
+typedef TrinaGridResolveDefaultColumnFilter =
+    TrinaFilterType Function(
+      TrinaColumn column,
+      TrinaGridColumnFilterResolver resolver,
+    );
 
 class TrinaGridColumnFilterConfig {
   /// # Set the filter information of the column.
@@ -1219,13 +1226,13 @@ class TrinaGridColumnFilterConfig {
     List<TrinaFilterType>? filters,
     TrinaGridResolveDefaultColumnFilter? resolveDefaultColumnFilter,
     int? debounceMilliseconds,
-  })  : _userFilters = filters,
-        _userResolveDefaultColumnFilter = resolveDefaultColumnFilter,
-        _debounceMilliseconds = debounceMilliseconds == null
-            ? TrinaGridSettings.debounceMillisecondsForColumnFilter
-            : debounceMilliseconds < 0
-                ? 0
-                : debounceMilliseconds;
+  }) : _userFilters = filters,
+       _userResolveDefaultColumnFilter = resolveDefaultColumnFilter,
+       _debounceMilliseconds = debounceMilliseconds == null
+           ? TrinaGridSettings.debounceMillisecondsForColumnFilter
+           : debounceMilliseconds < 0
+           ? 0
+           : debounceMilliseconds;
 
   final List<TrinaFilterType>? _userFilters;
 
@@ -1270,10 +1277,10 @@ class TrinaGridColumnFilterConfig {
 
   @override
   int get hashCode => Object.hash(
-        _userFilters,
-        _userResolveDefaultColumnFilter,
-        _debounceMilliseconds,
-      );
+    _userFilters,
+    _userResolveDefaultColumnFilter,
+    _debounceMilliseconds,
+  );
 }
 
 /// Automatically change the column width or set the mode when changing the width.
@@ -1333,13 +1340,16 @@ class TrinaGridColumnSizeConfig {
       resizeMode: resizeMode ?? this.resizeMode,
       restoreAutoSizeAfterHideColumn:
           restoreAutoSizeAfterHideColumn ?? this.restoreAutoSizeAfterHideColumn,
-      restoreAutoSizeAfterFrozenColumn: restoreAutoSizeAfterFrozenColumn ??
+      restoreAutoSizeAfterFrozenColumn:
+          restoreAutoSizeAfterFrozenColumn ??
           this.restoreAutoSizeAfterFrozenColumn,
       restoreAutoSizeAfterMoveColumn:
           restoreAutoSizeAfterMoveColumn ?? this.restoreAutoSizeAfterMoveColumn,
-      restoreAutoSizeAfterInsertColumn: restoreAutoSizeAfterInsertColumn ??
+      restoreAutoSizeAfterInsertColumn:
+          restoreAutoSizeAfterInsertColumn ??
           this.restoreAutoSizeAfterInsertColumn,
-      restoreAutoSizeAfterRemoveColumn: restoreAutoSizeAfterRemoveColumn ??
+      restoreAutoSizeAfterRemoveColumn:
+          restoreAutoSizeAfterRemoveColumn ??
           this.restoreAutoSizeAfterRemoveColumn,
     );
   }
@@ -1365,14 +1375,14 @@ class TrinaGridColumnSizeConfig {
 
   @override
   int get hashCode => Object.hash(
-        autoSizeMode,
-        resizeMode,
-        restoreAutoSizeAfterHideColumn,
-        restoreAutoSizeAfterFrozenColumn,
-        restoreAutoSizeAfterMoveColumn,
-        restoreAutoSizeAfterInsertColumn,
-        restoreAutoSizeAfterRemoveColumn,
-      );
+    autoSizeMode,
+    resizeMode,
+    restoreAutoSizeAfterHideColumn,
+    restoreAutoSizeAfterFrozenColumn,
+    restoreAutoSizeAfterMoveColumn,
+    restoreAutoSizeAfterInsertColumn,
+    restoreAutoSizeAfterRemoveColumn,
+  );
 }
 
 class TrinaGridLocaleText {
@@ -2068,41 +2078,41 @@ class TrinaGridLocaleText {
 
   @override
   int get hashCode => Object.hashAll([
-        unfreezeColumn,
-        freezeColumnToStart,
-        freezeColumnToEnd,
-        autoFitColumn,
-        hideColumn,
-        setColumns,
-        setFilter,
-        resetFilter,
-        setColumnsTitle,
-        filterColumn,
-        filterType,
-        filterValue,
-        filterAllColumns,
-        filterContains,
-        filterEquals,
-        filterStartsWith,
-        filterEndsWith,
-        filterGreaterThan,
-        filterGreaterThanOrEqualTo,
-        filterLessThan,
-        filterLessThanOrEqualTo,
-        sunday,
-        monday,
-        tuesday,
-        wednesday,
-        thursday,
-        friday,
-        saturday,
-        hour,
-        minute,
-        loadingText,
-        multiLineFilterHint,
-        multiLineFilterEditTitle,
-        multiLineFilterOkButton,
-      ]);
+    unfreezeColumn,
+    freezeColumnToStart,
+    freezeColumnToEnd,
+    autoFitColumn,
+    hideColumn,
+    setColumns,
+    setFilter,
+    resetFilter,
+    setColumnsTitle,
+    filterColumn,
+    filterType,
+    filterValue,
+    filterAllColumns,
+    filterContains,
+    filterEquals,
+    filterStartsWith,
+    filterEndsWith,
+    filterGreaterThan,
+    filterGreaterThanOrEqualTo,
+    filterLessThan,
+    filterLessThanOrEqualTo,
+    sunday,
+    monday,
+    tuesday,
+    wednesday,
+    thursday,
+    friday,
+    saturday,
+    hour,
+    minute,
+    loadingText,
+    multiLineFilterHint,
+    multiLineFilterEditTitle,
+    multiLineFilterOkButton,
+  ]);
 }
 
 enum TrinaGridRowSelectionCheckBoxBehavior {

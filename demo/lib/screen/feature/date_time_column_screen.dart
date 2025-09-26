@@ -45,9 +45,7 @@ class _DateTimeColumnScreenState extends State<DateTimeColumnScreen> {
       TrinaColumn(
         title: 'Default Format',
         field: 'default_format',
-        type: TrinaColumnType.dateTime(
-          format: dateTimeFormat,
-        ),
+        type: TrinaColumnType.dateTime(format: dateTimeFormat),
         width: 180,
       ),
       TrinaColumn(
@@ -81,17 +79,13 @@ class _DateTimeColumnScreenState extends State<DateTimeColumnScreen> {
       TrinaColumn(
         title: '24h Format',
         field: '24h_format',
-        type: TrinaColumnType.dateTime(
-          format: dateTimeFormat,
-        ),
+        type: TrinaColumnType.dateTime(format: dateTimeFormat),
         width: 180,
       ),
       TrinaColumn(
         title: '12h Format',
         field: '12h_format',
-        type: TrinaColumnType.dateTime(
-          format: 'yyyy-MM-dd hh:mm',
-        ),
+        type: TrinaColumnType.dateTime(format: 'yyyy-MM-dd hh:mm'),
         width: 180,
       ),
     ]);
@@ -115,10 +109,12 @@ class _DateTimeColumnScreenState extends State<DateTimeColumnScreen> {
       TrinaRow(
         cells: {
           'id': TrinaCell(value: '2'),
-          'default_format':
-              TrinaCell(value: dateTimeFormatter.format(yesterday)),
-          'custom_format':
-              TrinaCell(value: dateTimeFormatter.format(yesterday)),
+          'default_format': TrinaCell(
+            value: dateTimeFormatter.format(yesterday),
+          ),
+          'custom_format': TrinaCell(
+            value: dateTimeFormatter.format(yesterday),
+          ),
           'with_range': TrinaCell(value: dateTimeFormatter.format(yesterday)),
           'custom_icon': TrinaCell(value: dateTimeFormatter.format(yesterday)),
           '24h_format': TrinaCell(value: dateTimeFormatter.format(yesterday)),
@@ -128,8 +124,9 @@ class _DateTimeColumnScreenState extends State<DateTimeColumnScreen> {
       TrinaRow(
         cells: {
           'id': TrinaCell(value: '3'),
-          'default_format':
-              TrinaCell(value: dateTimeFormatter.format(tomorrow)),
+          'default_format': TrinaCell(
+            value: dateTimeFormatter.format(tomorrow),
+          ),
           'custom_format': TrinaCell(value: dateTimeFormatter.format(tomorrow)),
           'with_range': TrinaCell(value: dateTimeFormatter.format(tomorrow)),
           'custom_icon': TrinaCell(value: dateTimeFormatter.format(tomorrow)),
@@ -140,8 +137,9 @@ class _DateTimeColumnScreenState extends State<DateTimeColumnScreen> {
       TrinaRow(
         cells: {
           'id': TrinaCell(value: '4'),
-          'default_format':
-              TrinaCell(value: dateTimeFormatter.format(nextWeek)),
+          'default_format': TrinaCell(
+            value: dateTimeFormatter.format(nextWeek),
+          ),
           'custom_format': TrinaCell(value: dateTimeFormatter.format(nextWeek)),
           'with_range': TrinaCell(value: dateTimeFormatter.format(nextWeek)),
           'custom_icon': TrinaCell(value: dateTimeFormatter.format(nextWeek)),
@@ -160,7 +158,8 @@ class _DateTimeColumnScreenState extends State<DateTimeColumnScreen> {
       topContents: const [
         Text('A column to enter both date and time values in a single field.'),
         Text(
-            'First select a date, then select a time to set the complete datetime value.'),
+          'First select a date, then select a time to set the complete datetime value.',
+        ),
         Text('Supports various format options and date/time constraints.'),
       ],
       topButtons: [
@@ -173,9 +172,7 @@ class _DateTimeColumnScreenState extends State<DateTimeColumnScreen> {
         configuration: TrinaGridConfiguration(
           style: TrinaGridStyleConfig(
             rowHeight: 40,
-            cellTextStyle: const TextStyle(
-              fontSize: 12,
-            ),
+            cellTextStyle: const TextStyle(fontSize: 12),
           ),
         ),
         columns: columns,

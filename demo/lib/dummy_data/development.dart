@@ -104,8 +104,10 @@ class DummyData {
           .toString();
     } else if (column.type.isTime) {
       final hour = faker.randomGenerator.integer(12).toString().padLeft(2, '0');
-      final minute =
-          faker.randomGenerator.integer(60).toString().padLeft(2, '0');
+      final minute = faker.randomGenerator
+          .integer(60)
+          .toString()
+          .padLeft(2, '0');
       return '$hour:$minute';
     } else {
       return faker.randomGenerator.element(multilingualWords);
@@ -167,9 +169,7 @@ class DummyData {
       if (maxDepth < 1) return null;
 
       final TrinaRowType type = TrinaRowType.group(
-        children: FilteredList(
-          initialList: [],
-        ),
+        children: FilteredList(initialList: []),
       );
       List<TrinaRow>? currentChildren = type.group.children;
       List<List<TrinaRow>> childrenStack = [];
@@ -182,19 +182,21 @@ class DummyData {
         next = childrenStack.isEmpty;
 
         if (currentChildren != null) {
-          for (final _
-              in List.generate(countOfChildren[currentDepth], (i) => i)) {
+          for (final _ in List.generate(
+            countOfChildren[currentDepth],
+            (i) => i,
+          )) {
             final children = <TrinaRow>[];
-            currentChildren.add(TrinaRow(
-              cells: _cellsByColumn(columns),
-              type: isMax
-                  ? null
-                  : TrinaRowType.group(
-                      children: FilteredList(
-                        initialList: children,
+            currentChildren.add(
+              TrinaRow(
+                cells: _cellsByColumn(columns),
+                type: isMax
+                    ? null
+                    : TrinaRowType.group(
+                        children: FilteredList(initialList: children),
                       ),
-                    ),
-            ));
+              ),
+            );
 
             if (!isMax) childrenStackTemp.add(children);
           }
@@ -219,13 +221,11 @@ class DummyData {
     for (final _ in List.generate(count, (index) => index)) {
       TrinaRowType? type;
 
-      final depthOrRandom = depth ??
-          faker.randomGenerator.integer(
-            defaultRandomDepth,
-            min: 0,
-          );
+      final depthOrRandom =
+          depth ?? faker.randomGenerator.integer(defaultRandomDepth, min: 0);
 
-      final countOfChildren = childCount ??
+      final countOfChildren =
+          childCount ??
           List.generate(depthOrRandom, (index) {
             return faker.randomGenerator.integer(
               defaultRandomChildCount,
@@ -237,12 +237,7 @@ class DummyData {
           ? null
           : generateType(depthOrRandom, countOfChildren);
 
-      rows.add(
-        TrinaRow(
-          cells: _cellsByColumn(columns),
-          type: type,
-        ),
-      );
+      rows.add(TrinaRow(cells: _cellsByColumn(columns), type: type));
     }
 
     return rows;
@@ -252,9 +247,7 @@ class DummyData {
     final cells = <String, TrinaCell>{};
 
     for (var column in columns) {
-      cells[column.field] = TrinaCell(
-        value: valueByColumnType(column),
-      );
+      cells[column.field] = TrinaCell(value: valueByColumnType(column));
     }
 
     return cells;

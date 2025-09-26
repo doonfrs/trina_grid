@@ -33,9 +33,9 @@ class TrinaColumnTypeTime
     this.minTime = defaultMinTime,
     this.maxTime = defaultMaxTime,
   }) : assert(
-          maxTime.isAfter(minTime) || maxTime.isAtSameTimeAs(minTime),
-          'maxTime must be after or at the same time as minTime',
-        );
+         maxTime.isAfter(minTime) || maxTime.isAtSameTimeAs(minTime),
+         'maxTime must be after or at the same time as minTime',
+       );
 
   static final _timeFormat = RegExp(r'^([0-1]?\d|2[0-3]):[0-5]\d$');
 

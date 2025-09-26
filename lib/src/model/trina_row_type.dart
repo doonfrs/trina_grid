@@ -9,10 +9,7 @@ abstract class TrinaRowType {
     required FilteredList<TrinaRow> children,
     bool expanded = false,
   }) {
-    return TrinaRowTypeGroup(
-      children: children,
-      expanded: expanded,
-    );
+    return TrinaRowTypeGroup(children: children, expanded: expanded);
   }
 }
 
@@ -45,10 +42,8 @@ class TrinaRowTypeNormal implements TrinaRowType {
 }
 
 class TrinaRowTypeGroup implements TrinaRowType {
-  TrinaRowTypeGroup({
-    required this.children,
-    bool expanded = false,
-  }) : _expanded = expanded;
+  TrinaRowTypeGroup({required this.children, bool expanded = false})
+    : _expanded = expanded;
 
   final FilteredList<TrinaRow> children;
 

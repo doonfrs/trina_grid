@@ -25,9 +25,7 @@ class TrinaSection extends StatelessWidget {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(
-              bottom: 20,
-            ),
+            padding: const EdgeInsets.only(bottom: 20),
             child: Text(
               title!,
               style: TextStyle(

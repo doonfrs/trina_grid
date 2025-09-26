@@ -39,7 +39,7 @@ class TrinaColumnFilterState extends TrinaStateWithChange<TrinaColumnFilter> {
     return _filterRows.isEmpty
         ? ''
         : _filterRows.first.cells[FilterHelper.filterFieldValue]!.value
-            .toString();
+              .toString();
   }
 
   bool get _hasCompositeFilter {
@@ -50,26 +50,31 @@ class TrinaColumnFilterState extends TrinaStateWithChange<TrinaColumnFilter> {
   }
 
   InputBorder get _border => OutlineInputBorder(
-        borderSide: BorderSide(
-            color: stateManager.configuration.style.borderColor, width: 0.0),
-        borderRadius: BorderRadius.zero,
-      );
+    borderSide: BorderSide(
+      color: stateManager.configuration.style.borderColor,
+      width: 0.0,
+    ),
+    borderRadius: BorderRadius.zero,
+  );
 
   InputBorder get _enabledBorder => OutlineInputBorder(
-        borderSide: BorderSide(
-            color: stateManager.configuration.style.activatedBorderColor,
-            width: 0.0),
-        borderRadius: BorderRadius.zero,
-      );
+    borderSide: BorderSide(
+      color: stateManager.configuration.style.activatedBorderColor,
+      width: 0.0,
+    ),
+    borderRadius: BorderRadius.zero,
+  );
 
   InputBorder get _disabledBorder => OutlineInputBorder(
-        borderSide: BorderSide(
-            color: stateManager.configuration.style.inactivatedBorderColor,
-            width: 0.0),
-        borderRadius: BorderRadius.zero,
-      );
+    borderSide: BorderSide(
+      color: stateManager.configuration.style.inactivatedBorderColor,
+      width: 0.0,
+    ),
+    borderRadius: BorderRadius.zero,
+  );
 
-  Color get _textFieldColor => stateManager.configuration.style.filterHeaderColor ??
+  Color get _textFieldColor =>
+      stateManager.configuration.style.filterHeaderColor ??
       (_enabled
           ? stateManager.configuration.style.cellColorInEditState
           : stateManager.configuration.style.cellColorInReadOnlyState);
@@ -148,13 +153,11 @@ class TrinaColumnFilterState extends TrinaStateWithChange<TrinaColumnFilter> {
   }
 
   KeyEventResult _handleOnKey(FocusNode node, KeyEvent event) {
-    var keyManager = TrinaKeyManagerEvent(
-      focusNode: node,
-      event: event,
-    );
+    var keyManager = TrinaKeyManagerEvent(focusNode: node, event: event);
 
     // Check if column has a specific filter enter key action
-    final enterKeyAction = widget.column.filterEnterKeyAction ??
+    final enterKeyAction =
+        widget.column.filterEnterKeyAction ??
         stateManager.configuration.enterKeyAction;
 
     if (enterKeyAction.isNone) {
@@ -169,12 +172,14 @@ class TrinaColumnFilterState extends TrinaStateWithChange<TrinaColumnFilter> {
       return KeyEventResult.ignored;
     }
 
-    final handleMoveDown = (keyManager.isDown ||
+    final handleMoveDown =
+        (keyManager.isDown ||
             (keyManager.isEnter && !enterKeyAction.isNone) ||
             keyManager.isEsc) &&
         stateManager.refRows.isNotEmpty;
 
-    final handleMoveHorizontal = keyManager.isTab ||
+    final handleMoveHorizontal =
+        keyManager.isTab ||
         (_controller.text.isEmpty && keyManager.isHorizontal);
 
     final skip = !(handleMoveDown || handleMoveHorizontal || keyManager.isF3);
@@ -215,10 +220,12 @@ class TrinaColumnFilterState extends TrinaStateWithChange<TrinaColumnFilter> {
 
     if (trinaEvent is TrinaGridCannotMoveCurrentCellEvent &&
         trinaEvent.direction.isUp) {
-      var isCurrentColumn = widget
+      var isCurrentColumn =
+          widget
               .stateManager
-              .refColumns[stateManager.columnIndexesByShowFrozen[
-                  trinaEvent.cellPosition.columnIdx!]]
+              .refColumns[stateManager.columnIndexesByShowFrozen[trinaEvent
+                  .cellPosition
+                  .columnIdx!]]
               .key ==
           widget.column.key;
 
@@ -290,17 +297,18 @@ class TrinaColumnFilterState extends TrinaStateWithChange<TrinaColumnFilter> {
           mainAxisAlignment: MainAxisAlignment.end,
           mainAxisSize: MainAxisSize.min,
           spacing: 8,
-          children: [
-            suffixIcon,
-            clearIcon,
-            SizedBox(width: 4),
-          ],
+          children: [suffixIcon, clearIcon, SizedBox(width: 4)],
         );
       }
     }
 
     Widget? w = filterDelegate?.filterWidgetBuilder?.call(
-        _focusNode, _controller, _enabled, _handleOnChanged, stateManager);
+      _focusNode,
+      _controller,
+      _enabled,
+      _handleOnChanged,
+      stateManager,
+    );
 
     if (filterDelegate?.isMultiItems == true) {
       w = MultiLineColumnFilter(
@@ -320,7 +328,8 @@ class TrinaColumnFilterState extends TrinaStateWithChange<TrinaColumnFilter> {
         onEditingComplete: _handleOnEditingComplete,
         decoration: InputDecoration(
           suffixIcon: suffixIcon,
-          hintText: filterDelegate?.filterHintText ??
+          hintText:
+              filterDelegate?.filterHintText ??
               (_enabled ? widget.column.defaultFilter.title : ''),
           filled: true,
           hintStyle: TextStyle(color: filterDelegate?.filterHintTextColor),

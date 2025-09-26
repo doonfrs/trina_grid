@@ -116,11 +116,13 @@ class _PagesListScreenState extends State<PagesListScreen> {
 
     await Future.delayed(const Duration(milliseconds: 500));
 
-    return Future.value(TrinaLazyPaginationResponse(
-      totalPage: totalPage,
-      rows: fetchedRows.toList(),
-      totalRecords: tempList.length,
-    ));
+    return Future.value(
+      TrinaLazyPaginationResponse(
+        totalPage: totalPage,
+        rows: fetchedRows.toList(),
+        totalRecords: tempList.length,
+      ),
+    );
   }
 
   @override
@@ -130,7 +132,8 @@ class _PagesListScreenState extends State<PagesListScreen> {
       topTitle: 'Row lazy pagination',
       topContents: const [
         Text(
-            'Implement pagination in the form of fetching data from the server.'),
+          'Implement pagination in the form of fetching data from the server.',
+        ),
       ],
       topButtons: [
         TrinaExampleButton(

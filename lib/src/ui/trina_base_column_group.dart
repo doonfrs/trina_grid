@@ -106,8 +106,8 @@ class _ColumnGroupTitle extends StatelessWidget {
       columnGroup.group.titleSpan == null ? columnGroup.group.title : null;
 
   List<InlineSpan>? get _children => [
-        if (columnGroup.group.titleSpan != null) columnGroup.group.titleSpan!,
-      ];
+    if (columnGroup.group.titleSpan != null) columnGroup.group.titleSpan!,
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -124,16 +124,10 @@ class _ColumnGroupTitle extends StatelessWidget {
           color: columnGroup.group.backgroundColor,
           border: BorderDirectional(
             end: style.enableColumnBorderVertical
-                ? BorderSide(
-                    color: style.borderColor,
-                    width: 1.0,
-                  )
+                ? BorderSide(color: style.borderColor, width: 1.0)
                 : BorderSide.none,
             bottom: style.enableColumnBorderHorizontal
-                ? BorderSide(
-                    color: style.borderColor,
-                    width: 1.0,
-                  )
+                ? BorderSide(color: style.borderColor, width: 1.0)
                 : BorderSide.none,
           ),
         ),
@@ -141,10 +135,7 @@ class _ColumnGroupTitle extends StatelessWidget {
           padding: _padding,
           child: Center(
             child: Text.rich(
-              TextSpan(
-                text: _title,
-                children: _children,
-              ),
+              TextSpan(text: _title, children: _children),
               style: style.columnTextStyle,
               overflow: TextOverflow.ellipsis,
               softWrap: false,
@@ -180,10 +171,7 @@ class _ColumnGroup extends StatelessWidget {
   Widget _makeFieldWidget(TrinaColumn column) {
     return LayoutId(
       id: column.field,
-      child: TrinaBaseColumn(
-        stateManager: stateManager,
-        column: column,
-      ),
+      child: TrinaBaseColumn(stateManager: stateManager, column: column),
     );
   }
 
@@ -207,8 +195,9 @@ class _ColumnGroup extends StatelessWidget {
           columns: columnGroup.columns,
           textDirection: stateManager.textDirection,
         ),
-        children:
-            columnGroup.columns.map(_makeFieldWidget).toList(growable: false),
+        children: columnGroup.columns
+            .map(_makeFieldWidget)
+            .toList(growable: false),
       );
     }
 
@@ -219,8 +208,9 @@ class _ColumnGroup extends StatelessWidget {
         depth: depth,
         textDirection: stateManager.textDirection,
       ),
-      children:
-          _separateLinkedGroup.map(_makeChildWidget).toList(growable: false),
+      children: _separateLinkedGroup
+          .map(_makeChildWidget)
+          .toList(growable: false),
     );
   }
 }

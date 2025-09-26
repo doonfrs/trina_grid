@@ -48,40 +48,37 @@ void main() {
 
     const headerName = 'header0';
 
-    final grid = TrinaWidgetTestHelper(
-      '100 rows and default page size 40',
-      (tester) async {
-        columns = [
-          ...ColumnHelper.textColumn('header', count: 1),
-        ];
+    final grid = TrinaWidgetTestHelper('100 rows and default page size 40', (
+      tester,
+    ) async {
+      columns = [...ColumnHelper.textColumn('header', count: 1)];
 
-        rows = RowHelper.count(100, columns);
+      rows = RowHelper.count(100, columns);
 
-        fillNumbers(rows, headerName);
+      fillNumbers(rows, headerName);
 
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Material(
-              child: TrinaGrid(
-                columns: columns,
-                rows: rows,
-                onLoaded: (TrinaGridOnLoadedEvent event) {
-                  stateManager = event.stateManager;
-                },
-                createFooter: (s) => TrinaPagination(s),
-              ),
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Material(
+            child: TrinaGrid(
+              columns: columns,
+              rows: rows,
+              onLoaded: (TrinaGridOnLoadedEvent event) {
+                stateManager = event.stateManager;
+              },
+              createFooter: (s) => TrinaPagination(s),
             ),
           ),
-        );
+        ),
+      );
 
-        pageButtons = find.byType(TextButton);
+      pageButtons = find.byType(TextButton);
 
-        defaultButtonColor = stateManager.configuration.style.iconColor;
+      defaultButtonColor = stateManager.configuration.style.iconColor;
 
-        activateButtonColor =
-            stateManager.configuration.style.activatedBorderColor;
-      },
-    );
+      activateButtonColor =
+          stateManager.configuration.style.activatedBorderColor;
+    });
 
     grid.test('TrinaPagination widget should be rendered.', (tester) async {
       expect(find.byType(TrinaPagination), findsOneWidget);
@@ -91,8 +88,9 @@ void main() {
       expect(pageButtons, findsNWidgets(3));
     });
 
-    grid.test('Pagination buttons should be rendered as 1, 2, 3.',
-        (tester) async {
+    grid.test('Pagination buttons should be rendered as 1, 2, 3.', (
+      tester,
+    ) async {
       List<TextButton> pageButtonsAsTextButton = buttonsToWidgets(pageButtons);
 
       expect(textFromTextButton(pageButtonsAsTextButton[0]), '1');
@@ -100,8 +98,9 @@ void main() {
       expect(textFromTextButton(pageButtonsAsTextButton[2]), '3');
     });
 
-    grid.test('The first pagination button should be activated.',
-        (tester) async {
+    grid.test('The first pagination button should be activated.', (
+      tester,
+    ) async {
       List<TextButton> pageButtonsAsTextButton = buttonsToWidgets(pageButtons);
 
       final style1 = textStyleFromTextButton(pageButtonsAsTextButton[0]);
@@ -110,21 +109,25 @@ void main() {
     });
 
     grid.test(
-        'The second and third pagination buttons should not be activated.',
-        (tester) async {
-      List<TextButton> pageButtonsAsTextButton = buttonsToWidgets(pageButtons);
+      'The second and third pagination buttons should not be activated.',
+      (tester) async {
+        List<TextButton> pageButtonsAsTextButton = buttonsToWidgets(
+          pageButtons,
+        );
 
-      final style2 = textStyleFromTextButton(pageButtonsAsTextButton[1]);
+        final style2 = textStyleFromTextButton(pageButtonsAsTextButton[1]);
 
-      final style3 = textStyleFromTextButton(pageButtonsAsTextButton[2]);
+        final style3 = textStyleFromTextButton(pageButtonsAsTextButton[2]);
 
-      expect(style2.color, defaultButtonColor);
+        expect(style2.color, defaultButtonColor);
 
-      expect(style3.color, defaultButtonColor);
-    });
+        expect(style3.color, defaultButtonColor);
+      },
+    );
 
-    grid.test('Cell values of 100 rows should be set from 0 to 99.',
-        (tester) async {
+    grid.test('Cell values of 100 rows should be set from 0 to 99.', (
+      tester,
+    ) async {
       // Set cell values in order from 0 to 99 for testing.
       final rows = stateManager.refRows.originalList;
 
@@ -146,79 +149,88 @@ void main() {
     });
 
     grid.test(
-        'When clicking the second pagination button, the second button should be activated.',
-        (tester) async {
-      await tester.tap(pageButtons.at(1));
+      'When clicking the second pagination button, the second button should be activated.',
+      (tester) async {
+        await tester.tap(pageButtons.at(1));
 
-      await tester.pumpAndSettle(const Duration(milliseconds: 300));
+        await tester.pumpAndSettle(const Duration(milliseconds: 300));
 
-      List<TextButton> pageButtonsAsTextButton = buttonsToWidgets(pageButtons);
+        List<TextButton> pageButtonsAsTextButton = buttonsToWidgets(
+          pageButtons,
+        );
 
-      final style1 = textStyleFromTextButton(pageButtonsAsTextButton[0]);
+        final style1 = textStyleFromTextButton(pageButtonsAsTextButton[0]);
 
-      expect(style1.color, defaultButtonColor);
+        expect(style1.color, defaultButtonColor);
 
-      final style2 = textStyleFromTextButton(pageButtonsAsTextButton[1]);
+        final style2 = textStyleFromTextButton(pageButtonsAsTextButton[1]);
 
-      expect(style2.color, activateButtonColor);
-    });
-
-    grid.test(
-        'When clicking the second pagination button, the current rows should render cell values from 40 to 79.',
-        (tester) async {
-      await tester.tap(pageButtons.at(1));
-
-      await tester.pumpAndSettle(const Duration(milliseconds: 300));
-
-      final rows = stateManager.rows;
-
-      expect(rows.length, 40);
-
-      expect(rows.first.cells[headerName]!.value, 40);
-
-      expect(rows.last.cells[headerName]!.value, 79);
-    });
+        expect(style2.color, activateButtonColor);
+      },
+    );
 
     grid.test(
-        'When clicking the third pagination button, the third button should be activated.',
-        (tester) async {
-      await tester.tap(pageButtons.at(2));
+      'When clicking the second pagination button, the current rows should render cell values from 40 to 79.',
+      (tester) async {
+        await tester.tap(pageButtons.at(1));
 
-      await tester.pumpAndSettle(const Duration(milliseconds: 300));
+        await tester.pumpAndSettle(const Duration(milliseconds: 300));
 
-      List<TextButton> pageButtonsAsTextButton = buttonsToWidgets(pageButtons);
+        final rows = stateManager.rows;
 
-      final style1 = textStyleFromTextButton(pageButtonsAsTextButton[0]);
+        expect(rows.length, 40);
 
-      expect(style1.color, defaultButtonColor);
+        expect(rows.first.cells[headerName]!.value, 40);
 
-      final style2 = textStyleFromTextButton(pageButtonsAsTextButton[1]);
-
-      expect(style2.color, defaultButtonColor);
-
-      final style3 = textStyleFromTextButton(pageButtonsAsTextButton[2]);
-
-      expect(style3.color, activateButtonColor);
-    });
+        expect(rows.last.cells[headerName]!.value, 79);
+      },
+    );
 
     grid.test(
-        'When clicking the third pagination button, the current rows should render cell values from 80 to 99.',
-        (tester) async {
-      await tester.tap(pageButtons.at(2));
+      'When clicking the third pagination button, the third button should be activated.',
+      (tester) async {
+        await tester.tap(pageButtons.at(2));
 
-      await tester.pumpAndSettle(const Duration(milliseconds: 300));
+        await tester.pumpAndSettle(const Duration(milliseconds: 300));
 
-      final rows = stateManager.rows;
+        List<TextButton> pageButtonsAsTextButton = buttonsToWidgets(
+          pageButtons,
+        );
 
-      expect(rows.length, 20);
+        final style1 = textStyleFromTextButton(pageButtonsAsTextButton[0]);
 
-      expect(rows.first.cells[headerName]!.value, 80);
+        expect(style1.color, defaultButtonColor);
 
-      expect(rows.last.cells[headerName]!.value, 99);
-    });
+        final style2 = textStyleFromTextButton(pageButtonsAsTextButton[1]);
 
-    grid.test('Alt + Page Down/Up key combination should navigate pages.',
-        (tester) async {
+        expect(style2.color, defaultButtonColor);
+
+        final style3 = textStyleFromTextButton(pageButtonsAsTextButton[2]);
+
+        expect(style3.color, activateButtonColor);
+      },
+    );
+
+    grid.test(
+      'When clicking the third pagination button, the current rows should render cell values from 80 to 99.',
+      (tester) async {
+        await tester.tap(pageButtons.at(2));
+
+        await tester.pumpAndSettle(const Duration(milliseconds: 300));
+
+        final rows = stateManager.rows;
+
+        expect(rows.length, 20);
+
+        expect(rows.first.cells[headerName]!.value, 80);
+
+        expect(rows.last.cells[headerName]!.value, 99);
+      },
+    );
+
+    grid.test('Alt + Page Down/Up key combination should navigate pages.', (
+      tester,
+    ) async {
       await tester.tap(find.byType(TrinaBaseCell).first);
 
       await tester.pump();

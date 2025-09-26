@@ -47,7 +47,8 @@ void main() {
       MaterialApp(
         home: Scaffold(
           body: TrinaGrid(
-            columns: columns ??
+            columns:
+                columns ??
                 [
                   TrinaColumn(
                     title: 'Test Column',
@@ -55,7 +56,8 @@ void main() {
                     type: TrinaColumnType.text(),
                   ),
                 ],
-            rows: rows ??
+            rows:
+                rows ??
                 [
                   TrinaRow(cells: {'test': TrinaCell(value: 'test')}),
                 ],
@@ -85,106 +87,96 @@ void main() {
     await tester.pump();
   }
 
-  testWidgets(
-    'Alt + character combos should not start editing',
-    (WidgetTester tester) async {
-      // given
-      final stateManager =
-          await pumpTrinaGrid(tester, const TrinaGridShortcut());
-      await setFirstCellAsCurrent(tester, stateManager);
+  testWidgets('Alt + character combos should not start editing', (
+    WidgetTester tester,
+  ) async {
+    // given
+    final stateManager = await pumpTrinaGrid(tester, const TrinaGridShortcut());
+    await setFirstCellAsCurrent(tester, stateManager);
 
-      // when
-      await tester.sendKeyDownEvent(LogicalKeyboardKey.altLeft);
-      await tester.sendKeyEvent(LogicalKeyboardKey.keyA);
-      await tester.sendKeyUpEvent(LogicalKeyboardKey.altLeft);
-      await tester.pumpAndSettle();
+    // when
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.altLeft);
+    await tester.sendKeyEvent(LogicalKeyboardKey.keyA);
+    await tester.sendKeyUpEvent(LogicalKeyboardKey.altLeft);
+    await tester.pumpAndSettle();
 
-      // then
-      expect(stateManager.isEditing, false);
-    },
-  );
+    // then
+    expect(stateManager.isEditing, false);
+  });
 
-  testWidgets(
-    'AltGr + character combos should not start editing',
-    (WidgetTester tester) async {
-      // given
-      final stateManager =
-          await pumpTrinaGrid(tester, const TrinaGridShortcut());
-      await setFirstCellAsCurrent(tester, stateManager);
+  testWidgets('AltGr + character combos should not start editing', (
+    WidgetTester tester,
+  ) async {
+    // given
+    final stateManager = await pumpTrinaGrid(tester, const TrinaGridShortcut());
+    await setFirstCellAsCurrent(tester, stateManager);
 
-      // when
-      await tester.sendKeyDownEvent(LogicalKeyboardKey.altRight);
-      await tester.sendKeyEvent(LogicalKeyboardKey.keyA);
-      await tester.sendKeyUpEvent(LogicalKeyboardKey.altRight);
-      await tester.pumpAndSettle();
+    // when
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.altRight);
+    await tester.sendKeyEvent(LogicalKeyboardKey.keyA);
+    await tester.sendKeyUpEvent(LogicalKeyboardKey.altRight);
+    await tester.pumpAndSettle();
 
-      // then
-      expect(stateManager.isEditing, false);
-    },
-  );
+    // then
+    expect(stateManager.isEditing, false);
+  });
   group('Shortcut Handling Verification Tests', () {
-    testWidgets(
-      'Registered shortcut should be handled properly',
-      (tester) async {
-        final testAction = TestShortcutAction(actionName: 'F1Action');
+    testWidgets('Registered shortcut should be handled properly', (
+      tester,
+    ) async {
+      final testAction = TestShortcutAction(actionName: 'F1Action');
 
-        final shortcut = TrinaGridShortcut(actions: {
-          LogicalKeySet(LogicalKeyboardKey.f1): testAction,
-        });
+      final shortcut = TrinaGridShortcut(
+        actions: {LogicalKeySet(LogicalKeyboardKey.f1): testAction},
+      );
 
-        await pumpTrinaGrid(tester, shortcut, autoFocusGrid: true);
+      await pumpTrinaGrid(tester, shortcut, autoFocusGrid: true);
 
-        // Send F1 key
-        await tester.sendKeyEvent(LogicalKeyboardKey.f1);
-        await tester.pump();
+      // Send F1 key
+      await tester.sendKeyEvent(LogicalKeyboardKey.f1);
+      await tester.pump();
 
-        // Verify the shortcut was executed
-        expect(testAction.wasExecuted, true);
-      },
-    );
+      // Verify the shortcut was executed
+      expect(testAction.wasExecuted, true);
+    });
 
-    testWidgets(
-      'Unregistered shortcut should be ignored',
-      (tester) async {
-        final testAction = TestShortcutAction(actionName: 'F1Action');
+    testWidgets('Unregistered shortcut should be ignored', (tester) async {
+      final testAction = TestShortcutAction(actionName: 'F1Action');
 
-        final shortcut = TrinaGridShortcut(actions: {
-          LogicalKeySet(LogicalKeyboardKey.f1): testAction,
-        });
+      final shortcut = TrinaGridShortcut(
+        actions: {LogicalKeySet(LogicalKeyboardKey.f1): testAction},
+      );
 
-        await pumpTrinaGrid(tester, shortcut);
+      await pumpTrinaGrid(tester, shortcut);
 
-        // Focus the grid
-        await tester.tap(find.byType(TrinaGrid));
-        await tester.pump();
+      // Focus the grid
+      await tester.tap(find.byType(TrinaGrid));
+      await tester.pump();
 
-        // Send F2 key (not registered)
-        await tester.sendKeyEvent(LogicalKeyboardKey.f2);
-        await tester.pump();
+      // Send F2 key (not registered)
+      await tester.sendKeyEvent(LogicalKeyboardKey.f2);
+      await tester.pump();
 
-        // Verify the action was not executed
-        expect(testAction.wasExecuted, false);
-      },
-    );
+      // Verify the action was not executed
+      expect(testAction.wasExecuted, false);
+    });
     testWidgets(
       'When primary focus is in the grid header, unregistered shortcuts should be ignored',
       (tester) async {
         // given
         final testAction = TestShortcutAction(actionName: 'F1Action');
 
-        final shortcut = TrinaGridShortcut(actions: {
-          LogicalKeySet(LogicalKeyboardKey.f1): testAction,
-        });
+        final shortcut = TrinaGridShortcut(
+          actions: {LogicalKeySet(LogicalKeyboardKey.f1): testAction},
+        );
         final focusNode = FocusNode();
 
         await pumpTrinaGrid(
           tester,
           shortcut,
           autoFocusGrid: false,
-          headerBuilder: (stateManager) => TextField(
-            focusNode: focusNode,
-            autofocus: true,
-          ),
+          headerBuilder: (stateManager) =>
+              TextField(focusNode: focusNode, autofocus: true),
         );
 
         // when
@@ -201,19 +193,17 @@ void main() {
         // given
         final testAction = TestShortcutAction(actionName: 'F1Action');
 
-        final shortcut = TrinaGridShortcut(actions: {
-          LogicalKeySet(LogicalKeyboardKey.f1): testAction,
-        });
+        final shortcut = TrinaGridShortcut(
+          actions: {LogicalKeySet(LogicalKeyboardKey.f1): testAction},
+        );
         final focusNode = FocusNode();
 
         await pumpTrinaGrid(
           tester,
           shortcut,
           autoFocusGrid: false,
-          footerBuilder: (_) => TextField(
-            focusNode: focusNode,
-            autofocus: true,
-          ),
+          footerBuilder: (_) =>
+              TextField(focusNode: focusNode, autofocus: true),
         );
 
         // when
@@ -225,64 +215,62 @@ void main() {
       },
     );
 
-    testWidgets(
-      'Multiple shortcuts should work independently',
-      (tester) async {
-        final f1Action = TestShortcutAction(actionName: 'F1Action');
-        final f2Action = TestShortcutAction(actionName: 'F2Action');
+    testWidgets('Multiple shortcuts should work independently', (tester) async {
+      final f1Action = TestShortcutAction(actionName: 'F1Action');
+      final f2Action = TestShortcutAction(actionName: 'F2Action');
 
-        final shortcut = TrinaGridShortcut(actions: {
+      final shortcut = TrinaGridShortcut(
+        actions: {
           LogicalKeySet(LogicalKeyboardKey.f1): f1Action,
           LogicalKeySet(LogicalKeyboardKey.f2): f2Action,
-        });
+        },
+      );
 
-        await pumpTrinaGrid(tester, shortcut, autoFocusGrid: true);
+      await pumpTrinaGrid(tester, shortcut, autoFocusGrid: true);
 
-        // Send F1 key
-        await tester.sendKeyEvent(LogicalKeyboardKey.f1);
-        await tester.pump();
+      // Send F1 key
+      await tester.sendKeyEvent(LogicalKeyboardKey.f1);
+      await tester.pump();
 
-        expect(f1Action.wasExecuted, true);
-        expect(f2Action.wasExecuted, false);
+      expect(f1Action.wasExecuted, true);
+      expect(f2Action.wasExecuted, false);
 
-        // Send F2 key
-        await tester.sendKeyEvent(LogicalKeyboardKey.f2);
-        await tester.pump();
+      // Send F2 key
+      await tester.sendKeyEvent(LogicalKeyboardKey.f2);
+      await tester.pump();
 
-        expect(f2Action.wasExecuted, true);
-      },
-    );
+      expect(f2Action.wasExecuted, true);
+    });
 
-    testWidgets(
-      'Shortcut with modifier keys should work',
-      (tester) async {
-        final testAction = TestShortcutAction(actionName: 'CtrlFAction');
+    testWidgets('Shortcut with modifier keys should work', (tester) async {
+      final testAction = TestShortcutAction(actionName: 'CtrlFAction');
 
-        final shortcut = TrinaGridShortcut(actions: {
+      final shortcut = TrinaGridShortcut(
+        actions: {
           LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyF):
               testAction,
-        });
+        },
+      );
 
-        await pumpTrinaGrid(tester, shortcut, autoFocusGrid: true);
+      await pumpTrinaGrid(tester, shortcut, autoFocusGrid: true);
 
-        // Send Ctrl+F
-        await tester.sendKeyDownEvent(LogicalKeyboardKey.control);
-        await tester.sendKeyEvent(LogicalKeyboardKey.keyF);
-        await tester.sendKeyUpEvent(LogicalKeyboardKey.control);
-        await tester.pump();
+      // Send Ctrl+F
+      await tester.sendKeyDownEvent(LogicalKeyboardKey.control);
+      await tester.sendKeyEvent(LogicalKeyboardKey.keyF);
+      await tester.sendKeyUpEvent(LogicalKeyboardKey.control);
+      await tester.pump();
 
-        expect(testAction.wasExecuted, true);
-      },
-    );
+      expect(testAction.wasExecuted, true);
+    });
 
     testWidgets(
       'Grid should ignore shortcuts when widget outside of the grid has the focus',
       (tester) async {
         final testAction = TestShortcutAction(actionName: 'F1Action');
 
-        final shortcut = TrinaGridShortcut(actions: {
-          LogicalKeySet(LogicalKeyboardKey.f1): testAction,
-        });
+        final shortcut = TrinaGridShortcut(
+          actions: {LogicalKeySet(LogicalKeyboardKey.f1): testAction},
+        );
 
         await tester.pumpWidget(
           MaterialApp(
@@ -290,9 +278,7 @@ void main() {
               body: Column(
                 children: [
                   // Another focusable widget
-                  TextField(
-                    autofocus: true,
-                  ),
+                  TextField(autofocus: true),
                   Expanded(
                     child: TrinaGrid(
                       columns: [
@@ -337,8 +323,9 @@ void main() {
         await setFirstCellAsCurrent(tester, stateManager);
 
         final filterTextField = find.descendant(
-            of: find.byType(TrinaColumnFilter),
-            matching: find.byType(TextField));
+          of: find.byType(TrinaColumnFilter),
+          matching: find.byType(TextField),
+        );
 
         await tester.enterText(filterTextField, 'filter');
         await tester.pump();
@@ -347,50 +334,46 @@ void main() {
       },
     );
 
-    testWidgets(
-      'it should not handle character key event '
-      'when a `TextField` in gird footer is focused',
-      (tester) async {
-        final stateManager = await pumpTrinaGrid(
-          tester,
-          TrinaGridShortcut(),
-          autoFocusGrid: true,
-          footerBuilder: (stateManager) => TextField(
-            key: Key('footerTextField'),
-            autofocus: true,
-          ),
-        );
+    testWidgets('it should not handle character key event '
+        'when a `TextField` in gird footer is focused', (tester) async {
+      final stateManager = await pumpTrinaGrid(
+        tester,
+        TrinaGridShortcut(),
+        autoFocusGrid: true,
+        footerBuilder: (stateManager) =>
+            TextField(key: Key('footerTextField'), autofocus: true),
+      );
 
-        await setFirstCellAsCurrent(tester, stateManager);
-        await tester.enterText(find.byKey(Key('footerTextField')), 'NEW');
+      await setFirstCellAsCurrent(tester, stateManager);
+      await tester.enterText(find.byKey(Key('footerTextField')), 'NEW');
 
-        expect(stateManager.currentCell?.value, 'test');
-        expect(find.widgetWithText(TextField, 'NEW'), findsOneWidget);
-      },
-    );
+      expect(stateManager.currentCell?.value, 'test');
+      expect(find.widgetWithText(TextField, 'NEW'), findsOneWidget);
+    });
   });
 
   group('Edge Cases', () {
-    testWidgets(
-      'Multiple actions for same key should handle first matching',
-      (tester) async {
-        final action1 = TestShortcutAction(actionName: 'FirstAction');
+    testWidgets('Multiple actions for same key should handle first matching', (
+      tester,
+    ) async {
+      final action1 = TestShortcutAction(actionName: 'FirstAction');
 
-        // Note: In practice, you shouldn't have multiple actions for the same key
-        // But this tests the behavior if it happens
-        final shortcut = TrinaGridShortcut(actions: {
+      // Note: In practice, you shouldn't have multiple actions for the same key
+      // But this tests the behavior if it happens
+      final shortcut = TrinaGridShortcut(
+        actions: {
           LogicalKeySet(LogicalKeyboardKey.f1): action1,
           // This would overwrite the first one in a real Map
-        });
+        },
+      );
 
-        await pumpTrinaGrid(tester, shortcut, autoFocusGrid: true);
+      await pumpTrinaGrid(tester, shortcut, autoFocusGrid: true);
 
-        await tester.sendKeyEvent(LogicalKeyboardKey.f1);
-        await tester.pump();
+      await tester.sendKeyEvent(LogicalKeyboardKey.f1);
+      await tester.pump();
 
-        expect(action1.wasExecuted, true);
-      },
-    );
+      expect(action1.wasExecuted, true);
+    });
   });
 
   group('Custom Shortcut Test', () {
@@ -399,9 +382,9 @@ void main() {
       (tester) async {
         final testAction = TestShortcutAction();
 
-        final shortcut = TrinaGridShortcut(actions: {
-          LogicalKeySet(LogicalKeyboardKey.enter): testAction,
-        });
+        final shortcut = TrinaGridShortcut(
+          actions: {LogicalKeySet(LogicalKeyboardKey.enter): testAction},
+        );
 
         final columns = ColumnHelper.textColumn('column', count: 5);
         final rows = RowHelper.count(30, columns);
@@ -426,13 +409,15 @@ void main() {
         String? copied;
 
         tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
-            SystemChannels.platform, (MethodCall methodCall) async {
-          if (methodCall.method == 'Clipboard.setData') {
-            final data = methodCall.arguments as Map<String, dynamic>;
-            copied = data['text'] as String?;
-          }
-          return null;
-        });
+          SystemChannels.platform,
+          (MethodCall methodCall) async {
+            if (methodCall.method == 'Clipboard.setData') {
+              final data = methodCall.arguments as Map<String, dynamic>;
+              copied = data['text'] as String?;
+            }
+            return null;
+          },
+        );
 
         const shortcut = TrinaGridShortcut();
 
@@ -464,13 +449,15 @@ void main() {
         String? copied;
 
         tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
-            SystemChannels.platform, (MethodCall methodCall) async {
-          if (methodCall.method == 'Clipboard.setData') {
-            final data = methodCall.arguments as Map<String, dynamic>;
-            copied = data['text'] as String?;
-          }
-          return null;
-        });
+          SystemChannels.platform,
+          (MethodCall methodCall) async {
+            if (methodCall.method == 'Clipboard.setData') {
+              final data = methodCall.arguments as Map<String, dynamic>;
+              copied = data['text'] as String?;
+            }
+            return null;
+          },
+        );
 
         final testAction = TestShortcutAction();
 

@@ -25,17 +25,17 @@ void main() {
 
         stateManager = MockTrinaGridStateManager();
 
-        when(stateManager.configuration).thenReturn(
-          const TrinaGridConfiguration(),
-        );
+        when(
+          stateManager.configuration,
+        ).thenReturn(const TrinaGridConfiguration());
 
         when(stateManager.isEditing).thenReturn(true);
 
         when(stateManager.keepFocus).thenReturn(true);
 
-        when(stateManager.keyManager).thenReturn(TrinaGridKeyManager(
-          stateManager: stateManager,
-        ));
+        when(
+          stateManager.keyManager,
+        ).thenReturn(TrinaGridKeyManager(stateManager: stateManager));
 
         final TrinaColumn column = TrinaColumn(
           title: 'column title',
@@ -52,11 +52,7 @@ void main() {
 
         final TrinaCell cell = TrinaCell(value: number);
 
-        final TrinaRow row = TrinaRow(
-          cells: {
-            'column_field_name': cell,
-          },
-        );
+        final TrinaRow row = TrinaRow(cells: {'column_field_name': cell});
 
         await tester.pumpWidget(
           MaterialApp(
@@ -79,12 +75,9 @@ void main() {
       format: '#,###',
       applyFormatOnInit: true,
       allowFirstDot: false,
-    ).test(
-      'Default value 0 should be displayed',
-      (tester) async {
-        expect(find.text('0'), findsOneWidget);
-      },
-    );
+    ).test('Default value 0 should be displayed', (tester) async {
+      expect(find.text('0'), findsOneWidget);
+    });
 
     buildWidget(
       number: 1234.02,
@@ -92,12 +85,11 @@ void main() {
       format: '#,###',
       applyFormatOnInit: true,
       allowFirstDot: false,
-    ).test(
-      'When locale is default, 1234.02 should be displayed',
-      (tester) async {
-        expect(find.text('1234.02'), findsOneWidget);
-      },
-    );
+    ).test('When locale is default, 1234.02 should be displayed', (
+      tester,
+    ) async {
+      expect(find.text('1234.02'), findsOneWidget);
+    });
 
     buildWidget(
       number: 1234.02,
@@ -106,12 +98,11 @@ void main() {
       applyFormatOnInit: true,
       allowFirstDot: false,
       locale: 'da_DK',
-    ).test(
-      'When locale is Danish (using comma), 1234,02 should be displayed',
-      (tester) async {
-        expect(find.text('1234,02'), findsOneWidget);
-      },
-    );
+    ).test('When locale is Danish (using comma), 1234,02 should be displayed', (
+      tester,
+    ) async {
+      expect(find.text('1234,02'), findsOneWidget);
+    });
   });
 
   group('DecimalTextInputFormatter', () {
@@ -137,91 +128,76 @@ void main() {
       return formatter.formatEditUpdate(oldText, newText).text;
     }
 
-    test(
-      'When decimalRange is 2 and decimalSeparator is comma, '
-      'input of 123.01 should return 0',
-      () {
-        expect(
-          updatedValue(
-            oldValue: '0',
-            newValue: '123.01',
-            decimalRange: 2,
-            activatedNegativeValues: true,
-            allowFirstDot: false,
-            decimalSeparator: ',',
-          ),
-          '0',
-        );
-      },
-    );
+    test('When decimalRange is 2 and decimalSeparator is comma, '
+        'input of 123.01 should return 0', () {
+      expect(
+        updatedValue(
+          oldValue: '0',
+          newValue: '123.01',
+          decimalRange: 2,
+          activatedNegativeValues: true,
+          allowFirstDot: false,
+          decimalSeparator: ',',
+        ),
+        '0',
+      );
+    });
 
-    test(
-      'When decimalRange is 2 and decimalSeparator is comma, '
-      'input of 123,01 should return 123,01',
-      () {
-        expect(
-          updatedValue(
-            oldValue: '0',
-            newValue: '123,01',
-            decimalRange: 2,
-            activatedNegativeValues: true,
-            allowFirstDot: false,
-            decimalSeparator: ',',
-          ),
-          '123,01',
-        );
-      },
-    );
+    test('When decimalRange is 2 and decimalSeparator is comma, '
+        'input of 123,01 should return 123,01', () {
+      expect(
+        updatedValue(
+          oldValue: '0',
+          newValue: '123,01',
+          decimalRange: 2,
+          activatedNegativeValues: true,
+          allowFirstDot: false,
+          decimalSeparator: ',',
+        ),
+        '123,01',
+      );
+    });
 
-    test(
-      'When decimalRange is 0 and decimalSeparator is comma, '
-      'input of 123,01 should return 123',
-      () {
-        expect(
-          updatedValue(
-            oldValue: '123',
-            newValue: '123,01',
-            decimalRange: 0,
-            activatedNegativeValues: true,
-            allowFirstDot: false,
-            decimalSeparator: ',',
-          ),
-          '123',
-        );
-      },
-    );
+    test('When decimalRange is 0 and decimalSeparator is comma, '
+        'input of 123,01 should return 123', () {
+      expect(
+        updatedValue(
+          oldValue: '123',
+          newValue: '123,01',
+          decimalRange: 0,
+          activatedNegativeValues: true,
+          allowFirstDot: false,
+          decimalSeparator: ',',
+        ),
+        '123',
+      );
+    });
 
-    test(
-      'When decimalRange is 2, input of 0.12 should return 0.12',
-      () {
-        expect(
-          updatedValue(
-            oldValue: '0',
-            newValue: '0.12',
-            decimalRange: 2,
-            activatedNegativeValues: true,
-            allowFirstDot: false,
-          ),
-          '0.12',
-        );
-      },
-    );
+    test('When decimalRange is 2, input of 0.12 should return 0.12', () {
+      expect(
+        updatedValue(
+          oldValue: '0',
+          newValue: '0.12',
+          decimalRange: 2,
+          activatedNegativeValues: true,
+          allowFirstDot: false,
+        ),
+        '0.12',
+      );
+    });
 
-    test(
-      'When decimalRange is 2, input of 0.123 should return 0',
-      () {
-        expect(
-          updatedValue(
-            oldValue: '0',
-            newValue: '0.123',
-            decimalRange: 2,
-            activatedNegativeValues: true,
-            allowFirstDot: false,
-          ),
-          '0',
-        );
-      },
-    );
+    test('When decimalRange is 2, input of 0.123 should return 0', () {
+      expect(
+        updatedValue(
+          oldValue: '0',
+          newValue: '0.123',
+          decimalRange: 2,
+          activatedNegativeValues: true,
+          allowFirstDot: false,
+        ),
+        '0',
+      );
+    });
 
     test(
       'When activatedNegativeValues is true, input of -0.12 should return -0.12',
@@ -255,72 +231,60 @@ void main() {
       },
     );
 
-    test(
-      'When activatedNegativeValues is true and allowFirstDot is false, '
-      'input of .0.12 should return 0',
-      () {
-        expect(
-          updatedValue(
-            oldValue: '0',
-            newValue: '.0.12',
-            decimalRange: 2,
-            activatedNegativeValues: true,
-            allowFirstDot: false,
-          ),
-          '0',
-        );
-      },
-    );
+    test('When activatedNegativeValues is true and allowFirstDot is false, '
+        'input of .0.12 should return 0', () {
+      expect(
+        updatedValue(
+          oldValue: '0',
+          newValue: '.0.12',
+          decimalRange: 2,
+          activatedNegativeValues: true,
+          allowFirstDot: false,
+        ),
+        '0',
+      );
+    });
 
-    test(
-      'When activatedNegativeValues is true and allowFirstDot is true, '
-      'input of .0.12 should return .0.12',
-      () {
-        expect(
-          updatedValue(
-            oldValue: '0',
-            newValue: '.0.12',
-            decimalRange: 2,
-            activatedNegativeValues: true,
-            allowFirstDot: true,
-          ),
-          '.0.12',
-        );
-      },
-    );
+    test('When activatedNegativeValues is true and allowFirstDot is true, '
+        'input of .0.12 should return .0.12', () {
+      expect(
+        updatedValue(
+          oldValue: '0',
+          newValue: '.0.12',
+          decimalRange: 2,
+          activatedNegativeValues: true,
+          allowFirstDot: true,
+        ),
+        '.0.12',
+      );
+    });
 
-    test(
-      'When activatedNegativeValues is true and allowFirstDot is true, '
-      'input of ..0.12 should return 0',
-      () {
-        expect(
-          updatedValue(
-            oldValue: '0',
-            newValue: '..0.12',
-            decimalRange: 2,
-            activatedNegativeValues: true,
-            allowFirstDot: true,
-          ),
-          '0',
-        );
-      },
-    );
+    test('When activatedNegativeValues is true and allowFirstDot is true, '
+        'input of ..0.12 should return 0', () {
+      expect(
+        updatedValue(
+          oldValue: '0',
+          newValue: '..0.12',
+          decimalRange: 2,
+          activatedNegativeValues: true,
+          allowFirstDot: true,
+        ),
+        '0',
+      );
+    });
 
-    test(
-      'When activatedNegativeValues is true and allowFirstDot is true, '
-      'input of -.0.12 should return 0',
-      () {
-        expect(
-          updatedValue(
-            oldValue: '0',
-            newValue: '-.0.12',
-            decimalRange: 2,
-            activatedNegativeValues: true,
-            allowFirstDot: true,
-          ),
-          '0',
-        );
-      },
-    );
+    test('When activatedNegativeValues is true and allowFirstDot is true, '
+        'input of -.0.12 should return 0', () {
+      expect(
+        updatedValue(
+          oldValue: '0',
+          newValue: '-.0.12',
+          decimalRange: 2,
+          activatedNegativeValues: true,
+          allowFirstDot: true,
+        ),
+        '0',
+      );
+    });
   });
 }

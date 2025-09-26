@@ -20,9 +20,7 @@ class TrinaShadowContainer extends StatelessWidget {
     required this.width,
     required this.height,
     required this.child,
-    this.padding = const EdgeInsets.symmetric(
-      horizontal: 10,
-    ),
+    this.padding = const EdgeInsets.symmetric(horizontal: 10),
     this.backgroundColor = Colors.white,
     this.borderColor = const Color(0xFFA1A5AE),
     this.alignment = Alignment.centerLeft,
@@ -36,9 +34,7 @@ class TrinaShadowContainer extends StatelessWidget {
       child: DecoratedBox(
         decoration: BoxDecoration(
           color: backgroundColor,
-          border: Border.all(
-            color: borderColor,
-          ),
+          border: Border.all(color: borderColor),
           boxShadow: [
             BoxShadow(
               color: Colors.grey.withAlpha((0.5 * 255).toInt()),
@@ -50,10 +46,7 @@ class TrinaShadowContainer extends StatelessWidget {
         ),
         child: Padding(
           padding: padding,
-          child: Align(
-            alignment: alignment,
-            child: child,
-          ),
+          child: Align(alignment: alignment, child: child),
         ),
       ),
     );

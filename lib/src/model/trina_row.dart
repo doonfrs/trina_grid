@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trina_grid/trina_grid.dart';
 
-enum TrinaRowFrozen {
-  none,
-  start,
-  end;
-}
+enum TrinaRowFrozen { none, start, end }
 
 class TrinaRow<T> {
   TrinaRow({
@@ -17,11 +13,11 @@ class TrinaRow<T> {
     Key? key,
     TrinaRowFrozen? frozen,
     this.height,
-  })  : type = type ?? TrinaRowTypeNormal.instance,
-        _checked = checked,
-        _state = TrinaRowState.none,
-        _key = key ?? UniqueKey(),
-        frozen = frozen ?? TrinaRowFrozen.none;
+  }) : type = type ?? TrinaRowTypeNormal.instance,
+       _checked = checked,
+       _state = TrinaRowState.none,
+       _key = key ?? UniqueKey(),
+       frozen = frozen ?? TrinaRowFrozen.none;
 
   final TrinaRowType type;
 
@@ -315,9 +311,7 @@ class TrinaRow<T> {
     if (!includeChildren || !type.isGroup) return json;
 
     final List<Map<String, dynamic>> children = type.group.children
-        .map(
-          (e) => e.toJson(childrenField: childrenField),
-        )
+        .map((e) => e.toJson(childrenField: childrenField))
         .toList();
 
     json[childrenField] = children;

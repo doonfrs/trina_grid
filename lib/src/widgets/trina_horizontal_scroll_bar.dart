@@ -221,20 +221,20 @@ class _TrinaHorizontalScrollBarState extends State<TrinaHorizontalScrollBar>
                 builder: (context, viewportExtent, _) {
                   final double thumbWidth =
                       (viewportExtent / (viewportExtent + scrollExtent)) *
-                          widget.width;
+                      widget.width;
 
                   return ValueListenableBuilder<double>(
                     valueListenable: widget.horizontalScrollOffsetNotifier,
                     builder: (context, scrollOffset, _) {
                       final double thumbPosition =
                           (scrollOffset / scrollExtent) *
-                              (widget.width - thumbWidth);
+                          (widget.width - thumbWidth);
 
                       // For RTL languages, we need to flip the thumb position calculation
                       final double adjustedThumbPosition =
                           widget.stateManager.isRTL
-                              ? widget.width - thumbWidth - thumbPosition
-                              : thumbPosition;
+                          ? widget.width - thumbWidth - thumbPosition
+                          : thumbPosition;
 
                       return SizedBox(
                         width: widget.width,
@@ -291,14 +291,14 @@ class _TrinaHorizontalScrollBarState extends State<TrinaHorizontalScrollBar>
                                   child: GestureDetector(
                                     onHorizontalDragStart:
                                         scrollConfig.isDraggable
-                                            ? (details) {
-                                                setState(() {
-                                                  _isDragging = true;
-                                                });
-                                              }
-                                            : null,
-                                    onHorizontalDragUpdate: scrollConfig
-                                            .isDraggable
+                                        ? (details) {
+                                            setState(() {
+                                              _isDragging = true;
+                                            });
+                                          }
+                                        : null,
+                                    onHorizontalDragUpdate:
+                                        scrollConfig.isDraggable
                                         ? (details) {
                                             // Direct thumb manipulation approach
                                             final double dragDelta =
@@ -309,7 +309,7 @@ class _TrinaHorizontalScrollBarState extends State<TrinaHorizontalScrollBar>
                                             // The total scrollable content is scrollExtent
                                             final double scrollableRatio =
                                                 scrollExtent /
-                                                    (widget.width - thumbWidth);
+                                                (widget.width - thumbWidth);
                                             final double scrollDelta =
                                                 dragDelta * scrollableRatio;
 
@@ -325,10 +325,11 @@ class _TrinaHorizontalScrollBarState extends State<TrinaHorizontalScrollBar>
                                               final newOffset =
                                                   (currentOffset + scrollDelta)
                                                       .clamp(
-                                                0.0,
-                                                scrollController
-                                                    .position.maxScrollExtent,
-                                              );
+                                                        0.0,
+                                                        scrollController
+                                                            .position
+                                                            .maxScrollExtent,
+                                                      );
 
                                               // Jump to the new position
                                               scrollController.jumpTo(
@@ -337,8 +338,8 @@ class _TrinaHorizontalScrollBarState extends State<TrinaHorizontalScrollBar>
                                             }
                                           }
                                         : null,
-                                    onHorizontalDragEnd: scrollConfig
-                                            .isDraggable
+                                    onHorizontalDragEnd:
+                                        scrollConfig.isDraggable
                                         ? (_) {
                                             setState(() {
                                               _isDragging = false;
@@ -353,7 +354,7 @@ class _TrinaHorizontalScrollBarState extends State<TrinaHorizontalScrollBar>
                                       decoration: BoxDecoration(
                                         color: _isThumbHovered || _isDragging
                                             ? scrollConfig
-                                                .effectiveThumbHoverColor
+                                                  .effectiveThumbHoverColor
                                             : scrollConfig.effectiveThumbColor,
                                         borderRadius: BorderRadius.circular(
                                           scrollConfig.effectiveRadius,

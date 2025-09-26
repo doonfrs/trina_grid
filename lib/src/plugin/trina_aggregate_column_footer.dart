@@ -213,7 +213,8 @@ class TrinaAggregateColumnFooterState
     required Iterable<TrinaRow> rows,
     required TrinaColumn column,
     TrinaAggregateFilter? filter,
-  }) _aggregator;
+  })
+  _aggregator;
 
   @override
   TrinaGridStateManager get stateManager => widget.rendererContext.stateManager;
@@ -273,7 +274,8 @@ class TrinaAggregateColumnFooterState
   void initState() {
     super.initState();
 
-    _numberFormat = widget.numberFormat ??
+    _numberFormat =
+        widget.numberFormat ??
         (widget.formatAsCurrency
             ? NumberFormat.simpleCurrency()
             : NumberFormat("#,###"));
@@ -287,11 +289,7 @@ class TrinaAggregateColumnFooterState
   void updateState(TrinaNotifierEvent event) {
     _aggregatedValue = update<num?>(
       _aggregatedValue,
-      _aggregator(
-        rows: rows,
-        column: column,
-        filter: widget.filter,
-      ),
+      _aggregator(rows: rows, column: column, filter: widget.filter),
     );
   }
 
@@ -319,13 +317,15 @@ class TrinaAggregateColumnFooterState
   Widget build(BuildContext context) {
     final hasTitleSpan = widget.titleSpanBuilder != null;
 
-    final formattedValue =
-        _aggregatedValue == null ? '' : _numberFormat.format(_aggregatedValue);
+    final formattedValue = _aggregatedValue == null
+        ? ''
+        : _numberFormat.format(_aggregatedValue);
 
     final text = hasTitleSpan ? null : formattedValue;
 
-    final children =
-        hasTitleSpan ? widget.titleSpanBuilder!(formattedValue) : null;
+    final children = hasTitleSpan
+        ? widget.titleSpanBuilder!(formattedValue)
+        : null;
 
     return Padding(
       padding: widget.padding ?? TrinaGridSettings.columnTitlePadding,

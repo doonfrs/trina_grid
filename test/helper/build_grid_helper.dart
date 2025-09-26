@@ -77,52 +77,49 @@ class BuildGridHelper {
     String columnName = 'column',
   }) {
     // given
-    final safetyColumns = columns ??
+    final safetyColumns =
+        columns ??
         ColumnHelper.textColumn(
           columnName,
           count: numberOfColumns,
           start: startColumnIndex,
         );
 
-    final safetyRows = rows ??
-        RowHelper.count(
-          numberOfRows,
-          safetyColumns,
-          start: startColumnIndex,
-        );
+    final safetyRows =
+        rows ??
+        RowHelper.count(numberOfRows, safetyColumns, start: startColumnIndex);
 
-    return TrinaWidgetTestHelper(
-      'build with selecting rows.',
-      (WidgetTester tester) async {
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Material(
-              child: TrinaGrid(
-                columns: safetyColumns,
-                rows: safetyRows,
-                onLoaded: (TrinaGridOnLoadedEvent event) {
-                  stateManager = event.stateManager;
-                  stateManager.setSelectingMode(TrinaGridSelectingMode.row);
-                },
-              ),
+    return TrinaWidgetTestHelper('build with selecting rows.', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Material(
+            child: TrinaGrid(
+              columns: safetyColumns,
+              rows: safetyRows,
+              onLoaded: (TrinaGridOnLoadedEvent event) {
+                stateManager = event.stateManager;
+                stateManager.setSelectingMode(TrinaGridSelectingMode.row);
+              },
             ),
           ),
-        );
+        ),
+      );
 
-        await tester.pump();
+      await tester.pump();
 
-        await selectRows(
-          startRowIdx: startRowIdx,
-          endRowIdx: endRowIdx,
-          tester: tester,
-          columnTitle: '$columnName$startColumnIndex',
-        );
+      await selectRows(
+        startRowIdx: startRowIdx,
+        endRowIdx: endRowIdx,
+        tester: tester,
+        columnTitle: '$columnName$startColumnIndex',
+      );
 
-        final length = (startRowIdx - endRowIdx).abs() + 1;
+      final length = (startRowIdx - endRowIdx).abs() + 1;
 
-        expect(stateManager.currentSelectingRows.length, length);
-      },
-    );
+      expect(stateManager.currentSelectingRows.length, length);
+    });
   }
 
   TrinaWidgetTestHelper build({
@@ -135,38 +132,35 @@ class BuildGridHelper {
     TrinaGridSelectingMode selectingMode = TrinaGridSelectingMode.none,
   }) {
     // given
-    final safetyColumns = columns ??
+    final safetyColumns =
+        columns ??
         ColumnHelper.textColumn(
           columnName,
           count: numberOfColumns,
           start: startColumnIndex,
         );
 
-    final safetyRows = rows ??
-        RowHelper.count(
-          numberOfRows,
-          safetyColumns,
-          start: startColumnIndex,
-        );
+    final safetyRows =
+        rows ??
+        RowHelper.count(numberOfRows, safetyColumns, start: startColumnIndex);
 
-    return TrinaWidgetTestHelper(
-      'build with selecting rows.',
-      (WidgetTester tester) async {
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Material(
-              child: TrinaGrid(
-                columns: safetyColumns,
-                rows: safetyRows,
-                onLoaded: (TrinaGridOnLoadedEvent event) {
-                  stateManager = event.stateManager;
-                  stateManager.setSelectingMode(selectingMode);
-                },
-              ),
+    return TrinaWidgetTestHelper('build with selecting rows.', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Material(
+            child: TrinaGrid(
+              columns: safetyColumns,
+              rows: safetyRows,
+              onLoaded: (TrinaGridOnLoadedEvent event) {
+                stateManager = event.stateManager;
+                stateManager.setSelectingMode(selectingMode);
+              },
             ),
           ),
-        );
-      },
-    );
+        ),
+      );
+    });
   }
 }

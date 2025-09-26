@@ -31,23 +31,17 @@ class _DateTypeColumnScreenState extends State<DateTypeColumnScreen> {
       TrinaColumn(
         title: 'MM/dd/yyyy',
         field: 'mm_dd_yyyy',
-        type: TrinaColumnType.date(
-          format: 'MM/dd/yyyy',
-        ),
+        type: TrinaColumnType.date(format: 'MM/dd/yyyy'),
       ),
       TrinaColumn(
         title: 'with StartDate',
         field: 'with_start_date',
-        type: TrinaColumnType.date(
-          startDate: DateTime.parse('2020-01-01'),
-        ),
+        type: TrinaColumnType.date(startDate: DateTime.parse('2020-01-01')),
       ),
       TrinaColumn(
         title: 'with EndDate',
         field: 'with_end_date',
-        type: TrinaColumnType.date(
-          endDate: DateTime.parse('2020-01-01'),
-        ),
+        type: TrinaColumnType.date(endDate: DateTime.parse('2020-01-01')),
       ),
       TrinaColumn(
         title: 'with Both',

@@ -6,9 +6,7 @@ import 'package:rxdart/rxdart.dart';
 class TrinaGridEventManager {
   final TrinaGridStateManager stateManager;
 
-  TrinaGridEventManager({
-    required this.stateManager,
-  });
+  TrinaGridEventManager({required this.stateManager});
 
   final PublishSubject<TrinaGridEvent> _subject =
       PublishSubject<TrinaGridEvent>();
@@ -48,12 +46,13 @@ class TrinaGridEventManager {
           ),
         );
 
-    final debounceStream =
-        _subject.stream.where((event) => event.type.isDebounce).transform(
-              DebounceStreamTransformer(
-                (e) => TimerStream<TrinaGridEvent>(e, e.duration as Duration),
-              ),
-            );
+    final debounceStream = _subject.stream
+        .where((event) => event.type.isDebounce)
+        .transform(
+          DebounceStreamTransformer(
+            (e) => TimerStream<TrinaGridEvent>(e, e.duration as Duration),
+          ),
+        );
 
     _subscription = MergeStream([
       normalStream,

@@ -43,7 +43,8 @@ class TrinaDateCellState
     final currentDate = selectedDate?.copyWith();
     selectedDate = value;
 
-    final onlyYearWasChanged = currentDate?.year != value?.year &&
+    final onlyYearWasChanged =
+        currentDate?.year != value?.year &&
         currentDate?.month == value?.month &&
         currentDate?.day == value?.day;
 

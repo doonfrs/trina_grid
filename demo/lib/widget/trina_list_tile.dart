@@ -20,8 +20,8 @@ class TrinaListTile extends StatelessWidget {
     this.onTapPreview,
     this.onTapLiveDemo,
     this.trailing,
-  })  : _color = Colors.white,
-        _fontColor = TrinaGridExampleColors.fontColor;
+  }) : _color = Colors.white,
+       _fontColor = TrinaGridExampleColors.fontColor;
 
   const TrinaListTile.dark({
     super.key,
@@ -30,8 +30,8 @@ class TrinaListTile extends StatelessWidget {
     this.onTapPreview,
     this.onTapLiveDemo,
     this.trailing,
-  })  : _color = Colors.black87,
-        _fontColor = Colors.white70;
+  }) : _color = Colors.black87,
+       _fontColor = Colors.white70;
 
   const TrinaListTile.amber({
     super.key,
@@ -40,8 +40,8 @@ class TrinaListTile extends StatelessWidget {
     this.onTapPreview,
     this.onTapLiveDemo,
     this.trailing,
-  })  : _color = Colors.amber,
-        _fontColor = Colors.black87;
+  }) : _color = Colors.amber,
+       _fontColor = Colors.black87;
 
   final Color _color;
   final Color _fontColor;
@@ -88,12 +88,7 @@ class TrinaListTile extends StatelessWidget {
                         ),
                     ],
                   ),
-                Text(
-                  description!,
-                  style: TextStyle(
-                    color: _fontColor,
-                  ),
-                ),
+                Text(description!, style: TextStyle(color: _fontColor)),
               ],
             ),
             contentPadding: const EdgeInsets.all(15),

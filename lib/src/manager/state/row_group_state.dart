@@ -113,10 +113,7 @@ abstract class IRowGroupState {
   /// Set up a delegate for grouping rows.
   ///
   /// {@macro row_group_state_rowGroupDelegate}
-  void setRowGroup(
-    TrinaRowGroupDelegate? delegate, {
-    bool notify = true,
-  });
+  void setRowGroup(TrinaRowGroupDelegate? delegate, {bool notify = true});
 
   /// Collapse or expand the group row.
   ///
@@ -221,16 +218,20 @@ mixin RowGroupState implements ITrinaGridState {
 
   @override
   Iterable<TrinaRow> get iterateRowGroup sync* {
-    for (final row
-        in _iterateRowGroup(iterateMainRowGroup, iterateAll: false)) {
+    for (final row in _iterateRowGroup(
+      iterateMainRowGroup,
+      iterateAll: false,
+    )) {
       yield row;
     }
   }
 
   @override
   Iterable<TrinaRow> get iterateRowAndGroup sync* {
-    for (final row
-        in _iterateRowAndGroup(iterateMainRowGroup, iterateAll: false)) {
+    for (final row in _iterateRowAndGroup(
+      iterateMainRowGroup,
+      iterateAll: false,
+    )) {
       yield row;
     }
   }
@@ -256,10 +257,7 @@ mixin RowGroupState implements ITrinaGridState {
   }
 
   @override
-  void setRowGroup(
-    TrinaRowGroupDelegate? delegate, {
-    bool notify = true,
-  }) {
+  void setRowGroup(TrinaRowGroupDelegate? delegate, {bool notify = true}) {
     _state._rowGroupDelegate = delegate;
 
     _updateRowGroup();
@@ -399,7 +397,10 @@ mixin RowGroupState implements ITrinaGridState {
 
     for (final groupRow in expandedGroups) {
       toggleExpandedRowGroup(
-          rowGroup: groupRow, expanded: false, notify: false);
+        rowGroup: groupRow,
+        expanded: false,
+        notify: false,
+      );
     }
 
     notifyListeners(notify);
@@ -548,10 +549,7 @@ mixin RowGroupState implements ITrinaGridState {
           compare: found.type.group.children[insertIdx].sortIdx,
           increase: row.type.group.children.length,
         );
-        found.type.group.children.insertAll(
-          insertIdx,
-          row.type.group.children,
-        );
+        found.type.group.children.insertAll(insertIdx, row.type.group.children);
       } else {
         found.type.group.children.addAll(row.type.group.children);
       }
@@ -673,8 +671,9 @@ mixin RowGroupState implements ITrinaGridState {
 
     isNotRemoved(e) => !removeKeys.contains(e.key);
 
-    final remaining =
-        delegate.columns.where(isNotRemoved).toList(growable: false);
+    final remaining = delegate.columns
+        .where(isNotRemoved)
+        .toList(growable: false);
 
     if (remaining.length == delegate.columns.length) {
       return;
@@ -813,8 +812,11 @@ mixin RowGroupState implements ITrinaGridState {
   }) sync* {
     bool isNotGroup(TrinaRow e) => !e.type.isGroup;
 
-    for (final row in TrinaRowGroupHelper.iterateWithFilter(rows,
-        filter: isNotGroup, iterateAll: iterateAll)) {
+    for (final row in TrinaRowGroupHelper.iterateWithFilter(
+      rows,
+      filter: isNotGroup,
+      iterateAll: iterateAll,
+    )) {
       yield row;
     }
   }
@@ -825,8 +827,11 @@ mixin RowGroupState implements ITrinaGridState {
   }) sync* {
     bool isGroup(TrinaRow e) => e.type.isGroup;
 
-    for (final row in TrinaRowGroupHelper.iterateWithFilter(rows,
-        filter: isGroup, iterateAll: iterateAll)) {
+    for (final row in TrinaRowGroupHelper.iterateWithFilter(
+      rows,
+      filter: isGroup,
+      iterateAll: iterateAll,
+    )) {
       yield row;
     }
   }
@@ -835,8 +840,10 @@ mixin RowGroupState implements ITrinaGridState {
     Iterable<TrinaRow> rows, {
     bool iterateAll = true,
   }) sync* {
-    for (final row in TrinaRowGroupHelper.iterateWithFilter(rows,
-        iterateAll: iterateAll)) {
+    for (final row in TrinaRowGroupHelper.iterateWithFilter(
+      rows,
+      iterateAll: iterateAll,
+    )) {
       yield row;
     }
   }

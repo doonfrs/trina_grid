@@ -60,9 +60,7 @@ abstract class TrinaPopupCellStateWithMenu<T extends PopupCell> extends State<T>
         ),
         alignment: Alignment.bottomLeft,
       ),
-      menuChildren: [
-        buildMenu(),
-      ],
+      menuChildren: [buildMenu()],
       builder: (context, controller, child) {
         return Focus(
           onKeyEvent: (node, event) =>

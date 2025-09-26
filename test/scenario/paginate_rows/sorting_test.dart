@@ -11,21 +11,23 @@ void main() {
   late List<TrinaRow> rows;
 
   Future<void> buildGrid(WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(
-      home: Material(
-        child: TrinaGrid(
-          columns: columns,
-          rows: rows,
-          onLoaded: (TrinaGridOnLoadedEvent event) {
-            stateManager = event.stateManager;
-          },
-          createFooter: (s) {
-            s.setPageSize(3);
-            return TrinaPagination(s);
-          },
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Material(
+          child: TrinaGrid(
+            columns: columns,
+            rows: rows,
+            onLoaded: (TrinaGridOnLoadedEvent event) {
+              stateManager = event.stateManager;
+            },
+            createFooter: (s) {
+              s.setPageSize(3);
+              return TrinaPagination(s);
+            },
+          ),
         ),
       ),
-    ));
+    );
   }
 
   Future<List<TrinaBaseCell>> getCells(WidgetTester tester, {int? page}) async {

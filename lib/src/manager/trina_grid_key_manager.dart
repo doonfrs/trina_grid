@@ -8,9 +8,7 @@ import 'package:rxdart/rxdart.dart';
 class TrinaGridKeyManager {
   TrinaGridStateManager stateManager;
 
-  TrinaGridKeyManager({
-    required this.stateManager,
-  });
+  TrinaGridKeyManager({required this.stateManager});
 
   final PublishSubject<TrinaKeyManagerEvent> _subject =
       PublishSubject<TrinaKeyManagerEvent>();

@@ -30,8 +30,9 @@ class TrinaDateTimeHelper {
       return date;
     }
 
-    int moveCount =
-        date.weekday == DateTime.sunday ? 6 : DateTime.saturday - date.weekday;
+    int moveCount = date.weekday == DateTime.sunday
+        ? 6
+        : DateTime.saturday - date.weekday;
 
     return date.add(Duration(days: moveCount));
   }

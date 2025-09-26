@@ -56,34 +56,36 @@ class TrinaDualGridPopup {
 
     TrinaDualOnSelectedEvent? selected =
         await showDialog<TrinaDualOnSelectedEvent>(
-            context: context,
-            builder: (BuildContext ctx) {
-              return Dialog(
-                shape: shape,
-                child: LayoutBuilder(
-                  builder: (ctx, size) {
-                    return SizedBox(
-                      width: (width ?? size.maxWidth) +
-                          TrinaGridSettings.gridInnerSpacing,
-                      height: height ?? size.maxHeight,
-                      child: Directionality(
-                        textDirection: textDirection,
-                        child: TrinaDualGrid(
-                          gridPropsA: propsA,
-                          gridPropsB: propsB,
-                          mode: mode,
-                          onSelected: (TrinaDualOnSelectedEvent event) {
-                            Navigator.pop(ctx, event);
-                          },
-                          display: display ?? TrinaDualGridDisplayRatio(),
-                          divider: divider ?? const TrinaDualGridDivider(),
-                        ),
+          context: context,
+          builder: (BuildContext ctx) {
+            return Dialog(
+              shape: shape,
+              child: LayoutBuilder(
+                builder: (ctx, size) {
+                  return SizedBox(
+                    width:
+                        (width ?? size.maxWidth) +
+                        TrinaGridSettings.gridInnerSpacing,
+                    height: height ?? size.maxHeight,
+                    child: Directionality(
+                      textDirection: textDirection,
+                      child: TrinaDualGrid(
+                        gridPropsA: propsA,
+                        gridPropsB: propsB,
+                        mode: mode,
+                        onSelected: (TrinaDualOnSelectedEvent event) {
+                          Navigator.pop(ctx, event);
+                        },
+                        display: display ?? TrinaDualGridDisplayRatio(),
+                        divider: divider ?? const TrinaDualGridDivider(),
                       ),
-                    );
-                  },
-                ),
-              );
-            });
+                    ),
+                  );
+                },
+              ),
+            );
+          },
+        );
     if (onSelected != null && selected != null) {
       onSelected!(selected);
     }

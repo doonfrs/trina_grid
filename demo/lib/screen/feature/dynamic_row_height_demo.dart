@@ -86,10 +86,12 @@ class _DynamicRowHeightDemoState extends State<DynamicRowHeightDemo> {
         cells: {
           'id': TrinaCell(value: '${index + 1}'),
           'name': TrinaCell(value: 'Item ${index + 1}'),
-          'description':
-              TrinaCell(value: 'This is a description for item ${index + 1}.'),
-          'status':
-              TrinaCell(value: ['Active', 'Inactive', 'Pending'][index % 3]),
+          'description': TrinaCell(
+            value: 'This is a description for item ${index + 1}.',
+          ),
+          'status': TrinaCell(
+            value: ['Active', 'Inactive', 'Pending'][index % 3],
+          ),
         },
         height: customHeight,
       );
@@ -146,7 +148,8 @@ class _DynamicRowHeightDemoState extends State<DynamicRowHeightDemo> {
       _rowHeightController.text = height.toString();
 
       _showMessage(
-          'Row $rowIndex height retrieved: ${height.toStringAsFixed(1)}px');
+        'Row $rowIndex height retrieved: ${height.toStringAsFixed(1)}px',
+      );
     }
   }
 
@@ -173,7 +176,8 @@ class _DynamicRowHeightDemoState extends State<DynamicRowHeightDemo> {
       _rowHeightController.text = defaultHeight.toString();
 
       _showMessage(
-          'Row $rowIndex height reset to default (${defaultHeight.toStringAsFixed(1)}px)');
+        'Row $rowIndex height reset to default (${defaultHeight.toStringAsFixed(1)}px)',
+      );
       setState(() {});
     }
   }
@@ -189,17 +193,15 @@ class _DynamicRowHeightDemoState extends State<DynamicRowHeightDemo> {
       _rowHeightController.text = defaultHeight.toString();
 
       _showMessage(
-          'All row heights reset to default (${defaultHeight.toStringAsFixed(1)}px)');
+        'All row heights reset to default (${defaultHeight.toStringAsFixed(1)}px)',
+      );
       setState(() {});
     }
   }
 
   void _showMessage(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: const Duration(seconds: 2),
-      ),
+      SnackBar(content: Text(message), duration: const Duration(seconds: 2)),
     );
   }
 
@@ -219,10 +221,7 @@ class _DynamicRowHeightDemoState extends State<DynamicRowHeightDemo> {
               children: [
                 const Text(
                   'Row Height Controls',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16),
 

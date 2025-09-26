@@ -4,7 +4,8 @@ import 'package:trina_grid/src/widgets/trina_popup.dart';
 
 /// Abstract state for popup cells that use a [TrinaPopup] to display the popup.
 abstract class TrinaPopupCellStateWithCustomPopup<T extends PopupCell>
-    extends State<T> with PopupCellState<T> {
+    extends State<T>
+    with PopupCellState<T> {
   /// Notifier for popup visibility state.
   late final popupVisibilityNotifier = ValueNotifier<bool>(false);
 
@@ -97,8 +98,9 @@ class _CustomPopup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeData = Theme.of(context)
-        .copyWith(brightness: isDarkMode ? Brightness.dark : Brightness.light);
+    final themeData = Theme.of(
+      context,
+    ).copyWith(brightness: isDarkMode ? Brightness.dark : Brightness.light);
     final colorScheme = themeData.colorScheme;
 
     return Focus(
@@ -117,10 +119,7 @@ class _CustomPopup extends StatelessWidget {
         // widgets inside the popup will use the app's [Theme].
         content: Theme(
           data: themeData,
-          child: Material(
-            type: MaterialType.transparency,
-            child: popupContent,
-          ),
+          child: Material(type: MaterialType.transparency, child: popupContent),
         ),
         rootNavigator: true,
         child: Container(

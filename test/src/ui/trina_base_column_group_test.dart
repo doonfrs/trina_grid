@@ -51,17 +51,16 @@ void main() {
         columnGroupList: anyNamed('columnGroupList'),
         columns: anyNamed('columns'),
       ),
-    ).thenAnswer(
-      (realInvocation) {
-        return TrinaColumnGroupHelper.separateLinkedGroup(
-          columnGroupList:
-              realInvocation.namedArguments[const Symbol('columnGroupList')]
-                  as List<TrinaColumnGroup>,
-          columns: realInvocation.namedArguments[const Symbol('columns')]
-              as List<TrinaColumn>,
-        );
-      },
-    );
+    ).thenAnswer((realInvocation) {
+      return TrinaColumnGroupHelper.separateLinkedGroup(
+        columnGroupList:
+            realInvocation.namedArguments[const Symbol('columnGroupList')]
+                as List<TrinaColumnGroup>,
+        columns:
+            realInvocation.namedArguments[const Symbol('columns')]
+                as List<TrinaColumn>,
+      );
+    });
   });
 
   tearDown(() {
@@ -109,20 +108,19 @@ void main() {
       columns: ColumnHelper.textColumn('column', count: 1, start: 1),
     ),
     depth: 1,
-  ).test(
-    'When expandedColumn is true and depth is 1, '
-    'TrinaBaseColumn columnTitleHeight should be columnHeight * 2',
-    (tester) async {
-      final baseColumn = find.byType(TrinaBaseColumn);
+  ).test('When expandedColumn is true and depth is 1, '
+      'TrinaBaseColumn columnTitleHeight should be columnHeight * 2', (
+    tester,
+  ) async {
+    final baseColumn = find.byType(TrinaBaseColumn);
 
-      final baseColumnWidget =
-          baseColumn.first.evaluate().first.widget as TrinaBaseColumn;
+    final baseColumnWidget =
+        baseColumn.first.evaluate().first.widget as TrinaBaseColumn;
 
-      expect(baseColumn, findsOneWidget);
+    expect(baseColumn, findsOneWidget);
 
-      expect(baseColumnWidget.columnTitleHeight, columnHeight * 2);
-    },
-  );
+    expect(baseColumnWidget.columnTitleHeight, columnHeight * 2);
+  });
 
   buildWidget(
     columnGroup: TrinaColumnGroupPair(
@@ -134,20 +132,19 @@ void main() {
       columns: ColumnHelper.textColumn('column', count: 1, start: 1),
     ),
     depth: 3,
-  ).test(
-    'When expandedColumn is true and depth is 3, '
-    'TrinaBaseColumn columnTitleHeight should be columnHeight * 4',
-    (tester) async {
-      final baseColumn = find.byType(TrinaBaseColumn);
+  ).test('When expandedColumn is true and depth is 3, '
+      'TrinaBaseColumn columnTitleHeight should be columnHeight * 4', (
+    tester,
+  ) async {
+    final baseColumn = find.byType(TrinaBaseColumn);
 
-      final baseColumnWidget =
-          baseColumn.first.evaluate().first.widget as TrinaBaseColumn;
+    final baseColumnWidget =
+        baseColumn.first.evaluate().first.widget as TrinaBaseColumn;
 
-      expect(baseColumn, findsOneWidget);
+    expect(baseColumn, findsOneWidget);
 
-      expect(baseColumnWidget.columnTitleHeight, columnHeight * 4);
-    },
-  );
+    expect(baseColumnWidget.columnTitleHeight, columnHeight * 4);
+  });
 
   buildWidget(
     columnGroup: TrinaColumnGroupPair(
@@ -159,19 +156,16 @@ void main() {
       columns: ColumnHelper.textColumn('column', count: 1, start: 1),
     ),
     depth: 1,
-  ).test(
-    'When expandedColumn is false, '
-    'group title should be displayed',
-    (tester) async {
-      final groupTitle = find.text('column group title');
+  ).test('When expandedColumn is false, '
+      'group title should be displayed', (tester) async {
+    final groupTitle = find.text('column group title');
 
-      final columnTitle = find.text('column1');
+    final columnTitle = find.text('column1');
 
-      expect(groupTitle, findsOneWidget);
+    expect(groupTitle, findsOneWidget);
 
-      expect(columnTitle, findsOneWidget);
-    },
-  );
+    expect(columnTitle, findsOneWidget);
+  });
 
   buildWidget(
     columnGroup: TrinaColumnGroupPair(
@@ -183,28 +177,27 @@ void main() {
       columns: ColumnHelper.textColumn('column', count: 1, start: 1),
     ),
     depth: 3,
-  ).test(
-    'When expandedColumn is false and depth is 3, '
-    'group title widget height should be 3 * columnHeight',
-    (tester) async {
-      final groupTitle = find.text('column group title');
+  ).test('When expandedColumn is false and depth is 3, '
+      'group title widget height should be 3 * columnHeight', (tester) async {
+    final groupTitle = find.text('column group title');
 
-      final groupTitleWidget = find
-          .ancestor(of: groupTitle, matching: find.byType(SizedBox))
-          .first
-          .evaluate()
-          .first
-          .widget as SizedBox;
+    final groupTitleWidget =
+        find
+                .ancestor(of: groupTitle, matching: find.byType(SizedBox))
+                .first
+                .evaluate()
+                .first
+                .widget
+            as SizedBox;
 
-      final columnTitle = find.text('column1');
+    final columnTitle = find.text('column1');
 
-      expect(groupTitle, findsOneWidget);
+    expect(groupTitle, findsOneWidget);
 
-      expect(columnTitle, findsOneWidget);
+    expect(columnTitle, findsOneWidget);
 
-      expect(groupTitleWidget.height, columnHeight * 3);
-    },
-  );
+    expect(groupTitleWidget.height, columnHeight * 3);
+  });
 
   buildWidget(
     columnGroup: TrinaColumnGroupPair(
@@ -216,19 +209,16 @@ void main() {
       columns: ColumnHelper.textColumn('column', count: 1, start: 1),
     ),
     depth: 1,
-  ).test(
-    'When expandedColumn is true, '
-    'group title should not be displayed',
-    (tester) async {
-      final groupTitle = find.text('column group title');
+  ).test('When expandedColumn is true, '
+      'group title should not be displayed', (tester) async {
+    final groupTitle = find.text('column group title');
 
-      final columnTitle = find.text('column1');
+    final columnTitle = find.text('column1');
 
-      expect(groupTitle, findsNothing);
+    expect(groupTitle, findsNothing);
 
-      expect(columnTitle, findsOneWidget);
-    },
-  );
+    expect(columnTitle, findsOneWidget);
+  });
 
   buildWidget(
     columnGroup: TrinaColumnGroupPair(
@@ -248,10 +238,13 @@ void main() {
                 fields: ['column4'],
                 expandedColumn: true,
               ),
-              TrinaColumnGroup(title: 'group b-3', children: [
-                TrinaColumnGroup(title: 'group b-3-1', fields: ['column5']),
-                TrinaColumnGroup(title: 'group b-3-2', fields: ['column6']),
-              ]),
+              TrinaColumnGroup(
+                title: 'group b-3',
+                children: [
+                  TrinaColumnGroup(title: 'group b-3-1', fields: ['column5']),
+                  TrinaColumnGroup(title: 'group b-3-2', fields: ['column6']),
+                ],
+              ),
             ],
           ),
         ],
@@ -260,18 +253,17 @@ void main() {
       columns: ColumnHelper.textColumn('column', count: 6, start: 1),
     ),
     depth: 4,
-  ).test(
-    'All titles should be displayed except for expandedColumn group b-2',
-    (tester) async {
-      expect(find.text('main group'), findsOneWidget);
-      expect(find.text('group a'), findsOneWidget);
-      expect(find.text('group b'), findsOneWidget);
-      expect(find.text('group b-1'), findsOneWidget);
-      expect(find.text('group b-3'), findsOneWidget);
-      expect(find.text('group b-3-1'), findsOneWidget);
-      expect(find.text('group b-3-2'), findsOneWidget);
+  ).test('All titles should be displayed except for expandedColumn group b-2', (
+    tester,
+  ) async {
+    expect(find.text('main group'), findsOneWidget);
+    expect(find.text('group a'), findsOneWidget);
+    expect(find.text('group b'), findsOneWidget);
+    expect(find.text('group b-1'), findsOneWidget);
+    expect(find.text('group b-3'), findsOneWidget);
+    expect(find.text('group b-3-1'), findsOneWidget);
+    expect(find.text('group b-3-2'), findsOneWidget);
 
-      expect(find.text('group b-2'), findsNothing);
-    },
-  );
+    expect(find.text('group b-2'), findsNothing);
+  });
 }

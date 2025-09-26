@@ -39,10 +39,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
-          body: TrinaGrid(
-            columns: [column],
-            rows: [row],
-          ),
+          body: TrinaGrid(columns: [column], rows: [row]),
         ),
       ),
     );
@@ -72,74 +69,63 @@ void main() {
       expect(find.byIcon(Icons.add), findsOneWidget);
     });
 
-    testWidgets(
-      'When popupIcon is null, icon should not be rendered',
-      (tester) async {
-        await buildCellAndEdit(
-          tester,
-          initialCellValue: '2020-01-01',
-          popupIcon: null,
-        );
-        expect(
-          find.descendant(
-            of: find.byType(TrinaDateCell),
-            matching: find.byType(Icon),
-          ),
-          findsNothing,
-        );
-      },
-    );
+    testWidgets('When popupIcon is null, icon should not be rendered', (
+      tester,
+    ) async {
+      await buildCellAndEdit(
+        tester,
+        initialCellValue: '2020-01-01',
+        popupIcon: null,
+      );
+      expect(
+        find.descendant(
+          of: find.byType(TrinaDateCell),
+          matching: find.byType(Icon),
+        ),
+        findsNothing,
+      );
+    });
   });
 
   group('Selection with Keyboard ', () {
-    testWidgets(
-      'when initial date is 2020-01-01, '
-      'navigating to 2019-12-31 and pressing enter '
-      'then OK button,should update cell value to 2019-12-31',
-      (tester) async {
-        await buildCellAndEdit(
-          tester,
-          initialCellValue: '2020-01-01',
-        );
-        await openPopup(tester);
+    testWidgets('when initial date is 2020-01-01, '
+        'navigating to 2019-12-31 and pressing enter '
+        'then OK button,should update cell value to 2019-12-31', (
+      tester,
+    ) async {
+      await buildCellAndEdit(tester, initialCellValue: '2020-01-01');
+      await openPopup(tester);
 
-        // first tap to focus the day widget
-        await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
-        await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
-        await tester.pumpAndSettle();
-        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-        await tester.pump();
-        await tester.tap(okButtonFinder);
-        await tester.pumpAndSettle();
+      // first tap to focus the day widget
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+      await tester.pumpAndSettle();
+      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+      await tester.pump();
+      await tester.tap(okButtonFinder);
+      await tester.pumpAndSettle();
 
-        expect(cell.value, '2019-12-31');
-      },
-    );
+      expect(cell.value, '2019-12-31');
+    });
 
-    testWidgets(
-      'when initial date is 2020-1-31, '
-      'navigating to 2020-2-1 and pressing enter '
-      'then OK button, should update cell value to 2020-2-1',
-      (tester) async {
-        await buildCellAndEdit(
-          tester,
-          initialCellValue: '2020-01-31',
-        );
-        await openPopup(tester);
+    testWidgets('when initial date is 2020-1-31, '
+        'navigating to 2020-2-1 and pressing enter '
+        'then OK button, should update cell value to 2020-2-1', (tester) async {
+      await buildCellAndEdit(tester, initialCellValue: '2020-01-31');
+      await openPopup(tester);
 
-        // first arrow key to focus the current day in calendar
-        await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
-        await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
-        await tester.pumpAndSettle();
+      // first arrow key to focus the current day in calendar
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+      await tester.pumpAndSettle();
 
-        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-        await tester.pump();
-        await tester.tap(okButtonFinder);
-        await tester.pumpAndSettle();
+      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+      await tester.pump();
+      await tester.tap(okButtonFinder);
+      await tester.pumpAndSettle();
 
-        expect(cell.value, '2020-02-01');
-      },
-    );
+      expect(cell.value, '2020-02-01');
+    });
   });
 
   group('Format yyyy-MM-dd', () {
@@ -167,73 +153,63 @@ void main() {
   });
 
   group('closePopupOnSelection', () {
-    testWidgets(
-      'when closePopupOnSelection is true, '
-      'tapping a date should close the popup and update the cell value',
-      (tester) async {
-        await buildCellAndEdit(
-          tester,
-          initialCellValue: '2020-01-01',
-          closePopupOnSelection: true,
-        );
-        await openPopup(tester);
+    testWidgets('when closePopupOnSelection is true, '
+        'tapping a date should close the popup and update the cell value', (
+      tester,
+    ) async {
+      await buildCellAndEdit(
+        tester,
+        initialCellValue: '2020-01-01',
+        closePopupOnSelection: true,
+      );
+      await openPopup(tester);
 
-        await tester.tap(find.text('3'));
-        await tester.pumpAndSettle();
+      await tester.tap(find.text('3'));
+      await tester.pumpAndSettle();
 
-        expect(find.byType(CalendarDatePicker), findsNothing);
-        expect(cell.value, '2020-01-03');
-      },
-    );
+      expect(find.byType(CalendarDatePicker), findsNothing);
+      expect(cell.value, '2020-01-03');
+    });
 
-    testWidgets(
-      'when closePopupOnSelection is true, '
-      'OK and Cancel buttons should not be rendered',
-      (tester) async {
-        await buildCellAndEdit(
-          tester,
-          initialCellValue: '2020-01-01',
-          closePopupOnSelection: true,
-        );
-        await openPopup(tester);
+    testWidgets('when closePopupOnSelection is true, '
+        'OK and Cancel buttons should not be rendered', (tester) async {
+      await buildCellAndEdit(
+        tester,
+        initialCellValue: '2020-01-01',
+        closePopupOnSelection: true,
+      );
+      await openPopup(tester);
 
-        expect(okButtonFinder, findsNothing);
-        expect(find.widgetWithText(TextButton, 'Cancel'), findsNothing);
-      },
-    );
+      expect(okButtonFinder, findsNothing);
+      expect(find.widgetWithText(TextButton, 'Cancel'), findsNothing);
+    });
 
-    testWidgets(
-      'when closePopupOnSelection is false, '
-      'tapping a date should not close the popup',
-      (tester) async {
-        await buildCellAndEdit(
-          tester,
-          initialCellValue: '2020-01-01',
-          closePopupOnSelection: false,
-        );
-        await openPopup(tester);
+    testWidgets('when closePopupOnSelection is false, '
+        'tapping a date should not close the popup', (tester) async {
+      await buildCellAndEdit(
+        tester,
+        initialCellValue: '2020-01-01',
+        closePopupOnSelection: false,
+      );
+      await openPopup(tester);
 
-        await tester.tap(find.text('3'));
-        await tester.pumpAndSettle();
+      await tester.tap(find.text('3'));
+      await tester.pumpAndSettle();
 
-        expect(find.byType(CalendarDatePicker), findsOneWidget);
-      },
-    );
+      expect(find.byType(CalendarDatePicker), findsOneWidget);
+    });
 
-    testWidgets(
-      'when closePopupOnSelection is false, '
-      'OK and Cancel buttons should be rendered',
-      (tester) async {
-        await buildCellAndEdit(
-          tester,
-          initialCellValue: '2020-01-01',
-          closePopupOnSelection: false,
-        );
-        await openPopup(tester);
+    testWidgets('when closePopupOnSelection is false, '
+        'OK and Cancel buttons should be rendered', (tester) async {
+      await buildCellAndEdit(
+        tester,
+        initialCellValue: '2020-01-01',
+        closePopupOnSelection: false,
+      );
+      await openPopup(tester);
 
-        expect(okButtonFinder, findsOneWidget);
-        expect(find.widgetWithText(TextButton, 'Cancel'), findsOneWidget);
-      },
-    );
+      expect(okButtonFinder, findsOneWidget);
+      expect(find.widgetWithText(TextButton, 'Cancel'), findsOneWidget);
+    });
   });
 }

@@ -13,36 +13,35 @@ void main() {
     'ColumnTitleSortableGesture',
   );
 
-  testWidgets(
-    'When Directionality is rtl, rtl state should be applied',
-    (WidgetTester tester) async {
-      // given
-      late final TrinaGridStateManager stateManager;
-      final columns = ColumnHelper.textColumn('header');
-      final rows = RowHelper.count(3, columns);
+  testWidgets('When Directionality is rtl, rtl state should be applied', (
+    WidgetTester tester,
+  ) async {
+    // given
+    late final TrinaGridStateManager stateManager;
+    final columns = ColumnHelper.textColumn('header');
+    final rows = RowHelper.count(3, columns);
 
-      // when
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Material(
-            child: Directionality(
-              textDirection: TextDirection.rtl,
-              child: TrinaGrid(
-                columns: columns,
-                rows: rows,
-                onLoaded: (e) => stateManager = e.stateManager,
-              ),
+    // when
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Material(
+          child: Directionality(
+            textDirection: TextDirection.rtl,
+            child: TrinaGrid(
+              columns: columns,
+              rows: rows,
+              onLoaded: (e) => stateManager = e.stateManager,
             ),
           ),
         ),
-      );
+      ),
+    );
 
-      await tester.pumpAndSettle();
+    await tester.pumpAndSettle();
 
-      expect(stateManager.isLTR, false);
-      expect(stateManager.isRTL, true);
-    },
-  );
+    expect(stateManager.isLTR, false);
+    expect(stateManager.isRTL, true);
+  });
 
   testWidgets(
     'When Directionality is rtl, columns should be positioned according to their frozen state',
@@ -67,10 +66,7 @@ void main() {
           home: Material(
             child: Directionality(
               textDirection: TextDirection.rtl,
-              child: TrinaGrid(
-                columns: columns,
-                rows: rows,
-              ),
+              child: TrinaGrid(columns: columns, rows: rows),
             ),
           ),
         ),
@@ -110,8 +106,9 @@ void main() {
     },
   );
 
-  testWidgets('When createFooter is set, footer should be displayed',
-      (WidgetTester tester) async {
+  testWidgets('When createFooter is set, footer should be displayed', (
+    WidgetTester tester,
+  ) async {
     // given
     final columns = ColumnHelper.textColumn('header');
     final rows = RowHelper.count(3, columns);
@@ -138,8 +135,9 @@ void main() {
     expect(footer, findsOneWidget);
   });
 
-  testWidgets('When TrinaPagination is set in header, it should be rendered',
-      (WidgetTester tester) async {
+  testWidgets('When TrinaPagination is set in header, it should be rendered', (
+    WidgetTester tester,
+  ) async {
     // given
     final columns = ColumnHelper.textColumn('header');
     final rows = RowHelper.count(3, columns);
@@ -175,10 +173,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: Material(
-          child: TrinaGrid(
-            columns: columns,
-            rows: rows,
-          ),
+          child: TrinaGrid(columns: columns, rows: rows),
         ),
       ),
     );
@@ -196,8 +191,9 @@ void main() {
     expect(cell3, findsOneWidget);
   });
 
-  testWidgets('Tapping header should trigger sorting',
-      (WidgetTester tester) async {
+  testWidgets('Tapping header should trigger sorting', (
+    WidgetTester tester,
+  ) async {
     // given
     final columns = ColumnHelper.textColumn('header');
     final rows = RowHelper.count(3, columns);
@@ -206,10 +202,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: Material(
-          child: TrinaGrid(
-            columns: columns,
-            rows: rows,
-          ),
+          child: TrinaGrid(columns: columns, rows: rows),
         ),
       ),
     );
@@ -241,8 +234,7 @@ void main() {
     expect(rows[2].cells['header0']!.value, 'header0 value 2');
   });
 
-  testWidgets(
-      'Without frozen columns, '
+  testWidgets('Without frozen columns, '
       'move column 0 to position 2', (WidgetTester tester) async {
     // given
     List<TrinaColumn> columns = [

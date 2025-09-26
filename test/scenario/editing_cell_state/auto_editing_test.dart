@@ -18,9 +18,7 @@ void main() {
     final trinaGrid = TrinaWidgetTestHelper(
       '5 columns and 10 rows are created',
       (tester) async {
-        columns = [
-          ...ColumnHelper.textColumn('header', count: 5),
-        ];
+        columns = [...ColumnHelper.textColumn('header', count: 5)];
 
         rows = RowHelper.count(10, columns);
 

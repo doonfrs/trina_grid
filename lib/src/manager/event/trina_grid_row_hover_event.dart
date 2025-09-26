@@ -5,10 +5,7 @@ class TrinaGridRowHoverEvent extends TrinaGridEvent {
   final int rowIdx;
   bool isHovered;
 
-  TrinaGridRowHoverEvent({
-    required this.rowIdx,
-    required this.isHovered,
-  });
+  TrinaGridRowHoverEvent({required this.rowIdx, required this.isHovered});
 
   @override
   void handler(TrinaGridStateManager stateManager) {

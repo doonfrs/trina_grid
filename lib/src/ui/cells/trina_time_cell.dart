@@ -131,10 +131,7 @@ class _PopupContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: BoxConstraints(
-        maxWidth: 270,
-        maxHeight: 190,
-      ),
+      constraints: BoxConstraints(maxWidth: 270, maxHeight: 190),
       child: Stack(
         fit: StackFit.loose,
         children: [

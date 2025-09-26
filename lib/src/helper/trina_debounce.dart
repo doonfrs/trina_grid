@@ -3,9 +3,7 @@ import 'dart:async';
 class TrinaDebounce {
   final Duration duration;
 
-  TrinaDebounce({
-    this.duration = const Duration(milliseconds: 1),
-  });
+  TrinaDebounce({this.duration = const Duration(milliseconds: 1)});
 
   Timer? _debounce;
 
@@ -13,9 +11,7 @@ class TrinaDebounce {
     _debounce?.cancel();
   }
 
-  void debounce({
-    required void Function() callback,
-  }) {
+  void debounce({required void Function() callback}) {
     if (_debounce?.isActive ?? false) {
       _debounce?.cancel();
     }
@@ -27,9 +23,7 @@ class TrinaDebounce {
 class TrinaDebounceByHashCode {
   final Duration duration;
 
-  TrinaDebounceByHashCode({
-    this.duration = const Duration(milliseconds: 1),
-  });
+  TrinaDebounceByHashCode({this.duration = const Duration(milliseconds: 1)});
 
   Timer? _debounce;
 
@@ -39,10 +33,7 @@ class TrinaDebounceByHashCode {
     _debounce?.cancel();
   }
 
-  bool isDebounced({
-    required int hashCode,
-    bool ignore = false,
-  }) {
+  bool isDebounced({required int hashCode, bool ignore = false}) {
     if (ignore) {
       return false;
     }

@@ -77,11 +77,13 @@ class _CustomPaginationScreenState extends State<CustomPaginationScreen> {
 
     await Future.delayed(const Duration(milliseconds: 500));
 
-    return Future.value(TrinaLazyPaginationResponse(
-      totalPage: totalPage,
-      rows: fetchedRows.toList(),
-      totalRecords: tempList.length,
-    ));
+    return Future.value(
+      TrinaLazyPaginationResponse(
+        totalPage: totalPage,
+        rows: fetchedRows.toList(),
+        totalRecords: tempList.length,
+      ),
+    );
   }
 
   @override
@@ -92,7 +94,8 @@ class _CustomPaginationScreenState extends State<CustomPaginationScreen> {
       topContents: const [
         Text('This screen demonstrates how to customize the pagination UI.'),
         Text(
-            'You can enable\\disable through `TrinaLazyPagination.showLoading` and customize the loading widget through `TrinaLazyPagination.customLoadingWidget`.'),
+          'You can enable\\disable through `TrinaLazyPagination.showLoading` and customize the loading widget through `TrinaLazyPagination.customLoadingWidget`.',
+        ),
       ],
       topButtons: [
         TrinaExampleButton(
@@ -126,8 +129,10 @@ class _CustomPaginationScreenState extends State<CustomPaginationScreen> {
             // Customizing the pagination UI
             builder: (context, paginationState) {
               return Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
                 color: Colors.blueGrey[50],
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -167,27 +172,31 @@ class _CustomPaginationScreenState extends State<CustomPaginationScreen> {
                           IconButton(
                             icon: const Icon(Icons.chevron_left),
                             onPressed: paginationState.page > 1
-                                ? () => paginationState
-                                    .setPage(paginationState.page - 1)
+                                ? () => paginationState.setPage(
+                                    paginationState.page - 1,
+                                  )
                                 : null,
                           ),
                           Text(
-                              'Page ${paginationState.page} of ${paginationState.totalPage}'),
+                            'Page ${paginationState.page} of ${paginationState.totalPage}',
+                          ),
                           IconButton(
                             icon: const Icon(Icons.chevron_right),
                             onPressed:
                                 paginationState.page < paginationState.totalPage
-                                    ? () => paginationState
-                                        .setPage(paginationState.page + 1)
-                                    : null,
+                                ? () => paginationState.setPage(
+                                    paginationState.page + 1,
+                                  )
+                                : null,
                           ),
                           IconButton(
                             icon: const Icon(Icons.last_page),
                             onPressed:
                                 paginationState.page < paginationState.totalPage
-                                    ? () => paginationState
-                                        .setPage(paginationState.totalPage)
-                                    : null,
+                                ? () => paginationState.setPage(
+                                    paginationState.totalPage,
+                                  )
+                                : null,
                           ),
                         ],
                       ),

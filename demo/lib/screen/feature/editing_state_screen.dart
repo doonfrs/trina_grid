@@ -61,10 +61,7 @@ class _EditingStateScreenState extends State<EditingStateScreen> {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                Switch(
-                  value: autoEditing,
-                  onChanged: toggleAutoEditing,
-                ),
+                Switch(value: autoEditing, onChanged: toggleAutoEditing),
                 const Text('autoEditing'),
               ],
             ),
@@ -77,8 +74,9 @@ class _EditingStateScreenState extends State<EditingStateScreen> {
                 print(event);
               },
               onLoaded: (TrinaGridOnLoadedEvent event) {
-                event.stateManager
-                    .setSelectingMode(TrinaGridSelectingMode.cell);
+                event.stateManager.setSelectingMode(
+                  TrinaGridSelectingMode.cell,
+                );
 
                 stateManager = event.stateManager;
               },

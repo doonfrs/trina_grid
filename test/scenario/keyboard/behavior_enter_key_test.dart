@@ -18,9 +18,7 @@ void main() {
     final withTheCellSelected = TrinaWidgetTestHelper(
       'With the cell selected at 3, 3',
       (tester) async {
-        columns = [
-          ...ColumnHelper.textColumn('header', count: 10),
-        ];
+        columns = [...ColumnHelper.textColumn('header', count: 10)];
 
         rows = RowHelper.count(10, columns);
 

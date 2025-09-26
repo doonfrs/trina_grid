@@ -17,7 +17,7 @@ screenshots:
 documentation: https://github.com/doonfrs/trina_grid/blob/main/doc/index.md
 
 environment:
-  sdk: ^3.6.1
+  sdk: ^3.9.2
 
 # This allows the package to be run as an executable
 executables:

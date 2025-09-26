@@ -16,15 +16,18 @@ class TrinaGridChangeColumnFilterEvent extends TrinaGridEvent {
     this.debounceMilliseconds,
     this.eventType,
   }) : super(
-          type: eventType ?? TrinaGridEventType.normal,
-          duration: Duration(
-              milliseconds: debounceMilliseconds?.abs() ??
-                  TrinaGridSettings.debounceMillisecondsForColumnFilter),
-        );
+         type: eventType ?? TrinaGridEventType.normal,
+         duration: Duration(
+           milliseconds:
+               debounceMilliseconds?.abs() ??
+               TrinaGridSettings.debounceMillisecondsForColumnFilter,
+         ),
+       );
 
   List<TrinaRow> _getFilterRows(TrinaGridStateManager? stateManager) {
-    List<TrinaRow> foundFilterRows =
-        stateManager!.filterRowsByField(column.field);
+    List<TrinaRow> foundFilterRows = stateManager!.filterRowsByField(
+      column.field,
+    );
 
     if (foundFilterRows.isEmpty) {
       return [

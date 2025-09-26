@@ -58,31 +58,17 @@ abstract class IRowState {
 
   TrinaRow getNewRow();
 
-  List<TrinaRow> getNewRows({
-    int count = 1,
-  });
+  List<TrinaRow> getNewRows({int count = 1});
 
-  void setRowChecked(
-    TrinaRow row,
-    bool flag, {
-    bool notify = true,
-  });
+  void setRowChecked(TrinaRow row, bool flag, {bool notify = true});
 
-  void insertRows(
-    int rowIdx,
-    List<TrinaRow> rows, {
-    bool notify = true,
-  });
+  void insertRows(int rowIdx, List<TrinaRow> rows, {bool notify = true});
 
-  void prependNewRows({
-    int count = 1,
-  });
+  void prependNewRows({int count = 1});
 
   void prependRows(List<TrinaRow> rows);
 
-  void appendNewRows({
-    int count = 1,
-  });
+  void appendNewRows({int count = 1});
 
   void appendRows(List<TrinaRow> rows);
 
@@ -98,16 +84,9 @@ abstract class IRowState {
     bool notify = true,
   });
 
-  void moveRowsByIndex(
-    List<TrinaRow> rows,
-    int index, {
-    bool notify = true,
-  });
+  void moveRowsByIndex(List<TrinaRow> rows, int index, {bool notify = true});
 
-  void toggleAllRowChecked(
-    bool flag, {
-    bool notify = true,
-  });
+  void toggleAllRowChecked(bool flag, {bool notify = true});
 
   /// Set the height of a specific row by index
   void setRowHeight(int rowIndex, double height);
@@ -127,9 +106,8 @@ mixin RowState implements ITrinaGridState {
   List<TrinaRow> get rows => [...refRows];
 
   @override
-  List<TrinaRow> get checkedRows => refRows.where((row) => row.checked!).toList(
-        growable: false,
-      );
+  List<TrinaRow> get checkedRows =>
+      refRows.where((row) => row.checked!).toList(growable: false);
 
   @override
   List<TrinaRow> get checkedRowsViaSelect =>
@@ -137,9 +115,7 @@ mixin RowState implements ITrinaGridState {
 
   @override
   List<TrinaRow> get unCheckedRows =>
-      refRows.where((row) => !row.checked!).toList(
-            growable: false,
-          );
+      refRows.where((row) => !row.checked!).toList(growable: false);
 
   @override
   bool get hasCheckedRow =>
@@ -220,18 +196,14 @@ mixin RowState implements ITrinaGridState {
     final cells = <String, TrinaCell>{};
 
     for (var column in refColumns) {
-      cells[column.field] = TrinaCell(
-        value: column.type.defaultValue,
-      );
+      cells[column.field] = TrinaCell(value: column.type.defaultValue);
     }
 
     return TrinaRow(cells: cells);
   }
 
   @override
-  List<TrinaRow> getNewRows({
-    int count = 1,
-  }) {
+  List<TrinaRow> getNewRows({int count = 1}) {
     List<TrinaRow> rows = [];
 
     for (var i = 0; i < count; i += 1) {
@@ -266,11 +238,7 @@ mixin RowState implements ITrinaGridState {
   }
 
   @override
-  void insertRows(
-    int rowIdx,
-    List<TrinaRow> rows, {
-    bool notify = true,
-  }) {
+  void insertRows(int rowIdx, List<TrinaRow> rows, {bool notify = true}) {
     _insertRows(rowIdx, rows);
 
     /// Update currentRowIdx
@@ -296,9 +264,7 @@ mixin RowState implements ITrinaGridState {
   }
 
   @override
-  void prependNewRows({
-    int count = 1,
-  }) {
+  void prependNewRows({int count = 1}) {
     prependRows(getNewRows(count: count));
   }
 
@@ -336,9 +302,7 @@ mixin RowState implements ITrinaGridState {
   }
 
   @override
-  void appendNewRows({
-    int count = 1,
-  }) {
+  void appendNewRows({int count = 1}) {
     appendRows(getNewRows(count: count));
   }
 
@@ -367,10 +331,7 @@ mixin RowState implements ITrinaGridState {
   }
 
   @override
-  void removeRows(
-    List<TrinaRow> rows, {
-    bool notify = true,
-  }) {
+  void removeRows(List<TrinaRow> rows, {bool notify = true}) {
     if (rows.isEmpty) {
       return;
     }
@@ -387,7 +348,9 @@ mixin RowState implements ITrinaGridState {
 
     if (hasCurrentSelectingPosition) {
       selectingCellKey = refRows
-          .originalList[currentSelectingPosition!.rowIdx!].cells.entries
+          .originalList[currentSelectingPosition!.rowIdx!]
+          .cells
+          .entries
           .elementAt(currentSelectingPosition!.columnIdx!)
           .value
           .key;
@@ -467,20 +430,14 @@ mixin RowState implements ITrinaGridState {
     updateCurrentCellPosition(notify: false);
 
     if (onRowsMoved != null) {
-      onRowsMoved!(TrinaGridOnRowsMovedEvent(
-        idx: indexToMove,
-        rows: rows,
-      ));
+      onRowsMoved!(TrinaGridOnRowsMovedEvent(idx: indexToMove, rows: rows));
     }
 
     notifyListeners(notify, moveRowsByIndex.hashCode);
   }
 
   @override
-  void toggleAllRowChecked(
-    bool flag, {
-    bool notify = true,
-  }) {
+  void toggleAllRowChecked(bool flag, {bool notify = true}) {
     for (var row in refRows) {
       row.setChecked(flag);
     }
@@ -620,10 +577,7 @@ mixin RowState implements ITrinaGridState {
     return index;
   }
 
-  void _setSortIdx({
-    required List<TrinaRow> rows,
-    int start = 0,
-  }) {
+  void _setSortIdx({required List<TrinaRow> rows, int start = 0}) {
     for (final row in rows) {
       row.sortIdx = start++;
     }

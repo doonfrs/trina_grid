@@ -21,9 +21,9 @@ void main() {
     });
 
     test('When the rows is not empty, the filter should be called.', () {
-      final FilteredList<TrinaRow> rows = FilteredList(initialList: [
-        TrinaRow(cells: {}),
-      ]);
+      final FilteredList<TrinaRow> rows = FilteredList(
+        initialList: [TrinaRow(cells: {})],
+      );
 
       final mockFilter = mock.oneParamReturnBool<TrinaRow>;
 
@@ -37,11 +37,13 @@ void main() {
     });
 
     test('When the filter is set, calling null should remove the filter.', () {
-      final FilteredList<TrinaRow> rows = FilteredList(initialList: [
-        TrinaRow(cells: {'column1': TrinaCell(value: 'test1')}),
-        TrinaRow(cells: {'column1': TrinaCell(value: 'test2')}),
-        TrinaRow(cells: {'column1': TrinaCell(value: 'test3')}),
-      ]);
+      final FilteredList<TrinaRow> rows = FilteredList(
+        initialList: [
+          TrinaRow(cells: {'column1': TrinaCell(value: 'test1')}),
+          TrinaRow(cells: {'column1': TrinaCell(value: 'test2')}),
+          TrinaRow(cells: {'column1': TrinaCell(value: 'test3')}),
+        ],
+      );
 
       filter(TrinaRow row) => row.cells['column1']!.value == 'test1';
 
@@ -61,19 +63,23 @@ void main() {
     });
 
     test('When the group row is included, the filter should be included.', () {
-      final FilteredList<TrinaRow> rows = FilteredList(initialList: [
-        TrinaRow(cells: {'column1': TrinaCell(value: 'test1')}),
-        TrinaRow(cells: {'column1': TrinaCell(value: 'test2')}),
-        TrinaRow(
-          cells: {'column1': TrinaCell(value: 'test3')},
-          type: TrinaRowType.group(
-            children: FilteredList(initialList: [
-              TrinaRow(cells: {'column1': TrinaCell(value: 'group1')}),
-              TrinaRow(cells: {'column1': TrinaCell(value: 'group2')}),
-            ]),
+      final FilteredList<TrinaRow> rows = FilteredList(
+        initialList: [
+          TrinaRow(cells: {'column1': TrinaCell(value: 'test1')}),
+          TrinaRow(cells: {'column1': TrinaCell(value: 'test2')}),
+          TrinaRow(
+            cells: {'column1': TrinaCell(value: 'test3')},
+            type: TrinaRowType.group(
+              children: FilteredList(
+                initialList: [
+                  TrinaRow(cells: {'column1': TrinaCell(value: 'group1')}),
+                  TrinaRow(cells: {'column1': TrinaCell(value: 'group2')}),
+                ],
+              ),
+            ),
           ),
-        ),
-      ]);
+        ],
+      );
 
       final mockFilter = mock.oneParamReturnBool<TrinaRow>;
 
@@ -85,32 +91,38 @@ void main() {
     });
 
     test(
-        'When the child rows of the group are filtered and the filter is removed, '
-        'the child rows should be included in the list.', () {
-      final FilteredList<TrinaRow> rows = FilteredList(initialList: [
-        TrinaRow(cells: {'column1': TrinaCell(value: 'test1')}),
-        TrinaRow(cells: {'column1': TrinaCell(value: 'test2')}),
-        TrinaRow(
-          cells: {'column1': TrinaCell(value: 'test3')},
-          type: TrinaRowType.group(
-            children: FilteredList(initialList: [
-              TrinaRow(cells: {'column1': TrinaCell(value: 'group1')}),
-              TrinaRow(cells: {'column1': TrinaCell(value: 'group2')}),
-            ]),
-          ),
-        ),
-      ]);
+      'When the child rows of the group are filtered and the filter is removed, '
+      'the child rows should be included in the list.',
+      () {
+        final FilteredList<TrinaRow> rows = FilteredList(
+          initialList: [
+            TrinaRow(cells: {'column1': TrinaCell(value: 'test1')}),
+            TrinaRow(cells: {'column1': TrinaCell(value: 'test2')}),
+            TrinaRow(
+              cells: {'column1': TrinaCell(value: 'test3')},
+              type: TrinaRowType.group(
+                children: FilteredList(
+                  initialList: [
+                    TrinaRow(cells: {'column1': TrinaCell(value: 'group1')}),
+                    TrinaRow(cells: {'column1': TrinaCell(value: 'group2')}),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        );
 
-      filter(TrinaRow row) =>
-          !row.cells['column1']!.value.toString().startsWith('group');
+        filter(TrinaRow row) =>
+            !row.cells['column1']!.value.toString().startsWith('group');
 
-      TrinaRowGroupHelper.applyFilter(rows: rows, filter: filter);
+        TrinaRowGroupHelper.applyFilter(rows: rows, filter: filter);
 
-      expect(rows[2].type.group.children.length, 0);
+        expect(rows[2].type.group.children.length, 0);
 
-      TrinaRowGroupHelper.applyFilter(rows: rows, filter: null);
+        TrinaRowGroupHelper.applyFilter(rows: rows, filter: null);
 
-      expect(rows[2].type.group.children.length, 2);
-    });
+        expect(rows[2].type.group.children.length, 2);
+      },
+    );
   });
 }

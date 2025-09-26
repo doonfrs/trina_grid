@@ -67,8 +67,7 @@ void main() {
         expect(items[4].size, 100);
       });
 
-      test(
-          'The sum of the minimum sizes of each item is less than maxSize, '
+      test('The sum of the minimum sizes of each item is less than maxSize, '
           'each item should be set to minSize.', () {
         final items = [
           _ResizeItem(index: 0, size: 100, minSize: 50),
@@ -153,8 +152,7 @@ void main() {
         expect(items[4].size, 100 * scale);
       });
 
-      test(
-          'The sum of the minimum sizes of each item is less than maxSize, '
+      test('The sum of the minimum sizes of each item is less than maxSize, '
           'each item should be set to minSize.', () {
         final items = [
           _ResizeItem(index: 0, size: 100, minSize: 50),
@@ -255,249 +253,256 @@ void main() {
       const mode = TrinaResizeMode.pushAndPull;
 
       test(
-          'When the mode is pushAndPull, '
-          'the size of the 0th item increases by 10 and the size of the 1st item decreases by 10.',
-          () {
-        final items = <_ResizeItem>[
-          _ResizeItem(index: 0, size: 200, minSize: 80),
-          _ResizeItem(index: 1, size: 200, minSize: 80),
-          _ResizeItem(index: 2, size: 200, minSize: 80),
-          _ResizeItem(index: 3, size: 200, minSize: 80),
-          _ResizeItem(index: 4, size: 200, minSize: 80),
-        ];
+        'When the mode is pushAndPull, '
+        'the size of the 0th item increases by 10 and the size of the 1st item decreases by 10.',
+        () {
+          final items = <_ResizeItem>[
+            _ResizeItem(index: 0, size: 200, minSize: 80),
+            _ResizeItem(index: 1, size: 200, minSize: 80),
+            _ResizeItem(index: 2, size: 200, minSize: 80),
+            _ResizeItem(index: 3, size: 200, minSize: 80),
+            _ResizeItem(index: 4, size: 200, minSize: 80),
+          ];
 
-        final helper = TrinaResizeHelper.items<_ResizeItem>(
-          offset: 10,
-          items: items,
-          isMainItem: (i) => i.index == 0,
-          getItemSize: (i) => i.size,
-          getItemMinSize: (i) => i.minSize,
-          setItemSize: (i, size) => i.size = size,
-          mode: mode,
-        );
+          final helper = TrinaResizeHelper.items<_ResizeItem>(
+            offset: 10,
+            items: items,
+            isMainItem: (i) => i.index == 0,
+            getItemSize: (i) => i.size,
+            getItemMinSize: (i) => i.minSize,
+            setItemSize: (i, size) => i.size = size,
+            mode: mode,
+          );
 
-        expect(helper.update(), true);
-        expect(items[0].size, 210);
-        expect(items[1].size, 190);
-        expect(items[2].size, 200);
-        expect(items[3].size, 200);
-        expect(items[4].size, 200);
-      });
-
-      test(
-          'When the mode is pushAndPull, '
-          'the size of the 1st item increases by 10 and the size of the 2nd item decreases by 10.',
-          () {
-        final items = <_ResizeItem>[
-          _ResizeItem(index: 0, size: 200, minSize: 80),
-          _ResizeItem(index: 1, size: 200, minSize: 80),
-          _ResizeItem(index: 2, size: 200, minSize: 80),
-          _ResizeItem(index: 3, size: 200, minSize: 80),
-          _ResizeItem(index: 4, size: 200, minSize: 80),
-        ];
-
-        final helper = TrinaResizeHelper.items<_ResizeItem>(
-          offset: 10,
-          items: items,
-          isMainItem: (i) => i.index == 1,
-          getItemSize: (i) => i.size,
-          getItemMinSize: (i) => i.minSize,
-          setItemSize: (i, size) => i.size = size,
-          mode: mode,
-        );
-
-        expect(helper.update(), true);
-        expect(items[0].size, 200);
-        expect(items[1].size, 210);
-        expect(items[2].size, 190);
-        expect(items[3].size, 200);
-        expect(items[4].size, 200);
-      });
+          expect(helper.update(), true);
+          expect(items[0].size, 210);
+          expect(items[1].size, 190);
+          expect(items[2].size, 200);
+          expect(items[3].size, 200);
+          expect(items[4].size, 200);
+        },
+      );
 
       test(
-          'When the mode is pushAndPull, '
-          'the size of the 3rd item increases by 10 and the size of the 4th item decreases by 10.',
-          () {
-        final items = <_ResizeItem>[
-          _ResizeItem(index: 0, size: 200, minSize: 80),
-          _ResizeItem(index: 1, size: 200, minSize: 80),
-          _ResizeItem(index: 2, size: 200, minSize: 80),
-          _ResizeItem(index: 3, size: 200, minSize: 80),
-          _ResizeItem(index: 4, size: 200, minSize: 80),
-        ];
+        'When the mode is pushAndPull, '
+        'the size of the 1st item increases by 10 and the size of the 2nd item decreases by 10.',
+        () {
+          final items = <_ResizeItem>[
+            _ResizeItem(index: 0, size: 200, minSize: 80),
+            _ResizeItem(index: 1, size: 200, minSize: 80),
+            _ResizeItem(index: 2, size: 200, minSize: 80),
+            _ResizeItem(index: 3, size: 200, minSize: 80),
+            _ResizeItem(index: 4, size: 200, minSize: 80),
+          ];
 
-        final helper = TrinaResizeHelper.items<_ResizeItem>(
-          offset: 10,
-          items: items,
-          isMainItem: (i) => i.index == 3,
-          getItemSize: (i) => i.size,
-          getItemMinSize: (i) => i.minSize,
-          setItemSize: (i, size) => i.size = size,
-          mode: mode,
-        );
+          final helper = TrinaResizeHelper.items<_ResizeItem>(
+            offset: 10,
+            items: items,
+            isMainItem: (i) => i.index == 1,
+            getItemSize: (i) => i.size,
+            getItemMinSize: (i) => i.minSize,
+            setItemSize: (i, size) => i.size = size,
+            mode: mode,
+          );
 
-        expect(helper.update(), true);
-        expect(items[0].size, 200);
-        expect(items[1].size, 200);
-        expect(items[2].size, 200);
-        expect(items[3].size, 210);
-        expect(items[4].size, 190);
-      });
-
-      test(
-          'When the mode is pushAndPull, '
-          'the size of the 4th item increases by 10 and the size of the 3rd item decreases by 10.',
-          () {
-        final items = <_ResizeItem>[
-          _ResizeItem(index: 0, size: 200, minSize: 80),
-          _ResizeItem(index: 1, size: 200, minSize: 80),
-          _ResizeItem(index: 2, size: 200, minSize: 80),
-          _ResizeItem(index: 3, size: 200, minSize: 80),
-          _ResizeItem(index: 4, size: 200, minSize: 80),
-        ];
-
-        final helper = TrinaResizeHelper.items<_ResizeItem>(
-          offset: 10,
-          items: items,
-          isMainItem: (i) => i.index == 4,
-          getItemSize: (i) => i.size,
-          getItemMinSize: (i) => i.minSize,
-          setItemSize: (i, size) => i.size = size,
-          mode: mode,
-        );
-
-        expect(helper.update(), true);
-        expect(items[0].size, 200);
-        expect(items[1].size, 200);
-        expect(items[2].size, 200);
-        expect(items[3].size, 190);
-        expect(items[4].size, 210);
-      });
+          expect(helper.update(), true);
+          expect(items[0].size, 200);
+          expect(items[1].size, 210);
+          expect(items[2].size, 190);
+          expect(items[3].size, 200);
+          expect(items[4].size, 200);
+        },
+      );
 
       test(
-          'When the mode is pushAndPull, '
-          'the size of the 4th item decreases by 10 and the size of the 3rd item increases by 10.',
-          () {
-        final items = <_ResizeItem>[
-          _ResizeItem(index: 0, size: 200, minSize: 80),
-          _ResizeItem(index: 1, size: 200, minSize: 80),
-          _ResizeItem(index: 2, size: 200, minSize: 80),
-          _ResizeItem(index: 3, size: 200, minSize: 80),
-          _ResizeItem(index: 4, size: 200, minSize: 80),
-        ];
+        'When the mode is pushAndPull, '
+        'the size of the 3rd item increases by 10 and the size of the 4th item decreases by 10.',
+        () {
+          final items = <_ResizeItem>[
+            _ResizeItem(index: 0, size: 200, minSize: 80),
+            _ResizeItem(index: 1, size: 200, minSize: 80),
+            _ResizeItem(index: 2, size: 200, minSize: 80),
+            _ResizeItem(index: 3, size: 200, minSize: 80),
+            _ResizeItem(index: 4, size: 200, minSize: 80),
+          ];
 
-        final helper = TrinaResizeHelper.items<_ResizeItem>(
-          offset: -10,
-          items: items,
-          isMainItem: (i) => i.index == 4,
-          getItemSize: (i) => i.size,
-          getItemMinSize: (i) => i.minSize,
-          setItemSize: (i, size) => i.size = size,
-          mode: mode,
-        );
+          final helper = TrinaResizeHelper.items<_ResizeItem>(
+            offset: 10,
+            items: items,
+            isMainItem: (i) => i.index == 3,
+            getItemSize: (i) => i.size,
+            getItemMinSize: (i) => i.minSize,
+            setItemSize: (i, size) => i.size = size,
+            mode: mode,
+          );
 
-        expect(helper.update(), true);
-        expect(items[0].size, 200);
-        expect(items[1].size, 200);
-        expect(items[2].size, 200);
-        expect(items[3].size, 210);
-        expect(items[4].size, 190);
-      });
-
-      test(
-          'When the mode is pushAndPull, '
-          'the size of the 1st item decreases by 10 and the size of the 2nd item increases by 10.',
-          () {
-        final items = <_ResizeItem>[
-          _ResizeItem(index: 0, size: 200, minSize: 80),
-          _ResizeItem(index: 1, size: 200, minSize: 80),
-          _ResizeItem(index: 2, size: 200, minSize: 80),
-          _ResizeItem(index: 3, size: 200, minSize: 80),
-          _ResizeItem(index: 4, size: 200, minSize: 80),
-        ];
-
-        final helper = TrinaResizeHelper.items<_ResizeItem>(
-          offset: -10,
-          items: items,
-          isMainItem: (i) => i.index == 1,
-          getItemSize: (i) => i.size,
-          getItemMinSize: (i) => i.minSize,
-          setItemSize: (i, size) => i.size = size,
-          mode: mode,
-        );
-
-        expect(helper.update(), true);
-        expect(items[0].size, 200);
-        expect(items[1].size, 190);
-        expect(items[2].size, 210);
-        expect(items[3].size, 200);
-        expect(items[4].size, 200);
-      });
+          expect(helper.update(), true);
+          expect(items[0].size, 200);
+          expect(items[1].size, 200);
+          expect(items[2].size, 200);
+          expect(items[3].size, 210);
+          expect(items[4].size, 190);
+        },
+      );
 
       test(
-          'When the mode is pushAndPull, '
-          'the size of the 1st item decreases to the minimum size, '
-          'and the size of the 0th item decreases and the size of the 2nd item increases.',
-          () {
-        final items = <_ResizeItem>[
-          _ResizeItem(index: 0, size: 200, minSize: 80),
-          _ResizeItem(index: 1, size: 80, minSize: 80),
-          _ResizeItem(index: 2, size: 200, minSize: 80),
-          _ResizeItem(index: 3, size: 200, minSize: 80),
-          _ResizeItem(index: 4, size: 200, minSize: 80),
-        ];
+        'When the mode is pushAndPull, '
+        'the size of the 4th item increases by 10 and the size of the 3rd item decreases by 10.',
+        () {
+          final items = <_ResizeItem>[
+            _ResizeItem(index: 0, size: 200, minSize: 80),
+            _ResizeItem(index: 1, size: 200, minSize: 80),
+            _ResizeItem(index: 2, size: 200, minSize: 80),
+            _ResizeItem(index: 3, size: 200, minSize: 80),
+            _ResizeItem(index: 4, size: 200, minSize: 80),
+          ];
 
-        final helper = TrinaResizeHelper.items<_ResizeItem>(
-          offset: -10,
-          items: items,
-          isMainItem: (i) => i.index == 1,
-          getItemSize: (i) => i.size,
-          getItemMinSize: (i) => i.minSize,
-          setItemSize: (i, size) => i.size = size,
-          mode: mode,
-        );
+          final helper = TrinaResizeHelper.items<_ResizeItem>(
+            offset: 10,
+            items: items,
+            isMainItem: (i) => i.index == 4,
+            getItemSize: (i) => i.size,
+            getItemMinSize: (i) => i.minSize,
+            setItemSize: (i, size) => i.size = size,
+            mode: mode,
+          );
 
-        expect(helper.update(), true);
-        expect(items[0].size, 190);
-        expect(items[1].size, 80);
-        expect(items[2].size, 210);
-        expect(items[3].size, 200);
-        expect(items[4].size, 200);
-      });
-
-      test(
-          'When the mode is pushAndPull, '
-          'the size of the 1st item decreases to the minimum size, '
-          'and the size of the 0th item decreases and the size of the 2nd item increases.',
-          () {
-        final items = <_ResizeItem>[
-          _ResizeItem(index: 0, size: 80, minSize: 80),
-          _ResizeItem(index: 1, size: 80, minSize: 80),
-          _ResizeItem(index: 2, size: 200, minSize: 80),
-          _ResizeItem(index: 3, size: 200, minSize: 80),
-          _ResizeItem(index: 4, size: 200, minSize: 80),
-        ];
-
-        final helper = TrinaResizeHelper.items<_ResizeItem>(
-          offset: -10,
-          items: items,
-          isMainItem: (i) => i.index == 1,
-          getItemSize: (i) => i.size,
-          getItemMinSize: (i) => i.minSize,
-          setItemSize: (i, size) => i.size = size,
-          mode: mode,
-        );
-
-        expect(helper.update(), false);
-        expect(items[0].size, 80);
-        expect(items[1].size, 80);
-        expect(items[2].size, 200);
-        expect(items[3].size, 200);
-        expect(items[4].size, 200);
-      });
+          expect(helper.update(), true);
+          expect(items[0].size, 200);
+          expect(items[1].size, 200);
+          expect(items[2].size, 200);
+          expect(items[3].size, 190);
+          expect(items[4].size, 210);
+        },
+      );
 
       test(
-          'When the mode is pushAndPull, '
+        'When the mode is pushAndPull, '
+        'the size of the 4th item decreases by 10 and the size of the 3rd item increases by 10.',
+        () {
+          final items = <_ResizeItem>[
+            _ResizeItem(index: 0, size: 200, minSize: 80),
+            _ResizeItem(index: 1, size: 200, minSize: 80),
+            _ResizeItem(index: 2, size: 200, minSize: 80),
+            _ResizeItem(index: 3, size: 200, minSize: 80),
+            _ResizeItem(index: 4, size: 200, minSize: 80),
+          ];
+
+          final helper = TrinaResizeHelper.items<_ResizeItem>(
+            offset: -10,
+            items: items,
+            isMainItem: (i) => i.index == 4,
+            getItemSize: (i) => i.size,
+            getItemMinSize: (i) => i.minSize,
+            setItemSize: (i, size) => i.size = size,
+            mode: mode,
+          );
+
+          expect(helper.update(), true);
+          expect(items[0].size, 200);
+          expect(items[1].size, 200);
+          expect(items[2].size, 200);
+          expect(items[3].size, 210);
+          expect(items[4].size, 190);
+        },
+      );
+
+      test(
+        'When the mode is pushAndPull, '
+        'the size of the 1st item decreases by 10 and the size of the 2nd item increases by 10.',
+        () {
+          final items = <_ResizeItem>[
+            _ResizeItem(index: 0, size: 200, minSize: 80),
+            _ResizeItem(index: 1, size: 200, minSize: 80),
+            _ResizeItem(index: 2, size: 200, minSize: 80),
+            _ResizeItem(index: 3, size: 200, minSize: 80),
+            _ResizeItem(index: 4, size: 200, minSize: 80),
+          ];
+
+          final helper = TrinaResizeHelper.items<_ResizeItem>(
+            offset: -10,
+            items: items,
+            isMainItem: (i) => i.index == 1,
+            getItemSize: (i) => i.size,
+            getItemMinSize: (i) => i.minSize,
+            setItemSize: (i, size) => i.size = size,
+            mode: mode,
+          );
+
+          expect(helper.update(), true);
+          expect(items[0].size, 200);
+          expect(items[1].size, 190);
+          expect(items[2].size, 210);
+          expect(items[3].size, 200);
+          expect(items[4].size, 200);
+        },
+      );
+
+      test(
+        'When the mode is pushAndPull, '
+        'the size of the 1st item decreases to the minimum size, '
+        'and the size of the 0th item decreases and the size of the 2nd item increases.',
+        () {
+          final items = <_ResizeItem>[
+            _ResizeItem(index: 0, size: 200, minSize: 80),
+            _ResizeItem(index: 1, size: 80, minSize: 80),
+            _ResizeItem(index: 2, size: 200, minSize: 80),
+            _ResizeItem(index: 3, size: 200, minSize: 80),
+            _ResizeItem(index: 4, size: 200, minSize: 80),
+          ];
+
+          final helper = TrinaResizeHelper.items<_ResizeItem>(
+            offset: -10,
+            items: items,
+            isMainItem: (i) => i.index == 1,
+            getItemSize: (i) => i.size,
+            getItemMinSize: (i) => i.minSize,
+            setItemSize: (i, size) => i.size = size,
+            mode: mode,
+          );
+
+          expect(helper.update(), true);
+          expect(items[0].size, 190);
+          expect(items[1].size, 80);
+          expect(items[2].size, 210);
+          expect(items[3].size, 200);
+          expect(items[4].size, 200);
+        },
+      );
+
+      test(
+        'When the mode is pushAndPull, '
+        'the size of the 1st item decreases to the minimum size, '
+        'and the size of the 0th item decreases and the size of the 2nd item increases.',
+        () {
+          final items = <_ResizeItem>[
+            _ResizeItem(index: 0, size: 80, minSize: 80),
+            _ResizeItem(index: 1, size: 80, minSize: 80),
+            _ResizeItem(index: 2, size: 200, minSize: 80),
+            _ResizeItem(index: 3, size: 200, minSize: 80),
+            _ResizeItem(index: 4, size: 200, minSize: 80),
+          ];
+
+          final helper = TrinaResizeHelper.items<_ResizeItem>(
+            offset: -10,
+            items: items,
+            isMainItem: (i) => i.index == 1,
+            getItemSize: (i) => i.size,
+            getItemMinSize: (i) => i.minSize,
+            setItemSize: (i, size) => i.size = size,
+            mode: mode,
+          );
+
+          expect(helper.update(), false);
+          expect(items[0].size, 80);
+          expect(items[1].size, 80);
+          expect(items[2].size, 200);
+          expect(items[3].size, 200);
+          expect(items[4].size, 200);
+        },
+      );
+
+      test('When the mode is pushAndPull, '
           'the size of the 2nd item increases to the maximum size, '
           'and the left and right sizes are reduced to the minimum size.', () {
         final items = <_ResizeItem>[
@@ -526,8 +531,7 @@ void main() {
         expect(items[4].size, 80);
       });
 
-      test(
-          'When the mode is pushAndPull, '
+      test('When the mode is pushAndPull, '
           'the size of the 2nd item decreases to 40, '
           'and the size of the 3rd item decreases to 360, '
           'and the size of the 1st item decreases to 160.', () {
@@ -557,8 +561,7 @@ void main() {
         expect(items[4].size, 200);
       });
 
-      test(
-          'When the mode is pushAndPull, '
+      test('When the mode is pushAndPull, '
           'the size of the 0th item decreases to 40, '
           'and the size of the 1st item decreases to 320.', () {
         final items = <_ResizeItem>[
@@ -587,8 +590,7 @@ void main() {
         expect(items[4].size, 200);
       });
 
-      test(
-          'When the mode is pushAndPull, '
+      test('When the mode is pushAndPull, '
           'the size of the 4th item decreases to 40, '
           'and the size of the 3rd item decreases to 320.', () {
         final items = <_ResizeItem>[
@@ -617,8 +619,7 @@ void main() {
         expect(items[4].size, 80);
       });
 
-      test(
-          'When the mode is pushAndPull, '
+      test('When the mode is pushAndPull, '
           'the size of the 0th item increases to the maximum size, '
           'and the remaining sizes are reduced to the minimum size.', () {
         final items = <_ResizeItem>[
@@ -647,8 +648,7 @@ void main() {
         expect(items[4].size, 80);
       });
 
-      test(
-          'When the mode is pushAndPull, '
+      test('When the mode is pushAndPull, '
           'the size of the 2nd item increases to the maximum size, '
           'and the remaining sizes are reduced to the minimum size.', () {
         final items = <_ResizeItem>[
@@ -677,8 +677,7 @@ void main() {
         expect(items[4].size, 80);
       });
 
-      test(
-          'When the mode is pushAndPull, '
+      test('When the mode is pushAndPull, '
           'the size of the 4th item increases to the maximum size, '
           'and the remaining sizes are reduced to the minimum size.', () {
         final items = <_ResizeItem>[

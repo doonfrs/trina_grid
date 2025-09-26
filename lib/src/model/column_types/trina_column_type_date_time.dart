@@ -40,8 +40,8 @@ class TrinaColumnTypeDateTime
     required this.headerFormat,
     required this.applyFormatOnInit,
     this.popupIcon,
-  })  : dateFormat = intl.DateFormat(format),
-        headerDateFormat = intl.DateFormat(headerFormat);
+  }) : dateFormat = intl.DateFormat(format),
+       headerDateFormat = intl.DateFormat(headerFormat);
 
   @override
   final intl.DateFormat dateFormat;
@@ -93,7 +93,8 @@ class TrinaColumnTypeDateTime
     if (value is DateTime) {
       date = value;
     } else {
-      date = dateFormat.tryParse(value.toString()) ??
+      date =
+          dateFormat.tryParse(value.toString()) ??
           DateTime.tryParse(value.toString());
     }
 

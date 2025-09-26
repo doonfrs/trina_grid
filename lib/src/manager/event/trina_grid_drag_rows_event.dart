@@ -5,16 +5,10 @@ class TrinaGridDragRowsEvent extends TrinaGridEvent {
   final List<TrinaRow> rows;
   final int targetIdx;
 
-  TrinaGridDragRowsEvent({
-    required this.rows,
-    required this.targetIdx,
-  });
+  TrinaGridDragRowsEvent({required this.rows, required this.targetIdx});
 
   @override
   void handler(TrinaGridStateManager stateManager) async {
-    stateManager.moveRowsByIndex(
-      rows,
-      targetIdx,
-    );
+    stateManager.moveRowsByIndex(rows, targetIdx);
   }
 }

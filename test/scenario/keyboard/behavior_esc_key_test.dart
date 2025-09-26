@@ -24,36 +24,31 @@ void main() {
     });
 
     withTheCellSelected([TrinaGridMode mode = TrinaGridMode.normal]) {
-      return TrinaWidgetTestHelper(
-        '0, 0 cell is selected',
-        (tester) async {
-          columns = [
-            ...ColumnHelper.textColumn('header', count: 10),
-          ];
+      return TrinaWidgetTestHelper('0, 0 cell is selected', (tester) async {
+        columns = [...ColumnHelper.textColumn('header', count: 10)];
 
-          rows = RowHelper.count(10, columns);
+        rows = RowHelper.count(10, columns);
 
-          await tester.pumpWidget(
-            MaterialApp(
-              home: Material(
-                child: TrinaGrid(
-                  columns: columns,
-                  rows: rows,
-                  onLoaded: (TrinaGridOnLoadedEvent event) {
-                    stateManager = event.stateManager;
-                  },
-                  mode: mode,
-                  onSelected: mock.oneParamReturnVoid,
-                ),
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Material(
+              child: TrinaGrid(
+                columns: columns,
+                rows: rows,
+                onLoaded: (TrinaGridOnLoadedEvent event) {
+                  stateManager = event.stateManager;
+                },
+                mode: mode,
+                onSelected: mock.oneParamReturnVoid,
               ),
             ),
-          );
+          ),
+        );
 
-          await tester.pump();
+        await tester.pump();
 
-          await tester.tap(find.text('header0 value 0'));
-        },
-      );
+        await tester.tap(find.text('header0 value 0'));
+      });
     }
 
     withTheCellSelected(TrinaGridMode.select).test(

@@ -16,8 +16,8 @@ class TrinaGridExportCsv implements TrinaGridExport {
     // Get visible columns if no specific columns are requested
     final List<TrinaColumn> visibleColumns = columns != null
         ? stateManager.refColumns
-            .where((column) => columns.contains(column.title))
-            .toList()
+              .where((column) => columns.contains(column.title))
+              .toList()
         : stateManager.columns;
 
     if (visibleColumns.isEmpty) {

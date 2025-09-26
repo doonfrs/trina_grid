@@ -31,7 +31,8 @@ class _MultiLineColumnFilterState extends State<MultiLineColumnFilter> {
 
   @override
   Widget build(BuildContext context) {
-    final fillColor = widget.stateManager.configuration.style.filterHeaderColor ??
+    final fillColor =
+        widget.stateManager.configuration.style.filterHeaderColor ??
         widget.stateManager.configuration.style.cellColorInEditState;
 
     return Stack(
@@ -59,7 +60,10 @@ class _MultiLineColumnFilterState extends State<MultiLineColumnFilter> {
             enabledBorder: _border,
             focusedBorder: _enabledBorder,
             hintText: widget
-                .stateManager.configuration.localeText.multiLineFilterHint,
+                .stateManager
+                .configuration
+                .localeText
+                .multiLineFilterHint,
             contentPadding: const EdgeInsets.all(5),
             suffixIcon: Row(
               mainAxisSize: MainAxisSize.min,
@@ -78,7 +82,12 @@ class _MultiLineColumnFilterState extends State<MultiLineColumnFilter> {
                         icon: Icon(
                           Icons.clear,
                           size: 16,
-                          color: widget.stateManager.configuration.style.filterHeaderIconColor ??
+                          color:
+                              widget
+                                  .stateManager
+                                  .configuration
+                                  .style
+                                  .filterHeaderIconColor ??
                               widget.stateManager.configuration.style.iconColor,
                         ),
                       ),
@@ -94,8 +103,13 @@ class _MultiLineColumnFilterState extends State<MultiLineColumnFilter> {
                         showDialog(
                           context: context,
                           builder: (context) => AlertDialog(
-                            title: Text(widget.stateManager.configuration
-                                .localeText.multiLineFilterEditTitle),
+                            title: Text(
+                              widget
+                                  .stateManager
+                                  .configuration
+                                  .localeText
+                                  .multiLineFilterEditTitle,
+                            ),
                             content: Material(
                               child: TextField(
                                 controller: widget.controller,
@@ -111,8 +125,13 @@ class _MultiLineColumnFilterState extends State<MultiLineColumnFilter> {
                                   );
                                   Navigator.pop(context);
                                 },
-                                child: Text(widget.stateManager.configuration
-                                    .localeText.multiLineFilterOkButton),
+                                child: Text(
+                                  widget
+                                      .stateManager
+                                      .configuration
+                                      .localeText
+                                      .multiLineFilterOkButton,
+                                ),
                               ),
                             ],
                           ),
@@ -121,7 +140,12 @@ class _MultiLineColumnFilterState extends State<MultiLineColumnFilter> {
                       icon: Icon(
                         Icons.edit,
                         size: 16,
-                        color: widget.stateManager.configuration.style.filterHeaderIconColor ??
+                        color:
+                            widget
+                                .stateManager
+                                .configuration
+                                .style
+                                .filterHeaderIconColor ??
                             widget.stateManager.configuration.style.iconColor,
                       ),
                     ),
@@ -136,18 +160,18 @@ class _MultiLineColumnFilterState extends State<MultiLineColumnFilter> {
   }
 
   InputBorder get _border => OutlineInputBorder(
-        borderSide: BorderSide(
-          color: widget.stateManager.configuration.style.borderColor,
-          width: 0.0,
-        ),
-        borderRadius: BorderRadius.zero,
-      );
+    borderSide: BorderSide(
+      color: widget.stateManager.configuration.style.borderColor,
+      width: 0.0,
+    ),
+    borderRadius: BorderRadius.zero,
+  );
 
   InputBorder get _enabledBorder => OutlineInputBorder(
-        borderSide: BorderSide(
-          color: widget.stateManager.configuration.style.activatedBorderColor,
-          width: 0.0,
-        ),
-        borderRadius: BorderRadius.zero,
-      );
+    borderSide: BorderSide(
+      color: widget.stateManager.configuration.style.activatedBorderColor,
+      width: 0.0,
+    ),
+    borderRadius: BorderRadius.zero,
+  );
 }

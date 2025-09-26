@@ -8,8 +8,9 @@ void main(List<String> args) {
   // Check if migration flag is present
   if (args.contains('--migrate-from-pluto-grid')) {
     // Remove the migration flag from args to pass remaining args to the migration tool
-    final migrationArgs =
-        args.where((arg) => arg != '--migrate-from-pluto-grid').toList();
+    final migrationArgs = args
+        .where((arg) => arg != '--migrate-from-pluto-grid')
+        .toList();
 
     print('🔄 TrinaGrid Migration Tool');
     print('---------------------------');

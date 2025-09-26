@@ -61,8 +61,10 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  Future<void> setCellInEditingState(WidgetTester tester,
-      {bool useCellKey = false}) async {
+  Future<void> setCellInEditingState(
+    WidgetTester tester, {
+    bool useCellKey = false,
+  }) async {
     if (stateManager.currentCell != cell) {
       if (useCellKey) {
         await tester.tap(find.byKey(cell.key));
@@ -100,7 +102,9 @@ void main() {
       await setCellInEditingState(tester);
       expect(
         find.descendant(
-            of: find.byType(TrinaTimeCell), matching: find.byType(Icon)),
+          of: find.byType(TrinaTimeCell),
+          matching: find.byType(Icon),
+        ),
         findsNothing,
       );
     });
@@ -115,10 +119,14 @@ void main() {
 
   group('when popup is opened', () {
     final okTextButtonFinder = find.widgetWithText(TextButton, 'OK');
-    final hourFieldFinder = find.byWidgetPredicate((widget) =>
-        widget is TextField && widget.decoration?.helperText == 'Hour');
-    final minuteFieldFinder = find.byWidgetPredicate((widget) =>
-        widget is TextField && widget.decoration?.helperText == 'Minute');
+    final hourFieldFinder = find.byWidgetPredicate(
+      (widget) =>
+          widget is TextField && widget.decoration?.helperText == 'Hour',
+    );
+    final minuteFieldFinder = find.byWidgetPredicate(
+      (widget) =>
+          widget is TextField && widget.decoration?.helperText == 'Minute',
+    );
     testWidgets('Tapping Cancel button should close popup', (tester) async {
       final cancelTextButtonFinder = find.widgetWithText(TextButton, 'Cancel');
       await pumpGrid(tester);
@@ -133,10 +141,7 @@ void main() {
         'when saveAndClosePopupWithEnter is true, should save and close popup',
         (tester) async {
           final column = getTimeColumn(saveAndClosePopupWithEnter: true);
-          await pumpGrid(
-            tester,
-            column: column,
-          );
+          await pumpGrid(tester, column: column);
           await openPopup(tester);
           const newHour = '11';
           const newMinute = '00';
@@ -156,99 +161,92 @@ void main() {
         },
       );
       testWidgets(
-          'when saveAndClosePopupWithEnter is false, should not save and close popup',
-          (tester) async {
+        'when saveAndClosePopupWithEnter is false, should not save and close popup',
+        (tester) async {
+          final column = getTimeColumn(saveAndClosePopupWithEnter: false);
+          await pumpGrid(
+            tester,
+            column: column,
+            trinaCell: TrinaCell(value: defaultCellValue),
+          );
+          await openPopup(tester);
+
+          // act
+
+          await tester.enterText(hourFieldFinder, '11');
+          await tester.pump();
+
+          await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+          await tester.pumpAndSettle();
+          // assert
+          expect(stateManager.currentCell?.value, defaultCellValue);
+          expect(find.byType(TrinaTimePicker), findsOneWidget);
+        },
+      );
+    });
+    group('Popup Buttons', () {
+      testWidgets('OK button should be disabled when time is invalid', (
+        tester,
+      ) async {
         final column = getTimeColumn(
-          saveAndClosePopupWithEnter: false,
+          minTime: const TimeOfDay(hour: 10, minute: 0),
+          maxTime: const TimeOfDay(hour: 12, minute: 0),
         );
         await pumpGrid(
           tester,
           column: column,
-          trinaCell: TrinaCell(value: defaultCellValue),
+          trinaCell: TrinaCell(value: '11:00'),
         );
         await openPopup(tester);
 
-        // act
+        // Enter an invalid hour
+        await tester.enterText(hourFieldFinder, '25');
+        await tester.pump();
 
+        // OK button should be disabled
+        expect(tester.widget<TextButton>(okTextButtonFinder).onPressed, isNull);
+
+        // Enter a valid hour
         await tester.enterText(hourFieldFinder, '11');
         await tester.pump();
 
-        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-        await tester.pumpAndSettle();
-        // assert
-        expect(stateManager.currentCell?.value, defaultCellValue);
-        expect(find.byType(TrinaTimePicker), findsOneWidget);
+        // OK button should be enabled
+        expect(
+          tester.widget<TextButton>(okTextButtonFinder).onPressed,
+          isNotNull,
+        );
       });
-    });
-    group('Popup Buttons', () {
-      testWidgets(
-        'OK button should be disabled when time is invalid',
-        (tester) async {
-          final column = getTimeColumn(
-            minTime: const TimeOfDay(hour: 10, minute: 0),
-            maxTime: const TimeOfDay(hour: 12, minute: 0),
-          );
-          await pumpGrid(
-            tester,
-            column: column,
-            trinaCell: TrinaCell(value: '11:00'),
-          );
-          await openPopup(tester);
+      testWidgets('OK button should be disabled when minute is invalid', (
+        tester,
+      ) async {
+        final column = getTimeColumn(
+          minTime: const TimeOfDay(hour: 10, minute: 0),
+          maxTime: const TimeOfDay(hour: 12, minute: 0),
+        );
+        await pumpGrid(
+          tester,
+          column: column,
+          trinaCell: TrinaCell(value: '11:00'),
+        );
+        await openPopup(tester);
 
-          // Enter an invalid hour
-          await tester.enterText(hourFieldFinder, '25');
-          await tester.pump();
+        // Enter an invalid minute
+        await tester.enterText(minuteFieldFinder, '65');
+        await tester.pump();
 
-          // OK button should be disabled
-          expect(
-              tester.widget<TextButton>(okTextButtonFinder).onPressed, isNull);
+        // OK button should be disabled
+        expect(tester.widget<TextButton>(okTextButtonFinder).onPressed, isNull);
 
-          // Enter a valid hour
-          await tester.enterText(hourFieldFinder, '11');
-          await tester.pump();
+        // Enter a valid minute
+        await tester.enterText(minuteFieldFinder, '30');
+        await tester.pump();
 
-          // OK button should be enabled
-          expect(
-            tester.widget<TextButton>(okTextButtonFinder).onPressed,
-            isNotNull,
-          );
-        },
-      );
-      testWidgets(
-        'OK button should be disabled when minute is invalid',
-        (tester) async {
-          final column = getTimeColumn(
-            minTime: const TimeOfDay(hour: 10, minute: 0),
-            maxTime: const TimeOfDay(hour: 12, minute: 0),
-          );
-          await pumpGrid(
-            tester,
-            column: column,
-            trinaCell: TrinaCell(value: '11:00'),
-          );
-          await openPopup(tester);
-
-          // Enter an invalid minute
-          await tester.enterText(minuteFieldFinder, '65');
-          await tester.pump();
-
-          // OK button should be disabled
-          expect(
-            tester.widget<TextButton>(okTextButtonFinder).onPressed,
-            isNull,
-          );
-
-          // Enter a valid minute
-          await tester.enterText(minuteFieldFinder, '30');
-          await tester.pump();
-
-          // OK button should be enabled
-          expect(
-            tester.widget<TextButton>(okTextButtonFinder).onPressed,
-            isNotNull,
-          );
-        },
-      );
+        // OK button should be enabled
+        expect(
+          tester.widget<TextButton>(okTextButtonFinder).onPressed,
+          isNotNull,
+        );
+      });
       testWidgets(
         'OK button should be disabled when time is out of min/max range',
         (tester) async {
@@ -297,9 +295,7 @@ void main() {
         },
       );
       testWidgets('Pressing Ok button should close the popup', (tester) async {
-        await pumpGrid(
-          tester,
-        );
+        await pumpGrid(tester);
         await openPopup(tester);
 
         // act
@@ -341,46 +337,47 @@ void main() {
       await pumpGrid(tester, trinaCell: TrinaCell(value: '14:30'));
       await openPopup(tester);
 
-      final timePicker =
-          tester.widget<TrinaTimePicker>(find.byType(TrinaTimePicker));
+      final timePicker = tester.widget<TrinaTimePicker>(
+        find.byType(TrinaTimePicker),
+      );
       expect(timePicker.initialTime, const TimeOfDay(hour: 14, minute: 30));
     });
 
-    testWidgets('should fall back to 00:00 for non-time cell value',
-        (tester) async {
+    testWidgets('should fall back to 00:00 for non-time cell value', (
+      tester,
+    ) async {
       await pumpGrid(tester, trinaCell: TrinaCell(value: 'not-a-time'));
       await openPopup(tester);
 
-      final timePicker =
-          tester.widget<TrinaTimePicker>(find.byType(TrinaTimePicker));
+      final timePicker = tester.widget<TrinaTimePicker>(
+        find.byType(TrinaTimePicker),
+      );
       expect(timePicker.initialTime, const TimeOfDay(hour: 0, minute: 0));
     });
 
-    testWidgets(
-      'should fall back to 00:00 when cell value is null',
-      (tester) async {
-        final column = getTimeColumn();
+    testWidgets('should fall back to 00:00 when cell value is null', (
+      tester,
+    ) async {
+      final column = getTimeColumn();
 
-        await pumpGrid(
-          tester,
-          column: column,
-          trinaCell: TrinaCell(value: null),
-        );
-        await openPopup(tester, useCellKey: true);
+      await pumpGrid(tester, column: column, trinaCell: TrinaCell(value: null));
+      await openPopup(tester, useCellKey: true);
 
-        final timePicker =
-            tester.widget<TrinaTimePicker>(find.byType(TrinaTimePicker));
-        expect(timePicker.initialTime, const TimeOfDay(hour: 0, minute: 0));
-      },
-    );
+      final timePicker = tester.widget<TrinaTimePicker>(
+        find.byType(TrinaTimePicker),
+      );
+      expect(timePicker.initialTime, const TimeOfDay(hour: 0, minute: 0));
+    });
 
-    testWidgets('should fall back to 00:00 for empty string cell value',
-        (tester) async {
+    testWidgets('should fall back to 00:00 for empty string cell value', (
+      tester,
+    ) async {
       await pumpGrid(tester, trinaCell: TrinaCell(value: ''));
       await openPopup(tester, useCellKey: true);
 
-      final timePicker =
-          tester.widget<TrinaTimePicker>(find.byType(TrinaTimePicker));
+      final timePicker = tester.widget<TrinaTimePicker>(
+        find.byType(TrinaTimePicker),
+      );
       expect(timePicker.initialTime, const TimeOfDay(hour: 0, minute: 0));
     });
 
@@ -388,8 +385,9 @@ void main() {
       await pumpGrid(tester, trinaCell: TrinaCell(value: '11'));
       await openPopup(tester);
 
-      final timePicker =
-          tester.widget<TrinaTimePicker>(find.byType(TrinaTimePicker));
+      final timePicker = tester.widget<TrinaTimePicker>(
+        find.byType(TrinaTimePicker),
+      );
       expect(timePicker.initialTime, const TimeOfDay(hour: 11, minute: 0));
     });
   });

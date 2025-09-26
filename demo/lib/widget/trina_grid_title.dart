@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 class TrinaGridTitle extends StatelessWidget {
   final double? fontSize;
 
-  const TrinaGridTitle({
-    super.key,
-    this.fontSize,
-  });
+  const TrinaGridTitle({super.key, this.fontSize});
 
   @override
   Widget build(BuildContext context) {

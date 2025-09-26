@@ -29,8 +29,9 @@ void main() {
     );
 
     stateManager.setEventManager(MockTrinaGridEventManager());
-    stateManager
-        .setTextDirection(isRTL ? TextDirection.rtl : TextDirection.ltr);
+    stateManager.setTextDirection(
+      isRTL ? TextDirection.rtl : TextDirection.ltr,
+    );
     if (layout != null) {
       stateManager.setLayout(layout);
     }
@@ -40,164 +41,89 @@ void main() {
 
   group('currentCellPosition', () {
     testWidgets(
-        'When the current cell is not selected, null should be returned',
-        (WidgetTester tester) async {
-      // given
-      List<TrinaColumn> columns = [
-        ...ColumnHelper.textColumn('left',
-            count: 3, frozen: TrinaColumnFrozen.start),
-        ...ColumnHelper.textColumn('body', count: 3, width: 150),
-        ...ColumnHelper.textColumn('right',
-            count: 3, frozen: TrinaColumnFrozen.end),
-      ];
+      'When the current cell is not selected, null should be returned',
+      (WidgetTester tester) async {
+        // given
+        List<TrinaColumn> columns = [
+          ...ColumnHelper.textColumn(
+            'left',
+            count: 3,
+            frozen: TrinaColumnFrozen.start,
+          ),
+          ...ColumnHelper.textColumn('body', count: 3, width: 150),
+          ...ColumnHelper.textColumn(
+            'right',
+            count: 3,
+            frozen: TrinaColumnFrozen.end,
+          ),
+        ];
 
-      List<TrinaRow> rows = RowHelper.count(10, columns);
+        List<TrinaRow> rows = RowHelper.count(10, columns);
 
-      TrinaGridStateManager stateManager = createStateManager(
-        columns: columns,
-        rows: rows,
-        gridFocusNode: null,
-        scroll: null,
-      );
+        TrinaGridStateManager stateManager = createStateManager(
+          columns: columns,
+          rows: rows,
+          gridFocusNode: null,
+          scroll: null,
+        );
 
-      // when
-      TrinaGridCellPosition? currentCellPosition =
-          stateManager.currentCellPosition;
+        // when
+        TrinaGridCellPosition? currentCellPosition =
+            stateManager.currentCellPosition;
 
-      // when
-      expect(currentCellPosition, null);
-    });
-
-    testWidgets(
-        'When the current cell is selected, it should return the selected position',
-        (WidgetTester tester) async {
-      // given
-      List<TrinaColumn> columns = [
-        ...ColumnHelper.textColumn('left',
-            count: 3, frozen: TrinaColumnFrozen.start),
-        ...ColumnHelper.textColumn('body', count: 3, width: 150),
-        ...ColumnHelper.textColumn('right',
-            count: 3, frozen: TrinaColumnFrozen.end),
-      ];
-
-      List<TrinaRow> rows = RowHelper.count(10, columns);
-
-      TrinaGridStateManager stateManager = createStateManager(
-        columns: columns,
-        rows: rows,
-        gridFocusNode: null,
-        scroll: null,
-      );
-
-      // when
-      stateManager
-          .setLayout(const BoxConstraints(maxWidth: 1900, maxHeight: 500));
-
-      String selectColumnField = 'body1';
-      stateManager.setCurrentCell(rows[5].cells[selectColumnField], 5);
-
-      TrinaGridCellPosition currentCellPosition =
-          stateManager.currentCellPosition!;
-
-      // when
-      expect(currentCellPosition, isNot(null));
-      expect(currentCellPosition.rowIdx, 5);
-      expect(currentCellPosition.columnIdx, 4);
-    });
+        // when
+        expect(currentCellPosition, null);
+      },
+    );
 
     testWidgets(
-        'When the current cell is selected, it should return the selected position. '
-        'Column frozen state has changed, and body minimum width is small',
-        (WidgetTester tester) async {
-      // given
-      List<TrinaColumn> columns = [
-        ...ColumnHelper.textColumn('body', count: 10, width: 150),
-      ];
+      'When the current cell is selected, it should return the selected position',
+      (WidgetTester tester) async {
+        // given
+        List<TrinaColumn> columns = [
+          ...ColumnHelper.textColumn(
+            'left',
+            count: 3,
+            frozen: TrinaColumnFrozen.start,
+          ),
+          ...ColumnHelper.textColumn('body', count: 3, width: 150),
+          ...ColumnHelper.textColumn(
+            'right',
+            count: 3,
+            frozen: TrinaColumnFrozen.end,
+          ),
+        ];
 
-      List<TrinaRow> rows = RowHelper.count(10, columns);
+        List<TrinaRow> rows = RowHelper.count(10, columns);
 
-      TrinaGridStateManager stateManager = createStateManager(
-        columns: columns,
-        rows: rows,
-        gridFocusNode: null,
-        scroll: null,
-      );
+        TrinaGridStateManager stateManager = createStateManager(
+          columns: columns,
+          rows: rows,
+          gridFocusNode: null,
+          scroll: null,
+        );
 
-      stateManager.setLayout(
-        const BoxConstraints(maxWidth: 300, maxHeight: 500),
-      );
+        // when
+        stateManager.setLayout(
+          const BoxConstraints(maxWidth: 1900, maxHeight: 500),
+        );
 
-      // when
-      stateManager.toggleFrozenColumn(columns[2], TrinaColumnFrozen.start);
-      stateManager.toggleFrozenColumn(columns[4], TrinaColumnFrozen.end);
+        String selectColumnField = 'body1';
+        stateManager.setCurrentCell(rows[5].cells[selectColumnField], 5);
 
-      stateManager.setLayout(
-        const BoxConstraints(maxWidth: 300, maxHeight: 500),
-      );
+        TrinaGridCellPosition currentCellPosition =
+            stateManager.currentCellPosition!;
 
-      String selectColumnField = 'body2';
-      stateManager.setCurrentCell(rows[5].cells[selectColumnField], 5);
-
-      TrinaGridCellPosition currentCellPosition =
-          stateManager.currentCellPosition!;
-
-      // when
-      expect(currentCellPosition, isNot(null));
-      expect(currentCellPosition.rowIdx, 5);
-      // The 3rd column was moved to the left and became the 1st column, but the grid's minimum width is 300,
-      // which is not enough, so the fixed column is unbound and exposed in its original order.
-      expect(currentCellPosition.columnIdx, 2);
-    });
+        // when
+        expect(currentCellPosition, isNot(null));
+        expect(currentCellPosition.rowIdx, 5);
+        expect(currentCellPosition.columnIdx, 4);
+      },
+    );
 
     testWidgets(
-        'When the current cell is selected, it should return the selected position. '
-        'Column frozen state has changed, and body minimum width is sufficient',
-        (WidgetTester tester) async {
-      // given
-      List<TrinaColumn> columns = [
-        ...ColumnHelper.textColumn('body', count: 10, width: 150),
-      ];
-
-      List<TrinaRow> rows = RowHelper.count(10, columns);
-
-      TrinaGridStateManager stateManager = createStateManager(
-        columns: columns,
-        rows: rows,
-        gridFocusNode: null,
-        scroll: null,
-      );
-
-      stateManager.setLayout(
-        const BoxConstraints(maxWidth: 1900, maxHeight: 500),
-      );
-
-      // when
-      stateManager.toggleFrozenColumn(columns[2], TrinaColumnFrozen.start);
-      stateManager.toggleFrozenColumn(columns[4], TrinaColumnFrozen.end);
-
-      stateManager.setLayout(
-        const BoxConstraints(maxWidth: 1900, maxHeight: 500),
-      );
-
-      String selectColumnField = 'body2';
-      stateManager.setCurrentCell(rows[5].cells[selectColumnField], 5);
-
-      TrinaGridCellPosition currentCellPosition =
-          stateManager.currentCellPosition!;
-
-      // when
-      expect(currentCellPosition, isNot(null));
-      expect(currentCellPosition.rowIdx, 5);
-      // The 3rd column was moved to the left and became the 1st column, but the grid's minimum width is 300,
-      // which is not enough, so the fixed column is unbound and exposed in its original order.
-      expect(currentCellPosition.columnIdx, 0);
-    });
-  });
-
-  group('setCurrentCellPosition', () {
-    testWidgets(
-      'If cellPosition is the same as currentCellPosition, '
-      'currentCellPosition should not be updated',
+      'When the current cell is selected, it should return the selected position. '
+      'Column frozen state has changed, and body minimum width is small',
       (WidgetTester tester) async {
         // given
         List<TrinaColumn> columns = [
@@ -213,28 +139,119 @@ void main() {
           scroll: null,
         );
 
-        final listener = MockMethods();
-
-        stateManager.addListener(listener.noParamReturnVoid);
-
-        expect(stateManager.currentCellPosition, isNull);
-
-        stateManager.setCurrentCellPosition(
-          const TrinaGridCellPosition(columnIdx: 0, rowIdx: 1),
+        stateManager.setLayout(
+          const BoxConstraints(maxWidth: 300, maxHeight: 500),
         );
-
-        expect(stateManager.currentCellPosition!.columnIdx, 0);
-        expect(stateManager.currentCellPosition!.rowIdx, 1);
 
         // when
-        stateManager.setCurrentCellPosition(
-          const TrinaGridCellPosition(columnIdx: 0, rowIdx: 1),
+        stateManager.toggleFrozenColumn(columns[2], TrinaColumnFrozen.start);
+        stateManager.toggleFrozenColumn(columns[4], TrinaColumnFrozen.end);
+
+        stateManager.setLayout(
+          const BoxConstraints(maxWidth: 300, maxHeight: 500),
         );
 
-        // then
-        verify(listener.noParamReturnVoid()).called(1);
+        String selectColumnField = 'body2';
+        stateManager.setCurrentCell(rows[5].cells[selectColumnField], 5);
+
+        TrinaGridCellPosition currentCellPosition =
+            stateManager.currentCellPosition!;
+
+        // when
+        expect(currentCellPosition, isNot(null));
+        expect(currentCellPosition.rowIdx, 5);
+        // The 3rd column was moved to the left and became the 1st column, but the grid's minimum width is 300,
+        // which is not enough, so the fixed column is unbound and exposed in its original order.
+        expect(currentCellPosition.columnIdx, 2);
       },
     );
+
+    testWidgets(
+      'When the current cell is selected, it should return the selected position. '
+      'Column frozen state has changed, and body minimum width is sufficient',
+      (WidgetTester tester) async {
+        // given
+        List<TrinaColumn> columns = [
+          ...ColumnHelper.textColumn('body', count: 10, width: 150),
+        ];
+
+        List<TrinaRow> rows = RowHelper.count(10, columns);
+
+        TrinaGridStateManager stateManager = createStateManager(
+          columns: columns,
+          rows: rows,
+          gridFocusNode: null,
+          scroll: null,
+        );
+
+        stateManager.setLayout(
+          const BoxConstraints(maxWidth: 1900, maxHeight: 500),
+        );
+
+        // when
+        stateManager.toggleFrozenColumn(columns[2], TrinaColumnFrozen.start);
+        stateManager.toggleFrozenColumn(columns[4], TrinaColumnFrozen.end);
+
+        stateManager.setLayout(
+          const BoxConstraints(maxWidth: 1900, maxHeight: 500),
+        );
+
+        String selectColumnField = 'body2';
+        stateManager.setCurrentCell(rows[5].cells[selectColumnField], 5);
+
+        TrinaGridCellPosition currentCellPosition =
+            stateManager.currentCellPosition!;
+
+        // when
+        expect(currentCellPosition, isNot(null));
+        expect(currentCellPosition.rowIdx, 5);
+        // The 3rd column was moved to the left and became the 1st column, but the grid's minimum width is 300,
+        // which is not enough, so the fixed column is unbound and exposed in its original order.
+        expect(currentCellPosition.columnIdx, 0);
+      },
+    );
+  });
+
+  group('setCurrentCellPosition', () {
+    testWidgets('If cellPosition is the same as currentCellPosition, '
+        'currentCellPosition should not be updated', (
+      WidgetTester tester,
+    ) async {
+      // given
+      List<TrinaColumn> columns = [
+        ...ColumnHelper.textColumn('body', count: 10, width: 150),
+      ];
+
+      List<TrinaRow> rows = RowHelper.count(10, columns);
+
+      TrinaGridStateManager stateManager = createStateManager(
+        columns: columns,
+        rows: rows,
+        gridFocusNode: null,
+        scroll: null,
+      );
+
+      final listener = MockMethods();
+
+      stateManager.addListener(listener.noParamReturnVoid);
+
+      expect(stateManager.currentCellPosition, isNull);
+
+      stateManager.setCurrentCellPosition(
+        const TrinaGridCellPosition(columnIdx: 0, rowIdx: 1),
+      );
+
+      expect(stateManager.currentCellPosition!.columnIdx, 0);
+      expect(stateManager.currentCellPosition!.rowIdx, 1);
+
+      // when
+      stateManager.setCurrentCellPosition(
+        const TrinaGridCellPosition(columnIdx: 0, rowIdx: 1),
+      );
+
+      // then
+      verify(listener.noParamReturnVoid()).called(1);
+    });
 
     testWidgets(
       'If cellPosition columnIdx is different from currentCellPosition columnIdx, '
@@ -376,8 +393,9 @@ void main() {
         scroll: null,
       );
 
-      stateManager
-          .setLayout(const BoxConstraints(maxHeight: 300, maxWidth: 50));
+      stateManager.setLayout(
+        const BoxConstraints(maxHeight: 300, maxWidth: 50),
+      );
 
       // when
       final Key nonExistsKey = UniqueKey();
@@ -386,8 +404,9 @@ void main() {
       expect(stateManager.cellPositionByCellKey(nonExistsKey), isNull);
     });
 
-    testWidgets('should be returned cellPosition columnIdx: 0, rowIdx 0',
-        (WidgetTester tester) async {
+    testWidgets('should be returned cellPosition columnIdx: 0, rowIdx 0', (
+      WidgetTester tester,
+    ) async {
       // given
       List<TrinaColumn> columns = [
         ...ColumnHelper.textColumn('body', count: 10, width: 150),
@@ -402,8 +421,9 @@ void main() {
         scroll: null,
       );
 
-      stateManager
-          .setLayout(const BoxConstraints(maxHeight: 300, maxWidth: 50));
+      stateManager.setLayout(
+        const BoxConstraints(maxHeight: 300, maxWidth: 50),
+      );
 
       // when
       final Key cellKey = rows.first.cells['body0']!.key;
@@ -415,8 +435,9 @@ void main() {
       expect(cellPosition.rowIdx, 0);
     });
 
-    testWidgets('should be returned cellPosition columnIdx: 3, rowIdx 7',
-        (WidgetTester tester) async {
+    testWidgets('should be returned cellPosition columnIdx: 3, rowIdx 7', (
+      WidgetTester tester,
+    ) async {
       // given
       List<TrinaColumn> columns = [
         ...ColumnHelper.textColumn('body', count: 10, width: 150),
@@ -431,8 +452,9 @@ void main() {
         scroll: null,
       );
 
-      stateManager
-          .setLayout(const BoxConstraints(maxHeight: 300, maxWidth: 50));
+      stateManager.setLayout(
+        const BoxConstraints(maxHeight: 300, maxWidth: 50),
+      );
 
       // when
       final Key cellKey = rows[7].cells['body3']!.key;
@@ -446,10 +468,7 @@ void main() {
   });
 
   group('canChangeCellValue', () {
-    createColumn({
-      bool readonly = false,
-      bool enableEditingMode = true,
-    }) {
+    createColumn({bool readonly = false, bool enableEditingMode = true}) {
       return TrinaColumn(
         title: 'title',
         field: 'field',
@@ -459,158 +478,143 @@ void main() {
       );
     }
 
-    test(
-      'readonly column.'
-      'should be returned false.',
-      () {
-        final normalGridAndReadonlyColumn = createStateManager(
-          columns: [],
-          rows: [],
-          gridFocusNode: null,
-          scroll: null,
-        );
+    test('readonly column.'
+        'should be returned false.', () {
+      final normalGridAndReadonlyColumn = createStateManager(
+        columns: [],
+        rows: [],
+        gridFocusNode: null,
+        scroll: null,
+      );
 
-        final cell = TrinaCell(value: '');
-        final column = createColumn(readonly: true);
-        final row = TrinaRow(cells: {'field': cell});
-        cell
-          ..setColumn(column)
-          ..setRow(row);
+      final cell = TrinaCell(value: '');
+      final column = createColumn(readonly: true);
+      final row = TrinaRow(cells: {'field': cell});
+      cell
+        ..setColumn(column)
+        ..setRow(row);
 
-        final bool result = normalGridAndReadonlyColumn.canChangeCellValue(
-          cell: cell,
-          newValue: 'abc',
-          oldValue: 'ABC',
-        );
+      final bool result = normalGridAndReadonlyColumn.canChangeCellValue(
+        cell: cell,
+        newValue: 'abc',
+        oldValue: 'ABC',
+      );
 
-        expect(result, isFalse);
-      },
-    );
+      expect(result, isFalse);
+    });
 
-    test(
-      'enableEditingMode = false, '
-      'should be returned false.',
-      () {
-        final normalGridAndReadonlyColumn = createStateManager(
-          columns: [],
-          rows: [],
-          gridFocusNode: null,
-          scroll: null,
-        );
+    test('enableEditingMode = false, '
+        'should be returned false.', () {
+      final normalGridAndReadonlyColumn = createStateManager(
+        columns: [],
+        rows: [],
+        gridFocusNode: null,
+        scroll: null,
+      );
 
-        final cell = TrinaCell(value: '');
-        final column = createColumn(enableEditingMode: false);
-        final row = TrinaRow(cells: {'field': cell});
-        cell
-          ..setColumn(column)
-          ..setRow(row);
+      final cell = TrinaCell(value: '');
+      final column = createColumn(enableEditingMode: false);
+      final row = TrinaRow(cells: {'field': cell});
+      cell
+        ..setColumn(column)
+        ..setRow(row);
 
-        final bool result = normalGridAndReadonlyColumn.canChangeCellValue(
-          cell: cell,
-          newValue: 'abc',
-          oldValue: 'ABC',
-        );
+      final bool result = normalGridAndReadonlyColumn.canChangeCellValue(
+        cell: cell,
+        newValue: 'abc',
+        oldValue: 'ABC',
+      );
 
-        expect(result, isFalse);
-      },
-    );
+      expect(result, isFalse);
+    });
 
-    test(
-      'not readonly column.'
-      'grid mode is normal.'
-      'should be returned true.',
-      () {
-        final normalGridAndReadonlyColumn = createStateManager(
-          columns: [],
-          rows: [],
-          gridFocusNode: null,
-          scroll: null,
-        );
+    test('not readonly column.'
+        'grid mode is normal.'
+        'should be returned true.', () {
+      final normalGridAndReadonlyColumn = createStateManager(
+        columns: [],
+        rows: [],
+        gridFocusNode: null,
+        scroll: null,
+      );
 
-        final cell = TrinaCell(value: '');
-        final column = createColumn(readonly: false);
-        final row = TrinaRow(cells: {'field': cell});
-        cell
-          ..setColumn(column)
-          ..setRow(row);
+      final cell = TrinaCell(value: '');
+      final column = createColumn(readonly: false);
+      final row = TrinaRow(cells: {'field': cell});
+      cell
+        ..setColumn(column)
+        ..setRow(row);
 
-        final bool result = normalGridAndReadonlyColumn.canChangeCellValue(
-          cell: cell,
-          newValue: 'abc',
-          oldValue: 'ABC',
-        );
+      final bool result = normalGridAndReadonlyColumn.canChangeCellValue(
+        cell: cell,
+        newValue: 'abc',
+        oldValue: 'ABC',
+      );
 
-        expect(result, isTrue);
-      },
-    );
+      expect(result, isTrue);
+    });
 
-    test(
-      'not readonly column.'
-      'grid mode is select.'
-      'should be returned false.',
-      () {
-        final normalGridAndReadonlyColumn = createStateManager(
-          columns: [],
-          rows: [],
-          gridFocusNode: null,
-          scroll: null,
-          mode: TrinaGridMode.select,
-        );
+    test('not readonly column.'
+        'grid mode is select.'
+        'should be returned false.', () {
+      final normalGridAndReadonlyColumn = createStateManager(
+        columns: [],
+        rows: [],
+        gridFocusNode: null,
+        scroll: null,
+        mode: TrinaGridMode.select,
+      );
 
-        final cell = TrinaCell(value: '');
-        final column = createColumn(readonly: false);
-        final row = TrinaRow(cells: {'field': cell});
-        cell
-          ..setColumn(column)
-          ..setRow(row);
+      final cell = TrinaCell(value: '');
+      final column = createColumn(readonly: false);
+      final row = TrinaRow(cells: {'field': cell});
+      cell
+        ..setColumn(column)
+        ..setRow(row);
 
-        final bool result = normalGridAndReadonlyColumn.canChangeCellValue(
-          cell: cell,
-          newValue: 'abc',
-          oldValue: 'ABC',
-        );
+      final bool result = normalGridAndReadonlyColumn.canChangeCellValue(
+        cell: cell,
+        newValue: 'abc',
+        oldValue: 'ABC',
+      );
 
-        expect(result, isFalse);
-      },
-    );
+      expect(result, isFalse);
+    });
 
-    test(
-      'not readonly column.'
-      'grid mode is normal.'
-      'but same values.'
-      'should be returned false.',
-      () {
-        final normalGridAndReadonlyColumn = createStateManager(
-          columns: [],
-          rows: [],
-          gridFocusNode: null,
-          scroll: null,
-        );
+    test('not readonly column.'
+        'grid mode is normal.'
+        'but same values.'
+        'should be returned false.', () {
+      final normalGridAndReadonlyColumn = createStateManager(
+        columns: [],
+        rows: [],
+        gridFocusNode: null,
+        scroll: null,
+      );
 
-        final cell = TrinaCell(value: '');
-        final column = createColumn(readonly: false);
-        final row = TrinaRow(cells: {'field': cell});
-        cell
-          ..setColumn(column)
-          ..setRow(row);
+      final cell = TrinaCell(value: '');
+      final column = createColumn(readonly: false);
+      final row = TrinaRow(cells: {'field': cell});
+      cell
+        ..setColumn(column)
+        ..setRow(row);
 
-        final bool result = normalGridAndReadonlyColumn.canChangeCellValue(
-          cell: cell,
-          newValue: 'abc',
-          oldValue: 'abc',
-        );
+      final bool result = normalGridAndReadonlyColumn.canChangeCellValue(
+        cell: cell,
+        newValue: 'abc',
+        oldValue: 'abc',
+      );
 
-        expect(result, isFalse);
-      },
-    );
+      expect(result, isFalse);
+    });
   });
 
   group('filteredCellValue', () {
-    testWidgets(
-        'select column'
+    testWidgets('select column'
         'WHEN newValue is not contained in select items'
-        'THEN the return value should be oldValue.',
-        (WidgetTester tester) async {
+        'THEN the return value should be oldValue.', (
+      WidgetTester tester,
+    ) async {
       // given
       const String newValue = 'four';
 
@@ -642,11 +646,11 @@ void main() {
       expect(filteredValue, oldValue);
     });
 
-    testWidgets(
-        'select column'
+    testWidgets('select column'
         'WHEN newValue is contained in select items'
-        'THEN the return value should be newValue.',
-        (WidgetTester tester) async {
+        'THEN the return value should be newValue.', (
+      WidgetTester tester,
+    ) async {
       // given
       const String newValue = 'four';
 
@@ -678,11 +682,11 @@ void main() {
       expect(filteredValue, newValue);
     });
 
-    testWidgets(
-        'date column'
+    testWidgets('date column'
         'WHEN newValue is not parsed to DateTime'
-        'THEN the return value should be oldValue.',
-        (WidgetTester tester) async {
+        'THEN the return value should be oldValue.', (
+      WidgetTester tester,
+    ) async {
       // given
       const String newValue = 'not date';
 
@@ -714,11 +718,11 @@ void main() {
       expect(filteredValue, oldValue);
     });
 
-    testWidgets(
-        'date column'
+    testWidgets('date column'
         'WHEN newValue is parsed to DateTime'
-        'THEN the return value should be newValue.',
-        (WidgetTester tester) async {
+        'THEN the return value should be newValue.', (
+      WidgetTester tester,
+    ) async {
       // given
       const String newValue = '2020-12-12';
 
@@ -750,11 +754,11 @@ void main() {
       expect(filteredValue, newValue);
     });
 
-    testWidgets(
-        'time column'
+    testWidgets('time column'
         'WHEN newValue is not in 00:00 format'
-        'THEN the return value should be oldValue.',
-        (WidgetTester tester) async {
+        'THEN the return value should be oldValue.', (
+      WidgetTester tester,
+    ) async {
       // given
       const String newValue = 'not 00:00';
 
@@ -786,11 +790,11 @@ void main() {
       expect(filteredValue, oldValue);
     });
 
-    testWidgets(
-        'time column'
+    testWidgets('time column'
         'WHEN newValue is in the 00:00 format'
-        'THEN the return value should be newValue.',
-        (WidgetTester tester) async {
+        'THEN the return value should be newValue.', (
+      WidgetTester tester,
+    ) async {
       // given
       const String newValue = '12:59';
 
@@ -834,175 +838,178 @@ void main() {
       stateManager = createStateManager(columns: columns, rows: rows);
     });
 
-    testWidgets(
-      'when cellPosition is null, should return false',
-      (WidgetTester tester) async {
-        // when
-        final bool result =
-            stateManager.canMoveCell(null, TrinaMoveDirection.left);
-        // then
-        expect(result, isFalse);
-      },
-    );
-
-    testWidgets(
-        'when moveDirection is TrinaMoveDirection.up, '
-        'and not at the top row, should return true',
-        (WidgetTester tester) async {
-      // given
-      final cellPosition = TrinaGridCellPosition(columnIdx: 0, rowIdx: 1);
+    testWidgets('when cellPosition is null, should return false', (
+      WidgetTester tester,
+    ) async {
       // when
-      final bool result =
-          stateManager.canMoveCell(cellPosition, TrinaMoveDirection.up);
-      // then
-      expect(result, isTrue);
-    });
-
-    testWidgets(
-        'when moveDirection is TrinaMoveDirection.up, '
-        'and at the top row, should return false', (WidgetTester tester) async {
-      // given
-      final cellPosition = TrinaGridCellPosition(columnIdx: 0, rowIdx: 0);
-      // when
-      final bool result =
-          stateManager.canMoveCell(cellPosition, TrinaMoveDirection.up);
+      final bool result = stateManager.canMoveCell(
+        null,
+        TrinaMoveDirection.left,
+      );
       // then
       expect(result, isFalse);
     });
 
-    testWidgets(
-        'when moveDirection is TrinaMoveDirection.down, '
-        'and not at the bottom row, should return true',
-        (WidgetTester tester) async {
+    testWidgets('when moveDirection is TrinaMoveDirection.up, '
+        'and not at the top row, should return true', (
+      WidgetTester tester,
+    ) async {
       // given
       final cellPosition = TrinaGridCellPosition(columnIdx: 0, rowIdx: 1);
       // when
-      final bool result =
-          stateManager.canMoveCell(cellPosition, TrinaMoveDirection.down);
+      final bool result = stateManager.canMoveCell(
+        cellPosition,
+        TrinaMoveDirection.up,
+      );
       // then
       expect(result, isTrue);
     });
 
-    testWidgets(
-        'when moveDirection is TrinaMoveDirection.down, '
-        'and at the bottom row, should return false',
-        (WidgetTester tester) async {
+    testWidgets('when moveDirection is TrinaMoveDirection.up, '
+        'and at the top row, should return false', (WidgetTester tester) async {
+      // given
+      final cellPosition = TrinaGridCellPosition(columnIdx: 0, rowIdx: 0);
+      // when
+      final bool result = stateManager.canMoveCell(
+        cellPosition,
+        TrinaMoveDirection.up,
+      );
+      // then
+      expect(result, isFalse);
+    });
+
+    testWidgets('when moveDirection is TrinaMoveDirection.down, '
+        'and not at the bottom row, should return true', (
+      WidgetTester tester,
+    ) async {
+      // given
+      final cellPosition = TrinaGridCellPosition(columnIdx: 0, rowIdx: 1);
+      // when
+      final bool result = stateManager.canMoveCell(
+        cellPosition,
+        TrinaMoveDirection.down,
+      );
+      // then
+      expect(result, isTrue);
+    });
+
+    testWidgets('when moveDirection is TrinaMoveDirection.down, '
+        'and at the bottom row, should return false', (
+      WidgetTester tester,
+    ) async {
       // given
       final cellPosition = TrinaGridCellPosition(columnIdx: 0, rowIdx: 2);
       // when
-      final bool result =
-          stateManager.canMoveCell(cellPosition, TrinaMoveDirection.down);
+      final bool result = stateManager.canMoveCell(
+        cellPosition,
+        TrinaMoveDirection.down,
+      );
       // then
       expect(result, isFalse);
     });
 
     group('with frozen columns', () {
       setUp(() {
-        stateManager
-            .setLayout(const BoxConstraints(maxWidth: 500, maxHeight: 500));
+        stateManager.setLayout(
+          const BoxConstraints(maxWidth: 500, maxHeight: 500),
+        );
       });
-      testWidgets(
-        'when moveDirection is TrinaMoveDirection.left, '
-        'cellPosition is at 2nd column, '
-        'first column is frozen, '
-        'we are not at left edge, '
-        'should return true',
-        (WidgetTester tester) async {
-          stateManager.toggleFrozenColumn(columns[0], TrinaColumnFrozen.start);
-          // given
-          final cellPosition = TrinaGridCellPosition(columnIdx: 1, rowIdx: 0);
+      testWidgets('when moveDirection is TrinaMoveDirection.left, '
+          'cellPosition is at 2nd column, '
+          'first column is frozen, '
+          'we are not at left edge, '
+          'should return true', (WidgetTester tester) async {
+        stateManager.toggleFrozenColumn(columns[0], TrinaColumnFrozen.start);
+        // given
+        final cellPosition = TrinaGridCellPosition(columnIdx: 1, rowIdx: 0);
 
-          // when
-          final bool result =
-              stateManager.canMoveCell(cellPosition, TrinaMoveDirection.left);
+        // when
+        final bool result = stateManager.canMoveCell(
+          cellPosition,
+          TrinaMoveDirection.left,
+        );
 
-          // then
-          expect(result, isTrue);
-        },
-      );
-      testWidgets(
-        'when moveDirection is TrinaMoveDirection.left, '
-        'cellPosition is at first column, '
-        'first column is frozen, '
-        'we are at left edge, '
-        'should return false',
-        (WidgetTester tester) async {
-          stateManager.toggleFrozenColumn(columns[0], TrinaColumnFrozen.start);
-          // given
-          final cellPosition = TrinaGridCellPosition(columnIdx: 0, rowIdx: 0);
+        // then
+        expect(result, isTrue);
+      });
+      testWidgets('when moveDirection is TrinaMoveDirection.left, '
+          'cellPosition is at first column, '
+          'first column is frozen, '
+          'we are at left edge, '
+          'should return false', (WidgetTester tester) async {
+        stateManager.toggleFrozenColumn(columns[0], TrinaColumnFrozen.start);
+        // given
+        final cellPosition = TrinaGridCellPosition(columnIdx: 0, rowIdx: 0);
 
-          // when
-          final bool result =
-              stateManager.canMoveCell(cellPosition, TrinaMoveDirection.left);
+        // when
+        final bool result = stateManager.canMoveCell(
+          cellPosition,
+          TrinaMoveDirection.left,
+        );
 
-          // then
-          expect(result, isFalse);
-        },
-      );
-      testWidgets(
-        'when moveDirection is TrinaMoveDirection.right, '
-        'cellPosition is at first column, '
-        'first column is frozen, '
-        'we are not at right edge, '
-        'should return true',
-        (WidgetTester tester) async {
-          stateManager.toggleFrozenColumn(columns[0], TrinaColumnFrozen.start);
-          // given
-          final cellPosition = TrinaGridCellPosition(columnIdx: 0, rowIdx: 0);
+        // then
+        expect(result, isFalse);
+      });
+      testWidgets('when moveDirection is TrinaMoveDirection.right, '
+          'cellPosition is at first column, '
+          'first column is frozen, '
+          'we are not at right edge, '
+          'should return true', (WidgetTester tester) async {
+        stateManager.toggleFrozenColumn(columns[0], TrinaColumnFrozen.start);
+        // given
+        final cellPosition = TrinaGridCellPosition(columnIdx: 0, rowIdx: 0);
 
-          // when
-          final bool result =
-              stateManager.canMoveCell(cellPosition, TrinaMoveDirection.right);
+        // when
+        final bool result = stateManager.canMoveCell(
+          cellPosition,
+          TrinaMoveDirection.right,
+        );
 
-          // then
-          expect(result, isTrue);
-        },
-      );
-      testWidgets(
-        'when moveDirection is TrinaMoveDirection.right, '
-        'cellPosition is at first column, '
-        'first & second column are frozen, '
-        'we are not at right edge, '
-        'should return true',
-        (WidgetTester tester) async {
-          stateManager.toggleFrozenColumn(columns[0], TrinaColumnFrozen.start);
-          stateManager.toggleFrozenColumn(columns[1], TrinaColumnFrozen.start);
-          // given
-          final cellPosition = TrinaGridCellPosition(columnIdx: 0, rowIdx: 0);
+        // then
+        expect(result, isTrue);
+      });
+      testWidgets('when moveDirection is TrinaMoveDirection.right, '
+          'cellPosition is at first column, '
+          'first & second column are frozen, '
+          'we are not at right edge, '
+          'should return true', (WidgetTester tester) async {
+        stateManager.toggleFrozenColumn(columns[0], TrinaColumnFrozen.start);
+        stateManager.toggleFrozenColumn(columns[1], TrinaColumnFrozen.start);
+        // given
+        final cellPosition = TrinaGridCellPosition(columnIdx: 0, rowIdx: 0);
 
-          // when
-          final bool result =
-              stateManager.canMoveCell(cellPosition, TrinaMoveDirection.right);
+        // when
+        final bool result = stateManager.canMoveCell(
+          cellPosition,
+          TrinaMoveDirection.right,
+        );
 
-          // then
-          expect(result, isTrue);
-        },
-      );
-      testWidgets(
-        'when moveDirection is TrinaMoveDirection.right, '
-        'cellPosition is at third column, '
-        'first & second column are frozen, '
-        'we are at right edge, '
-        'should return true',
-        (WidgetTester tester) async {
-          stateManager.toggleFrozenColumn(columns[0], TrinaColumnFrozen.start);
-          stateManager.toggleFrozenColumn(columns[1], TrinaColumnFrozen.start);
-          // given
-          final cellPosition = TrinaGridCellPosition(columnIdx: 2, rowIdx: 0);
+        // then
+        expect(result, isTrue);
+      });
+      testWidgets('when moveDirection is TrinaMoveDirection.right, '
+          'cellPosition is at third column, '
+          'first & second column are frozen, '
+          'we are at right edge, '
+          'should return true', (WidgetTester tester) async {
+        stateManager.toggleFrozenColumn(columns[0], TrinaColumnFrozen.start);
+        stateManager.toggleFrozenColumn(columns[1], TrinaColumnFrozen.start);
+        // given
+        final cellPosition = TrinaGridCellPosition(columnIdx: 2, rowIdx: 0);
 
-          // when
-          final bool result =
-              stateManager.canMoveCell(cellPosition, TrinaMoveDirection.right);
+        // when
+        final bool result = stateManager.canMoveCell(
+          cellPosition,
+          TrinaMoveDirection.right,
+        );
 
-          // then
-          expect(result, isFalse);
-        },
-      );
+        // then
+        expect(result, isFalse);
+      });
     });
 
     group('no frozen columns', () {
-      testWidgets(
-          'when moveDirection is TrinaMoveDirection.left, '
+      testWidgets('when moveDirection is TrinaMoveDirection.left, '
           'cellPosition is at 2nd column, '
           'we are not at left edge, '
           'should return true', (WidgetTester tester) async {
@@ -1010,14 +1017,15 @@ void main() {
         final cellPosition = TrinaGridCellPosition(columnIdx: 1, rowIdx: 0);
 
         // when
-        final bool result =
-            stateManager.canMoveCell(cellPosition, TrinaMoveDirection.left);
+        final bool result = stateManager.canMoveCell(
+          cellPosition,
+          TrinaMoveDirection.left,
+        );
 
         // then
         expect(result, isTrue);
       });
-      testWidgets(
-          'when moveDirection is TrinaMoveDirection.left, '
+      testWidgets('when moveDirection is TrinaMoveDirection.left, '
           'cellPosition is at first column, '
           'we are at left edge, '
           'should return false', (WidgetTester tester) async {
@@ -1025,15 +1033,16 @@ void main() {
         final cellPosition = TrinaGridCellPosition(columnIdx: 0, rowIdx: 0);
 
         // when
-        final bool result =
-            stateManager.canMoveCell(cellPosition, TrinaMoveDirection.left);
+        final bool result = stateManager.canMoveCell(
+          cellPosition,
+          TrinaMoveDirection.left,
+        );
 
         // then
         expect(result, isFalse);
       });
 
-      testWidgets(
-          'when moveDirection is TrinaMoveDirection.right, '
+      testWidgets('when moveDirection is TrinaMoveDirection.right, '
           'cellPosition is at first column, '
           'we have enough columns to move right, '
           'should return true', (WidgetTester tester) async {
@@ -1041,14 +1050,15 @@ void main() {
         final cellPosition = TrinaGridCellPosition(columnIdx: 0, rowIdx: 2);
 
         // when
-        final bool result =
-            stateManager.canMoveCell(cellPosition, TrinaMoveDirection.right);
+        final bool result = stateManager.canMoveCell(
+          cellPosition,
+          TrinaMoveDirection.right,
+        );
 
         // then
         expect(result, isTrue);
       });
-      testWidgets(
-          'when moveDirection is TrinaMoveDirection.right, '
+      testWidgets('when moveDirection is TrinaMoveDirection.right, '
           'cellPosition is at last column, '
           'we at right edge, '
           'should return false', (WidgetTester tester) async {
@@ -1056,8 +1066,10 @@ void main() {
         final cellPosition = TrinaGridCellPosition(columnIdx: 2, rowIdx: 2);
 
         // when
-        final bool result =
-            stateManager.canMoveCell(cellPosition, TrinaMoveDirection.right);
+        final bool result = stateManager.canMoveCell(
+          cellPosition,
+          TrinaMoveDirection.right,
+        );
 
         // then
         expect(result, isFalse);

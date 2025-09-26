@@ -63,10 +63,7 @@ mixin ScrollState implements ITrinaGridState {
       return offset;
     }
 
-    return Offset(
-      (maxWidth! + gridGlobalOffset!.dx) - offset.dx,
-      offset.dy,
-    );
+    return Offset((maxWidth! + gridGlobalOffset!.dx) - offset.dx, offset.dy);
   }
 
   @override
@@ -112,7 +109,8 @@ mixin ScrollState implements ITrinaGridState {
       }
     }
 
-    final double screenOffset = scroll.verticalOffset +
+    final double screenOffset =
+        scroll.verticalOffset +
         columnRowContainerHeight -
         columnGroupHeight -
         columnHeight -
@@ -127,7 +125,8 @@ mixin ScrollState implements ITrinaGridState {
     if (inScrollStart && inScrollEnd) {
       return;
     } else if (inScrollEnd == false) {
-      offsetToMove = scroll.verticalOffset +
+      offsetToMove =
+          scroll.verticalOffset +
           offsetToMove +
           getRowHeight(rowIdx) -
           screenOffset;
@@ -147,10 +146,7 @@ mixin ScrollState implements ITrinaGridState {
     final TrinaColumn columnToMove =
         refColumns[columnIndexes[columnIdx! + direction.offset]];
 
-    if (!canHorizontalCellScrollByDirection(
-      direction,
-      columnToMove,
-    )) {
+    if (!canHorizontalCellScrollByDirection(direction, columnToMove)) {
       return;
     }
 

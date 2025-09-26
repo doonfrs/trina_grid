@@ -17,8 +17,8 @@ class TrinaColumnTitle extends TrinaStatefulWidget {
     required this.stateManager,
     required this.column,
     double? height,
-  })  : height = height ?? stateManager.columnHeight,
-        super(key: ValueKey('column_title_${column.key}'));
+  }) : height = height ?? stateManager.columnHeight,
+       super(key: ValueKey('column_title_${column.key}'));
 
   @override
   TrinaColumnTitleState createState() => TrinaColumnTitleState();
@@ -226,8 +226,9 @@ class TrinaColumnTitleState extends TrinaStateWithChange<TrinaColumnTitle> {
       showContextIcon: showContextIcon,
       contextMenuIcon: contextMenuIcon,
       isFiltered: isFiltered,
-      showContextMenu:
-          mounted && widget.column.enableContextMenu ? _showContextMenu : null,
+      showContextMenu: mounted && widget.column.enableContextMenu
+          ? _showContextMenu
+          : null,
     );
   }
 
@@ -569,26 +570,27 @@ class _ColumnTextWidgetState extends TrinaStateWithChange<_ColumnTextWidget> {
       widget.column.titleSpan == null ? widget.column.title : null;
 
   List<InlineSpan> get _children => [
-        if (widget.column.titleSpan != null) widget.column.titleSpan!,
-        if (_isFilteredList &&
-            stateManager.configuration.style.filterIcon != null)
-          WidgetSpan(
-            alignment: PlaceholderAlignment.middle,
-            child: IconButton(
-              icon: Icon(
-                stateManager.configuration.style.filterIcon!.icon,
-                color: stateManager.configuration.style.filterHeaderIconColor ?? 
-                       stateManager.configuration.style.iconColor,
-                size: stateManager.configuration.style.iconSize,
-              ),
-              onPressed: _handleOnPressedFilter,
-              constraints: BoxConstraints(
-                maxHeight: widget.height +
-                    (widget.stateManager.style.cellHorizontalBorderWidth * 2),
-              ),
-            ),
+    if (widget.column.titleSpan != null) widget.column.titleSpan!,
+    if (_isFilteredList && stateManager.configuration.style.filterIcon != null)
+      WidgetSpan(
+        alignment: PlaceholderAlignment.middle,
+        child: IconButton(
+          icon: Icon(
+            stateManager.configuration.style.filterIcon!.icon,
+            color:
+                stateManager.configuration.style.filterHeaderIconColor ??
+                stateManager.configuration.style.iconColor,
+            size: stateManager.configuration.style.iconSize,
           ),
-      ];
+          onPressed: _handleOnPressedFilter,
+          constraints: BoxConstraints(
+            maxHeight:
+                widget.height +
+                (widget.stateManager.style.cellHorizontalBorderWidth * 2),
+          ),
+        ),
+      ),
+  ];
 
   @override
   Widget build(BuildContext context) {

@@ -19,10 +19,7 @@ mixin HoveringState implements ITrinaGridState {
   int? get hoveredRowIdx => _state._hoverRowIdx;
 
   @override
-  void setHoveredRowIdx(
-    int? rowIdx, {
-    bool notify = true,
-  }) {
+  void setHoveredRowIdx(int? rowIdx, {bool notify = true}) {
     if (hoveredRowIdx == rowIdx) {
       return;
     }

@@ -37,9 +37,11 @@ class _MovingScreenState extends State<MovingScreen> {
       topTitle: 'Moving',
       topContents: const [
         Text(
-            'Change the current cell position with the arrow keys, enter key, and tab key.'),
+          'Change the current cell position with the arrow keys, enter key, and tab key.',
+        ),
         Text(
-            'When creating a Grid, you can control "Enter key action" and "After pop-up action" with enableMoveDownAfterSelecting and enterKeyAction properties in the configuration.'),
+          'When creating a Grid, you can control "Enter key action" and "After pop-up action" with enableMoveDownAfterSelecting and enterKeyAction properties in the configuration.',
+        ),
       ],
       topButtons: [
         TrinaExampleButton(

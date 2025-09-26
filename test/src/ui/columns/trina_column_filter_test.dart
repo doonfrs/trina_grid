@@ -27,12 +27,12 @@ void main() {
     when(stateManager.streamNotifier).thenAnswer((_) => subject);
     when(stateManager.localeText).thenReturn(const TrinaGridLocaleText());
     when(stateManager.filterRowsByField(any)).thenReturn([]);
-    when(stateManager.columnHeight).thenReturn(
-      stateManager.configuration.style.columnHeight,
-    );
-    when(stateManager.columnFilterHeight).thenReturn(
-      stateManager.configuration.style.columnFilterHeight,
-    );
+    when(
+      stateManager.columnHeight,
+    ).thenReturn(stateManager.configuration.style.columnHeight);
+    when(
+      stateManager.columnFilterHeight,
+    ).thenReturn(stateManager.configuration.style.columnFilterHeight);
 
     when(eventManager!.listener(any)).thenReturn(streamSubscription);
   });
@@ -41,34 +41,30 @@ void main() {
     subject.close();
   });
 
-  testWidgets(
-    'Tapping TextField should call setKeepFocus with false',
-    (WidgetTester tester) async {
-      // given
-      final TrinaColumn column = TrinaColumn(
-        title: 'column title',
-        field: 'column_field_name',
-        type: TrinaColumnType.text(),
-      );
+  testWidgets('Tapping TextField should call setKeepFocus with false', (
+    WidgetTester tester,
+  ) async {
+    // given
+    final TrinaColumn column = TrinaColumn(
+      title: 'column title',
+      field: 'column_field_name',
+      type: TrinaColumnType.text(),
+    );
 
-      // when
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Material(
-            child: TrinaColumnFilter(
-              stateManager: stateManager,
-              column: column,
-            ),
-          ),
+    // when
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Material(
+          child: TrinaColumnFilter(stateManager: stateManager, column: column),
         ),
-      );
+      ),
+    );
 
-      // then
-      await tester.tap(find.byType(TextField));
+    // then
+    await tester.tap(find.byType(TextField));
 
-      verify(stateManager.setKeepFocus(false)).called(1);
-    },
-  );
+    verify(stateManager.setKeepFocus(false)).called(1);
+  });
 
   testWidgets(
     'Entering text in TextField should trigger TrinaChangeColumnFilterEvent',
@@ -95,14 +91,19 @@ void main() {
       // then
       await tester.enterText(find.byType(TextField), 'abc');
 
-      verify(eventManager!.addEvent(
-        argThat(TrinaObjectMatcher<TrinaGridChangeColumnFilterEvent>(
-            rule: (object) {
-          return object.column.field == column.field &&
-              object.filterType.runtimeType == TrinaFilterTypeContains &&
-              object.filterValue == 'abc';
-        })),
-      )).called(1);
+      verify(
+        eventManager!.addEvent(
+          argThat(
+            TrinaObjectMatcher<TrinaGridChangeColumnFilterEvent>(
+              rule: (object) {
+                return object.column.field == column.field &&
+                    object.filterType.runtimeType == TrinaFilterTypeContains &&
+                    object.filterValue == 'abc';
+              },
+            ),
+          ),
+        ),
+      ).called(1);
     },
   );
 
@@ -151,12 +152,8 @@ void main() {
         );
 
         when(stateManager.filterRowsByField('column_field_name')).thenReturn([
-          FilterHelper.createFilterRow(
-            columnField: 'column_field_name',
-          ),
-          FilterHelper.createFilterRow(
-            columnField: 'column_field_name',
-          ),
+          FilterHelper.createFilterRow(columnField: 'column_field_name'),
+          FilterHelper.createFilterRow(columnField: 'column_field_name'),
         ]);
 
         // when
@@ -230,9 +227,7 @@ void main() {
         );
 
         when(stateManager.filterRowsByField('column_field_name')).thenReturn([
-          FilterHelper.createFilterRow(
-            columnField: 'column_field_name',
-          ),
+          FilterHelper.createFilterRow(columnField: 'column_field_name'),
         ]);
 
         when(

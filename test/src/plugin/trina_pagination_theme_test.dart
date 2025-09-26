@@ -6,16 +6,13 @@ void main() {
   group('TrinaPagination theme updates', () {
     testWidgets('should update colors when theme changes', (tester) async {
       final columns = [
-        TrinaColumn(
-          title: 'Test',
-          field: 'test',
-          type: TrinaColumnType.text(),
-        ),
+        TrinaColumn(title: 'Test', field: 'test', type: TrinaColumnType.text()),
       ];
 
-      final rows = List.generate(50, (index) => TrinaRow(cells: {
-        'test': TrinaCell(value: 'Value $index'),
-      }));
+      final rows = List.generate(
+        50,
+        (index) => TrinaRow(cells: {'test': TrinaCell(value: 'Value $index')}),
+      );
 
       // Initial light theme
       var lightTheme = const TrinaGridConfiguration(
@@ -26,16 +23,18 @@ void main() {
         ),
       );
 
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          body: TrinaGrid(
-            columns: columns,
-            rows: rows,
-            configuration: lightTheme,
-            createFooter: (stateManager) => TrinaPagination(stateManager),
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: TrinaGrid(
+              columns: columns,
+              rows: rows,
+              configuration: lightTheme,
+              createFooter: (stateManager) => TrinaPagination(stateManager),
+            ),
           ),
         ),
-      ));
+      );
 
       await tester.pumpAndSettle();
 
@@ -52,16 +51,18 @@ void main() {
         ),
       );
 
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          body: TrinaGrid(
-            columns: columns,
-            rows: rows,
-            configuration: darkTheme,
-            createFooter: (stateManager) => TrinaPagination(stateManager),
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: TrinaGrid(
+              columns: columns,
+              rows: rows,
+              configuration: darkTheme,
+              createFooter: (stateManager) => TrinaPagination(stateManager),
+            ),
           ),
         ),
-      ));
+      );
 
       await tester.pumpAndSettle();
 

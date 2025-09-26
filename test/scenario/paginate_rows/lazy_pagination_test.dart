@@ -32,11 +32,7 @@ void main() {
     bool showColumnFilter = false,
     required TrinaLazyPaginationFetch fetch,
   }) async {
-    await TestHelperUtil.changeWidth(
-      tester: tester,
-      width: 1200,
-      height: 800,
-    );
+    await TestHelperUtil.changeWidth(tester: tester, width: 1200, height: 800);
 
     await tester.pumpWidget(
       MaterialApp(
@@ -70,9 +66,7 @@ void main() {
     int delayedMS = 20,
     required List<TrinaRow> fakeFetchedRows,
   }) {
-    return (
-      TrinaLazyPaginationRequest request,
-    ) async {
+    return (TrinaLazyPaginationRequest request) async {
       List<TrinaRow> tempList = fakeFetchedRows;
 
       if (request.filterRows.isNotEmpty) {
@@ -110,10 +104,12 @@ void main() {
 
       await Future.delayed(Duration(milliseconds: delayedMS));
 
-      return Future.value(TrinaLazyPaginationResponse(
-        totalPage: totalPage,
-        rows: fetchedRows.toList(),
-      ));
+      return Future.value(
+        TrinaLazyPaginationResponse(
+          totalPage: totalPage,
+          rows: fetchedRows.toList(),
+        ),
+      );
     };
   }
 
@@ -140,11 +136,12 @@ void main() {
   Finder findFilterTextField(String columnTitle) {
     return find.descendant(
       of: find.descendant(
-          of: find.ancestor(
-            of: find.text(columnTitle),
-            matching: find.byType(TrinaBaseColumn),
-          ),
-          matching: find.byType(TrinaColumnFilter)),
+        of: find.ancestor(
+          of: find.text(columnTitle),
+          matching: find.byType(TrinaBaseColumn),
+        ),
+        matching: find.byType(TrinaColumnFilter),
+      ),
       matching: find.byType(TextField),
     );
   }
@@ -199,19 +196,18 @@ void main() {
       },
     );
 
-    testWidgets(
-      'When initialFetch is false, no rows should be rendered',
-      (tester) async {
-        final dummyRows = RowHelper.count(90, columns);
-        final fetch = makeFetch(fakeFetchedRows: dummyRows);
+    testWidgets('When initialFetch is false, no rows should be rendered', (
+      tester,
+    ) async {
+      final dummyRows = RowHelper.count(90, columns);
+      final fetch = makeFetch(fakeFetchedRows: dummyRows);
 
-        await buildGrid(tester, fetch: fetch, initialFetch: false);
-        await tester.pumpAndSettle(const Duration(milliseconds: 30));
+      await buildGrid(tester, fetch: fetch, initialFetch: false);
+      await tester.pumpAndSettle(const Duration(milliseconds: 30));
 
-        expect(stateManager.refRows.length, 0);
-        expect(find.byType(TrinaBaseRow), findsNothing);
-      },
-    );
+      expect(stateManager.refRows.length, 0);
+      expect(find.byType(TrinaBaseRow), findsNothing);
+    });
 
     testWidgets(
       'When fetchWithSorting is true, sortOnlyEvent should be updated',
@@ -300,7 +296,9 @@ void main() {
       final style1 = textStyleFromTextButton(pageButtonsAsTextButton[0]);
 
       expect(
-          style1.color, stateManager.configuration.style.activatedBorderColor);
+        style1.color,
+        stateManager.configuration.style.activatedBorderColor,
+      );
     });
 
     testWidgets(
@@ -381,8 +379,10 @@ void main() {
 
         final style1 = textStyleFromTextButton(pageButtonsAsTextButton[2]);
 
-        expect(style1.color,
-            stateManager.configuration.style.activatedBorderColor);
+        expect(
+          style1.color,
+          stateManager.configuration.style.activatedBorderColor,
+        );
       },
     );
 

@@ -41,11 +41,7 @@ class _GridAsPopupScreenState extends State<GridAsPopupScreen> {
     _moneyController = TextEditingController();
 
     columns.addAll([
-      TrinaColumn(
-        title: 'name',
-        field: 'name',
-        type: TrinaColumnType.text(),
-      ),
+      TrinaColumn(title: 'name', field: 'name', type: TrinaColumnType.text()),
       TrinaColumn(
         title: 'money',
         field: 'money',
@@ -62,8 +58,9 @@ class _GridAsPopupScreenState extends State<GridAsPopupScreen> {
   }
 
   void openGridPopup(BuildContext context, String selectFieldName) {
-    final controller =
-        selectFieldName == 'name' ? _nameController : _moneyController;
+    final controller = selectFieldName == 'name'
+        ? _nameController
+        : _moneyController;
 
     TrinaGridPopup(
       context: context,
@@ -77,8 +74,10 @@ class _GridAsPopupScreenState extends State<GridAsPopupScreen> {
 
           if (cell.value.toString() == controller.text) {
             event.stateManager.setCurrentCell(cell, element.key);
-            event.stateManager
-                .moveScrollByRow(TrinaMoveDirection.up, element.key + 1);
+            event.stateManager.moveScrollByRow(
+              TrinaMoveDirection.up,
+              element.key + 1,
+            );
           }
         });
 
@@ -100,11 +99,14 @@ class _GridAsPopupScreenState extends State<GridAsPopupScreen> {
       topTitle: 'Grid as Popup',
       topContents: const [
         Text(
-            'You can call the popup with the desired data and select a value from the called list.'),
+          'You can call the popup with the desired data and select a value from the called list.',
+        ),
         Text(
-            'Click the magnifying glass icon on the right side of the TextField to call the popup.'),
+          'Click the magnifying glass icon on the right side of the TextField to call the popup.',
+        ),
         Text(
-            'And when you tap one of the list in the pop-up or press Enter key, the item is selected and the value is automatically entered.'),
+          'And when you tap one of the list in the pop-up or press Enter key, the item is selected and the value is automatically entered.',
+        ),
       ],
       topButtons: [
         TrinaExampleButton(
@@ -125,15 +127,11 @@ class _GridAsPopupScreenState extends State<GridAsPopupScreen> {
                 child: const Icon(Icons.search),
               ),
               border: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(10.0),
-                ),
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
               ),
             ),
           ),
-          const SizedBox(
-            height: 30,
-          ),
+          const SizedBox(height: 30),
           TextField(
             controller: _moneyController,
             decoration: InputDecoration(
@@ -144,9 +142,7 @@ class _GridAsPopupScreenState extends State<GridAsPopupScreen> {
                 child: const Icon(Icons.search),
               ),
               border: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(10.0),
-                ),
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
               ),
             ),
           ),

@@ -37,9 +37,11 @@ class _ColumnFreezingScreenState extends State<ColumnFreezingScreen> {
       topTitle: 'Column freezing',
       topContents: const [
         Text(
-            'You can freeze the column by tapping ToLeft, ToRight in the dropdown menu that appears when you tap the icon to the right of the column title.'),
+          'You can freeze the column by tapping ToLeft, ToRight in the dropdown menu that appears when you tap the icon to the right of the column title.',
+        ),
         Text(
-            'If the width of the middle columns is narrow, the frozen column is released.'),
+          'If the width of the middle columns is narrow, the frozen column is released.',
+        ),
       ],
       topButtons: [
         TrinaExampleButton(

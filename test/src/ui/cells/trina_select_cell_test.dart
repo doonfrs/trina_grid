@@ -31,15 +31,12 @@ void main() {
               popupIcon: popupIcon,
             )
           : enableFiltering
-              ? TrinaColumnType.selectWithFilters(
-                  items,
-                  menuFilters: [],
-                  popupIcon: popupIcon,
-                )
-              : TrinaColumnType.select(
-                  items,
-                  popupIcon: popupIcon,
-                ),
+          ? TrinaColumnType.selectWithFilters(
+              items,
+              menuFilters: [],
+              popupIcon: popupIcon,
+            )
+          : TrinaColumnType.select(items, popupIcon: popupIcon),
     );
 
     cell = TrinaCell(value: initialCellValue ?? items.first);
@@ -49,10 +46,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
-          body: TrinaGrid(
-            columns: [column],
-            rows: [row],
-          ),
+          body: TrinaGrid(columns: [column], rows: [row]),
         ),
       ),
     );
@@ -68,8 +62,10 @@ void main() {
   }
 
   group('Search Functionality', () {
-    final searchFieldFinder = find.byWidgetPredicate((widget) =>
-        widget is TextField && widget.decoration?.hintText == 'Search...');
+    final searchFieldFinder = find.byWidgetPredicate(
+      (widget) =>
+          widget is TextField && widget.decoration?.hintText == 'Search...',
+    );
 
     testWidgets('should filter items based on search text', (tester) async {
       await buildCellAndEdit(tester, enableSearch: true);
@@ -94,8 +90,9 @@ void main() {
       expect(find.widgetWithText(MenuItemButton, 'b'), findsNothing);
     });
 
-    testWidgets('should display "No matches" when no items match search',
-        (tester) async {
+    testWidgets('should display "No matches" when no items match search', (
+      tester,
+    ) async {
       await buildCellAndEdit(tester, enableSearch: true);
       await openPopup(tester);
 
@@ -139,8 +136,9 @@ void main() {
       expect(find.byIcon(Icons.add), findsOneWidget);
     });
 
-    testWidgets('When popupIcon is null, icon should not be rendered',
-        (tester) async {
+    testWidgets('When popupIcon is null, icon should not be rendered', (
+      tester,
+    ) async {
       await buildCellAndEdit(tester, popupIcon: null);
       expect(
         find.descendant(
@@ -161,25 +159,26 @@ void main() {
     });
 
     testWidgets(
-        'After closing popup with ESC and pressing F2 again, popup should reopen',
-        (tester) async {
-      await buildCellAndEdit(tester);
+      'After closing popup with ESC and pressing F2 again, popup should reopen',
+      (tester) async {
+        await buildCellAndEdit(tester);
 
-      // Open popup
-      await tester.sendKeyEvent(LogicalKeyboardKey.f2);
-      await tester.pumpAndSettle();
-      expect(find.byType(TrinaDropdownMenu<String>), findsOneWidget);
+        // Open popup
+        await tester.sendKeyEvent(LogicalKeyboardKey.f2);
+        await tester.pumpAndSettle();
+        expect(find.byType(TrinaDropdownMenu<String>), findsOneWidget);
 
-      // Close popup with escape
-      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
-      await tester.pumpAndSettle();
-      expect(find.byType(TrinaDropdownMenu<String>), findsNothing);
+        // Close popup with escape
+        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        await tester.pumpAndSettle();
+        expect(find.byType(TrinaDropdownMenu<String>), findsNothing);
 
-      // Reopen popup
-      await tester.sendKeyEvent(LogicalKeyboardKey.f2);
-      await tester.pumpAndSettle();
-      expect(find.byType(TrinaDropdownMenu<String>), findsOneWidget);
-    });
+        // Reopen popup
+        await tester.sendKeyEvent(LogicalKeyboardKey.f2);
+        await tester.pumpAndSettle();
+        expect(find.byType(TrinaDropdownMenu<String>), findsOneWidget);
+      },
+    );
 
     testWidgets(
       'After selecting an item with arrow keys and enter, value should be updated',

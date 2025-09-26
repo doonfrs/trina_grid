@@ -50,29 +50,28 @@ class _RowSelectionScreenState extends State<RowSelectionScreen> {
     }
 
     await showDialog<void>(
-        context: context,
-        builder: (BuildContext ctx) {
-          return Dialog(
-            child: LayoutBuilder(
-              builder: (ctx, size) {
-                return Container(
-                  padding: const EdgeInsets.all(15),
-                  width: 400,
-                  height: 500,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(value),
-                      ],
-                    ),
+      context: context,
+      builder: (BuildContext ctx) {
+        return Dialog(
+          child: LayoutBuilder(
+            builder: (ctx, size) {
+              return Container(
+                padding: const EdgeInsets.all(15),
+                width: 400,
+                height: 500,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [Text(value)],
                   ),
-                );
-              },
-            ),
-          );
-        });
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
   }
 
   void _onRowSelected(TrinaGridOnSelectedEvent event) {
@@ -83,12 +82,14 @@ class _RowSelectionScreenState extends State<RowSelectionScreen> {
       info += 'Row Index: ${event.rowIdx}\n';
       info += 'Cell: ${event.cell?.key}\n';
       info += 'Selected Rows Count: ${event.selectedRows?.length ?? 0}\n';
-      info += 'Current Selecting Rows: ${stateManager?.currentSelectingRows.length ?? 0}\n';
+      info +=
+          'Current Selecting Rows: ${stateManager?.currentSelectingRows.length ?? 0}\n';
       if (event.selectedRows != null && event.selectedRows!.isNotEmpty) {
         info +=
             'Selected Row Keys: ${event.selectedRows!.map((r) => r.key).toList()}\n';
       }
-      if (stateManager != null && stateManager!.currentSelectingRows.isNotEmpty) {
+      if (stateManager != null &&
+          stateManager!.currentSelectingRows.isNotEmpty) {
         info +=
             'Currently Selecting Row Keys: ${stateManager!.currentSelectingRows.map((r) => r.key).toList()}\n';
       }
@@ -96,7 +97,8 @@ class _RowSelectionScreenState extends State<RowSelectionScreen> {
     });
 
     print(
-        'onSelected callback fired: rowIdx=${event.rowIdx}, selectedRowsCount=${event.selectedRows?.length}, currentSelectingCount=${stateManager?.currentSelectingRows.length}');
+      'onSelected callback fired: rowIdx=${event.rowIdx}, selectedRowsCount=${event.selectedRows?.length}, currentSelectingCount=${stateManager?.currentSelectingRows.length}',
+    );
   }
 
   @override
@@ -106,9 +108,11 @@ class _RowSelectionScreenState extends State<RowSelectionScreen> {
       topTitle: 'Row selection',
       topContents: [
         const Text(
-            'In Row selection mode, Shift + tap or long tap and then move or Control + tap to select a row.'),
+          'In Row selection mode, Shift + tap or long tap and then move or Control + tap to select a row.',
+        ),
         const Text(
-            'onSelected callback now fires in Normal mode too! Try tapping rows, Ctrl+click, Shift+click, long press, or pressing Enter.'),
+          'onSelected callback now fires in Normal mode too! Try tapping rows, Ctrl+click, Shift+click, long press, or pressing Enter.',
+        ),
         const SizedBox(height: 8),
         Text(
           'onSelected Event Status: $_selectedInfo',

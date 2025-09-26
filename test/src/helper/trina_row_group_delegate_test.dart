@@ -111,9 +111,21 @@ void main() {
             createRow('B42', 'b42-1', 'b42-2', 'b42-3', 'b42-4', columns),
             createGroup('B43', 'b43-1', 'b43-2', 'b43-3', 'b43-4', columns, [
               createRow(
-                  'B431', 'b431-1', 'b431-2', 'b431-3', 'b431-4', columns),
+                'B431',
+                'b431-1',
+                'b431-2',
+                'b431-3',
+                'b431-4',
+                columns,
+              ),
               createRow(
-                  'B432', 'b432-1', 'b432-2', 'b432-3', 'b432-4', columns),
+                'B432',
+                'b432-1',
+                'b432-2',
+                'b432-3',
+                'b432-4',
+                columns,
+              ),
             ]),
           ]),
         ]),
@@ -131,7 +143,8 @@ void main() {
       bool Function(TrinaCell)? showText,
     }) {
       return TrinaRowGroupTreeDelegate(
-        resolveColumnDepth: resolveColumnDepth ??
+        resolveColumnDepth:
+            resolveColumnDepth ??
             (column) => int.parse(column.field.replaceAll('column', '')) - 1,
         showText: showText ?? (cell) => true,
       );
@@ -201,57 +214,60 @@ void main() {
         expect(B432.parent?.parent?.parent, B);
       });
 
-      test('The isEditableCell should return true for the showText condition.',
-          () {
-        final delegate = createDelegate(
-          showText: (cell) => cell.column.field == 'column1',
-        );
+      test(
+        'The isEditableCell should return true for the showText condition.',
+        () {
+          final delegate = createDelegate(
+            showText: (cell) => cell.column.field == 'column1',
+          );
 
-        final groups = delegate.toGroup(rows: rows);
+          final groups = delegate.toGroup(rows: rows);
 
-        final sampleRow = groups.first;
+          final sampleRow = groups.first;
 
-        expect(delegate.isEditableCell(sampleRow.cells['column1']!), true);
-        expect(delegate.isEditableCell(sampleRow.cells['column2']!), false);
-      });
+          expect(delegate.isEditableCell(sampleRow.cells['column1']!), true);
+          expect(delegate.isEditableCell(sampleRow.cells['column2']!), false);
+        },
+      );
 
       test(
-          'isExpandableCell should return true for the resolveColumnDepth condition.',
-          () {
-        final delegate = createDelegate(
-          resolveColumnDepth: (column) => {
-            'column1': 0,
-            'column2': 1,
-            'column3': 2,
-            'column4': 3,
-            'column5': 4,
-          }[column.field]!,
-        );
+        'isExpandableCell should return true for the resolveColumnDepth condition.',
+        () {
+          final delegate = createDelegate(
+            resolveColumnDepth: (column) => {
+              'column1': 0,
+              'column2': 1,
+              'column3': 2,
+              'column4': 3,
+              'column5': 4,
+            }[column.field]!,
+          );
 
-        final groups = delegate.toGroup(rows: rows);
+          final groups = delegate.toGroup(rows: rows);
 
-        final sampleRow = groups[0];
-        final sampleGroupDepth0 = groups[1];
-        final sampleGroupDepth1 = groups[1].type.group.children[3];
+          final sampleRow = groups[0];
+          final sampleGroupDepth0 = groups[1];
+          final sampleGroupDepth1 = groups[1].type.group.children[3];
 
-        expect(delegate.isExpandableCell(sampleRow.cells['column1']!), false);
-        expect(
-          delegate.isExpandableCell(sampleGroupDepth0.cells['column1']!),
-          true,
-        );
-        expect(
-          delegate.isExpandableCell(sampleGroupDepth0.cells['column2']!),
-          false,
-        );
-        expect(
-          delegate.isExpandableCell(sampleGroupDepth1.cells['column1']!),
-          false,
-        );
-        expect(
-          delegate.isExpandableCell(sampleGroupDepth1.cells['column2']!),
-          true,
-        );
-      });
+          expect(delegate.isExpandableCell(sampleRow.cells['column1']!), false);
+          expect(
+            delegate.isExpandableCell(sampleGroupDepth0.cells['column1']!),
+            true,
+          );
+          expect(
+            delegate.isExpandableCell(sampleGroupDepth0.cells['column2']!),
+            false,
+          );
+          expect(
+            delegate.isExpandableCell(sampleGroupDepth1.cells['column1']!),
+            false,
+          );
+          expect(
+            delegate.isExpandableCell(sampleGroupDepth1.cells['column2']!),
+            true,
+          );
+        },
+      );
     });
   });
 
@@ -323,11 +339,9 @@ void main() {
         createRow('B', '4', '42', 'B412', '10', columns),
       ];
 
-      delegate = TrinaRowGroupByColumnDelegate(columns: [
-        columns[0],
-        columns[1],
-        columns[2],
-      ]);
+      delegate = TrinaRowGroupByColumnDelegate(
+        columns: [columns[0], columns[1], columns[2]],
+      );
     });
 
     test('type should return byColumn.', () {
@@ -348,16 +362,13 @@ void main() {
       expect(delegate.visibleColumns.length, 2);
     });
 
-    test(
-      'When all columns are hidden, '
-      'length should be 0 and enabled should be false.',
-      () {
-        setHide(c) => c.hide = true;
-        delegate.visibleColumns.forEach(setHide);
-        expect(delegate.enabled, false);
-        expect(delegate.visibleColumns.length, 0);
-      },
-    );
+    test('When all columns are hidden, '
+        'length should be 0 and enabled should be false.', () {
+      setHide(c) => c.hide = true;
+      delegate.visibleColumns.forEach(setHide);
+      expect(delegate.enabled, false);
+      expect(delegate.visibleColumns.length, 0);
+    });
 
     test('The isEditableCell should return true for the non-group row.', () {
       final sampleColumn = columns[3]; // Not a group column.
@@ -392,36 +403,30 @@ void main() {
       expect(delegate.isExpandableCell(sampleCell), false);
     });
 
-    test(
-      'When the row is a group and the column is a group column '
-      'and the depth matches, '
-      'isExpandableCell should return true.',
-      () {
-        final grouped = delegate.toGroup(rows: rows);
-        final sampleColumn = columns[0]; // 0 depth
-        final sampleGroup = grouped.first; // 0 depth
-        final sampleCell = TrinaCell()
-          ..setRow(sampleGroup)
-          ..setColumn(sampleColumn);
+    test('When the row is a group and the column is a group column '
+        'and the depth matches, '
+        'isExpandableCell should return true.', () {
+      final grouped = delegate.toGroup(rows: rows);
+      final sampleColumn = columns[0]; // 0 depth
+      final sampleGroup = grouped.first; // 0 depth
+      final sampleCell = TrinaCell()
+        ..setRow(sampleGroup)
+        ..setColumn(sampleColumn);
 
-        expect(delegate.isExpandableCell(sampleCell), true);
-      },
-    );
+      expect(delegate.isExpandableCell(sampleCell), true);
+    });
 
-    test(
-      'The isExpandableCell should return false for the group row '
-      'and column depth does not match.',
-      () {
-        final grouped = delegate.toGroup(rows: rows);
-        final sampleColumn = columns[1]; // 1 depth
-        final sampleGroup = grouped.first; // 0 depth
-        final sampleCell = TrinaCell()
-          ..setRow(sampleGroup)
-          ..setColumn(sampleColumn);
+    test('The isExpandableCell should return false for the group row '
+        'and column depth does not match.', () {
+      final grouped = delegate.toGroup(rows: rows);
+      final sampleColumn = columns[1]; // 1 depth
+      final sampleGroup = grouped.first; // 0 depth
+      final sampleCell = TrinaCell()
+        ..setRow(sampleGroup)
+        ..setColumn(sampleColumn);
 
-        expect(delegate.isExpandableCell(sampleCell), false);
-      },
-    );
+      expect(delegate.isExpandableCell(sampleCell), false);
+    });
 
     test('The isRowGroupColumn should return true for the group column.', () {
       final sampleColumn = columns[1];
@@ -429,12 +434,14 @@ void main() {
       expect(delegate.isRowGroupColumn(sampleColumn), true);
     });
 
-    test('The isRowGroupColumn should return false for the non-group column.',
-        () {
-      final sampleColumn = columns[4];
+    test(
+      'The isRowGroupColumn should return false for the non-group column.',
+      () {
+        final sampleColumn = columns[4];
 
-      expect(delegate.isRowGroupColumn(sampleColumn), false);
-    });
+        expect(delegate.isRowGroupColumn(sampleColumn), false);
+      },
+    );
 
     group('toGroup', () {
       test('2 groups should be returned.', () {

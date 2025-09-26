@@ -28,27 +28,24 @@ void main() {
     final columns = ColumnHelper.textColumn('column');
     final rows = RowHelper.count(numberOfRows, columns);
 
-    return TrinaWidgetTestHelper(
-      'build with selecting rows.',
-      (tester) async {
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Material(
-              child: TrinaGrid(
-                mode: TrinaGridMode.select,
-                columns: columns,
-                rows: rows,
-                onLoaded: (TrinaGridOnLoadedEvent event) {
-                  stateManager = event.stateManager;
-                  if (onLoaded != null) onLoaded(event);
-                },
-                onSelected: onSelected,
-              ),
+    return TrinaWidgetTestHelper('build with selecting rows.', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Material(
+            child: TrinaGrid(
+              mode: TrinaGridMode.select,
+              columns: columns,
+              rows: rows,
+              onLoaded: (TrinaGridOnLoadedEvent event) {
+                stateManager = event.stateManager;
+                if (onLoaded != null) onLoaded(event);
+              },
+              onSelected: onSelected,
             ),
           ),
-        );
-      },
-    );
+        ),
+      );
+    });
   }
 
   buildGrid().test(
@@ -74,14 +71,13 @@ void main() {
       e.stateManager.refRows[1].cells['column0'],
       1,
     ),
-  ).test(
-    'When selected in onLoaded, the second cell should be focused',
-    (tester) async {
-      expect(stateManager.currentCell, isNot(null));
-      expect(stateManager.currentCellPosition?.rowIdx, 1);
-      expect(stateManager.currentCellPosition?.columnIdx, 0);
-    },
-  );
+  ).test('When selected in onLoaded, the second cell should be focused', (
+    tester,
+  ) async {
+    expect(stateManager.currentCell, isNot(null));
+    expect(stateManager.currentCellPosition?.rowIdx, 1);
+    expect(stateManager.currentCellPosition?.columnIdx, 0);
+  });
 
   buildGrid().test(
     'When select mode is executed, the selectingMode should be none',
@@ -101,13 +97,18 @@ void main() {
 
       verify(
         mock.oneParamReturnVoid(
-            argThat(TrinaObjectMatcher<TrinaGridOnSelectedEvent>(rule: (event) {
-          return event.row?.key == stateManager.refRows.first.key &&
-              event.rowIdx == 0 &&
-              event.cell?.key ==
-                  stateManager.refRows.first.cells['column0']!.key &&
-              event.selectedRows == null;
-        }))),
+          argThat(
+            TrinaObjectMatcher<TrinaGridOnSelectedEvent>(
+              rule: (event) {
+                return event.row?.key == stateManager.refRows.first.key &&
+                    event.rowIdx == 0 &&
+                    event.cell?.key ==
+                        stateManager.refRows.first.cells['column0']!.key &&
+                    event.selectedRows == null;
+              },
+            ),
+          ),
+        ),
       ).called(1);
 
       // select mode does not add to currentSelectingRows
@@ -129,13 +130,18 @@ void main() {
 
       verify(
         mock.oneParamReturnVoid(
-            argThat(TrinaObjectMatcher<TrinaGridOnSelectedEvent>(rule: (event) {
-          return event.row?.key == stateManager.refRows[1].key &&
-              event.rowIdx == 1 &&
-              event.cell?.key ==
-                  stateManager.refRows[1].cells['column0']!.key &&
-              event.selectedRows == null;
-        }))),
+          argThat(
+            TrinaObjectMatcher<TrinaGridOnSelectedEvent>(
+              rule: (event) {
+                return event.row?.key == stateManager.refRows[1].key &&
+                    event.rowIdx == 1 &&
+                    event.cell?.key ==
+                        stateManager.refRows[1].cells['column0']!.key &&
+                    event.selectedRows == null;
+              },
+            ),
+          ),
+        ),
       ).called(1);
 
       // In select mode, currentSelectingRows is not added.
@@ -162,13 +168,18 @@ void main() {
 
       verify(
         mock.oneParamReturnVoid(
-            argThat(TrinaObjectMatcher<TrinaGridOnSelectedEvent>(rule: (event) {
-          return event.row?.key == stateManager.refRows[1].key &&
-              event.rowIdx == 1 &&
-              event.cell?.key ==
-                  stateManager.refRows[1].cells['column0']!.key &&
-              event.selectedRows == null;
-        }))),
+          argThat(
+            TrinaObjectMatcher<TrinaGridOnSelectedEvent>(
+              rule: (event) {
+                return event.row?.key == stateManager.refRows[1].key &&
+                    event.rowIdx == 1 &&
+                    event.cell?.key ==
+                        stateManager.refRows[1].cells['column0']!.key &&
+                    event.selectedRows == null;
+              },
+            ),
+          ),
+        ),
       ).called(1);
 
       // select mode does not add to currentSelectingRows
@@ -195,13 +206,18 @@ void main() {
 
       verify(
         mock.oneParamReturnVoid(
-            argThat(TrinaObjectMatcher<TrinaGridOnSelectedEvent>(rule: (event) {
-          return event.row?.key == stateManager.refRows[1].key &&
-              event.rowIdx == 1 &&
-              event.cell?.key ==
-                  stateManager.refRows[1].cells['column0']!.key &&
-              event.selectedRows == null;
-        }))),
+          argThat(
+            TrinaObjectMatcher<TrinaGridOnSelectedEvent>(
+              rule: (event) {
+                return event.row?.key == stateManager.refRows[1].key &&
+                    event.rowIdx == 1 &&
+                    event.cell?.key ==
+                        stateManager.refRows[1].cells['column0']!.key &&
+                    event.selectedRows == null;
+              },
+            ),
+          ),
+        ),
       ).called(1);
 
       // select mode does not add to currentSelectingRows
@@ -224,13 +240,18 @@ void main() {
 
       verify(
         mock.oneParamReturnVoid(
-            argThat(TrinaObjectMatcher<TrinaGridOnSelectedEvent>(rule: (event) {
-          return event.row?.key == stateManager.refRows[2].key &&
-              event.rowIdx == 2 &&
-              event.cell?.key ==
-                  stateManager.refRows[2].cells['column0']!.key &&
-              event.selectedRows == null;
-        }))),
+          argThat(
+            TrinaObjectMatcher<TrinaGridOnSelectedEvent>(
+              rule: (event) {
+                return event.row?.key == stateManager.refRows[2].key &&
+                    event.rowIdx == 2 &&
+                    event.cell?.key ==
+                        stateManager.refRows[2].cells['column0']!.key &&
+                    event.selectedRows == null;
+              },
+            ),
+          ),
+        ),
       ).called(1);
 
       // select mode does not add to currentSelectingRows
@@ -257,13 +278,18 @@ void main() {
 
       verify(
         mock.oneParamReturnVoid(
-            argThat(TrinaObjectMatcher<TrinaGridOnSelectedEvent>(rule: (event) {
-          return event.row?.key == stateManager.refRows.first.key &&
-              event.rowIdx == 0 &&
-              event.cell?.key ==
-                  stateManager.refRows.first.cells['column0']!.key &&
-              event.selectedRows == null;
-        }))),
+          argThat(
+            TrinaObjectMatcher<TrinaGridOnSelectedEvent>(
+              rule: (event) {
+                return event.row?.key == stateManager.refRows.first.key &&
+                    event.rowIdx == 0 &&
+                    event.cell?.key ==
+                        stateManager.refRows.first.cells['column0']!.key &&
+                    event.selectedRows == null;
+              },
+            ),
+          ),
+        ),
       ).called(1);
 
       // select mode does not add to currentSelectingRows
@@ -284,12 +310,17 @@ void main() {
 
       verify(
         mock.oneParamReturnVoid(
-            argThat(TrinaObjectMatcher<TrinaGridOnSelectedEvent>(rule: (event) {
-          return event.row == null &&
-              event.rowIdx == null &&
-              event.cell == null &&
-              event.selectedRows == null;
-        }))),
+          argThat(
+            TrinaObjectMatcher<TrinaGridOnSelectedEvent>(
+              rule: (event) {
+                return event.row == null &&
+                    event.rowIdx == null &&
+                    event.cell == null &&
+                    event.selectedRows == null;
+              },
+            ),
+          ),
+        ),
       ).called(1);
 
       // select mode does not add to currentSelectingRows

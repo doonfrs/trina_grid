@@ -18,9 +18,7 @@ void main() {
     final withTenColumns = TrinaWidgetTestHelper(
       'When 10 columns are created',
       (tester) async {
-        columns = [
-          ...ColumnHelper.textColumn('header', count: 10),
-        ];
+        columns = [...ColumnHelper.textColumn('header', count: 10)];
 
         rows = RowHelper.count(10, columns);
 
@@ -225,9 +223,7 @@ void main() {
     final withTenColumns = TrinaWidgetTestHelper(
       '10 columns are created and columns 0, 5 are hidden',
       (tester) async {
-        columns = [
-          ...ColumnHelper.textColumn('header', count: 10),
-        ];
+        columns = [...ColumnHelper.textColumn('header', count: 10)];
 
         rows = RowHelper.count(10, columns);
 

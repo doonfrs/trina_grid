@@ -71,11 +71,7 @@ class _CellColorScreenState extends State<CellColorScreen> {
       TrinaColumn(
         title: 'Priority',
         field: 'priority',
-        type: TrinaColumnType.select(<String>[
-          'High',
-          'Medium',
-          'Low',
-        ]),
+        type: TrinaColumnType.select(<String>['High', 'Medium', 'Low']),
         width: 120,
       ),
       TrinaColumn(
@@ -103,51 +99,64 @@ class _CellColorScreenState extends State<CellColorScreen> {
     ]);
 
     rows.addAll([
-      TrinaRow(cells: {
-        'id': TrinaCell(value: 1),
-        'task': TrinaCell(value: 'Fix login bug'),
-        'priority': TrinaCell(value: 'High'),
-        'status': TrinaCell(value: 'Pending'),
-        'assignee': TrinaCell(value: 'John Doe'),
-        'due_date': TrinaCell(value: DateTime(2024, 3, 15)),
-      }),
-      TrinaRow(cells: {
-        'id': TrinaCell(value: 2),
-        'task': TrinaCell(value: 'Update documentation'),
-        'priority': TrinaCell(value: 'Low'),
-        'status': TrinaCell(value: 'Completed'),
-        'assignee': TrinaCell(value: 'Jane Smith'),
-        'due_date': TrinaCell(value: DateTime(2024, 3, 10)),
-      }),
-      TrinaRow(cells: {
-        'id': TrinaCell(value: 3),
-        'task': TrinaCell(value: 'Implement new feature'),
-        'priority': TrinaCell(value: 'Medium'),
-        'status': TrinaCell(value: 'Pending'),
-        'assignee': TrinaCell(value: 'Bob Wilson'),
-        'due_date': TrinaCell(value: DateTime(2024, 3, 20)),
-      }),
-      TrinaRow(cells: {
-        'id': TrinaCell(value: 4),
-        'task': TrinaCell(value: 'Code review'),
-        'priority': TrinaCell(value: 'High'),
-        'status': TrinaCell(value: 'Completed'),
-        'assignee': TrinaCell(value: 'Alice Brown'),
-        'due_date': TrinaCell(value: DateTime(2024, 3, 5)),
-      }),
-      TrinaRow(cells: {
-        'id': TrinaCell(value: 5),
-        'task': TrinaCell(value: 'Database migration'),
-        'priority': TrinaCell(value: 'Medium'),
-        'status': TrinaCell(value: 'Cancelled'),
-        'assignee': TrinaCell(value: 'Charlie Davis'),
-        'due_date': TrinaCell(value: DateTime(2024, 3, 25)),
-      }),
+      TrinaRow(
+        cells: {
+          'id': TrinaCell(value: 1),
+          'task': TrinaCell(value: 'Fix login bug'),
+          'priority': TrinaCell(value: 'High'),
+          'status': TrinaCell(value: 'Pending'),
+          'assignee': TrinaCell(value: 'John Doe'),
+          'due_date': TrinaCell(value: DateTime(2024, 3, 15)),
+        },
+      ),
+      TrinaRow(
+        cells: {
+          'id': TrinaCell(value: 2),
+          'task': TrinaCell(value: 'Update documentation'),
+          'priority': TrinaCell(value: 'Low'),
+          'status': TrinaCell(value: 'Completed'),
+          'assignee': TrinaCell(value: 'Jane Smith'),
+          'due_date': TrinaCell(value: DateTime(2024, 3, 10)),
+        },
+      ),
+      TrinaRow(
+        cells: {
+          'id': TrinaCell(value: 3),
+          'task': TrinaCell(value: 'Implement new feature'),
+          'priority': TrinaCell(value: 'Medium'),
+          'status': TrinaCell(value: 'Pending'),
+          'assignee': TrinaCell(value: 'Bob Wilson'),
+          'due_date': TrinaCell(value: DateTime(2024, 3, 20)),
+        },
+      ),
+      TrinaRow(
+        cells: {
+          'id': TrinaCell(value: 4),
+          'task': TrinaCell(value: 'Code review'),
+          'priority': TrinaCell(value: 'High'),
+          'status': TrinaCell(value: 'Completed'),
+          'assignee': TrinaCell(value: 'Alice Brown'),
+          'due_date': TrinaCell(value: DateTime(2024, 3, 5)),
+        },
+      ),
+      TrinaRow(
+        cells: {
+          'id': TrinaCell(value: 5),
+          'task': TrinaCell(value: 'Database migration'),
+          'priority': TrinaCell(value: 'Medium'),
+          'status': TrinaCell(value: 'Cancelled'),
+          'assignee': TrinaCell(value: 'Charlie Davis'),
+          'due_date': TrinaCell(value: DateTime(2024, 3, 25)),
+        },
+      ),
     ]);
   }
 
   Widget _buildColorSelector(
-      String label, int selectedIndex, Function(int) onChanged) {
+    String label,
+    int selectedIndex,
+    Function(int) onChanged,
+  ) {
     return Row(
       children: [
         SizedBox(width: 120, child: Text(label)),
@@ -158,8 +167,9 @@ class _CellColorScreenState extends State<CellColorScreen> {
               onChanged(newValue);
             }
           },
-          items:
-              colorOptions.asMap().entries.map<DropdownMenuItem<int>>((entry) {
+          items: colorOptions.asMap().entries.map<DropdownMenuItem<int>>((
+            entry,
+          ) {
             int index = entry.key;
             Map<String, dynamic> colorOption = entry.value;
             return DropdownMenuItem<int>(
@@ -214,8 +224,10 @@ class _CellColorScreenState extends State<CellColorScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Color Settings:',
-                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    const Text(
+                      'Color Settings:',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                     const SizedBox(height: 8),
                     Row(
                       children: [
@@ -223,28 +235,38 @@ class _CellColorScreenState extends State<CellColorScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text('Priority Colors:',
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.w600)),
+                              const Text(
+                                'Priority Colors:',
+                                style: TextStyle(fontWeight: FontWeight.w600),
+                              ),
                               const SizedBox(height: 8),
-                              _buildColorSelector('High Priority:',
-                                  selectedHighPriorityColorIndex, (index) {
-                                setState(() {
-                                  selectedHighPriorityColorIndex = index;
-                                });
-                              }),
-                              _buildColorSelector('Medium Priority:',
-                                  selectedMediumPriorityColorIndex, (index) {
-                                setState(() {
-                                  selectedMediumPriorityColorIndex = index;
-                                });
-                              }),
-                              _buildColorSelector('Low Priority:',
-                                  selectedLowPriorityColorIndex, (index) {
-                                setState(() {
-                                  selectedLowPriorityColorIndex = index;
-                                });
-                              }),
+                              _buildColorSelector(
+                                'High Priority:',
+                                selectedHighPriorityColorIndex,
+                                (index) {
+                                  setState(() {
+                                    selectedHighPriorityColorIndex = index;
+                                  });
+                                },
+                              ),
+                              _buildColorSelector(
+                                'Medium Priority:',
+                                selectedMediumPriorityColorIndex,
+                                (index) {
+                                  setState(() {
+                                    selectedMediumPriorityColorIndex = index;
+                                  });
+                                },
+                              ),
+                              _buildColorSelector(
+                                'Low Priority:',
+                                selectedLowPriorityColorIndex,
+                                (index) {
+                                  setState(() {
+                                    selectedLowPriorityColorIndex = index;
+                                  });
+                                },
+                              ),
                             ],
                           ),
                         ),
@@ -253,31 +275,38 @@ class _CellColorScreenState extends State<CellColorScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text('Status Colors:',
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.w600)),
+                              const Text(
+                                'Status Colors:',
+                                style: TextStyle(fontWeight: FontWeight.w600),
+                              ),
                               const SizedBox(height: 8),
                               _buildColorSelector(
-                                  'Completed:', selectedCompletedColorIndex,
-                                  (index) {
-                                setState(() {
-                                  selectedCompletedColorIndex = index;
-                                });
-                              }),
+                                'Completed:',
+                                selectedCompletedColorIndex,
+                                (index) {
+                                  setState(() {
+                                    selectedCompletedColorIndex = index;
+                                  });
+                                },
+                              ),
                               _buildColorSelector(
-                                  'Pending:', selectedPendingColorIndex,
-                                  (index) {
-                                setState(() {
-                                  selectedPendingColorIndex = index;
-                                });
-                              }),
+                                'Pending:',
+                                selectedPendingColorIndex,
+                                (index) {
+                                  setState(() {
+                                    selectedPendingColorIndex = index;
+                                  });
+                                },
+                              ),
                               _buildColorSelector(
-                                  'Cancelled:', selectedCancelledColorIndex,
-                                  (index) {
-                                setState(() {
-                                  selectedCancelledColorIndex = index;
-                                });
-                              }),
+                                'Cancelled:',
+                                selectedCancelledColorIndex,
+                                (index) {
+                                  setState(() {
+                                    selectedCancelledColorIndex = index;
+                                  });
+                                },
+                              ),
                             ],
                           ),
                         ),

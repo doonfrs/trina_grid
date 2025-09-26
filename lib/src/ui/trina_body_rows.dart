@@ -134,8 +134,9 @@ class TrinaBodyRowsState extends TrinaStateWithChange<TrinaBodyRows> {
 
     // Get non-frozen rows from the current page
     _rows = stateManager.refRows;
-    _scrollableRows =
-        _rows.where((row) => row.frozen == TrinaRowFrozen.none).toList();
+    _scrollableRows = _rows
+        .where((row) => row.frozen == TrinaRowFrozen.none)
+        .toList();
 
     // Cancel existing timers before creating new ones
     _verticalScrollTimer?.cancel();
@@ -179,7 +180,12 @@ class TrinaBodyRowsState extends TrinaStateWithChange<TrinaBodyRows> {
       visibilityLayout: true,
     );
 
-    return stateManager.rowWrapper?.call(context, rowWidget, row, stateManager) ??
+    return stateManager.rowWrapper?.call(
+          context,
+          rowWidget,
+          row,
+          stateManager,
+        ) ??
         rowWidget;
   }
 
@@ -312,7 +318,7 @@ class ListResizeDelegate extends SingleChildLayoutDelegate {
   List<TrinaColumn> columns;
 
   ListResizeDelegate(this.stateManager, this.columns)
-      : super(relayout: stateManager.resizingChangeNotifier);
+    : super(relayout: stateManager.resizingChangeNotifier);
 
   @override
   bool shouldRelayout(covariant SingleChildLayoutDelegate oldDelegate) {

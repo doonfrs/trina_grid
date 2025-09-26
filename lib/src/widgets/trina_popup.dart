@@ -18,7 +18,7 @@ enum TrinaPopupPosition {
   top,
 
   /// Always position the popup below the anchor.
-  bottom
+  bottom,
 }
 
 /// A widget that displays a popup anchored to another widget.
@@ -227,14 +227,32 @@ class _TrianglePainter extends CustomPainter {
     paint.color = color;
 
     path.lineTo(size.width * 0.66, size.height * 0.86);
-    path.cubicTo(size.width * 0.58, size.height * 1.05, size.width * 0.42,
-        size.height * 1.05, size.width * 0.34, size.height * 0.86);
+    path.cubicTo(
+      size.width * 0.58,
+      size.height * 1.05,
+      size.width * 0.42,
+      size.height * 1.05,
+      size.width * 0.34,
+      size.height * 0.86,
+    );
     path.cubicTo(size.width * 0.34, size.height * 0.86, 0, 0, 0, 0);
     path.cubicTo(0, 0, size.width, 0, size.width, 0);
-    path.cubicTo(size.width, 0, size.width * 0.66, size.height * 0.86,
-        size.width * 0.66, size.height * 0.86);
-    path.cubicTo(size.width * 0.66, size.height * 0.86, size.width * 0.66,
-        size.height * 0.86, size.width * 0.66, size.height * 0.86);
+    path.cubicTo(
+      size.width,
+      0,
+      size.width * 0.66,
+      size.height * 0.86,
+      size.width * 0.66,
+      size.height * 0.86,
+    );
+    path.cubicTo(
+      size.width * 0.66,
+      size.height * 0.86,
+      size.width * 0.66,
+      size.height * 0.86,
+      size.width * 0.66,
+      size.height * 0.86,
+    );
     canvas.drawPath(path, paint);
   }
 
@@ -255,8 +273,9 @@ class _PopupRoute<T> extends PopupRoute<T> {
   static const double _margin = 10;
   static const double _mobileWidthThreshold = 600;
 
-  late final ScreenUtil screenUtil =
-      ScreenUtil(mediaQuery: MediaQuery.of(context));
+  late final ScreenUtil screenUtil = ScreenUtil(
+    mediaQuery: MediaQuery.of(context),
+  );
 
   late final Rect _viewportRect = Rect.fromLTWH(
     _margin,
@@ -396,8 +415,10 @@ class _PopupRoute<T> extends PopupRoute<T> {
     final bottomHeight = _viewportRect.bottom - targetRect.bottom;
     final maximum = math.max(topHeight, bottomHeight);
     _maxHeight = childRect.height > maximum ? maximum : childRect.height;
-    _maxHeight =
-        _maxHeight.clamp(0.0, double.infinity); // Prevent negative height
+    _maxHeight = _maxHeight.clamp(
+      0.0,
+      double.infinity,
+    ); // Prevent negative height
 
     if (position == TrinaPopupPosition.top ||
         (position == TrinaPopupPosition.auto && _maxHeight > bottomHeight)) {

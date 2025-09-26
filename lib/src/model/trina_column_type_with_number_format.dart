@@ -37,7 +37,8 @@ mixin TrinaColumnTypeWithNumberFormat {
   }
 
   String applyFormat(dynamic value) {
-    num number = num.tryParse(
+    num number =
+        num.tryParse(
           value.toString().replaceAll(numberFormat.symbols.DECIMAL_SEP, '.'),
         ) ??
         0;

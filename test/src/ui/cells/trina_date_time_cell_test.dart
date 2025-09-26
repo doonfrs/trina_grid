@@ -53,10 +53,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
-          body: TrinaGrid(
-            columns: [column],
-            rows: [row],
-          ),
+          body: TrinaGrid(columns: [column], rows: [row]),
         ),
       ),
     );
@@ -80,8 +77,10 @@ void main() {
 
       testWidgets('Custom icon should be rendered', (tester) async {
         final customIcon = Icons.add;
-        await buildCellAndEdit(tester,
-            column: getColumn(popupIcon: customIcon));
+        await buildCellAndEdit(
+          tester,
+          column: getColumn(popupIcon: customIcon),
+        );
 
         expect(find.byIcon(customIcon), findsOneWidget);
       });
@@ -257,32 +256,31 @@ void main() {
       },
     );
 
-    testWidgets(
-      'selecting a date after endDate should not change the value',
-      (tester) async {
-        final column = getColumn(
-          startDate: DateTime(2023, 1, 10),
-          endDate: DateTime(2023, 1, 20),
-        );
-        await buildCellAndEdit(
-          tester,
-          column: column,
-          trinaCell: TrinaCell(value: '2023-01-15 12:00'),
-        );
-        await openPopup(tester);
+    testWidgets('selecting a date after endDate should not change the value', (
+      tester,
+    ) async {
+      final column = getColumn(
+        startDate: DateTime(2023, 1, 10),
+        endDate: DateTime(2023, 1, 20),
+      );
+      await buildCellAndEdit(
+        tester,
+        column: column,
+        trinaCell: TrinaCell(value: '2023-01-15 12:00'),
+      );
+      await openPopup(tester);
 
-        // Attempt to select a date after endDate
-        await tester.tap(find.text('25'));
-        await tester.pumpAndSettle();
+      // Attempt to select a date after endDate
+      await tester.tap(find.text('25'));
+      await tester.pumpAndSettle();
 
-        // Click OK
-        await tester.tap(okButtonFinder);
-        await tester.pumpAndSettle();
+      // Click OK
+      await tester.tap(okButtonFinder);
+      await tester.pumpAndSettle();
 
-        // Verify the cell value has not changed
-        expect(cell.value, '2023-01-15 12:00');
-      },
-    );
+      // Verify the cell value has not changed
+      expect(cell.value, '2023-01-15 12:00');
+    });
   });
 
   group('Initial Value Fallback', () {
@@ -329,26 +327,22 @@ void main() {
       },
     );
 
-    testWidgets(
-      'should have OK button disabled when all fallbacks are invalid',
-      (tester) async {
-        final now = DateTime.now();
-        final endDate = now.subtract(const Duration(days: 5));
-        final column = getColumn(
-          startDate: null,
-          endDate: endDate,
-        );
-        // Invalid cell value
-        await buildCellAndEdit(
-          tester,
-          column: column,
-          trinaCell: TrinaCell(value: 'invalid-date'),
-        );
-        await openPopup(tester);
+    testWidgets('should have OK button disabled when all fallbacks are invalid', (
+      tester,
+    ) async {
+      final now = DateTime.now();
+      final endDate = now.subtract(const Duration(days: 5));
+      final column = getColumn(startDate: null, endDate: endDate);
+      // Invalid cell value
+      await buildCellAndEdit(
+        tester,
+        column: column,
+        trinaCell: TrinaCell(value: 'invalid-date'),
+      );
+      await openPopup(tester);
 
-        // OK button should be disabled because no valid initial date could be determined
-        expect(tester.widget<TextButton>(okButtonFinder).onPressed, isNull);
-      },
-    );
+      // OK button should be disabled because no valid initial date could be determined
+      expect(tester.widget<TextButton>(okButtonFinder).onPressed, isNull);
+    });
   });
 }

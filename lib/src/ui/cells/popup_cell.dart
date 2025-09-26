@@ -57,7 +57,7 @@ mixin PopupCellState<T extends PopupCell> on State<T>
         logicalKey: event.logicalKey,
         currentValue: textController.text,
       );
-      
+
       widget.cell.onKeyPressed!(keyEvent);
     }
 

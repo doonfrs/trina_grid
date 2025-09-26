@@ -46,20 +46,21 @@ void main() {
     });
 
     test(
-        'If there is no delegate, iterateMainRowGroup should return an empty list.',
-        () {
-      final rows = [
-        TrinaRow(cells: {}),
-        TrinaRow(cells: {}),
-        TrinaRow(cells: {}),
-        TrinaRow(cells: {}),
-        TrinaRow(cells: {}),
-      ];
+      'If there is no delegate, iterateMainRowGroup should return an empty list.',
+      () {
+        final rows = [
+          TrinaRow(cells: {}),
+          TrinaRow(cells: {}),
+          TrinaRow(cells: {}),
+          TrinaRow(cells: {}),
+          TrinaRow(cells: {}),
+        ];
 
-      final stateManager = createStateManager(columns: [], rows: rows);
+        final stateManager = createStateManager(columns: [], rows: rows);
 
-      expect(stateManager.iterateAllMainRowGroup.length, 5);
-    });
+        expect(stateManager.iterateAllMainRowGroup.length, 5);
+      },
+    );
 
     group('[Group row (3 children), Normal row, Normal row]', () {
       late TrinaGridStateManager stateManager;
@@ -177,20 +178,22 @@ void main() {
       });
 
       test(
-          'If groupedRow is expanded, isExpandedGroupedRow should return true.',
-          () {
-        groupedRow.type.group.setExpanded(true);
+        'If groupedRow is expanded, isExpandedGroupedRow should return true.',
+        () {
+          groupedRow.type.group.setExpanded(true);
 
-        expect(stateManager.isExpandedGroupedRow(groupedRow), true);
-      });
+          expect(stateManager.isExpandedGroupedRow(groupedRow), true);
+        },
+      );
 
       test(
-          'If groupedRow is not expanded, isExpandedGroupedRow should return false.',
-          () {
-        groupedRow.type.group.setExpanded(false);
+        'If groupedRow is not expanded, isExpandedGroupedRow should return false.',
+        () {
+          groupedRow.type.group.setExpanded(false);
 
-        expect(stateManager.isExpandedGroupedRow(groupedRow), false);
-      });
+          expect(stateManager.isExpandedGroupedRow(groupedRow), false);
+        },
+      );
     });
   });
 
@@ -213,11 +216,13 @@ void main() {
     late TrinaGridStateManager stateManager;
 
     TrinaRow createRow(String value1, String value2, String value3) {
-      return TrinaRow(cells: {
-        'column1': TrinaCell(value: value1),
-        'column2': TrinaCell(value: value2),
-        'column3': TrinaCell(value: value3),
-      });
+      return TrinaRow(
+        cells: {
+          'column1': TrinaCell(value: value1),
+          'column2': TrinaCell(value: value2),
+          'column3': TrinaCell(value: value3),
+        },
+      );
     }
 
     setUp(() {
@@ -240,39 +245,48 @@ void main() {
       ];
 
       rows = [
-        TrinaRow(cells: {
-          'column1': TrinaCell(value: 'A'),
-          'column2': TrinaCell(value: '1'),
-          'column3': TrinaCell(value: '001'),
-        }),
-        TrinaRow(cells: {
-          'column1': TrinaCell(value: 'A'),
-          'column2': TrinaCell(value: '2'),
-          'column3': TrinaCell(value: '002'),
-        }),
-        TrinaRow(cells: {
-          'column1': TrinaCell(value: 'B'),
-          'column2': TrinaCell(value: '1'),
-          'column3': TrinaCell(value: '003'),
-        }),
-        TrinaRow(cells: {
-          'column1': TrinaCell(value: 'B'),
-          'column2': TrinaCell(value: '1'),
-          'column3': TrinaCell(value: '004'),
-        }),
-        TrinaRow(cells: {
-          'column1': TrinaCell(value: 'B'),
-          'column2': TrinaCell(value: '2'),
-          'column3': TrinaCell(value: '005'),
-        }),
+        TrinaRow(
+          cells: {
+            'column1': TrinaCell(value: 'A'),
+            'column2': TrinaCell(value: '1'),
+            'column3': TrinaCell(value: '001'),
+          },
+        ),
+        TrinaRow(
+          cells: {
+            'column1': TrinaCell(value: 'A'),
+            'column2': TrinaCell(value: '2'),
+            'column3': TrinaCell(value: '002'),
+          },
+        ),
+        TrinaRow(
+          cells: {
+            'column1': TrinaCell(value: 'B'),
+            'column2': TrinaCell(value: '1'),
+            'column3': TrinaCell(value: '003'),
+          },
+        ),
+        TrinaRow(
+          cells: {
+            'column1': TrinaCell(value: 'B'),
+            'column2': TrinaCell(value: '1'),
+            'column3': TrinaCell(value: '004'),
+          },
+        ),
+        TrinaRow(
+          cells: {
+            'column1': TrinaCell(value: 'B'),
+            'column2': TrinaCell(value: '2'),
+            'column3': TrinaCell(value: '005'),
+          },
+        ),
       ];
 
       stateManager = createStateManager(columns: columns, rows: rows);
 
-      stateManager.setRowGroup(TrinaRowGroupByColumnDelegate(columns: [
-        columns[0],
-        columns[1],
-      ]));
+      stateManager.setRowGroup(
+        TrinaRowGroupByColumnDelegate(columns: [columns[0], columns[1]]),
+      );
     });
 
     test('When there is a row group, return true.', () {
@@ -315,42 +329,43 @@ void main() {
     });
 
     test(
-        'If all columns are removed and new columns are added, the cells of the existing rows should be added.',
-        () {
-      stateManager.removeColumns(columns);
+      'If all columns are removed and new columns are added, the cells of the existing rows should be added.',
+      () {
+        stateManager.removeColumns(columns);
 
-      expect(stateManager.refColumns.originalList.length, 0);
-      expect(stateManager.refRows.originalList.length, 5);
+        expect(stateManager.refColumns.originalList.length, 0);
+        expect(stateManager.refRows.originalList.length, 5);
 
-      for (final row in stateManager.refRows.originalList) {
-        // The parent of the grouped column should be null.
-        expect(row.parent, null);
-        expect(row.cells['column1'], null);
-        expect(row.cells['column2'], null);
-        expect(row.cells['column3'], null);
-      }
+        for (final row in stateManager.refRows.originalList) {
+          // The parent of the grouped column should be null.
+          expect(row.parent, null);
+          expect(row.cells['column1'], null);
+          expect(row.cells['column2'], null);
+          expect(row.cells['column3'], null);
+        }
 
-      stateManager.insertColumns(0, [
-        TrinaColumn(
-          title: 'column4',
-          field: 'column4',
-          type: TrinaColumnType.text(),
-        ),
-      ]);
+        stateManager.insertColumns(0, [
+          TrinaColumn(
+            title: 'column4',
+            field: 'column4',
+            type: TrinaColumnType.text(),
+          ),
+        ]);
 
-      expect(stateManager.refColumns.originalList.length, 1);
-      expect(stateManager.refRows.originalList.length, 5);
+        expect(stateManager.refColumns.originalList.length, 1);
+        expect(stateManager.refRows.originalList.length, 5);
 
-      final rowAndGroup = stateManager.iterateAllRowAndGroup.toList();
+        final rowAndGroup = stateManager.iterateAllRowAndGroup.toList();
 
-      expect(rowAndGroup.length, 5);
-      for (final row in rowAndGroup) {
-        expect(row.cells['column1'], null);
-        expect(row.cells['column2'], null);
-        expect(row.cells['column3'], null);
-        expect(row.cells['column4'], isNot(null));
-      }
-    });
+        expect(rowAndGroup.length, 5);
+        for (final row in rowAndGroup) {
+          expect(row.cells['column1'], null);
+          expect(row.cells['column2'], null);
+          expect(row.cells['column3'], null);
+          expect(row.cells['column4'], isNot(null));
+        }
+      },
+    );
 
     test('If the first row is expanded, refRows should return 4 rows.', () {
       final firstRowGroup = stateManager.refRows.first;
@@ -362,60 +377,55 @@ void main() {
     });
 
     test(
-        'If the first row is expanded and then collapsed, refRows should return 2 rows.',
-        () {
-      final firstRowGroup = stateManager.refRows.first;
-
-      stateManager.toggleExpandedRowGroup(rowGroup: firstRowGroup);
-
-      expect(firstRowGroup.type.group.expanded, true);
-      expect(stateManager.refRows.length, 4);
-
-      stateManager.toggleExpandedRowGroup(rowGroup: firstRowGroup);
-
-      expect(firstRowGroup.type.group.expanded, false);
-      expect(stateManager.refRows.length, 2);
-    });
-
-    test(
-      'First row and its first child are expanded, '
-      'refRows should return 5 rows.',
+      'If the first row is expanded and then collapsed, refRows should return 2 rows.',
       () {
         final firstRowGroup = stateManager.refRows.first;
-        final firstRowGroupFirstChild = firstRowGroup.type.group.children.first;
 
         stateManager.toggleExpandedRowGroup(rowGroup: firstRowGroup);
-        stateManager.toggleExpandedRowGroup(rowGroup: firstRowGroupFirstChild);
 
         expect(firstRowGroup.type.group.expanded, true);
-        expect(firstRowGroupFirstChild.type.group.expanded, true);
-        expect(stateManager.refRows.length, 5);
-      },
-    );
-
-    test(
-      'First row and its first child are expanded, '
-      'refRows should return 2 rows.',
-      () {
-        final firstRowGroup = stateManager.refRows.first;
-        final firstRowGroupFirstChild = firstRowGroup.type.group.children.first;
+        expect(stateManager.refRows.length, 4);
 
         stateManager.toggleExpandedRowGroup(rowGroup: firstRowGroup);
-        stateManager.toggleExpandedRowGroup(rowGroup: firstRowGroupFirstChild);
 
-        expect(firstRowGroup.type.group.expanded, true);
-        expect(firstRowGroupFirstChild.type.group.expanded, true);
-        expect(stateManager.refRows.length, 5);
-
-        stateManager.toggleExpandedRowGroup(rowGroup: firstRowGroup);
         expect(firstRowGroup.type.group.expanded, false);
         expect(stateManager.refRows.length, 2);
-
-        stateManager.toggleExpandedRowGroup(rowGroup: firstRowGroup);
-        expect(firstRowGroup.type.group.expanded, true);
-        expect(stateManager.refRows.length, 5);
       },
     );
+
+    test('First row and its first child are expanded, '
+        'refRows should return 5 rows.', () {
+      final firstRowGroup = stateManager.refRows.first;
+      final firstRowGroupFirstChild = firstRowGroup.type.group.children.first;
+
+      stateManager.toggleExpandedRowGroup(rowGroup: firstRowGroup);
+      stateManager.toggleExpandedRowGroup(rowGroup: firstRowGroupFirstChild);
+
+      expect(firstRowGroup.type.group.expanded, true);
+      expect(firstRowGroupFirstChild.type.group.expanded, true);
+      expect(stateManager.refRows.length, 5);
+    });
+
+    test('First row and its first child are expanded, '
+        'refRows should return 2 rows.', () {
+      final firstRowGroup = stateManager.refRows.first;
+      final firstRowGroupFirstChild = firstRowGroup.type.group.children.first;
+
+      stateManager.toggleExpandedRowGroup(rowGroup: firstRowGroup);
+      stateManager.toggleExpandedRowGroup(rowGroup: firstRowGroupFirstChild);
+
+      expect(firstRowGroup.type.group.expanded, true);
+      expect(firstRowGroupFirstChild.type.group.expanded, true);
+      expect(stateManager.refRows.length, 5);
+
+      stateManager.toggleExpandedRowGroup(rowGroup: firstRowGroup);
+      expect(firstRowGroup.type.group.expanded, false);
+      expect(stateManager.refRows.length, 2);
+
+      stateManager.toggleExpandedRowGroup(rowGroup: firstRowGroup);
+      expect(firstRowGroup.type.group.expanded, true);
+      expect(stateManager.refRows.length, 5);
+    });
 
     test('refRows should be grouped by the 2 columns set.', () {
       final firstGroupField = columns[0].field;
@@ -459,10 +469,7 @@ void main() {
         final aGroupSecondChildren = aGroupChildren[1].type.group.children;
         expect(aGroupSecondChildren.length, 1);
         expect(aGroupSecondChildren[0].type.isNormal, true);
-        expect(
-          aGroupSecondChildren[0].cells[normalColumnField]!.value,
-          '002',
-        );
+        expect(aGroupSecondChildren[0].cells[normalColumnField]!.value, '002');
       });
     });
 
@@ -498,10 +505,7 @@ void main() {
         final bGroupSecondChildren = bGroupChildren[1].type.group.children;
         expect(bGroupSecondChildren.length, 1);
         expect(bGroupSecondChildren[0].type.isNormal, true);
-        expect(
-          bGroupSecondChildren[0].cells[normalColumnField]!.value,
-          '005',
-        );
+        expect(bGroupSecondChildren[0].cells[normalColumnField]!.value, '005');
       });
     });
 
@@ -512,47 +516,50 @@ void main() {
     });
 
     test(
-        'If the first row is expanded and then filtered by column1 value A, 3 rows should be returned.',
-        () {
-      final firstRowGroup = stateManager.refRows.first;
+      'If the first row is expanded and then filtered by column1 value A, 3 rows should be returned.',
+      () {
+        final firstRowGroup = stateManager.refRows.first;
 
-      stateManager.toggleExpandedRowGroup(rowGroup: firstRowGroup);
+        stateManager.toggleExpandedRowGroup(rowGroup: firstRowGroup);
 
-      stateManager.setFilter((row) => row.cells['column1']!.value == 'A');
+        stateManager.setFilter((row) => row.cells['column1']!.value == 'A');
 
-      // First row + first row's 2 children = 3 rows
-      expect(stateManager.refRows.length, 3);
-    });
-
-    test(
-        'If two rows are expanded and the  n filtered by column2 value 1, 4 rows should be returned.',
-        () {
-      final firstRowGroup = stateManager.refRows[0];
-      final secondRowGroup = stateManager.refRows[1];
-
-      stateManager.toggleExpandedRowGroup(rowGroup: firstRowGroup);
-      stateManager.toggleExpandedRowGroup(rowGroup: secondRowGroup);
-      expect(stateManager.refRows.length, 6);
-
-      stateManager.setFilter((row) => row.cells['column2']!.value == '1');
-
-      expect(stateManager.refRows.length, 4);
-    });
+        // First row + first row's 2 children = 3 rows
+        expect(stateManager.refRows.length, 3);
+      },
+    );
 
     test(
-        'If column1 is sorted in descending order, the order of the two rows should be reversed.',
-        () {
-      expect(stateManager.refRows[0].cells['column1']!.value, 'A');
-      expect(stateManager.refRows[1].cells['column1']!.value, 'B');
+      'If two rows are expanded and the  n filtered by column2 value 1, 4 rows should be returned.',
+      () {
+        final firstRowGroup = stateManager.refRows[0];
+        final secondRowGroup = stateManager.refRows[1];
 
-      // Ascending
-      stateManager.toggleSortColumn(columns[0]);
-      // Descending
-      stateManager.toggleSortColumn(columns[0]);
+        stateManager.toggleExpandedRowGroup(rowGroup: firstRowGroup);
+        stateManager.toggleExpandedRowGroup(rowGroup: secondRowGroup);
+        expect(stateManager.refRows.length, 6);
 
-      expect(stateManager.refRows[0].cells['column1']!.value, 'B');
-      expect(stateManager.refRows[1].cells['column1']!.value, 'A');
-    });
+        stateManager.setFilter((row) => row.cells['column2']!.value == '1');
+
+        expect(stateManager.refRows.length, 4);
+      },
+    );
+
+    test(
+      'If column1 is sorted in descending order, the order of the two rows should be reversed.',
+      () {
+        expect(stateManager.refRows[0].cells['column1']!.value, 'A');
+        expect(stateManager.refRows[1].cells['column1']!.value, 'B');
+
+        // Ascending
+        stateManager.toggleSortColumn(columns[0]);
+        // Descending
+        stateManager.toggleSortColumn(columns[0]);
+
+        expect(stateManager.refRows[0].cells['column1']!.value, 'B');
+        expect(stateManager.refRows[1].cells['column1']!.value, 'A');
+      },
+    );
 
     test(
       'If the second row is expanded and then sorted in descending order, the order of the two children should be reversed.',
@@ -593,44 +600,52 @@ void main() {
     );
 
     test(
-        'If a row with column2 value 3 is added to the first row, the first row should have 3 children.',
-        () {
-      final rowToAdd = TrinaRow(cells: {
-        'column1': TrinaCell(value: 'A'),
-        'column2': TrinaCell(value: '3'),
-        'column3': TrinaCell(value: '006'),
-      });
+      'If a row with column2 value 3 is added to the first row, the first row should have 3 children.',
+      () {
+        final rowToAdd = TrinaRow(
+          cells: {
+            'column1': TrinaCell(value: 'A'),
+            'column2': TrinaCell(value: '3'),
+            'column3': TrinaCell(value: '006'),
+          },
+        );
 
-      expect(stateManager.refRows.first.type.group.children.length, 2);
+        expect(stateManager.refRows.first.type.group.children.length, 2);
 
-      stateManager.insertRows(0, [rowToAdd]);
+        stateManager.insertRows(0, [rowToAdd]);
 
-      expect(stateManager.refRows.first.type.group.children.length, 3);
-    });
-
-    test(
-        'Adding a row with column2 value 3 to the first row should set the parent of the added child.',
-        () {
-      final rowToAdd = TrinaRow(cells: {
-        'column1': TrinaCell(value: 'A'),
-        'column2': TrinaCell(value: '3'),
-        'column3': TrinaCell(value: '006'),
-      });
-
-      stateManager.insertRows(0, [rowToAdd]);
-
-      expect(rowToAdd.parent?.cells['column2']!.value, '3');
-      expect(rowToAdd.parent?.parent, stateManager.refRows.first);
-    });
+        expect(stateManager.refRows.first.type.group.children.length, 3);
+      },
+    );
 
     test(
       'Adding a row with column2 value 3 to the first row should set the parent of the added child.',
       () {
-        final rowToAdd = TrinaRow(cells: {
-          'column1': TrinaCell(value: 'A'),
-          'column2': TrinaCell(value: '3'),
-          'column3': TrinaCell(value: '006'),
-        });
+        final rowToAdd = TrinaRow(
+          cells: {
+            'column1': TrinaCell(value: 'A'),
+            'column2': TrinaCell(value: '3'),
+            'column3': TrinaCell(value: '006'),
+          },
+        );
+
+        stateManager.insertRows(0, [rowToAdd]);
+
+        expect(rowToAdd.parent?.cells['column2']!.value, '3');
+        expect(rowToAdd.parent?.parent, stateManager.refRows.first);
+      },
+    );
+
+    test(
+      'Adding a row with column2 value 3 to the first row should set the parent of the added child.',
+      () {
+        final rowToAdd = TrinaRow(
+          cells: {
+            'column1': TrinaCell(value: 'A'),
+            'column2': TrinaCell(value: '3'),
+            'column3': TrinaCell(value: '006'),
+          },
+        );
 
         stateManager.toggleSortColumn(columns.first);
 
@@ -641,43 +656,41 @@ void main() {
       },
     );
 
-    test(
-      'prependRows with column2 value 3, '
-      'added child should have parent set.',
-      () {
-        final rowToAdd = TrinaRow(cells: {
+    test('prependRows with column2 value 3, '
+        'added child should have parent set.', () {
+      final rowToAdd = TrinaRow(
+        cells: {
           'column1': TrinaCell(value: 'A'),
           'column2': TrinaCell(value: '3'),
           'column3': TrinaCell(value: '006'),
-        });
+        },
+      );
 
-        stateManager.toggleSortColumn(columns.first);
+      stateManager.toggleSortColumn(columns.first);
 
-        stateManager.prependRows([rowToAdd]);
+      stateManager.prependRows([rowToAdd]);
 
-        expect(rowToAdd.parent?.cells['column2']!.value, '3');
-        expect(rowToAdd.parent?.parent, stateManager.refRows.first);
-      },
-    );
+      expect(rowToAdd.parent?.cells['column2']!.value, '3');
+      expect(rowToAdd.parent?.parent, stateManager.refRows.first);
+    });
 
-    test(
-      'appendRows with column2 value 3, '
-      'added child should have parent set.',
-      () {
-        final rowToAdd = TrinaRow(cells: {
+    test('appendRows with column2 value 3, '
+        'added child should have parent set.', () {
+      final rowToAdd = TrinaRow(
+        cells: {
           'column1': TrinaCell(value: 'A'),
           'column2': TrinaCell(value: '3'),
           'column3': TrinaCell(value: '006'),
-        });
+        },
+      );
 
-        stateManager.toggleSortColumn(columns.first);
+      stateManager.toggleSortColumn(columns.first);
 
-        stateManager.appendRows([rowToAdd]);
+      stateManager.appendRows([rowToAdd]);
 
-        expect(rowToAdd.parent?.cells['column2']!.value, '3');
-        expect(rowToAdd.parent?.parent, stateManager.refRows.first);
-      },
-    );
+      expect(rowToAdd.parent?.cells['column2']!.value, '3');
+      expect(rowToAdd.parent?.parent, stateManager.refRows.first);
+    });
 
     test('First row and its children should be removed.', () {
       final firstRowGroup = stateManager.refRows.first;
@@ -730,40 +743,41 @@ void main() {
     });
 
     test(
-        'If column1 is hidden and then unhidden, column1 should be grouped again.',
-        () {
-      final firstColumn = stateManager.refColumns.first;
+      'If column1 is hidden and then unhidden, column1 should be grouped again.',
+      () {
+        final firstColumn = stateManager.refColumns.first;
 
-      stateManager.hideColumn(firstColumn, true);
+        stateManager.hideColumn(firstColumn, true);
 
-      expect(stateManager.refRows.length, 2);
+        expect(stateManager.refRows.length, 2);
 
-      {
-        final rowGroup = stateManager.refRows[0];
-        expect(rowGroup.cells['column2']!.value, '1');
-        expect(rowGroup.type.group.children.length, 3);
-      }
+        {
+          final rowGroup = stateManager.refRows[0];
+          expect(rowGroup.cells['column2']!.value, '1');
+          expect(rowGroup.type.group.children.length, 3);
+        }
 
-      {
-        final rowGroup = stateManager.refRows[1];
-        expect(rowGroup.cells['column2']!.value, '2');
-        expect(rowGroup.type.group.children.length, 2);
-      }
+        {
+          final rowGroup = stateManager.refRows[1];
+          expect(rowGroup.cells['column2']!.value, '2');
+          expect(rowGroup.type.group.children.length, 2);
+        }
 
-      stateManager.hideColumn(firstColumn, false);
+        stateManager.hideColumn(firstColumn, false);
 
-      {
-        final rowGroup = stateManager.refRows[0];
-        expect(rowGroup.cells['column1']!.value, 'A');
-        expect(rowGroup.type.group.children.length, 2);
-      }
+        {
+          final rowGroup = stateManager.refRows[0];
+          expect(rowGroup.cells['column1']!.value, 'A');
+          expect(rowGroup.type.group.children.length, 2);
+        }
 
-      {
-        final rowGroup = stateManager.refRows[1];
-        expect(rowGroup.cells['column1']!.value, 'B');
-        expect(rowGroup.type.group.children.length, 2);
-      }
-    });
+        {
+          final rowGroup = stateManager.refRows[1];
+          expect(rowGroup.cells['column1']!.value, 'B');
+          expect(rowGroup.type.group.children.length, 2);
+        }
+      },
+    );
 
     group('insertRows', () {
       test('When inserting a row at index 0, the row should be added.', () {
@@ -1213,44 +1227,45 @@ void main() {
       });
 
       test(
-          'Adding rows (A, 1, 006), (B, 1, 007), (C, 1, 008) should add the rows.',
-          () {
-        /// Before
-        /// 0. A
-        /// 1. B
-        /// After
-        /// 0. C (1 > 008)
-        /// 1. A (1 > 001 006)
-        /// 2. B (1 > 003, 004, 007)
-        stateManager.prependRows([
-          createRow('A', '1', '006'),
-          createRow('B', '1', '007'),
-          createRow('C', '1', '008'),
-        ]);
+        'Adding rows (A, 1, 006), (B, 1, 007), (C, 1, 008) should add the rows.',
+        () {
+          /// Before
+          /// 0. A
+          /// 1. B
+          /// After
+          /// 0. C (1 > 008)
+          /// 1. A (1 > 001 006)
+          /// 2. B (1 > 003, 004, 007)
+          stateManager.prependRows([
+            createRow('A', '1', '006'),
+            createRow('B', '1', '007'),
+            createRow('C', '1', '008'),
+          ]);
 
-        final GROUP_C = stateManager.refRows[0];
-        final GROUP_C_1 = GROUP_C.type.group.children.first;
-        final GROUP_C_1_008 = GROUP_C_1.type.group.children.first;
-        final GROUP_A = stateManager.refRows[1];
-        final GROUP_A_1 = GROUP_A.type.group.children.first;
-        final GROUP_A_1_006 = GROUP_A_1.type.group.children.last;
-        final GROUP_B = stateManager.refRows[2];
-        final GROUP_B_1 = GROUP_B.type.group.children.first;
-        final GROUP_B_1_007 = GROUP_B_1.type.group.children.last;
+          final GROUP_C = stateManager.refRows[0];
+          final GROUP_C_1 = GROUP_C.type.group.children.first;
+          final GROUP_C_1_008 = GROUP_C_1.type.group.children.first;
+          final GROUP_A = stateManager.refRows[1];
+          final GROUP_A_1 = GROUP_A.type.group.children.first;
+          final GROUP_A_1_006 = GROUP_A_1.type.group.children.last;
+          final GROUP_B = stateManager.refRows[2];
+          final GROUP_B_1 = GROUP_B.type.group.children.first;
+          final GROUP_B_1_007 = GROUP_B_1.type.group.children.last;
 
-        expect(GROUP_C.cells['column1']!.value, 'C');
-        expect(GROUP_C_1.cells['column2']!.value, '1');
-        expect(GROUP_C_1_008.cells['column3']!.value, '008');
-        expect(GROUP_C_1_008.parent, GROUP_C_1);
-        expect(GROUP_C_1_008.parent?.parent, GROUP_C);
+          expect(GROUP_C.cells['column1']!.value, 'C');
+          expect(GROUP_C_1.cells['column2']!.value, '1');
+          expect(GROUP_C_1_008.cells['column3']!.value, '008');
+          expect(GROUP_C_1_008.parent, GROUP_C_1);
+          expect(GROUP_C_1_008.parent?.parent, GROUP_C);
 
-        expect(GROUP_A_1_006.cells['column3']!.value, '006');
-        expect(GROUP_A_1_006.parent, GROUP_A_1);
-        expect(GROUP_A_1_006.parent?.parent, GROUP_A);
-        expect(GROUP_B_1_007.cells['column3']!.value, '007');
-        expect(GROUP_B_1_007.parent, GROUP_B_1);
-        expect(GROUP_B_1_007.parent?.parent, GROUP_B);
-      });
+          expect(GROUP_A_1_006.cells['column3']!.value, '006');
+          expect(GROUP_A_1_006.parent, GROUP_A_1);
+          expect(GROUP_A_1_006.parent?.parent, GROUP_A);
+          expect(GROUP_B_1_007.cells['column3']!.value, '007');
+          expect(GROUP_B_1_007.parent, GROUP_B_1);
+          expect(GROUP_B_1_007.parent?.parent, GROUP_B);
+        },
+      );
     });
 
     group('appendRows', () {
@@ -1274,39 +1289,40 @@ void main() {
       });
 
       test(
-          'Adding rows (B, 3, 006), (C, 1, 007), (C, 2, 008) should add the rows.',
-          () {
-        /// Before
-        /// 0. A
-        /// 1. B
-        /// After
-        /// 0. A
-        /// 1. B (3 > 006)
-        /// 2. C (1 > 007, 2 > 008)
-        stateManager.appendRows([
-          createRow('B', '3', '006'),
-          createRow('C', '1', '007'),
-          createRow('C', '2', '008'),
-        ]);
+        'Adding rows (B, 3, 006), (C, 1, 007), (C, 2, 008) should add the rows.',
+        () {
+          /// Before
+          /// 0. A
+          /// 1. B
+          /// After
+          /// 0. A
+          /// 1. B (3 > 006)
+          /// 2. C (1 > 007, 2 > 008)
+          stateManager.appendRows([
+            createRow('B', '3', '006'),
+            createRow('C', '1', '007'),
+            createRow('C', '2', '008'),
+          ]);
 
-        expect(stateManager.refRows.length, 3);
-        final GROUP_B = stateManager.refRows[1];
-        final GROUP_B_3 = GROUP_B.type.group.children.last;
-        final GROUP_B_3_006 = GROUP_B_3.type.group.children.first;
-        expect(GROUP_B_3.cells['column2']!.value, '3');
-        expect(GROUP_B_3_006.cells['column3']!.value, '006');
+          expect(stateManager.refRows.length, 3);
+          final GROUP_B = stateManager.refRows[1];
+          final GROUP_B_3 = GROUP_B.type.group.children.last;
+          final GROUP_B_3_006 = GROUP_B_3.type.group.children.first;
+          expect(GROUP_B_3.cells['column2']!.value, '3');
+          expect(GROUP_B_3_006.cells['column3']!.value, '006');
 
-        final GROUP_C = stateManager.refRows[2];
-        final GROUP_C_1 = GROUP_C.type.group.children.first;
-        final GROUP_C_1_007 = GROUP_C_1.type.group.children.first;
-        final GROUP_C_2 = GROUP_C.type.group.children.last;
-        final GROUP_C_2_008 = GROUP_C_2.type.group.children.first;
-        expect(GROUP_C.cells['column1']!.value, 'C');
-        expect(GROUP_C_1.cells['column2']!.value, '1');
-        expect(GROUP_C_1_007.cells['column3']!.value, '007');
-        expect(GROUP_C_2.cells['column2']!.value, '2');
-        expect(GROUP_C_2_008.cells['column3']!.value, '008');
-      });
+          final GROUP_C = stateManager.refRows[2];
+          final GROUP_C_1 = GROUP_C.type.group.children.first;
+          final GROUP_C_1_007 = GROUP_C_1.type.group.children.first;
+          final GROUP_C_2 = GROUP_C.type.group.children.last;
+          final GROUP_C_2_008 = GROUP_C_2.type.group.children.first;
+          expect(GROUP_C.cells['column1']!.value, 'C');
+          expect(GROUP_C_1.cells['column2']!.value, '1');
+          expect(GROUP_C_1_007.cells['column3']!.value, '007');
+          expect(GROUP_C_2.cells['column2']!.value, '2');
+          expect(GROUP_C_2_008.cells['column3']!.value, '008');
+        },
+      );
     });
 
     group('removeRows', () {
@@ -1566,45 +1582,46 @@ void main() {
     });
 
     test(
-        'When all columns are removed and new columns are added, the cells of the existing rows should be added.',
-        () {
-      stateManager.removeColumns(columns);
+      'When all columns are removed and new columns are added, the cells of the existing rows should be added.',
+      () {
+        stateManager.removeColumns(columns);
 
-      expect(stateManager.refColumns.originalList.length, 0);
-      expect(stateManager.refRows.originalList.length, 2);
+        expect(stateManager.refColumns.originalList.length, 0);
+        expect(stateManager.refRows.originalList.length, 2);
 
-      for (final row in stateManager.refRows.originalList) {
-        expect(row.parent, null);
-        expect(row.cells['column1'], null);
-        expect(row.cells['column2'], null);
-        expect(row.cells['column3'], null);
-        expect(row.cells['column4'], null);
-        expect(row.cells['column5'], null);
-      }
+        for (final row in stateManager.refRows.originalList) {
+          expect(row.parent, null);
+          expect(row.cells['column1'], null);
+          expect(row.cells['column2'], null);
+          expect(row.cells['column3'], null);
+          expect(row.cells['column4'], null);
+          expect(row.cells['column5'], null);
+        }
 
-      stateManager.insertColumns(0, [
-        TrinaColumn(
-          title: 'column6',
-          field: 'column6',
-          type: TrinaColumnType.text(),
-        ),
-      ]);
+        stateManager.insertColumns(0, [
+          TrinaColumn(
+            title: 'column6',
+            field: 'column6',
+            type: TrinaColumnType.text(),
+          ),
+        ]);
 
-      expect(stateManager.refColumns.originalList.length, 1);
-      expect(stateManager.refRows.originalList.length, 2);
+        expect(stateManager.refColumns.originalList.length, 1);
+        expect(stateManager.refRows.originalList.length, 2);
 
-      final rowAndGroup = stateManager.iterateAllRowAndGroup.toList();
+        final rowAndGroup = stateManager.iterateAllRowAndGroup.toList();
 
-      expect(rowAndGroup.length, 11);
-      for (final row in rowAndGroup) {
-        expect(row.cells['column1'], null);
-        expect(row.cells['column2'], null);
-        expect(row.cells['column3'], null);
-        expect(row.cells['column4'], null);
-        expect(row.cells['column5'], null);
-        expect(row.cells['column6'], isNot(null));
-      }
-    });
+        expect(rowAndGroup.length, 11);
+        for (final row in rowAndGroup) {
+          expect(row.cells['column1'], null);
+          expect(row.cells['column2'], null);
+          expect(row.cells['column3'], null);
+          expect(row.cells['column4'], null);
+          expect(row.cells['column5'], null);
+          expect(row.cells['column6'], isNot(null));
+        }
+      },
+    );
 
     /// G300
     ///   - G310
@@ -1629,18 +1646,22 @@ void main() {
             TrinaRow(
               cells: createCell('G300'),
               type: TrinaRowType.group(
-                children: FilteredList(initialList: [
-                  TrinaRow(cells: createCell('G310')),
-                  TrinaRow(
-                    cells: createCell('G320'),
-                    type: TrinaRowType.group(
-                      children: FilteredList(initialList: [
-                        TrinaRow(cells: createCell('G321')),
-                        TrinaRow(cells: createCell('G322')),
-                      ]),
+                children: FilteredList(
+                  initialList: [
+                    TrinaRow(cells: createCell('G310')),
+                    TrinaRow(
+                      cells: createCell('G320'),
+                      type: TrinaRowType.group(
+                        children: FilteredList(
+                          initialList: [
+                            TrinaRow(cells: createCell('G321')),
+                            TrinaRow(cells: createCell('G322')),
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
-                ]),
+                  ],
+                ),
               ),
             ),
           ]);
@@ -1773,26 +1794,34 @@ void main() {
       ];
 
       rows = [
-        TrinaRow(cells: {
-          'category': TrinaCell(value: 'Electronics'),
-          'subcategory': TrinaCell(value: 'Phones'),
-          'product': TrinaCell(value: 'Smartphone X'),
-        }),
-        TrinaRow(cells: {
-          'category': TrinaCell(value: 'Electronics'),
-          'subcategory': TrinaCell(value: 'Phones'),
-          'product': TrinaCell(value: 'Smartphone Y'),
-        }),
-        TrinaRow(cells: {
-          'category': TrinaCell(value: 'Electronics'),
-          'subcategory': TrinaCell(value: 'Laptops'),
-          'product': TrinaCell(value: 'Laptop Z'),
-        }),
-        TrinaRow(cells: {
-          'category': TrinaCell(value: 'Clothing'),
-          'subcategory': TrinaCell(value: 'Shirts'),
-          'product': TrinaCell(value: 'T-Shirt'),
-        }),
+        TrinaRow(
+          cells: {
+            'category': TrinaCell(value: 'Electronics'),
+            'subcategory': TrinaCell(value: 'Phones'),
+            'product': TrinaCell(value: 'Smartphone X'),
+          },
+        ),
+        TrinaRow(
+          cells: {
+            'category': TrinaCell(value: 'Electronics'),
+            'subcategory': TrinaCell(value: 'Phones'),
+            'product': TrinaCell(value: 'Smartphone Y'),
+          },
+        ),
+        TrinaRow(
+          cells: {
+            'category': TrinaCell(value: 'Electronics'),
+            'subcategory': TrinaCell(value: 'Laptops'),
+            'product': TrinaCell(value: 'Laptop Z'),
+          },
+        ),
+        TrinaRow(
+          cells: {
+            'category': TrinaCell(value: 'Clothing'),
+            'subcategory': TrinaCell(value: 'Shirts'),
+            'product': TrinaCell(value: 'T-Shirt'),
+          },
+        ),
       ];
 
       stateManager = TrinaGridStateManager(
@@ -1803,9 +1832,7 @@ void main() {
       );
 
       stateManager.setRowGroup(
-        TrinaRowGroupByColumnDelegate(
-          columns: [columns[0], columns[1]],
-        ),
+        TrinaRowGroupByColumnDelegate(columns: [columns[0], columns[1]]),
       );
     });
 
@@ -1819,16 +1846,18 @@ void main() {
       expect(groupRows.isNotEmpty, true);
 
       // Check that some groups are collapsed
-      final collapsedGroups =
-          groupRows.where((row) => !row.type.group.expanded).toList();
+      final collapsedGroups = groupRows
+          .where((row) => !row.type.group.expanded)
+          .toList();
       expect(collapsedGroups.isNotEmpty, true);
 
       // Expand all groups
       stateManager.expandAllRowGroups();
 
       // Check that all groups are now expanded
-      final allGroupsExpanded = stateManager.iterateAllRowGroup
-          .every((row) => row.type.group.expanded);
+      final allGroupsExpanded = stateManager.iterateAllRowGroup.every(
+        (row) => row.type.group.expanded,
+      );
       expect(allGroupsExpanded, true);
     });
 
@@ -1837,58 +1866,66 @@ void main() {
       stateManager.expandAllRowGroups();
 
       // Verify all groups are expanded
-      final allGroupsExpanded = stateManager.iterateAllRowGroup
-          .every((row) => row.type.group.expanded);
+      final allGroupsExpanded = stateManager.iterateAllRowGroup.every(
+        (row) => row.type.group.expanded,
+      );
       expect(allGroupsExpanded, true);
 
       // Collapse all groups
       stateManager.collapseAllRowGroups();
 
       // Check that all groups are now collapsed
-      final allGroupsCollapsed = stateManager.iterateAllRowGroup
-          .every((row) => !row.type.group.expanded);
+      final allGroupsCollapsed = stateManager.iterateAllRowGroup.every(
+        (row) => !row.type.group.expanded,
+      );
       expect(allGroupsCollapsed, true);
     });
 
-    test('expandAllRowGroups should do nothing when row groups are not enabled',
-        () {
-      // Create a state manager without row groups
-      final stateManagerNoGroups = TrinaGridStateManager(
-        columns: columns,
-        rows: rows,
-        gridFocusNode: FocusNode(),
-        scroll: TrinaGridScrollController(),
-      );
+    test(
+      'expandAllRowGroups should do nothing when row groups are not enabled',
+      () {
+        // Create a state manager without row groups
+        final stateManagerNoGroups = TrinaGridStateManager(
+          columns: columns,
+          rows: rows,
+          gridFocusNode: FocusNode(),
+          scroll: TrinaGridScrollController(),
+        );
 
-      // This should not throw an error
-      expect(() => stateManagerNoGroups.expandAllRowGroups(), returnsNormally);
+        // This should not throw an error
+        expect(
+          () => stateManagerNoGroups.expandAllRowGroups(),
+          returnsNormally,
+        );
 
-      stateManagerNoGroups.dispose();
-    });
+        stateManagerNoGroups.dispose();
+      },
+    );
 
     test(
-        'collapseAllRowGroups should do nothing when row groups are not enabled',
-        () {
-      // Create a state manager without row groups
-      final stateManagerNoGroups = TrinaGridStateManager(
-        columns: columns,
-        rows: rows,
-        gridFocusNode: FocusNode(),
-        scroll: TrinaGridScrollController(),
-      );
+      'collapseAllRowGroups should do nothing when row groups are not enabled',
+      () {
+        // Create a state manager without row groups
+        final stateManagerNoGroups = TrinaGridStateManager(
+          columns: columns,
+          rows: rows,
+          gridFocusNode: FocusNode(),
+          scroll: TrinaGridScrollController(),
+        );
 
-      // This should not throw an error
-      expect(
-          () => stateManagerNoGroups.collapseAllRowGroups(), returnsNormally);
+        // This should not throw an error
+        expect(
+          () => stateManagerNoGroups.collapseAllRowGroups(),
+          returnsNormally,
+        );
 
-      stateManagerNoGroups.dispose();
-    });
+        stateManagerNoGroups.dispose();
+      },
+    );
 
     test('expandAllRowGroups should actually expand visible rows', () {
       stateManager.setRowGroup(
-        TrinaRowGroupByColumnDelegate(
-          columns: [columns[0], columns[1]],
-        ),
+        TrinaRowGroupByColumnDelegate(columns: [columns[0], columns[1]]),
       );
 
       // Initially, only main group rows should be visible
@@ -1911,9 +1948,7 @@ void main() {
 
     test('collapseAllRowGroups should actually collapse visible rows', () {
       stateManager.setRowGroup(
-        TrinaRowGroupByColumnDelegate(
-          columns: [columns[0], columns[1]],
-        ),
+        TrinaRowGroupByColumnDelegate(columns: [columns[0], columns[1]]),
       );
 
       // Expand all first

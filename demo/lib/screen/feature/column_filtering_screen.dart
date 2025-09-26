@@ -24,21 +24,13 @@ class _ColumnFilteringScreenState extends State<ColumnFilteringScreen> {
     super.initState();
 
     columns.addAll([
-      TrinaColumn(
-        title: 'Text',
-        field: 'text',
-        type: TrinaColumnType.text(),
-      ),
+      TrinaColumn(title: 'Text', field: 'text', type: TrinaColumnType.text()),
       TrinaColumn(
         title: 'Number',
         field: 'number',
         type: TrinaColumnType.number(),
       ),
-      TrinaColumn(
-        title: 'Date',
-        field: 'date',
-        type: TrinaColumnType.date(),
-      ),
+      TrinaColumn(title: 'Date', field: 'date', type: TrinaColumnType.date()),
       TrinaColumn(
         title: 'Disable',
         field: 'disable',
@@ -50,11 +42,7 @@ class _ColumnFilteringScreenState extends State<ColumnFilteringScreen> {
         field: 'select',
         type: TrinaColumnType.select(<String>['A', 'B', 'C', 'D', 'E', 'F']),
       ),
-      TrinaColumn(
-        title: 'Regex',
-        field: 'regex',
-        type: TrinaColumnType.text(),
-      ),
+      TrinaColumn(title: 'Regex', field: 'regex', type: TrinaColumnType.text()),
     ]);
 
     rows.addAll(DummyData.rowsByColumns(length: 30, columns: columns));
@@ -83,22 +71,23 @@ class _ColumnFilteringScreenState extends State<ColumnFilteringScreen> {
       topTitle: 'Column filtering',
       topContents: const [
         Text('Filter rows by setting filters on columns.'),
-        SizedBox(
-          height: 10,
+        SizedBox(height: 10),
+        Text(
+          'Select the SetFilter menu from the menu that appears when you tap the icon on the right of the column',
         ),
         Text(
-            'Select the SetFilter menu from the menu that appears when you tap the icon on the right of the column'),
-        Text(
-            'If the filter is set to all or complex conditions, TextField under the column is deactivated.'),
-        Text(
-            'Also, like the Disable column, if enableFilterMenuItem is false, it is excluded from all column filtering conditions.'),
-        Text(
-            'In the case of the Select column, it is a custom filter that can filter multiple filters with commas. (ex: a,b,c)'),
-        Text(
-            'The Regex column demonstrates the new Regex filter type that allows filtering with regular expressions.'),
-        SizedBox(
-          height: 10,
+          'If the filter is set to all or complex conditions, TextField under the column is deactivated.',
         ),
+        Text(
+          'Also, like the Disable column, if enableFilterMenuItem is false, it is excluded from all column filtering conditions.',
+        ),
+        Text(
+          'In the case of the Select column, it is a custom filter that can filter multiple filters with commas. (ex: a,b,c)',
+        ),
+        Text(
+          'The Regex column demonstrates the new Regex filter type that allows filtering with regular expressions.',
+        ),
+        SizedBox(height: 10),
         Text('Check out the source to add custom filters.'),
       ],
       topButtons: [
@@ -155,7 +144,8 @@ class ClassYouImplemented implements TrinaFilterType {
   String get title => 'Custom contains';
 
   @override
-  get compare => ({
+  get compare =>
+      ({
         required String? base,
         required String? search,
         required TrinaColumn? column,

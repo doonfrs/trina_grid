@@ -46,9 +46,7 @@ void main() {
 
   TrinaRow buildRow(String columnTitle, {String? initialCellValue}) {
     return TrinaRow(
-      cells: {
-        columnTitle: TrinaCell(value: initialCellValue ?? 'value'),
-      },
+      cells: {columnTitle: TrinaCell(value: initialCellValue ?? 'value')},
     );
   }
 
@@ -88,8 +86,7 @@ void main() {
     expect(find.byType(TrinaGridColumnIcon), findsOneWidget);
   });
 
-  testWidgets(
-      'When enableSorting is true (default), '
+  testWidgets('When enableSorting is true (default), '
       'tapping title should change sort state', (WidgetTester tester) async {
     await buildGrid(tester);
 
@@ -106,15 +103,12 @@ void main() {
     expect(stateManager.columns.first.sort, TrinaColumnSort.descending);
   });
 
-  testWidgets(
-    'When enableSorting is false, '
-    'GestureDetector widget should not exist',
-    (WidgetTester tester) async {
-      final column = buildColumn(enableSorting: false);
-      await buildGrid(tester, columns: [column]);
-      expect(find.byKey(sortableGestureKey), findsNothing);
-    },
-  );
+  testWidgets('When enableSorting is false, '
+      'GestureDetector widget should not exist', (WidgetTester tester) async {
+    final column = buildColumn(enableSorting: false);
+    await buildGrid(tester, columns: [column]);
+    expect(find.byKey(sortableGestureKey), findsNothing);
+  });
 
   testWidgets(
     'When enableContextMenu is false and enableDropToResize is false, '
@@ -129,105 +123,83 @@ void main() {
     },
   );
 
-  testWidgets(
-    'When enableContextMenu is true and enableDropToResize is true, '
-    'ColumnIcon should be displayed',
-    (WidgetTester tester) async {
-      await buildGrid(tester);
-      final found = find.byType(TrinaGridColumnIcon);
-      final foundWidget = found.evaluate().first.widget as TrinaGridColumnIcon;
-      expect(found, findsOneWidget);
-      expect(foundWidget.icon, stateManager.style.columnContextIcon);
-    },
-  );
+  testWidgets('When enableContextMenu is true and enableDropToResize is true, '
+      'ColumnIcon should be displayed', (WidgetTester tester) async {
+    await buildGrid(tester);
+    final found = find.byType(TrinaGridColumnIcon);
+    final foundWidget = found.evaluate().first.widget as TrinaGridColumnIcon;
+    expect(found, findsOneWidget);
+    expect(foundWidget.icon, stateManager.style.columnContextIcon);
+  });
 
-  testWidgets(
-    'When enableContextMenu is true and enableDropToResize is false, '
-    'ColumnIcon should be displayed',
-    (WidgetTester tester) async {
-      await buildGrid(
-        tester,
-      );
-      final found = find.byType(TrinaGridColumnIcon);
-      final foundWidget = found.evaluate().first.widget as TrinaGridColumnIcon;
-      expect(found, findsOneWidget);
-      expect(foundWidget.icon, stateManager.style.columnContextIcon);
-    },
-  );
+  testWidgets('When enableContextMenu is true and enableDropToResize is false, '
+      'ColumnIcon should be displayed', (WidgetTester tester) async {
+    await buildGrid(tester);
+    final found = find.byType(TrinaGridColumnIcon);
+    final foundWidget = found.evaluate().first.widget as TrinaGridColumnIcon;
+    expect(found, findsOneWidget);
+    expect(foundWidget.icon, stateManager.style.columnContextIcon);
+  });
 
-  testWidgets(
-    'When enableContextMenu is false and enableDropToResize is true, '
-    'ColumnIcon should be displayed',
-    (WidgetTester tester) async {
-      final column = buildColumn(enableContextMenu: false);
-      await buildGrid(tester, columns: [column]);
-      final found = find.byType(TrinaGridColumnIcon);
-      final foundWidget = found.evaluate().first.widget as TrinaGridColumnIcon;
-      expect(found, findsOneWidget);
-      expect(foundWidget.icon, stateManager.style.columnResizeIcon);
-    },
-  );
+  testWidgets('When enableContextMenu is false and enableDropToResize is true, '
+      'ColumnIcon should be displayed', (WidgetTester tester) async {
+    final column = buildColumn(enableContextMenu: false);
+    await buildGrid(tester, columns: [column]);
+    final found = find.byType(TrinaGridColumnIcon);
+    final foundWidget = found.evaluate().first.widget as TrinaGridColumnIcon;
+    expect(found, findsOneWidget);
+    expect(foundWidget.icon, stateManager.style.columnResizeIcon);
+  });
   group('Title size', () {
-    testWidgets(
-      'column title height should equal stateManager.columnHeight',
-      (tester) async {
-        await buildGrid(tester);
+    testWidgets('column title height should equal stateManager.columnHeight', (
+      tester,
+    ) async {
+      await buildGrid(tester);
 
-        final title = find.byType(TrinaColumnTitle);
-        expect(title, findsOneWidget);
-        final size = tester.getSize(title);
-        expect(size.height, stateManager.style.columnHeight);
-      },
-    );
-    testWidgets(
-      'column title width should equal column.width',
-      (tester) async {
-        final column = buildColumn(width: 100);
-        await buildGrid(tester, columns: [column]);
+      final title = find.byType(TrinaColumnTitle);
+      expect(title, findsOneWidget);
+      final size = tester.getSize(title);
+      expect(size.height, stateManager.style.columnHeight);
+    });
+    testWidgets('column title width should equal column.width', (tester) async {
+      final column = buildColumn(width: 100);
+      await buildGrid(tester, columns: [column]);
 
-        final title = find.byType(TrinaColumnTitle);
-        expect(title, findsOneWidget);
-        final size = tester.getSize(title);
-        expect(size.width, column.width);
-      },
-    );
-    testWidgets(
-      'WHEN enableColumnDrag is false, '
-      'column title height should equal to stateManager.columnHeight',
-      (tester) async {
-        final column = buildColumn(enableColumnDrag: false);
-        await buildGrid(tester, columns: [column]);
+      final title = find.byType(TrinaColumnTitle);
+      expect(title, findsOneWidget);
+      final size = tester.getSize(title);
+      expect(size.width, column.width);
+    });
+    testWidgets('WHEN enableColumnDrag is false, '
+        'column title height should equal to stateManager.columnHeight', (
+      tester,
+    ) async {
+      final column = buildColumn(enableColumnDrag: false);
+      await buildGrid(tester, columns: [column]);
 
-        final title = find.ancestor(
-          of: find.text(column.title),
-          matching: find.byType(Container),
-        );
-        expect(title, findsOneWidget);
-        final size = tester.getSize(title);
-        expect(size.height, stateManager.style.columnHeight);
-      },
-    );
+      final title = find.ancestor(
+        of: find.text(column.title),
+        matching: find.byType(Container),
+      );
+      expect(title, findsOneWidget);
+      final size = tester.getSize(title);
+      expect(size.height, stateManager.style.columnHeight);
+    });
   });
 
   group('enableColumnDrag', () {
-    testWidgets(
-      'WHEN Column has enableColumnDrag false '
-      'THEN Draggable should not be visible',
-      (tester) async {
-        final column = buildColumn(enableColumnDrag: false);
-        await buildGrid(tester, columns: [column]);
-        expect(columnTitleDraggableFinder, findsNothing);
-      },
-    );
+    testWidgets('WHEN Column has enableColumnDrag false '
+        'THEN Draggable should not be visible', (tester) async {
+      final column = buildColumn(enableColumnDrag: false);
+      await buildGrid(tester, columns: [column]);
+      expect(columnTitleDraggableFinder, findsNothing);
+    });
 
-    testWidgets(
-      'WHEN Column has enableColumnDrag true '
-      'THEN Draggable should be visible',
-      (tester) async {
-        await buildGrid(tester);
-        expect(columnTitleDraggableFinder, findsOneWidget);
-      },
-    );
+    testWidgets('WHEN Column has enableColumnDrag true '
+        'THEN Draggable should be visible', (tester) async {
+      await buildGrid(tester);
+      expect(columnTitleDraggableFinder, findsOneWidget);
+    });
   });
   group('enableRowChecked', () {
     final columnTitleCheckBox = find.descendant(
@@ -314,15 +286,8 @@ void main() {
 
     testWidgets('Tapping Auto fit should resize column', (tester) async {
       final column = buildColumn(width: 50);
-      final row = buildRow(
-        column.field,
-        initialCellValue: 'long cell value',
-      );
-      await buildGrid(
-        tester,
-        columns: [column],
-        rows: [row],
-      );
+      final row = buildRow(column.field, initialCellValue: 'long cell value');
+      await buildGrid(tester, columns: [column], rows: [row]);
 
       expect(stateManager.columns.first.width, 50);
 
@@ -415,10 +380,12 @@ void main() {
         TrinaColumn(title: 'col2', field: 'col2', type: TrinaColumnType.text()),
       ];
       rows = [
-        TrinaRow(cells: {
-          'col1': TrinaCell(value: 'v1'),
-          'col2': TrinaCell(value: 'v2'),
-        })
+        TrinaRow(
+          cells: {
+            'col1': TrinaCell(value: 'v1'),
+            'col2': TrinaCell(value: 'v2'),
+          },
+        ),
       ];
     });
     testWidgets(
@@ -426,15 +393,19 @@ void main() {
       (tester) async {
         await buildGrid(tester, columns: columns, rows: rows);
 
-        expect(stateManager.columns.map((e) => e.field).toList(),
-            ['col1', 'col2']);
+        expect(stateManager.columns.map((e) => e.field).toList(), [
+          'col1',
+          'col2',
+        ]);
 
         await tester.drag(find.text('col1'), const Offset(250, 0));
 
         await tester.pumpAndSettle();
 
-        expect(stateManager.columns.map((e) => e.field).toList(),
-            ['col2', 'col1']);
+        expect(stateManager.columns.map((e) => e.field).toList(), [
+          'col2',
+          'col1',
+        ]);
       },
     );
     testWidgets(
@@ -446,303 +417,258 @@ void main() {
 
         await tester.pumpAndSettle();
         // assert columns order didn't change
-        expect(stateManager.columns.map((e) => e.field).toList(),
-            ['col1', 'col2']);
+        expect(stateManager.columns.map((e) => e.field).toList(), [
+          'col1',
+          'col2',
+        ]);
       },
     );
   });
 
   group('Drag a button to resize', () {
-    testWidgets(
-      'dragging right should increase column width',
-      (tester) async {
-        final column = buildColumn(width: 100);
+    testWidgets('dragging right should increase column width', (tester) async {
+      final column = buildColumn(width: 100);
 
-        await buildGrid(
-          tester,
-          columns: [column],
-        );
+      await buildGrid(tester, columns: [column]);
 
-        expect(stateManager.columns.first.width, 100);
+      expect(stateManager.columns.first.width, 100);
 
-        final columnIcon = find.byType(TrinaGridColumnIcon);
-        await tester.drag(columnIcon, const Offset(50.0, 0.0));
-        await tester.pumpAndSettle();
+      final columnIcon = find.byType(TrinaGridColumnIcon);
+      await tester.drag(columnIcon, const Offset(50.0, 0.0));
+      await tester.pumpAndSettle();
 
-        expect(stateManager.columns.first.width, greaterThan(100.0));
-      },
-    );
+      expect(stateManager.columns.first.width, greaterThan(100.0));
+    });
 
-    testWidgets(
-      'dragging left should decrease column width',
-      (tester) async {
-        final column = buildColumn(width: 100);
-        await buildGrid(
-          tester,
-          columns: [column],
-        );
+    testWidgets('dragging left should decrease column width', (tester) async {
+      final column = buildColumn(width: 100);
+      await buildGrid(tester, columns: [column]);
 
-        expect(stateManager.columns.first.width, 100);
+      expect(stateManager.columns.first.width, 100);
 
-        final columnIcon = find.byType(TrinaGridColumnIcon);
-        await tester.drag(columnIcon, const Offset(-50.0, 0.0));
-        await tester.pumpAndSettle();
+      final columnIcon = find.byType(TrinaGridColumnIcon);
+      await tester.drag(columnIcon, const Offset(-50.0, 0.0));
+      await tester.pumpAndSettle();
 
-        expect(stateManager.columns.first.width, lessThan(100.0));
-      },
-    );
+      expect(stateManager.columns.first.width, lessThan(100.0));
+    });
   });
 
   group('configuration', () {
-    testWidgets(
-      'If enableColumnBorder is true, border should be set',
-      (tester) async {
-        await buildGrid(
-          tester,
-          configuration: const TrinaGridConfiguration(
-            style: TrinaGridStyleConfig(
-              enableColumnBorderVertical: true,
-              borderColor: Colors.deepOrange,
-            ),
+    testWidgets('If enableColumnBorder is true, border should be set', (
+      tester,
+    ) async {
+      await buildGrid(
+        tester,
+        configuration: const TrinaGridConfiguration(
+          style: TrinaGridStyleConfig(
+            enableColumnBorderVertical: true,
+            borderColor: Colors.deepOrange,
           ),
-        );
+        ),
+      );
 
-        final target = find.descendant(
-          of: find.byKey(sortableGestureKey),
-          matching: find.byType(DecoratedBox),
-        );
+      final target = find.descendant(
+        of: find.byKey(sortableGestureKey),
+        matching: find.byType(DecoratedBox),
+      );
 
-        final container = target.evaluate().single.widget as DecoratedBox;
-        final BoxDecoration decoration = container.decoration as BoxDecoration;
-        final BorderDirectional border = decoration.border as BorderDirectional;
+      final container = target.evaluate().single.widget as DecoratedBox;
+      final BoxDecoration decoration = container.decoration as BoxDecoration;
+      final BorderDirectional border = decoration.border as BorderDirectional;
 
-        expect(border.end.width, 1.0);
-        expect(border.end.color, Colors.deepOrange);
-      },
-    );
-    testWidgets(
-      'If enableColumnBorder is false, border should not be set',
-      (tester) async {
-        await buildGrid(
-          tester,
-          configuration: const TrinaGridConfiguration(
-            style: TrinaGridStyleConfig(
-              enableColumnBorderVertical: false,
-              borderColor: Colors.deepOrange,
-            ),
+      expect(border.end.width, 1.0);
+      expect(border.end.color, Colors.deepOrange);
+    });
+    testWidgets('If enableColumnBorder is false, border should not be set', (
+      tester,
+    ) async {
+      await buildGrid(
+        tester,
+        configuration: const TrinaGridConfiguration(
+          style: TrinaGridStyleConfig(
+            enableColumnBorderVertical: false,
+            borderColor: Colors.deepOrange,
           ),
-        );
+        ),
+      );
 
-        expect(
-          stateManager.configuration.style.enableColumnBorderVertical,
-          false,
-        );
+      expect(
+        stateManager.configuration.style.enableColumnBorderVertical,
+        false,
+      );
 
-        final target = find.descendant(
-          of: find.byKey(sortableGestureKey),
-          matching: find.byType(DecoratedBox),
-        );
+      final target = find.descendant(
+        of: find.byKey(sortableGestureKey),
+        matching: find.byType(DecoratedBox),
+      );
 
-        final container = target.evaluate().single.widget as DecoratedBox;
+      final container = target.evaluate().single.widget as DecoratedBox;
 
-        final BoxDecoration decoration = container.decoration as BoxDecoration;
+      final BoxDecoration decoration = container.decoration as BoxDecoration;
 
-        final BorderDirectional border = decoration.border as BorderDirectional;
+      final BorderDirectional border = decoration.border as BorderDirectional;
 
-        expect(border.end, BorderSide.none);
-      },
-    );
+      expect(border.end, BorderSide.none);
+    });
 
-    testWidgets(
-      'If columnAscendingIcon is set, the set icon should appear',
-      (tester) async {
-        final column = buildColumn(sort: TrinaColumnSort.ascending);
+    testWidgets('If columnAscendingIcon is set, the set icon should appear', (
+      tester,
+    ) async {
+      final column = buildColumn(sort: TrinaColumnSort.ascending);
 
-        await buildGrid(
-          tester,
-          columns: [column],
-          configuration: const TrinaGridConfiguration(
-            style: TrinaGridStyleConfig(
-              columnAscendingIcon: Icon(
-                Icons.arrow_upward,
-                color: Colors.cyan,
-              ),
-            ),
+      await buildGrid(
+        tester,
+        columns: [column],
+        configuration: const TrinaGridConfiguration(
+          style: TrinaGridStyleConfig(
+            columnAscendingIcon: Icon(Icons.arrow_upward, color: Colors.cyan),
           ),
-        );
+        ),
+      );
 
-        final target = find.descendant(
-          of: find.byType(TrinaColumnTitle),
-          matching: find.byType(Icon),
-        );
+      final target = find.descendant(
+        of: find.byType(TrinaColumnTitle),
+        matching: find.byType(Icon),
+      );
 
-        final icon = target.evaluate().first.widget as Icon;
+      final icon = target.evaluate().first.widget as Icon;
 
-        expect(icon.icon, Icons.arrow_upward);
-        expect(icon.color, Colors.cyan);
-      },
-    );
+      expect(icon.icon, Icons.arrow_upward);
+      expect(icon.color, Colors.cyan);
+    });
   });
 
   group('with titleRenderer', () {
     final customTitleWidget = Text('Custom Title');
     final originalTitleText = 'original title';
 
-    testWidgets(
-      'Custom title renderer should be used when provided',
-      (WidgetTester tester) async {
-        final column = buildColumn(
-          title: originalTitleText,
-          titleRenderer: (context) => customTitleWidget,
-        );
-        await buildGrid(tester, columns: [column]);
+    testWidgets('Custom title renderer should be used when provided', (
+      WidgetTester tester,
+    ) async {
+      final column = buildColumn(
+        title: originalTitleText,
+        titleRenderer: (context) => customTitleWidget,
+      );
+      await buildGrid(tester, columns: [column]);
 
-        expect(find.byWidget(customTitleWidget), findsOneWidget);
-        expect(find.text(originalTitleText), findsNothing);
-      },
-    );
+      expect(find.byWidget(customTitleWidget), findsOneWidget);
+      expect(find.text(originalTitleText), findsNothing);
+    });
 
-    testWidgets(
-      'When enableSorting is true and titleRenderer is provided, '
-      'tapping title should change sort state',
-      (WidgetTester tester) async {
-        final column = buildColumn(
-          title: originalTitleText,
-          titleRenderer: (context) => customTitleWidget,
-        );
-        await buildGrid(
-          tester,
-          columns: [column],
-        );
+    testWidgets('When enableSorting is true and titleRenderer is provided, '
+        'tapping title should change sort state', (WidgetTester tester) async {
+      final column = buildColumn(
+        title: originalTitleText,
+        titleRenderer: (context) => customTitleWidget,
+      );
+      await buildGrid(tester, columns: [column]);
 
-        expect(stateManager.columns.first.sort, TrinaColumnSort.none);
+      expect(stateManager.columns.first.sort, TrinaColumnSort.none);
 
-        await tester.tap(find.byKey(sortableGestureKey));
-        await tester.pumpAndSettle();
+      await tester.tap(find.byKey(sortableGestureKey));
+      await tester.pumpAndSettle();
 
-        expect(stateManager.columns.first.sort, TrinaColumnSort.ascending);
-      },
-    );
-    testWidgets(
-      'WHEN enableColumnDrag is false '
-      'THEN Draggable should not be visible',
-      (tester) async {
-        final column = buildColumn(
-          enableColumnDrag: false,
-          title: originalTitleText,
-          titleRenderer: (context) => customTitleWidget,
-        );
-        await buildGrid(
-          tester,
-          columns: [column],
-        );
-        // then
+      expect(stateManager.columns.first.sort, TrinaColumnSort.ascending);
+    });
+    testWidgets('WHEN enableColumnDrag is false '
+        'THEN Draggable should not be visible', (tester) async {
+      final column = buildColumn(
+        enableColumnDrag: false,
+        title: originalTitleText,
+        titleRenderer: (context) => customTitleWidget,
+      );
+      await buildGrid(tester, columns: [column]);
+      // then
 
-        expect(columnTitleDraggableFinder, findsNothing);
-      },
-    );
-    testWidgets(
-      'WHEN enableColumnDrag is true '
-      'THEN Draggable should be visible',
-      (tester) async {
-        final column = buildColumn(
-          enableColumnDrag: true,
-          title: originalTitleText,
-          titleRenderer: (context) => customTitleWidget,
-        );
-        await buildGrid(
-          tester,
-          columns: [column],
-        );
-        // then
+      expect(columnTitleDraggableFinder, findsNothing);
+    });
+    testWidgets('WHEN enableColumnDrag is true '
+        'THEN Draggable should be visible', (tester) async {
+      final column = buildColumn(
+        enableColumnDrag: true,
+        title: originalTitleText,
+        titleRenderer: (context) => customTitleWidget,
+      );
+      await buildGrid(tester, columns: [column]);
+      // then
 
-        expect(columnTitleDraggableFinder, findsOneWidget);
-      },
-    );
-    testWidgets(
-        'When enableSorting is false and titleRender is provided, '
+      expect(columnTitleDraggableFinder, findsOneWidget);
+    });
+    testWidgets('When enableSorting is false and titleRender is provided, '
         'GestureDetector widget should not exist', (tester) async {
       final column = buildColumn(
         enableSorting: false,
         title: originalTitleText,
         titleRenderer: (context) => customTitleWidget,
       );
-      await buildGrid(
-        tester,
-        columns: [column],
-      );
+      await buildGrid(tester, columns: [column]);
       // given
       Finder gestureDetector = find.byKey(sortableGestureKey);
 
       // then
       expect(gestureDetector, findsNothing);
     });
-    testWidgets(
-      'column title height should equal stateManager.columnHeight',
-      (tester) async {
-        final column = buildColumn(
-          enableColumnDrag: false,
-          title: originalTitleText,
-          titleRenderer: (context) => customTitleWidget,
-        );
-        await buildGrid(
-          tester,
-          columns: [column],
-        );
+    testWidgets('column title height should equal stateManager.columnHeight', (
+      tester,
+    ) async {
+      final column = buildColumn(
+        enableColumnDrag: false,
+        title: originalTitleText,
+        titleRenderer: (context) => customTitleWidget,
+      );
+      await buildGrid(tester, columns: [column]);
 
-        final title = find.byType(TrinaColumnTitle);
-        expect(title, findsOneWidget);
-        final size = tester.getSize(title);
-        expect(size.height, stateManager.style.columnHeight);
-      },
-    );
-    testWidgets(
-      'WHEN enableColumnDrag is false, '
-      'column title height should equal stateManager.columnHeight',
-      (tester) async {
-        final column = buildColumn(
-          enableColumnDrag: false,
-          title: originalTitleText,
-          titleRenderer: (context) => customTitleWidget,
-        );
-        final height = 100.0;
-        await buildGrid(
-          tester,
-          columns: [column],
-          configuration: TrinaGridConfiguration(
-            style: TrinaGridStyleConfig(columnHeight: height),
-          ),
-        );
+      final title = find.byType(TrinaColumnTitle);
+      expect(title, findsOneWidget);
+      final size = tester.getSize(title);
+      expect(size.height, stateManager.style.columnHeight);
+    });
+    testWidgets('WHEN enableColumnDrag is false, '
+        'column title height should equal stateManager.columnHeight', (
+      tester,
+    ) async {
+      final column = buildColumn(
+        enableColumnDrag: false,
+        title: originalTitleText,
+        titleRenderer: (context) => customTitleWidget,
+      );
+      final height = 100.0;
+      await buildGrid(
+        tester,
+        columns: [column],
+        configuration: TrinaGridConfiguration(
+          style: TrinaGridStyleConfig(columnHeight: height),
+        ),
+      );
 
-        final title = find.byType(TrinaColumnTitle);
-        expect(title, findsOneWidget);
-        final size = tester.getSize(title);
-        expect(size.height, height);
-      },
-    );
-    testWidgets(
-      'WHEN enableSorting is false, '
-      'column title height should equal stateManager.columnHeight',
-      (tester) async {
-        final column = buildColumn(
-          enableSorting: false,
-          title: originalTitleText,
-          titleRenderer: (context) => customTitleWidget,
-        );
-        final height = 100.0;
-        await buildGrid(
-          tester,
-          columns: [column],
-          configuration: TrinaGridConfiguration(
-            style: TrinaGridStyleConfig(columnHeight: height),
-          ),
-        );
+      final title = find.byType(TrinaColumnTitle);
+      expect(title, findsOneWidget);
+      final size = tester.getSize(title);
+      expect(size.height, height);
+    });
+    testWidgets('WHEN enableSorting is false, '
+        'column title height should equal stateManager.columnHeight', (
+      tester,
+    ) async {
+      final column = buildColumn(
+        enableSorting: false,
+        title: originalTitleText,
+        titleRenderer: (context) => customTitleWidget,
+      );
+      final height = 100.0;
+      await buildGrid(
+        tester,
+        columns: [column],
+        configuration: TrinaGridConfiguration(
+          style: TrinaGridStyleConfig(columnHeight: height),
+        ),
+      );
 
-        final title = find.byType(TrinaColumnTitle);
-        expect(title, findsOneWidget);
-        final size = tester.getSize(title);
-        expect(size.height, height);
-      },
-    );
+      final title = find.byType(TrinaColumnTitle);
+      expect(title, findsOneWidget);
+      final size = tester.getSize(title);
+      expect(size.height, height);
+    });
   });
 }

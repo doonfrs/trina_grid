@@ -97,8 +97,9 @@ void main() {
       expect(values, [123000, 311, 3133]);
     });
 
-    testWidgets('Filtering numbers greater than or equal to 300',
-        (tester) async {
+    testWidgets('Filtering numbers greater than or equal to 300', (
+      tester,
+    ) async {
       await tester.pumpWidget(buildGrid(columns: columns, rows: rows));
       await tester.pump();
 

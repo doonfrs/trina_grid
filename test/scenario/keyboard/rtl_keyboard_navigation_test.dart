@@ -89,7 +89,9 @@ void main() {
       await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
       await tester.pumpAndSettle();
       expect(
-          stateManager.currentColumn?.field, 'column0'); // Should stay at edge
+        stateManager.currentColumn?.field,
+        'column0',
+      ); // Should stay at edge
 
       // Pressing right arrow should move to the right column visually (column1)
       await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
@@ -102,8 +104,9 @@ void main() {
       expect(stateManager.currentColumn?.field, 'column0');
     });
 
-    testWidgets('Tab navigation should work correctly in RTL mode',
-        (tester) async {
+    testWidgets('Tab navigation should work correctly in RTL mode', (
+      tester,
+    ) async {
       await buildGrid(tester, TextDirection.rtl);
 
       // Start at the first cell (visually rightmost in RTL)
@@ -132,8 +135,9 @@ void main() {
       expect(stateManager.currentColumn?.field, 'column1');
     });
 
-    testWidgets('Home/End keys should work correctly in RTL mode',
-        (tester) async {
+    testWidgets('Home/End keys should work correctly in RTL mode', (
+      tester,
+    ) async {
       await buildGrid(tester, TextDirection.rtl);
 
       // Start at the middle cell
@@ -155,8 +159,9 @@ void main() {
       expect(stateManager.currentColumn?.field, 'column0');
     });
 
-    testWidgets('Home/End keys should work correctly in LTR mode',
-        (tester) async {
+    testWidgets('Home/End keys should work correctly in LTR mode', (
+      tester,
+    ) async {
       await buildGrid(tester, TextDirection.ltr);
 
       // Start at the middle cell
@@ -179,49 +184,51 @@ void main() {
     });
 
     testWidgets(
-        'When enterKeyAction is editingAndMoveRight, '
-        'pressing Enter key should move currentCell to next column of current row.',
-        (tester) async {
-      await buildGrid(
-        tester,
-        TextDirection.rtl,
-        configuration: const TrinaGridConfiguration(
-            enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveRight),
-      );
+      'When enterKeyAction is editingAndMoveRight, '
+      'pressing Enter key should move currentCell to next column of current row.',
+      (tester) async {
+        await buildGrid(
+          tester,
+          TextDirection.rtl,
+          configuration: const TrinaGridConfiguration(
+            enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveRight,
+          ),
+        );
 
-      // Start at the first cell
-      stateManager.setCurrentCell(rows[0].cells['column0'], 0);
-      await tester.pumpAndSettle();
+        // Start at the first cell
+        stateManager.setCurrentCell(rows[0].cells['column0'], 0);
+        await tester.pumpAndSettle();
 
-      // Set the cell in editing mode (required for editingAndMoveRight action)
-      stateManager.setEditing(true);
-      await tester.pumpAndSettle();
+        // Set the cell in editing mode (required for editingAndMoveRight action)
+        stateManager.setEditing(true);
+        await tester.pumpAndSettle();
 
-      // Ensure the grid has focus
-      stateManager.gridFocusNode.requestFocus();
-      await tester.pumpAndSettle();
+        // Ensure the grid has focus
+        stateManager.gridFocusNode.requestFocus();
+        await tester.pumpAndSettle();
 
-      // Pressing enter should move to the next cell visually (column1 in RTL)
-      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-      await tester.pumpAndSettle();
-      expect(stateManager.currentColumn?.field, 'column1');
+        // Pressing enter should move to the next cell visually (column1 in RTL)
+        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+        await tester.pumpAndSettle();
+        expect(stateManager.currentColumn?.field, 'column1');
 
-      // Pressing shift+enter should move to the previous cell visually (column0 in RTL)
-      await tester.sendKeyDownEvent(LogicalKeyboardKey.shift);
-      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-      await tester.sendKeyUpEvent(LogicalKeyboardKey.shift);
-      await tester.pumpAndSettle();
-      expect(stateManager.currentColumn?.field, 'column0');
-    });
-    testWidgets(
-        'when tabKeyAction is moveToNextOnEdge, '
+        // Pressing shift+enter should move to the previous cell visually (column0 in RTL)
+        await tester.sendKeyDownEvent(LogicalKeyboardKey.shift);
+        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+        await tester.sendKeyUpEvent(LogicalKeyboardKey.shift);
+        await tester.pumpAndSettle();
+        expect(stateManager.currentColumn?.field, 'column0');
+      },
+    );
+    testWidgets('when tabKeyAction is moveToNextOnEdge, '
         'pressing Tab key from the last cell of row, '
         'should move to next row.', (tester) async {
       await buildGrid(
         tester,
         TextDirection.rtl,
         configuration: const TrinaGridConfiguration(
-            tabKeyAction: TrinaGridTabKeyAction.moveToNextOnEdge),
+          tabKeyAction: TrinaGridTabKeyAction.moveToNextOnEdge,
+        ),
       );
       // Start at the visually last cell of the first row (column0 in RTL)
       stateManager.setCurrentCell(rows[0].cells.values.last, 0);

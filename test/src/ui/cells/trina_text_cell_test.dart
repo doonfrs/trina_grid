@@ -11,9 +11,7 @@ void main() {
 
   setUp(() {
     stateManager = MockTrinaGridStateManager();
-    when(stateManager.configuration).thenReturn(
-      const TrinaGridConfiguration(),
-    );
+    when(stateManager.configuration).thenReturn(const TrinaGridConfiguration());
     when(stateManager.localeText).thenReturn(const TrinaGridLocaleText());
     when(stateManager.keepFocus).thenReturn(true);
     when(stateManager.hasFocus).thenReturn(true);
@@ -30,11 +28,7 @@ void main() {
 
     final TrinaCell cell = TrinaCell(value: 'text value');
 
-    final TrinaRow row = TrinaRow(
-      cells: {
-        'column_field_name': cell,
-      },
-    );
+    final TrinaRow row = TrinaRow(cells: {'column_field_name': cell});
 
     when(stateManager.currentColumn).thenReturn(column);
 

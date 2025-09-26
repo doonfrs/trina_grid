@@ -297,7 +297,8 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
       ),
       TrinaListTile(
         title: 'Column Footer',
-        description: 'Column footer allows to display footer cell. '
+        description:
+            'Column footer allows to display footer cell. '
             'The default built-in footer is aggregate. '
             'But you can also customize it.',
         onTapLiveDemo: () {

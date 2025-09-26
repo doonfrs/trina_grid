@@ -373,8 +373,9 @@ class TrinaResizePushAndPull<T> extends TrinaResize<T> {
     final mainSize = getItemSize(_mainItem);
     final mainMinSize = getItemMinSize(_mainItem);
 
-    final setMainSize =
-        mainSize + offset > mainMinSize ? mainSize + offset : mainMinSize;
+    final setMainSize = mainSize + offset > mainMinSize
+        ? mainSize + offset
+        : mainMinSize;
 
     if (offset > 0) {
       double remaining = offset;
@@ -419,8 +420,9 @@ class TrinaResizePushAndPull<T> extends TrinaResize<T> {
         if (setMainSize == mainSize) {
           return false;
         }
-        final firstSiblingItem =
-            isFirstMain ? getFirstItemPositive() : getFirstItemNegative();
+        final firstSiblingItem = isFirstMain
+            ? getFirstItemPositive()
+            : getFirstItemNegative();
         if (firstSiblingItem == null) {
           return false;
         }
@@ -440,8 +442,9 @@ class TrinaResizePushAndPull<T> extends TrinaResize<T> {
           final siblingSize = getItemSize(iterNegative.current);
           final siblingMinSize = getItemMinSize(iterNegative.current);
           final enough = siblingSize - siblingMinSize;
-          final siblingOffsetToSet =
-              enough > remainingNegative ? remainingNegative : enough;
+          final siblingOffsetToSet = enough > remainingNegative
+              ? remainingNegative
+              : enough;
           setItemSize(iterNegative.current, siblingSize - siblingOffsetToSet);
           remainingNegative -= siblingOffsetToSet;
           if (remainingNegative <= 0) {

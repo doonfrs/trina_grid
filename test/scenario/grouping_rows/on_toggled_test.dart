@@ -44,15 +44,30 @@ void main() {
     setUp(() {
       columns = [
         TrinaColumn(
-            title: 'column1', field: 'column1', type: TrinaColumnType.text()),
+          title: 'column1',
+          field: 'column1',
+          type: TrinaColumnType.text(),
+        ),
         TrinaColumn(
-            title: 'column2', field: 'column2', type: TrinaColumnType.text()),
+          title: 'column2',
+          field: 'column2',
+          type: TrinaColumnType.text(),
+        ),
         TrinaColumn(
-            title: 'column3', field: 'column3', type: TrinaColumnType.text()),
+          title: 'column3',
+          field: 'column3',
+          type: TrinaColumnType.text(),
+        ),
         TrinaColumn(
-            title: 'column4', field: 'column4', type: TrinaColumnType.text()),
+          title: 'column4',
+          field: 'column4',
+          type: TrinaColumnType.text(),
+        ),
         TrinaColumn(
-            title: 'column5', field: 'column5', type: TrinaColumnType.text()),
+          title: 'column5',
+          field: 'column5',
+          type: TrinaColumnType.text(),
+        ),
       ];
 
       rows = [
@@ -66,9 +81,21 @@ void main() {
             createRow('B42', 'b42-1', 'b42-2', 'b42-3', 'b42-4', columns),
             createGroup('B43', 'b43-1', 'b43-2', 'b43-3', 'b43-4', columns, [
               createRow(
-                  'B431', 'b431-1', 'b431-2', 'b431-3', 'b431-4', columns),
+                'B431',
+                'b431-1',
+                'b431-2',
+                'b431-3',
+                'b431-4',
+                columns,
+              ),
               createRow(
-                  'B432', 'b432-1', 'b432-2', 'b432-3', 'b432-4', columns),
+                'B432',
+                'b432-1',
+                'b432-2',
+                'b432-3',
+                'b432-4',
+                columns,
+              ),
             ]),
           ]),
         ]),
@@ -82,34 +109,35 @@ void main() {
     });
 
     testWidgets(
-        'When group B is toggled, the onToggled callback should be called.',
-        (tester) async {
-      TrinaRow? toggledRow;
-      bool? isExpanded;
+      'When group B is toggled, the onToggled callback should be called.',
+      (tester) async {
+        TrinaRow? toggledRow;
+        bool? isExpanded;
 
-      void onToggled({required bool expanded, required TrinaRow row}) {
-        toggledRow = row;
-        isExpanded = expanded;
-      }
+        void onToggled({required bool expanded, required TrinaRow row}) {
+          toggledRow = row;
+          isExpanded = expanded;
+        }
 
-      await buildGrid(
-        tester: tester,
-        columns: columns,
-        rows: rows,
-        delegate: TrinaRowGroupTreeDelegate(
-          resolveColumnDepth: (column) =>
-              int.parse(column.field.replaceAll('column', '')) - 1,
-          showText: (cell) => true,
-          showFirstExpandableIcon: true,
-          onToggled: onToggled,
-        ),
-      );
+        await buildGrid(
+          tester: tester,
+          columns: columns,
+          rows: rows,
+          delegate: TrinaRowGroupTreeDelegate(
+            resolveColumnDepth: (column) =>
+                int.parse(column.field.replaceAll('column', '')) - 1,
+            showText: (cell) => true,
+            showFirstExpandableIcon: true,
+            onToggled: onToggled,
+          ),
+        );
 
-      stateManager.toggleExpandedRowGroup(rowGroup: rows[1]);
+        stateManager.toggleExpandedRowGroup(rowGroup: rows[1]);
 
-      expect(toggledRow, rows[1]);
-      expect(isExpanded, true);
-    });
+        expect(toggledRow, rows[1]);
+        expect(isExpanded, true);
+      },
+    );
   });
 
   group('TrinaRowGroupByColumnDelegate', () {
@@ -137,32 +165,35 @@ void main() {
     });
 
     testWidgets(
-        'When group A is toggled, the onToggled callback should be called.',
-        (tester) async {
-      TrinaRow? toggledRow;
-      bool? isExpanded;
+      'When group A is toggled, the onToggled callback should be called.',
+      (tester) async {
+        TrinaRow? toggledRow;
+        bool? isExpanded;
 
-      void onToggled({required bool expanded, required TrinaRow row}) {
-        toggledRow = row;
-        isExpanded = expanded;
-      }
+        void onToggled({required bool expanded, required TrinaRow row}) {
+          toggledRow = row;
+          isExpanded = expanded;
+        }
 
-      await buildGrid(
-        tester: tester,
-        columns: columns,
-        rows: rows,
-        delegate: TrinaRowGroupByColumnDelegate(
-          columns: [columns[0], columns[1]],
-          showFirstExpandableIcon: true,
-          onToggled: onToggled,
-        ),
-      );
+        await buildGrid(
+          tester: tester,
+          columns: columns,
+          rows: rows,
+          delegate: TrinaRowGroupByColumnDelegate(
+            columns: [columns[0], columns[1]],
+            showFirstExpandableIcon: true,
+            onToggled: onToggled,
+          ),
+        );
 
-      stateManager.toggleExpandedRowGroup(rowGroup: stateManager.refRows.first);
+        stateManager.toggleExpandedRowGroup(
+          rowGroup: stateManager.refRows.first,
+        );
 
-      expect(toggledRow, stateManager.refRows.first);
-      expect(isExpanded, true);
-    });
+        expect(toggledRow, stateManager.refRows.first);
+        expect(isExpanded, true);
+      },
+    );
   });
 }
 

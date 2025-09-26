@@ -9,7 +9,7 @@ class _Methods {
 class MockMethods extends Mock implements _Methods {
   @override
   bool oneParamReturnBool<T>(T? param) => super.noSuchMethod(
-        Invocation.method(#onChangeOneParamReturnBoolListener, [param]),
-        returnValue: true,
-      );
+    Invocation.method(#onChangeOneParamReturnBoolListener, [param]),
+    returnValue: true,
+  );
 }

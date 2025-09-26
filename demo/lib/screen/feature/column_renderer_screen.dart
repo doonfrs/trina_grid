@@ -38,9 +38,7 @@ class _ColumnRendererScreenState extends State<ColumnRendererScreen> {
           return Row(
             children: [
               IconButton(
-                icon: const Icon(
-                  Icons.add_circle,
-                ),
+                icon: const Icon(Icons.add_circle),
                 onPressed: () {
                   rendererContext.stateManager.insertRows(
                     rendererContext.rowIdx,
@@ -52,12 +50,11 @@ class _ColumnRendererScreenState extends State<ColumnRendererScreen> {
                 padding: const EdgeInsets.all(0),
               ),
               IconButton(
-                icon: const Icon(
-                  Icons.remove_circle_outlined,
-                ),
+                icon: const Icon(Icons.remove_circle_outlined),
                 onPressed: () {
-                  rendererContext.stateManager
-                      .removeRows([rendererContext.row]);
+                  rendererContext.stateManager.removeRows([
+                    rendererContext.row,
+                  ]);
                 },
                 iconSize: 18,
                 color: Colors.red,
@@ -92,10 +89,7 @@ class _ColumnRendererScreenState extends State<ColumnRendererScreen> {
 
           return Text(
             rendererContext.cell.value.toString(),
-            style: TextStyle(
-              color: textColor,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(color: textColor, fontWeight: FontWeight.bold),
           );
         },
       ),

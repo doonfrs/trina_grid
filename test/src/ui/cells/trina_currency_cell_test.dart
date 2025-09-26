@@ -13,19 +13,17 @@ void main() {
   setUp(() {
     stateManager = MockTrinaGridStateManager();
     stateManager = MockTrinaGridStateManager();
-    when(stateManager.configuration).thenReturn(
-      const TrinaGridConfiguration(),
-    );
+    when(stateManager.configuration).thenReturn(const TrinaGridConfiguration());
     when(stateManager.keyPressed).thenReturn(TrinaGridKeyPressed());
-    when(stateManager.columnHeight).thenReturn(
-      stateManager.configuration.style.columnHeight,
-    );
-    when(stateManager.rowHeight).thenReturn(
-      stateManager.configuration.style.rowHeight,
-    );
-    when(stateManager.headerHeight).thenReturn(
-      stateManager.configuration.style.columnHeight,
-    );
+    when(
+      stateManager.columnHeight,
+    ).thenReturn(stateManager.configuration.style.columnHeight);
+    when(
+      stateManager.rowHeight,
+    ).thenReturn(stateManager.configuration.style.rowHeight);
+    when(
+      stateManager.headerHeight,
+    ).thenReturn(stateManager.configuration.style.columnHeight);
     when(stateManager.rowTotalHeight).thenReturn(
       RowHelper.resolveRowTotalHeight(stateManager.configuration.style),
     );
@@ -52,9 +50,7 @@ void main() {
 
     final TrinaCell cell = TrinaCell(value: cellValue);
 
-    final TrinaRow row = TrinaRow(
-      cells: {'column': cell},
-    );
+    final TrinaRow row = TrinaRow(cells: {'column': cell});
 
     when(stateManager.currentColumn).thenReturn(column);
 

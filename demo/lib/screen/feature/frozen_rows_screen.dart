@@ -36,20 +36,26 @@ class _FrozenRowsScreenState extends State<FrozenRowsScreen> {
     rows.addAll(dummyData.rows);
 
     rows.insert(
-        0,
-        TrinaRow(
-          cells: Map.fromIterables(columns.map((e) => e.field),
-              columns.map((e) => TrinaCell(value: 'frozen'))),
-          frozen: TrinaRowFrozen.start,
-        ));
+      0,
+      TrinaRow(
+        cells: Map.fromIterables(
+          columns.map((e) => e.field),
+          columns.map((e) => TrinaCell(value: 'frozen')),
+        ),
+        frozen: TrinaRowFrozen.start,
+      ),
+    );
 
     rows.insert(
-        rows.length - 1,
-        TrinaRow(
-          cells: Map.fromIterables(columns.map((e) => e.field),
-              columns.map((e) => TrinaCell(value: 'frozen'))),
-          frozen: TrinaRowFrozen.end,
-        ));
+      rows.length - 1,
+      TrinaRow(
+        cells: Map.fromIterables(
+          columns.map((e) => e.field),
+          columns.map((e) => TrinaCell(value: 'frozen')),
+        ),
+        frozen: TrinaRowFrozen.end,
+      ),
+    );
   }
 
   @override
@@ -74,9 +80,7 @@ class _FrozenRowsScreenState extends State<FrozenRowsScreen> {
         onLoaded: (TrinaGridOnLoadedEvent event) {
           stateManager = event.stateManager;
         },
-        createHeader: (stateManager) => _Header(
-          setConfig: setColumnSizeConfig,
-        ),
+        createHeader: (stateManager) => _Header(setConfig: setColumnSizeConfig),
         configuration: const TrinaGridConfiguration(
           columnSize: TrinaGridColumnSizeConfig(
             autoSizeMode: TrinaAutoSizeMode.none,
@@ -93,9 +97,7 @@ class _FrozenRowsScreenState extends State<FrozenRowsScreen> {
 }
 
 class _Header extends StatefulWidget {
-  const _Header({
-    required this.setConfig,
-  });
+  const _Header({required this.setConfig});
 
   final void Function(TrinaGridColumnSizeConfig) setConfig;
 

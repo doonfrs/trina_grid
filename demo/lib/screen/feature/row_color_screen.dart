@@ -75,8 +75,12 @@ class _RowColorScreenState extends State<RowColorScreen> {
   }
 
   // Helper method to create color selection dropdown
-  Widget _buildColorDropdown(String label, int currentIndex,
-      Function(int) onChanged, List<Map<String, dynamic>> options) {
+  Widget _buildColorDropdown(
+    String label,
+    int currentIndex,
+    Function(int) onChanged,
+    List<Map<String, dynamic>> options,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Row(
@@ -106,10 +110,9 @@ class _RowColorScreenState extends State<RowColorScreen> {
                     final newStyle = stateManager!.configuration.style.copyWith(
                       activatedColor: selectionColor,
                     );
-                    stateManager!
-                        .setConfiguration(stateManager!.configuration.copyWith(
-                      style: newStyle,
-                    ));
+                    stateManager!.setConfiguration(
+                      stateManager!.configuration.copyWith(style: newStyle),
+                    );
                   }
                 });
               }
@@ -146,15 +149,20 @@ class _RowColorScreenState extends State<RowColorScreen> {
       topTitle: 'Row color',
       topContents: const [
         Text(
-            'You can dynamically change the row color of row by implementing rowColorCallback.'),
+          'You can dynamically change the row color of row by implementing rowColorCallback.',
+        ),
         Text(
-            'If you change the value of the 5th column, the background color is dynamically changed according to the value.'),
+          'If you change the value of the 5th column, the background color is dynamically changed according to the value.',
+        ),
         Text(
-            'Use the controls below to customize the row colors and selection color.'),
+          'Use the controls below to customize the row colors and selection color.',
+        ),
         Text(
-            'This example uses transparent activatedColor and TrinaGridMode.selectWithOneTap to demonstrate row color overlay.'),
+          'This example uses transparent activatedColor and TrinaGridMode.selectWithOneTap to demonstrate row color overlay.',
+        ),
         Text(
-            'Some columns (1, 3, 5) are read-only and will show the read-only cell color.'),
+          'Some columns (1, 3, 5) are read-only and will show the read-only cell color.',
+        ),
       ],
       topButtons: [
         TrinaExampleButton(
@@ -173,69 +181,89 @@ class _RowColorScreenState extends State<RowColorScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Color Settings:',
-                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    const Text(
+                      'Color Settings:',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                     const SizedBox(height: 8),
                     const Text(
-                        'Note: Read-only color can be changed dynamically by recreating the grid configuration.',
-                        style: TextStyle(fontSize: 12, color: Colors.grey)),
+                      'Note: Read-only color can be changed dynamically by recreating the grid configuration.',
+                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
                     const SizedBox(height: 8),
                     Wrap(
                       spacing: 8,
                       runSpacing: 8,
                       children: [
                         _buildColorDropdown(
-                            'Value "One" Color',
-                            oneValueColorIndex,
-                            (index) => oneValueColorIndex = index,
-                            colorOptions),
+                          'Value "One" Color',
+                          oneValueColorIndex,
+                          (index) => oneValueColorIndex = index,
+                          colorOptions,
+                        ),
                         _buildColorDropdown(
-                            'Value "Two" Color',
-                            twoValueColorIndex,
-                            (index) => twoValueColorIndex = index,
-                            colorOptions),
+                          'Value "Two" Color',
+                          twoValueColorIndex,
+                          (index) => twoValueColorIndex = index,
+                          colorOptions,
+                        ),
                         _buildColorDropdown(
-                            'Default Row Color',
-                            defaultRowColorIndex,
-                            (index) => defaultRowColorIndex = index,
-                            colorOptions),
+                          'Default Row Color',
+                          defaultRowColorIndex,
+                          (index) => defaultRowColorIndex = index,
+                          colorOptions,
+                        ),
                         _buildColorDropdown(
-                            'Selection Color',
-                            selectionColorIndex,
-                            (index) => selectionColorIndex = index,
-                            selectionColorOptions),
+                          'Selection Color',
+                          selectionColorIndex,
+                          (index) => selectionColorIndex = index,
+                          selectionColorOptions,
+                        ),
                         _buildColorDropdown(
-                            'Border Color', activatedBorderColorIndex, (index) {
-                          setState(() {
-                            activatedBorderColorIndex = index;
-                            if (stateManager != null) {
-                              final newStyle =
-                                  stateManager!.configuration.style.copyWith(
-                                activatedBorderColor: activatedBorderColor,
-                              );
-                              stateManager!.setConfiguration(
+                          'Border Color',
+                          activatedBorderColorIndex,
+                          (index) {
+                            setState(() {
+                              activatedBorderColorIndex = index;
+                              if (stateManager != null) {
+                                final newStyle = stateManager!
+                                    .configuration
+                                    .style
+                                    .copyWith(
+                                      activatedBorderColor:
+                                          activatedBorderColor,
+                                    );
+                                stateManager!.setConfiguration(
                                   stateManager!.configuration.copyWith(
-                                style: newStyle,
-                              ));
-                            }
-                          });
-                        }, selectionColorOptions),
+                                    style: newStyle,
+                                  ),
+                                );
+                              }
+                            });
+                          },
+                          selectionColorOptions,
+                        ),
                         _buildColorDropdown(
-                            'Read-Only Color', readOnlyColorIndex, (index) {
-                          setState(() {
-                            readOnlyColorIndex = index;
-                            if (stateManager != null) {
-                              final newStyle =
-                                  stateManager!.configuration.style.copyWith(
-                                cellReadonlyColor: readOnlyColor,
-                              );
-                              stateManager!.setConfiguration(
+                          'Read-Only Color',
+                          readOnlyColorIndex,
+                          (index) {
+                            setState(() {
+                              readOnlyColorIndex = index;
+                              if (stateManager != null) {
+                                final newStyle = stateManager!
+                                    .configuration
+                                    .style
+                                    .copyWith(cellReadonlyColor: readOnlyColor);
+                                stateManager!.setConfiguration(
                                   stateManager!.configuration.copyWith(
-                                style: newStyle,
-                              ));
-                            }
-                          });
-                        }, colorOptions),
+                                    style: newStyle,
+                                  ),
+                                );
+                              }
+                            });
+                          },
+                          colorOptions,
+                        ),
                       ],
                     ),
                   ],

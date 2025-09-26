@@ -259,8 +259,9 @@ mixin SelectingState implements ITrinaGridState {
       return;
     }
 
-    _state._currentSelectingPosition =
-        isInvalidCellPosition(cellPosition) ? null : cellPosition;
+    _state._currentSelectingPosition = isInvalidCellPosition(cellPosition)
+        ? null
+        : cellPosition;
 
     if (currentSelectingPosition != null && selectingMode.isRow) {
       setCurrentSelectingRowsByRange(
@@ -294,14 +295,16 @@ mixin SelectingState implements ITrinaGridState {
       return;
     }
 
-    final double gridBodyOffsetDy = gridGlobalOffset!.dy +
+    final double gridBodyOffsetDy =
+        gridGlobalOffset!.dy +
         gridBorderWidth +
         headerHeight +
         columnGroupHeight +
         columnHeight +
         columnFilterHeight;
 
-    double currentCellOffsetDy = (currentRowIdx! * rowTotalHeight) +
+    double currentCellOffsetDy =
+        (currentRowIdx! * rowTotalHeight) +
         gridBodyOffsetDy -
         scroll.vertical!.offset;
 
@@ -309,9 +312,10 @@ mixin SelectingState implements ITrinaGridState {
       return;
     }
 
-    int rowIdx = (((currentCellOffsetDy - offset.dy) / rowTotalHeight).ceil() -
-            currentRowIdx!)
-        .abs();
+    int rowIdx =
+        (((currentCellOffsetDy - offset.dy) / rowTotalHeight).ceil() -
+                currentRowIdx!)
+            .abs();
 
     int? columnIdx;
 
@@ -328,8 +332,9 @@ mixin SelectingState implements ITrinaGridState {
 
       currentWidth += column.width;
 
-      final rightFrozenColumnOffset =
-          column.frozen.isEnd && showFrozenColumn ? savedRightBlankOffset : 0;
+      final rightFrozenColumnOffset = column.frozen.isEnd && showFrozenColumn
+          ? savedRightBlankOffset
+          : 0;
 
       if (currentWidth + rightFrozenColumnOffset >
           directionalOffset.dx + savedHorizontalScrollOffset) {
@@ -439,7 +444,8 @@ mixin SelectingState implements ITrinaGridState {
     }
 
     if (selectingMode.isCell) {
-      final bool inRangeOfRows = min(
+      final bool inRangeOfRows =
+          min(
                 currentCellPosition!.rowIdx as num,
                 currentSelectingPosition!.rowIdx as num,
               ) <=
@@ -460,7 +466,8 @@ mixin SelectingState implements ITrinaGridState {
         return false;
       }
 
-      final bool inRangeOfColumns = min(
+      final bool inRangeOfColumns =
+          min(
                 currentCellPosition!.columnIdx as num,
                 currentSelectingPosition!.columnIdx as num,
               ) <=
@@ -589,17 +596,19 @@ mixin SelectingState implements ITrinaGridState {
 
     final columnIndexes = columnIndexesByShowFrozen;
 
-    final bool firstCurrent = currentCellPosition!.rowIdx! <
-            currentSelectingPosition!.rowIdx! ||
+    final bool firstCurrent =
+        currentCellPosition!.rowIdx! < currentSelectingPosition!.rowIdx! ||
         (currentCellPosition!.rowIdx! == currentSelectingPosition!.rowIdx! &&
             currentCellPosition!.columnIdx! <=
                 currentSelectingPosition!.columnIdx!);
 
-    TrinaGridCellPosition startCell =
-        firstCurrent ? currentCellPosition! : currentSelectingPosition!;
+    TrinaGridCellPosition startCell = firstCurrent
+        ? currentCellPosition!
+        : currentSelectingPosition!;
 
-    TrinaGridCellPosition endCell =
-        !firstCurrent ? currentCellPosition! : currentSelectingPosition!;
+    TrinaGridCellPosition endCell = !firstCurrent
+        ? currentCellPosition!
+        : currentSelectingPosition!;
 
     int columnStartIdx = startCell.columnIdx!;
 

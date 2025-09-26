@@ -26,24 +26,27 @@ class _TrinaTextColorAnimationState extends State<TrinaTextColorAnimation>
   @override
   void initState() {
     super.initState();
-    controller =
-        AnimationController(duration: const Duration(seconds: 5), vsync: this);
-    _colorAnim = RainbowColorTween([
-      Colors.white,
-      const Color(0xFF33BDE5),
-      Colors.white,
-    ]).animate(controller)
-      ..addListener(() {
-        setState(() {});
-      })
-      ..addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          controller.reset();
-          controller.forward();
-        } else if (status == AnimationStatus.dismissed) {
-          controller.forward();
-        }
-      });
+    controller = AnimationController(
+      duration: const Duration(seconds: 5),
+      vsync: this,
+    );
+    _colorAnim =
+        RainbowColorTween([
+            Colors.white,
+            const Color(0xFF33BDE5),
+            Colors.white,
+          ]).animate(controller)
+          ..addListener(() {
+            setState(() {});
+          })
+          ..addStatusListener((status) {
+            if (status == AnimationStatus.completed) {
+              controller.reset();
+              controller.forward();
+            } else if (status == AnimationStatus.dismissed) {
+              controller.forward();
+            }
+          });
     controller.forward();
   }
 

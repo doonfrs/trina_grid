@@ -80,12 +80,39 @@ class _DarkModeScreenState extends State<DarkModeScreen> {
     ]);
 
     // Create sample rows - enough to trigger pagination
-    final statuses = ['Active', 'Inactive', 'Pending', 'Completed', 'Cancelled'];
+    final statuses = [
+      'Active',
+      'Inactive',
+      'Pending',
+      'Completed',
+      'Cancelled',
+    ];
     final priorities = ['Low', 'Medium', 'High', 'Critical'];
     final projectNames = [
-      'Alpha', 'Beta', 'Gamma', 'Delta', 'Epsilon', 'Zeta', 'Eta', 'Theta',
-      'Iota', 'Kappa', 'Lambda', 'Mu', 'Nu', 'Xi', 'Omicron', 'Pi', 'Rho',
-      'Sigma', 'Tau', 'Upsilon', 'Phi', 'Chi', 'Psi', 'Omega'
+      'Alpha',
+      'Beta',
+      'Gamma',
+      'Delta',
+      'Epsilon',
+      'Zeta',
+      'Eta',
+      'Theta',
+      'Iota',
+      'Kappa',
+      'Lambda',
+      'Mu',
+      'Nu',
+      'Xi',
+      'Omicron',
+      'Pi',
+      'Rho',
+      'Sigma',
+      'Tau',
+      'Upsilon',
+      'Phi',
+      'Chi',
+      'Psi',
+      'Omega',
     ];
 
     for (int i = 1; i <= 150; i++) {
@@ -93,15 +120,24 @@ class _DarkModeScreenState extends State<DarkModeScreen> {
       final priority = priorities[i % priorities.length];
       final projectName = projectNames[i % projectNames.length];
 
-      rows.add(TrinaRow(cells: {
-        'id': TrinaCell(value: i),
-        'name': TrinaCell(value: 'Project $projectName $i'),
-        'status': TrinaCell(value: status),
-        'priority': TrinaCell(value: priority),
-        'date': TrinaCell(value: DateTime.now().add(Duration(days: i % 30 - 15))),
-        'time': TrinaCell(value: '${(8 + (i % 10)).toString().padLeft(2, '0')}:${(i % 6 * 10).toString().padLeft(2, '0')}'),
-        'amount': TrinaCell(value: (5000 + (i * 123.45)) % 50000),
-      }));
+      rows.add(
+        TrinaRow(
+          cells: {
+            'id': TrinaCell(value: i),
+            'name': TrinaCell(value: 'Project $projectName $i'),
+            'status': TrinaCell(value: status),
+            'priority': TrinaCell(value: priority),
+            'date': TrinaCell(
+              value: DateTime.now().add(Duration(days: i % 30 - 15)),
+            ),
+            'time': TrinaCell(
+              value:
+                  '${(8 + (i % 10)).toString().padLeft(2, '0')}:${(i % 6 * 10).toString().padLeft(2, '0')}',
+            ),
+            'amount': TrinaCell(value: (5000 + (i * 123.45)) % 50000),
+          },
+        ),
+      );
     }
   }
 
@@ -114,10 +150,12 @@ class _DarkModeScreenState extends State<DarkModeScreen> {
         Text('Change the entire theme of the grid to Dark.'),
         SizedBox(height: 8),
         Text(
-            'Click on Status, Priority, Date, or Time columns to test dark mode popups.'),
+          'Click on Status, Priority, Date, or Time columns to test dark mode popups.',
+        ),
         SizedBox(height: 8),
         Text(
-            'This demo shows 150 rows with pagination (20 rows per page) to test theme switching with pagination controls.'),
+          'This demo shows 150 rows with pagination (20 rows per page) to test theme switching with pagination controls.',
+        ),
       ],
       topButtons: [
         TrinaExampleButton(

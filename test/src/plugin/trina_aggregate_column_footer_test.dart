@@ -28,29 +28,34 @@ void main() {
     EdgeInsets? padding,
     bool enabledRowGroups = false,
   }) {
-    return TrinaWidgetTestHelper('TrinaAggregateColumnFooter : ',
-        (tester) async {
+    return TrinaWidgetTestHelper('TrinaAggregateColumnFooter : ', (
+      tester,
+    ) async {
       stateManager = MockTrinaGridStateManager();
 
       subject = PublishSubject<TrinaNotifierEvent>();
 
       when(stateManager.streamNotifier).thenAnswer((_) => subject);
 
-      when(stateManager.configuration)
-          .thenReturn(const TrinaGridConfiguration());
+      when(
+        stateManager.configuration,
+      ).thenReturn(const TrinaGridConfiguration());
 
       when(stateManager.refRows).thenReturn(rows);
 
       when(stateManager.enabledRowGroups).thenReturn(enabledRowGroups);
 
-      when(stateManager.iterateAllMainRowGroup)
-          .thenReturn(rows.originalList.where((r) => r.isMain));
+      when(
+        stateManager.iterateAllMainRowGroup,
+      ).thenReturn(rows.originalList.where((r) => r.isMain));
 
-      when(stateManager.iterateFilteredMainRowGroup)
-          .thenReturn(rows.filterOrOriginalList.where((r) => r.isMain));
+      when(
+        stateManager.iterateFilteredMainRowGroup,
+      ).thenReturn(rows.filterOrOriginalList.where((r) => r.isMain));
 
-      when(stateManager.iterateMainRowGroup)
-          .thenReturn(rows.where((r) => r.isMain));
+      when(
+        stateManager.iterateMainRowGroup,
+      ).thenReturn(rows.where((r) => r.isMain));
 
       await tester.pumpWidget(
         MaterialApp(
@@ -89,165 +94,190 @@ void main() {
       rows: FilteredList<TrinaRow>(initialList: []),
       type: TrinaAggregateColumnType.sum,
     ).test(
-        'When sum is set, the value should be displayed in the specified format.',
-        (tester) async {
-      final found = find.text('0');
+      'When sum is set, the value should be displayed in the specified format.',
+      (tester) async {
+        final found = find.text('0');
 
-      expect(found, findsOneWidget);
-    });
+        expect(found, findsOneWidget);
+      },
+    );
 
     buildWidget(
       column: columns.first,
       rows: FilteredList<TrinaRow>(initialList: []),
       type: TrinaAggregateColumnType.average,
     ).test(
-        'When average is set, the value should be displayed in the specified format.',
-        (tester) async {
-      final found = find.text('0');
+      'When average is set, the value should be displayed in the specified format.',
+      (tester) async {
+        final found = find.text('0');
 
-      expect(found, findsOneWidget);
-    });
+        expect(found, findsOneWidget);
+      },
+    );
 
     buildWidget(
       column: columns.first,
       rows: FilteredList<TrinaRow>(initialList: []),
       type: TrinaAggregateColumnType.min,
     ).test(
-        'When min is set, the value should be displayed in the specified format.',
-        (tester) async {
-      final found = find.text('');
+      'When min is set, the value should be displayed in the specified format.',
+      (tester) async {
+        final found = find.text('');
 
-      expect(found, findsOneWidget);
-    });
+        expect(found, findsOneWidget);
+      },
+    );
 
     buildWidget(
       column: columns.first,
       rows: FilteredList<TrinaRow>(initialList: []),
       type: TrinaAggregateColumnType.max,
     ).test(
-        'When max is set, the value should be displayed in the specified format.',
-        (tester) async {
-      final found = find.text('');
+      'When max is set, the value should be displayed in the specified format.',
+      (tester) async {
+        final found = find.text('');
 
-      expect(found, findsOneWidget);
-    });
+        expect(found, findsOneWidget);
+      },
+    );
 
     buildWidget(
       column: columns.first,
       rows: FilteredList<TrinaRow>(initialList: []),
       type: TrinaAggregateColumnType.count,
     ).test(
-        'When count is set, the value should be displayed in the specified format.',
-        (tester) async {
-      final found = find.text('0');
+      'When count is set, the value should be displayed in the specified format.',
+      (tester) async {
+        final found = find.text('0');
 
-      expect(found, findsOneWidget);
-    });
+        expect(found, findsOneWidget);
+      },
+    );
 
     buildWidget(
       column: columns.first,
-      rows: FilteredList<TrinaRow>(initialList: [
-        TrinaRow(cells: {'column': TrinaCell(value: 1000)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
-      ]),
+      rows: FilteredList<TrinaRow>(
+        initialList: [
+          TrinaRow(cells: {'column': TrinaCell(value: 1000)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
+        ],
+      ),
       type: TrinaAggregateColumnType.sum,
     ).test(
-        'When sum is set, the value should be displayed in the specified format.',
-        (tester) async {
-      final found = find.text('6,000');
+      'When sum is set, the value should be displayed in the specified format.',
+      (tester) async {
+        final found = find.text('6,000');
 
-      expect(found, findsOneWidget);
-    });
+        expect(found, findsOneWidget);
+      },
+    );
 
     buildWidget(
       column: columns.first,
-      rows: FilteredList<TrinaRow>(initialList: [
-        TrinaRow(cells: {'column': TrinaCell(value: 1000)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
-      ]),
+      rows: FilteredList<TrinaRow>(
+        initialList: [
+          TrinaRow(cells: {'column': TrinaCell(value: 1000)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
+        ],
+      ),
       type: TrinaAggregateColumnType.average,
     ).test(
-        'When average is set, the value should be displayed in the specified format.',
-        (tester) async {
-      final found = find.text('2,000');
+      'When average is set, the value should be displayed in the specified format.',
+      (tester) async {
+        final found = find.text('2,000');
 
-      expect(found, findsOneWidget);
-    });
+        expect(found, findsOneWidget);
+      },
+    );
 
     buildWidget(
       column: columns.first,
-      rows: FilteredList<TrinaRow>(initialList: [
-        TrinaRow(cells: {'column': TrinaCell(value: 1000)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
-      ]),
+      rows: FilteredList<TrinaRow>(
+        initialList: [
+          TrinaRow(cells: {'column': TrinaCell(value: 1000)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
+        ],
+      ),
       type: TrinaAggregateColumnType.min,
     ).test(
-        'When min is set, the value should be displayed in the specified format.',
-        (tester) async {
-      final found = find.text('1,000');
+      'When min is set, the value should be displayed in the specified format.',
+      (tester) async {
+        final found = find.text('1,000');
 
-      expect(found, findsOneWidget);
-    });
+        expect(found, findsOneWidget);
+      },
+    );
 
     buildWidget(
       column: columns.first,
-      rows: FilteredList<TrinaRow>(initialList: [
-        TrinaRow(cells: {'column': TrinaCell(value: 1000)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
-      ]),
+      rows: FilteredList<TrinaRow>(
+        initialList: [
+          TrinaRow(cells: {'column': TrinaCell(value: 1000)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
+        ],
+      ),
       type: TrinaAggregateColumnType.max,
     ).test(
-        'When max is set, the value should be displayed in the specified format.',
-        (tester) async {
-      final found = find.text('3,000');
+      'When max is set, the value should be displayed in the specified format.',
+      (tester) async {
+        final found = find.text('3,000');
 
-      expect(found, findsOneWidget);
-    });
+        expect(found, findsOneWidget);
+      },
+    );
 
     buildWidget(
       column: columns.first,
-      rows: FilteredList<TrinaRow>(initialList: [
-        TrinaRow(cells: {'column': TrinaCell(value: 1000)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
-      ]),
+      rows: FilteredList<TrinaRow>(
+        initialList: [
+          TrinaRow(cells: {'column': TrinaCell(value: 1000)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
+        ],
+      ),
       type: TrinaAggregateColumnType.count,
     ).test(
-        'When count is set, the value should be displayed in the specified format.',
-        (tester) async {
-      final found = find.text('3');
+      'When count is set, the value should be displayed in the specified format.',
+      (tester) async {
+        final found = find.text('3');
 
-      expect(found, findsOneWidget);
-    });
+        expect(found, findsOneWidget);
+      },
+    );
 
     buildWidget(
       column: columns.first,
-      rows: FilteredList<TrinaRow>(initialList: [
-        TrinaRow(cells: {'column': TrinaCell(value: 1000)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
-      ]),
+      rows: FilteredList<TrinaRow>(
+        initialList: [
+          TrinaRow(cells: {'column': TrinaCell(value: 1000)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
+        ],
+      ),
       type: TrinaAggregateColumnType.count,
       filter: (cell) => cell.value > 1000,
     ).test(
-        'When filter is set, the count value should be displayed based on the filter condition.',
-        (tester) async {
-      final found = find.text('2');
+      'When filter is set, the count value should be displayed based on the filter condition.',
+      (tester) async {
+        final found = find.text('2');
 
-      expect(found, findsOneWidget);
-    });
+        expect(found, findsOneWidget);
+      },
+    );
 
     buildWidget(
       column: columns.first,
-      rows: FilteredList<TrinaRow>(initialList: [
-        TrinaRow(cells: {'column': TrinaCell(value: 1000)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
-      ]),
+      rows: FilteredList<TrinaRow>(
+        initialList: [
+          TrinaRow(cells: {'column': TrinaCell(value: 1000)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
+        ],
+      ),
       type: TrinaAggregateColumnType.count,
       format: NumberFormat('Total : #,###'),
     ).test(
@@ -261,11 +291,13 @@ void main() {
 
     buildWidget(
       column: columns.first,
-      rows: FilteredList<TrinaRow>(initialList: [
-        TrinaRow(cells: {'column': TrinaCell(value: 1000)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
-      ]),
+      rows: FilteredList<TrinaRow>(
+        initialList: [
+          TrinaRow(cells: {'column': TrinaCell(value: 1000)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
+        ],
+      ),
       type: TrinaAggregateColumnType.sum,
       titleSpanBuilder: (text) {
         return [
@@ -285,12 +317,13 @@ void main() {
 
     buildWidget(
       column: columns.first,
-      rows: FilteredList<TrinaRow>(initialList: [
-        TrinaRow(cells: {'column': TrinaCell(value: 1000)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
-      ])
-        ..setFilter((element) => element.cells['column']!.value > 1000),
+      rows: FilteredList<TrinaRow>(
+        initialList: [
+          TrinaRow(cells: {'column': TrinaCell(value: 1000)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
+        ],
+      )..setFilter((element) => element.cells['column']!.value > 1000),
       type: TrinaAggregateColumnType.sum,
     ).test(
       'When filter is applied, only the filtered results should be aggregated.',
@@ -301,12 +334,13 @@ void main() {
 
     buildWidget(
       column: columns.first,
-      rows: FilteredList<TrinaRow>(initialList: [
-        TrinaRow(cells: {'column': TrinaCell(value: 1000)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
-      ])
-        ..setFilterRange(FilteredListRange(0, 2)),
+      rows: FilteredList<TrinaRow>(
+        initialList: [
+          TrinaRow(cells: {'column': TrinaCell(value: 1000)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
+        ],
+      )..setFilterRange(FilteredListRange(0, 2)),
       type: TrinaAggregateColumnType.sum,
     ).test(
       'When pagination is applied, only the paginated results should be aggregated.',
@@ -317,12 +351,13 @@ void main() {
 
     buildWidget(
       column: columns.first,
-      rows: FilteredList<TrinaRow>(initialList: [
-        TrinaRow(cells: {'column': TrinaCell(value: 1000)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
-      ])
-        ..setFilterRange(FilteredListRange(0, 2)),
+      rows: FilteredList<TrinaRow>(
+        initialList: [
+          TrinaRow(cells: {'column': TrinaCell(value: 1000)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
+        ],
+      )..setFilterRange(FilteredListRange(0, 2)),
       type: TrinaAggregateColumnType.sum,
       iterateRowType: TrinaAggregateColumnIterateRowType.all,
     ).test(
@@ -334,13 +369,16 @@ void main() {
 
     buildWidget(
       column: columns.first,
-      rows: FilteredList<TrinaRow>(initialList: [
-        TrinaRow(cells: {'column': TrinaCell(value: 1000)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
-      ])
-        ..setFilter((element) => element.cells['column']!.value > 1000)
-        ..setFilterRange(FilteredListRange(0, 2)),
+      rows:
+          FilteredList<TrinaRow>(
+              initialList: [
+                TrinaRow(cells: {'column': TrinaCell(value: 1000)}),
+                TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
+                TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
+              ],
+            )
+            ..setFilter((element) => element.cells['column']!.value > 1000)
+            ..setFilterRange(FilteredListRange(0, 2)),
       type: TrinaAggregateColumnType.sum,
       iterateRowType: TrinaAggregateColumnIterateRowType.filtered,
     ).test(
@@ -352,12 +390,13 @@ void main() {
 
     buildWidget(
       column: columns.first,
-      rows: FilteredList<TrinaRow>(initialList: [
-        TrinaRow(cells: {'column': TrinaCell(value: 1000)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
-      ])
-        ..setFilter((element) => element.cells['column']!.value > 1000),
+      rows: FilteredList<TrinaRow>(
+        initialList: [
+          TrinaRow(cells: {'column': TrinaCell(value: 1000)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
+        ],
+      )..setFilter((element) => element.cells['column']!.value > 1000),
       type: TrinaAggregateColumnType.sum,
       iterateRowType: TrinaAggregateColumnIterateRowType.all,
     ).test(
@@ -379,70 +418,69 @@ void main() {
 
     buildWidget(
       column: columns.first,
-      rows: FilteredList<TrinaRow>(initialList: [
-        TrinaRow(
+      rows: FilteredList<TrinaRow>(
+        initialList: [
+          TrinaRow(
             cells: {'column': TrinaCell(value: 1000)},
             type: TrinaRowType.group(
-                children: FilteredList(
-              initialList: [
-                TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
-                TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
-              ],
-            ))),
-        TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
-      ]),
+              children: FilteredList(
+                initialList: [
+                  TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
+                  TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
+                ],
+              ),
+            ),
+          ),
+          TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
+        ],
+      ),
       type: TrinaAggregateColumnType.sum,
       groupedRowType: TrinaAggregateColumnGroupedRowType.all,
       enabledRowGroups: true,
       titleSpanBuilder: (text) {
-        return [
-          WidgetSpan(child: Text('Value : $text')),
-        ];
+        return [WidgetSpan(child: Text('Value : $text'))];
       },
-    ).test(
-      'When GroupedRowType is all, '
-      'Value : 10,000 should be displayed.',
-      (tester) async {
-        expect(find.text('Value : 10,000'), findsOneWidget);
-      },
-    );
+    ).test('When GroupedRowType is all, '
+        'Value : 10,000 should be displayed.', (tester) async {
+      expect(find.text('Value : 10,000'), findsOneWidget);
+    });
 
     buildWidget(
       column: columns.first,
-      rows: FilteredList<TrinaRow>(initialList: [
-        TrinaRow(
+      rows: FilteredList<TrinaRow>(
+        initialList: [
+          TrinaRow(
             cells: {'column': TrinaCell(value: 1000)},
             type: TrinaRowType.group(
-                children: FilteredList(
-              initialList: [
-                TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
-                TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
-              ],
-            ))),
-        TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
-      ]),
+              children: FilteredList(
+                initialList: [
+                  TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
+                  TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
+                ],
+              ),
+            ),
+          ),
+          TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
+        ],
+      ),
       type: TrinaAggregateColumnType.sum,
       groupedRowType: TrinaAggregateColumnGroupedRowType.expandedAll,
       enabledRowGroups: true,
       titleSpanBuilder: (text) {
-        return [
-          WidgetSpan(child: Text('Value : $text')),
-        ];
+        return [WidgetSpan(child: Text('Value : $text'))];
       },
-    ).test(
-      'When GroupedRowType is expandedAll and the group row is collapsed, '
-      'Value : 6,000 should be displayed.',
-      (tester) async {
-        expect(find.text('Value : 6,000'), findsOneWidget);
-      },
-    );
+    ).test('When GroupedRowType is expandedAll and the group row is collapsed, '
+        'Value : 6,000 should be displayed.', (tester) async {
+      expect(find.text('Value : 6,000'), findsOneWidget);
+    });
 
     buildWidget(
       column: columns.first,
-      rows: FilteredList<TrinaRow>(initialList: [
-        TrinaRow(
+      rows: FilteredList<TrinaRow>(
+        initialList: [
+          TrinaRow(
             cells: {'column': TrinaCell(value: 1000)},
             type: TrinaRowType.group(
               children: FilteredList(
@@ -452,30 +490,28 @@ void main() {
                 ],
               ),
               expanded: true,
-            )),
-        TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
-      ]),
+            ),
+          ),
+          TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
+        ],
+      ),
       type: TrinaAggregateColumnType.sum,
       groupedRowType: TrinaAggregateColumnGroupedRowType.expandedAll,
       enabledRowGroups: true,
       titleSpanBuilder: (text) {
-        return [
-          WidgetSpan(child: Text('Value : $text')),
-        ];
+        return [WidgetSpan(child: Text('Value : $text'))];
       },
-    ).test(
-      'When GroupedRowType is expandedAll and the group row is expanded, '
-      'Value : 10,000 should be displayed.',
-      (tester) async {
-        expect(find.text('Value : 10,000'), findsOneWidget);
-      },
-    );
+    ).test('When GroupedRowType is expandedAll and the group row is expanded, '
+        'Value : 10,000 should be displayed.', (tester) async {
+      expect(find.text('Value : 10,000'), findsOneWidget);
+    });
 
     buildWidget(
       column: columns.first,
-      rows: FilteredList<TrinaRow>(initialList: [
-        TrinaRow(
+      rows: FilteredList<TrinaRow>(
+        initialList: [
+          TrinaRow(
             cells: {'column': TrinaCell(value: 1000)},
             type: TrinaRowType.group(
               children: FilteredList(
@@ -485,30 +521,28 @@ void main() {
                 ],
               ),
               expanded: true,
-            )),
-        TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
-      ]),
+            ),
+          ),
+          TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
+        ],
+      ),
       type: TrinaAggregateColumnType.sum,
       groupedRowType: TrinaAggregateColumnGroupedRowType.rows,
       enabledRowGroups: true,
       titleSpanBuilder: (text) {
-        return [
-          WidgetSpan(child: Text('Value : $text')),
-        ];
+        return [WidgetSpan(child: Text('Value : $text'))];
       },
-    ).test(
-      'When GroupedRowType is rows, '
-      'Value : 9,000 should be displayed.',
-      (tester) async {
-        expect(find.text('Value : 9,000'), findsOneWidget);
-      },
-    );
+    ).test('When GroupedRowType is rows, '
+        'Value : 9,000 should be displayed.', (tester) async {
+      expect(find.text('Value : 9,000'), findsOneWidget);
+    });
 
     buildWidget(
       column: columns.first,
-      rows: FilteredList<TrinaRow>(initialList: [
-        TrinaRow(
+      rows: FilteredList<TrinaRow>(
+        initialList: [
+          TrinaRow(
             cells: {'column': TrinaCell(value: 1000)},
             type: TrinaRowType.group(
               children: FilteredList(
@@ -518,17 +552,17 @@ void main() {
                 ],
               ),
               expanded: false,
-            )),
-        TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
-      ]),
+            ),
+          ),
+          TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
+        ],
+      ),
       type: TrinaAggregateColumnType.sum,
       groupedRowType: TrinaAggregateColumnGroupedRowType.expandedRows,
       enabledRowGroups: true,
       titleSpanBuilder: (text) {
-        return [
-          WidgetSpan(child: Text('Value : $text')),
-        ];
+        return [WidgetSpan(child: Text('Value : $text'))];
       },
     ).test(
       'When GroupedRowType is expandedRows and the group row is collapsed, '
@@ -540,8 +574,9 @@ void main() {
 
     buildWidget(
       column: columns.first,
-      rows: FilteredList<TrinaRow>(initialList: [
-        TrinaRow(
+      rows: FilteredList<TrinaRow>(
+        initialList: [
+          TrinaRow(
             cells: {'column': TrinaCell(value: 1000)},
             type: TrinaRowType.group(
               children: FilteredList(
@@ -551,30 +586,28 @@ void main() {
                 ],
               ),
               expanded: true,
-            )),
-        TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
-      ]),
+            ),
+          ),
+          TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
+        ],
+      ),
       type: TrinaAggregateColumnType.sum,
       groupedRowType: TrinaAggregateColumnGroupedRowType.expandedRows,
       enabledRowGroups: true,
       titleSpanBuilder: (text) {
-        return [
-          WidgetSpan(child: Text('Value : $text')),
-        ];
+        return [WidgetSpan(child: Text('Value : $text'))];
       },
-    ).test(
-      'When GroupedRowType is expandedRows and the group row is expanded, '
-      'Value : 9,000 should be displayed.',
-      (tester) async {
-        expect(find.text('Value : 9,000'), findsOneWidget);
-      },
-    );
+    ).test('When GroupedRowType is expandedRows and the group row is expanded, '
+        'Value : 9,000 should be displayed.', (tester) async {
+      expect(find.text('Value : 9,000'), findsOneWidget);
+    });
 
     buildWidget(
       column: columns.first,
-      rows: FilteredList<TrinaRow>(initialList: [
-        TrinaRow(
+      rows: FilteredList<TrinaRow>(
+        initialList: [
+          TrinaRow(
             cells: {'column': TrinaCell(value: 1000)},
             type: TrinaRowType.group(
               children: FilteredList(
@@ -584,11 +617,12 @@ void main() {
                 ],
               ),
               expanded: true,
-            )),
-        TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
-      ])
-        ..setFilter((element) => element.cells['column']!.value > 1000),
+            ),
+          ),
+          TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
+        ],
+      )..setFilter((element) => element.cells['column']!.value > 1000),
       type: TrinaAggregateColumnType.sum,
       groupedRowType: TrinaAggregateColumnGroupedRowType.all,
       enabledRowGroups: true,
@@ -601,8 +635,9 @@ void main() {
 
     buildWidget(
       column: columns.first,
-      rows: FilteredList<TrinaRow>(initialList: [
-        TrinaRow(
+      rows: FilteredList<TrinaRow>(
+        initialList: [
+          TrinaRow(
             cells: {'column': TrinaCell(value: 1000)},
             type: TrinaRowType.group(
               children: FilteredList(
@@ -612,11 +647,12 @@ void main() {
                 ],
               ),
               expanded: true,
-            )),
-        TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
-      ])
-        ..setFilterRange(FilteredListRange(0, 2)),
+            ),
+          ),
+          TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
+        ],
+      )..setFilterRange(FilteredListRange(0, 2)),
       type: TrinaAggregateColumnType.sum,
       groupedRowType: TrinaAggregateColumnGroupedRowType.all,
       enabledRowGroups: true,
@@ -629,8 +665,9 @@ void main() {
 
     buildWidget(
       column: columns.first,
-      rows: FilteredList<TrinaRow>(initialList: [
-        TrinaRow(
+      rows: FilteredList<TrinaRow>(
+        initialList: [
+          TrinaRow(
             cells: {'column': TrinaCell(value: 1000)},
             type: TrinaRowType.group(
               children: FilteredList(
@@ -640,11 +677,12 @@ void main() {
                 ],
               ),
               expanded: true,
-            )),
-        TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
-      ])
-        ..setFilter((element) => element.cells['column']!.value > 1000),
+            ),
+          ),
+          TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
+        ],
+      )..setFilter((element) => element.cells['column']!.value > 1000),
       type: TrinaAggregateColumnType.sum,
       iterateRowType: TrinaAggregateColumnIterateRowType.all,
       groupedRowType: TrinaAggregateColumnGroupedRowType.all,
@@ -658,23 +696,27 @@ void main() {
 
     buildWidget(
       column: columns.first,
-      rows: FilteredList<TrinaRow>(initialList: [
-        TrinaRow(
-            cells: {'column': TrinaCell(value: 1000)},
-            type: TrinaRowType.group(
-              children: FilteredList(
-                initialList: [
-                  TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
-                  TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
-                ],
-              ),
-              expanded: true,
-            )),
-        TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
-      ])
-        ..setFilter((element) => element.cells['column']!.value > 1000)
-        ..setFilterRange(FilteredListRange(0, 2)),
+      rows:
+          FilteredList<TrinaRow>(
+              initialList: [
+                TrinaRow(
+                  cells: {'column': TrinaCell(value: 1000)},
+                  type: TrinaRowType.group(
+                    children: FilteredList(
+                      initialList: [
+                        TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
+                        TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
+                      ],
+                    ),
+                    expanded: true,
+                  ),
+                ),
+                TrinaRow(cells: {'column': TrinaCell(value: 2000)}),
+                TrinaRow(cells: {'column': TrinaCell(value: 3000)}),
+              ],
+            )
+            ..setFilter((element) => element.cells['column']!.value > 1000)
+            ..setFilterRange(FilteredListRange(0, 2)),
       type: TrinaAggregateColumnType.sum,
       iterateRowType: TrinaAggregateColumnIterateRowType.filtered,
       groupedRowType: TrinaAggregateColumnGroupedRowType.all,

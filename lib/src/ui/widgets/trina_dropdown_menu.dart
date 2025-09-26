@@ -137,8 +137,8 @@ class TrinaDropdownMenu<T> extends StatefulWidget {
     this.itemToString,
     this.itemToValue,
     super.key,
-  })  : builder = _defaultBuilder<T>,
-        variant = TrinaDropdownMenuVariant.select;
+  }) : builder = _defaultBuilder<T>,
+       variant = TrinaDropdownMenuVariant.select;
 
   static Widget _defaultBuilder<T>(BuildContext context) {
     final widget = TrinaDropdownMenu.of<T>(context).widget;
@@ -354,42 +354,43 @@ final class _TrinaSelectMenuWithSearch<T> extends TrinaDropdownMenu<T> {
     required super.itemHeight,
     required super.maxHeight,
   }) : super._(
-          variant: TrinaDropdownMenuVariant.selectWithSearch,
-          itemToString: itemToString,
-          builder: (context) {
-            final state = (TrinaDropdownMenu.of<T>(context)
-                as _TrinaSelectMenuWithSearchState<T>);
-            return FocusScope(
-              onKeyEvent: (node, event) {
-                if (event.character != null) {
-                  if (state.focusNode.hasFocus == false) {
-                    // Focus the search text field in order
-                    // to receive input from the keyboard.
-                    state.focusNode.requestFocus();
-                  }
-                }
-                return KeyEventResult.ignored;
-              },
-              child: SizedBox(
-                width: width,
-                height: maxHeight,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _SearchField<T>(),
-                    Divider(
-                      height: 5,
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.onSurface.withAlpha(50),
-                    ),
-                    Flexible(child: _ItemListView<T>()),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
+         variant: TrinaDropdownMenuVariant.selectWithSearch,
+         itemToString: itemToString,
+         builder: (context) {
+           final state =
+               (TrinaDropdownMenu.of<T>(context)
+                   as _TrinaSelectMenuWithSearchState<T>);
+           return FocusScope(
+             onKeyEvent: (node, event) {
+               if (event.character != null) {
+                 if (state.focusNode.hasFocus == false) {
+                   // Focus the search text field in order
+                   // to receive input from the keyboard.
+                   state.focusNode.requestFocus();
+                 }
+               }
+               return KeyEventResult.ignored;
+             },
+             child: SizedBox(
+               width: width,
+               height: maxHeight,
+               child: Column(
+                 mainAxisSize: MainAxisSize.min,
+                 children: [
+                   _SearchField<T>(),
+                   Divider(
+                     height: 5,
+                     color: Theme.of(
+                       context,
+                     ).colorScheme.onSurface.withAlpha(50),
+                   ),
+                   Flexible(child: _ItemListView<T>()),
+                 ],
+               ),
+             ),
+           );
+         },
+       );
 
   /// {@template TrinaDropdownMenu.emptySearchResultBuilder}
   /// Used to provide a custom widget to display when the search yields no results.
@@ -466,8 +467,9 @@ class _SearchField<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final state = (TrinaDropdownMenu.of<T>(context)
-        as _TrinaSelectMenuWithSearchState<T>);
+    final state =
+        (TrinaDropdownMenu.of<T>(context)
+            as _TrinaSelectMenuWithSearchState<T>);
     return _EnterKeyListener(
       onEnter: () {
         if (state._debounce?.isActive ?? false) state._debounce!.cancel();
@@ -509,63 +511,64 @@ class _TrinaSelectMenuWithFilters<T> extends TrinaDropdownMenu<T> {
     super.itemBuilder,
     super.key,
     this.emptyFilterResultBuilder,
-  })  : assert(
-          filters.map((e) => e.title).toSet().length == filters.length,
-          'Filter titles must be unique.',
-        ),
-        super._(
-          variant: TrinaDropdownMenuVariant.selectWithFilters,
-          builder: (context) {
-            final state = TrinaDropdownMenu.of<T>(context)
-                as _TrinaSelectMenuWithFiltersState<T>;
-            final colorScheme = Theme.of(context).colorScheme;
-            return FocusTraversalGroup(
-              policy: WidgetOrderTraversalPolicy(),
-              child: SizedBox(
-                height: maxHeight,
-                child: StatefulBuilder(
-                  builder: (context, mSetState) {
-                    return Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: width,
-                          child: Column(
-                            children: [
-                              _FiltersSectionButton(
-                                filtersIsVisible: state.filtersIsVisible,
-                                onPressed: () {
-                                  mSetState(() {
-                                    state.filtersIsVisible =
-                                        !state.filtersIsVisible;
-                                  });
-                                },
-                              ),
-                              Divider(
-                                height: 0,
-                                color: colorScheme.onSurface.withAlpha(50),
-                              ),
-                              Flexible(child: _ItemListView<T>()),
-                            ],
-                          ),
-                        ),
-                        VerticalDivider(
-                          width: 0,
-                          color: colorScheme.onSurface.withAlpha(50),
-                        ),
-                        if (state.filtersIsVisible)
-                          Container(
-                            key: TrinaDropdownMenu.filterSectionKey,
-                            child: _FiltersSection<T>(filters: filters),
-                          ),
-                      ],
-                    );
-                  },
-                ),
-              ),
-            );
-          },
-        );
+  }) : assert(
+         filters.map((e) => e.title).toSet().length == filters.length,
+         'Filter titles must be unique.',
+       ),
+       super._(
+         variant: TrinaDropdownMenuVariant.selectWithFilters,
+         builder: (context) {
+           final state =
+               TrinaDropdownMenu.of<T>(context)
+                   as _TrinaSelectMenuWithFiltersState<T>;
+           final colorScheme = Theme.of(context).colorScheme;
+           return FocusTraversalGroup(
+             policy: WidgetOrderTraversalPolicy(),
+             child: SizedBox(
+               height: maxHeight,
+               child: StatefulBuilder(
+                 builder: (context, mSetState) {
+                   return Row(
+                     crossAxisAlignment: CrossAxisAlignment.start,
+                     children: [
+                       SizedBox(
+                         width: width,
+                         child: Column(
+                           children: [
+                             _FiltersSectionButton(
+                               filtersIsVisible: state.filtersIsVisible,
+                               onPressed: () {
+                                 mSetState(() {
+                                   state.filtersIsVisible =
+                                       !state.filtersIsVisible;
+                                 });
+                               },
+                             ),
+                             Divider(
+                               height: 0,
+                               color: colorScheme.onSurface.withAlpha(50),
+                             ),
+                             Flexible(child: _ItemListView<T>()),
+                           ],
+                         ),
+                       ),
+                       VerticalDivider(
+                         width: 0,
+                         color: colorScheme.onSurface.withAlpha(50),
+                       ),
+                       if (state.filtersIsVisible)
+                         Container(
+                           key: TrinaDropdownMenu.filterSectionKey,
+                           child: _FiltersSection<T>(filters: filters),
+                         ),
+                     ],
+                   );
+                 },
+               ),
+             ),
+           );
+         },
+       );
 
   /// {@template TrinaDropdownMenu.emptyFilterResultBuilder}
   /// The widget to display when the applied filters yield no results.
@@ -675,11 +678,13 @@ final class _TrinaSelectMenuWithFiltersState<T>
   void toggleFilter(TrinaDropdownMenuFilter filter) {
     final currentEnabledFilters = enabledFiltersNotifier.value;
     if (isFilterEnabled(filter)) {
-      enabledFiltersNotifier.value =
-          currentEnabledFilters.difference({filter.title});
+      enabledFiltersNotifier.value = currentEnabledFilters.difference({
+        filter.title,
+      });
     } else {
-      enabledFiltersNotifier.value =
-          currentEnabledFilters.union({filter.title});
+      enabledFiltersNotifier.value = currentEnabledFilters.union({
+        filter.title,
+      });
     }
   }
 
@@ -748,8 +753,9 @@ class _ActionButtons<T> extends StatelessWidget {
                     icon: const Icon(Icons.clear_all),
                     label: const Text('Clear all'),
                     style: ButtonStyle(
-                      foregroundColor:
-                          WidgetStateProperty.resolveWith((states) {
+                      foregroundColor: WidgetStateProperty.resolveWith((
+                        states,
+                      ) {
                         return states.contains(WidgetState.disabled)
                             ? null
                             : colorScheme.onSurface;
@@ -775,8 +781,9 @@ class _ActionButtons<T> extends StatelessWidget {
                 // this's the default Material3 TextButton style
                 final textButtonStyle = TextButton.styleFrom(
                   foregroundColor: colorScheme.primary,
-                  disabledForegroundColor:
-                      colorScheme.onSurface.withAlpha((0.38 * 255).round()),
+                  disabledForegroundColor: colorScheme.onSurface.withAlpha(
+                    (0.38 * 255).round(),
+                  ),
                   backgroundColor: Colors.transparent,
                   disabledBackgroundColor: Colors.transparent,
                   elevation: 0,
@@ -878,8 +885,9 @@ class _FiltersSection<T> extends StatelessWidget {
     if (currentEnabledFilters.length == filters.length) {
       menuState.enabledFiltersNotifier.value = <String>{};
     } else {
-      menuState.enabledFiltersNotifier.value =
-          filters.map((e) => e.title).toSet();
+      menuState.enabledFiltersNotifier.value = filters
+          .map((e) => e.title)
+          .toSet();
     }
   }
 
@@ -998,8 +1006,9 @@ class _ActiveFilter<T> extends StatelessWidget {
                         ExcludeFocus(
                           excluding: true,
                           child: Checkbox(
-                            overlayColor:
-                                WidgetStatePropertyAll(Colors.transparent),
+                            overlayColor: WidgetStatePropertyAll(
+                              Colors.transparent,
+                            ),
                             value: isEnabled,
                             onChanged: (value) =>
                                 menuState.toggleFilter(filter),
@@ -1022,8 +1031,9 @@ class _ActiveFilter<T> extends StatelessWidget {
                           fontSize: 14,
                           color: colorScheme.onSurface,
                         ),
-                        mouseCursor:
-                            isEnabled ? null : SystemMouseCursors.click,
+                        mouseCursor: isEnabled
+                            ? null
+                            : SystemMouseCursors.click,
                         decoration: InputDecoration(
                           isDense: true,
                           hintText: 'value...',
@@ -1110,7 +1120,8 @@ class _ItemListView<T> extends StatelessWidget {
             itemCount: filteredItems.length,
             itemBuilder: (context, index) {
               final item = filteredItems[index];
-              final isSelected = menuState.getComparableValue(item) ==
+              final isSelected =
+                  menuState.getComparableValue(item) ==
                   menuState.getComparableValue(menuWidget.initialValue);
               return _EnterKeyListener(
                 onEnter: () {
@@ -1124,8 +1135,9 @@ class _ItemListView<T> extends StatelessWidget {
                     },
                     closeOnActivate: false,
                     autofocus: isSelected,
-                    trailingIcon:
-                        isSelected ? const Icon(Icons.check, size: 20) : null,
+                    trailingIcon: isSelected
+                        ? const Icon(Icons.check, size: 20)
+                        : null,
                     child: menuWidget.itemBuilder != null
                         ? menuWidget.itemBuilder!(item)
                         : Text(
@@ -1148,10 +1160,7 @@ class _ItemListView<T> extends StatelessWidget {
 /// This is used to work around a focus issue where pressing 'Enter' on a button
 /// inside the menu would cause the menu to lose focus.
 class _EnterKeyListener extends StatelessWidget {
-  const _EnterKeyListener({
-    required this.onEnter,
-    required this.child,
-  });
+  const _EnterKeyListener({required this.onEnter, required this.child});
   final void Function() onEnter;
   final Widget child;
 

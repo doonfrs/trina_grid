@@ -19,9 +19,7 @@ class TrinaExpansionTile extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: const Color(0xFFFDFDFD),
-        border: Border.all(
-          color: const Color(0xFFA1A5AE),
-        ),
+        border: Border.all(color: const Color(0xFFA1A5AE)),
       ),
       child: ExpansionTile(
         title: Text(title),
@@ -34,9 +32,7 @@ class TrinaExpansionTile extends StatelessWidget {
           if (buttons != null)
             Container(
               padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-              child: Wrap(
-                children: buttons!,
-              ),
+              child: Wrap(children: buttons!),
             ),
         ],
       ),

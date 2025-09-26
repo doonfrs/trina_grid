@@ -13,7 +13,7 @@ void main() {
     setUp(() {
       columns = ColumnHelper.textColumn('header', count: 3);
       rows = RowHelper.count(3, columns);
-      
+
       // Set specific values for testing
       rows[0].cells['header0']!.value = 'Row 1 Data';
       rows[1].cells['header0']!.value = 'Row 2 Data';
@@ -42,7 +42,7 @@ void main() {
                   capturedRowWidget = rowWidget;
                   capturedRowData = rowData;
                   capturedStateManager = stateManager;
-                  
+
                   return Container(
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.blue),
@@ -59,13 +59,13 @@ void main() {
 
         // Verify rowWrapper was called
         expect(callCount, greaterThan(0));
-        
+
         // Verify parameters are not null
         expect(capturedContext, isNotNull);
         expect(capturedRowWidget, isNotNull);
         expect(capturedRowData, isNotNull);
         expect(capturedStateManager, isNotNull);
-        
+
         // Verify rowData contains expected cell data
         expect(capturedRowData!.cells, isNotEmpty);
         expect(capturedRowData!.cells.containsKey('header0'), isTrue);
@@ -85,12 +85,12 @@ void main() {
                 rows: rows,
                 rowWrapper: (context, rowWidget, rowData, stateManager) {
                   capturedRowData.add(rowData);
-                  
+
                   return Container(
                     decoration: BoxDecoration(
-                      color: rowData.cells['header0']?.value == 'Row 1 Data' 
-                          ? Colors.red.withOpacity(0.1)
-                          : Colors.blue.withOpacity(0.1),
+                      color: rowData.cells['header0']?.value == 'Row 1 Data'
+                          ? Colors.red.withValues(alpha: 0.1)
+                          : Colors.blue.withValues(alpha: 0.1),
                     ),
                     child: rowWidget,
                   );
@@ -104,12 +104,12 @@ void main() {
 
         // Verify we captured row data for visible rows
         expect(capturedRowData, isNotEmpty);
-        
+
         // Verify each captured row has the expected data
         final capturedValues = capturedRowData
             .map((row) => row.cells['header0']?.value)
             .toList();
-        
+
         expect(capturedValues, contains('Row 1 Data'));
         expect(capturedValues, contains('Row 2 Data'));
         expect(capturedValues, contains('Row 3 Data'));
@@ -121,78 +121,85 @@ void main() {
       },
     );
 
-    testWidgets(
-      'rowWrapper can apply conditional styling based on row data',
-      (WidgetTester tester) async {
-        bool firstRowFound = false;
-        bool otherRowFound = false;
-        
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Material(
-              child: TrinaGrid(
-                columns: columns,
-                rows: rows,
-                rowWrapper: (context, rowWidget, rowData, stateManager) {
-                  final isFirstRow = rowData.cells['header0']?.value == 'Row 1 Data';
-                  
-                  if (isFirstRow) {
-                    firstRowFound = true;
-                  } else {
-                    otherRowFound = true;
-                  }
-                  
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: isFirstRow ? Colors.yellow : Colors.transparent,
-                      border: Border.all(
-                        color: isFirstRow ? Colors.red : Colors.grey,
-                        width: isFirstRow ? 2 : 1,
-                      ),
+    testWidgets('rowWrapper can apply conditional styling based on row data', (
+      WidgetTester tester,
+    ) async {
+      bool firstRowFound = false;
+      bool otherRowFound = false;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Material(
+            child: TrinaGrid(
+              columns: columns,
+              rows: rows,
+              rowWrapper: (context, rowWidget, rowData, stateManager) {
+                final isFirstRow =
+                    rowData.cells['header0']?.value == 'Row 1 Data';
+
+                if (isFirstRow) {
+                  firstRowFound = true;
+                } else {
+                  otherRowFound = true;
+                }
+
+                return Container(
+                  decoration: BoxDecoration(
+                    color: isFirstRow ? Colors.yellow : Colors.transparent,
+                    border: Border.all(
+                      color: isFirstRow ? Colors.red : Colors.grey,
+                      width: isFirstRow ? 2 : 1,
                     ),
-                    child: rowWidget,
-                  );
-                },
-              ),
+                  ),
+                  child: rowWidget,
+                );
+              },
             ),
           ),
-        );
+        ),
+      );
 
-        await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
 
-        // Verify conditional logic was executed for different rows
-        expect(firstRowFound, isTrue, reason: 'First row should have been processed');
-        expect(otherRowFound, isTrue, reason: 'Other rows should have been processed');
+      // Verify conditional logic was executed for different rows
+      expect(
+        firstRowFound,
+        isTrue,
+        reason: 'First row should have been processed',
+      );
+      expect(
+        otherRowFound,
+        isTrue,
+        reason: 'Other rows should have been processed',
+      );
 
-        // Verify the grid still displays the data correctly after wrapping
-        expect(find.text('Row 1 Data'), findsOneWidget);
-        expect(find.text('Row 2 Data'), findsOneWidget);
-        expect(find.text('Row 3 Data'), findsOneWidget);
-      },
-    );
+      // Verify the grid still displays the data correctly after wrapping
+      expect(find.text('Row 1 Data'), findsOneWidget);
+      expect(find.text('Row 2 Data'), findsOneWidget);
+      expect(find.text('Row 3 Data'), findsOneWidget);
+    });
 
-    testWidgets(
-      'grid works correctly without rowWrapper',
-      (WidgetTester tester) async {
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Material(
-              child: TrinaGrid(
-                columns: columns,
-                rows: rows,
-                // No rowWrapper provided
-              ),
+    testWidgets('grid works correctly without rowWrapper', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Material(
+            child: TrinaGrid(
+              columns: columns,
+              rows: rows,
+              // No rowWrapper provided
             ),
           ),
-        );
+        ),
+      );
 
-        await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
 
-        // Verify grid renders correctly without rowWrapper
-        expect(find.text('Row 1 Data'), findsOneWidget);
-        expect(find.text('Row 2 Data'), findsOneWidget);
-        expect(find.text('Row 3 Data'), findsOneWidget);
-      },
-    );
+      // Verify grid renders correctly without rowWrapper
+      expect(find.text('Row 1 Data'), findsOneWidget);
+      expect(find.text('Row 2 Data'), findsOneWidget);
+      expect(find.text('Row 3 Data'), findsOneWidget);
+    });
   });
 }

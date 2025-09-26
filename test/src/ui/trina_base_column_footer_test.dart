@@ -83,12 +83,9 @@ void main() {
 
       await buildWidget(tester: tester, column: column);
 
-      final DecoratedBox box = find
-          .byType(DecoratedBox)
-          .first
-          .evaluate()
-          .first
-          .widget as DecoratedBox;
+      final DecoratedBox box =
+          find.byType(DecoratedBox).first.evaluate().first.widget
+              as DecoratedBox;
 
       final decoration = box.decoration as BoxDecoration;
 
@@ -118,12 +115,9 @@ void main() {
         enableColumnBorderVertical: false,
       );
 
-      final DecoratedBox box = find
-          .byType(DecoratedBox)
-          .first
-          .evaluate()
-          .first
-          .widget as DecoratedBox;
+      final DecoratedBox box =
+          find.byType(DecoratedBox).first.evaluate().first.widget
+              as DecoratedBox;
 
       final decoration = box.decoration as BoxDecoration;
 
@@ -136,32 +130,25 @@ void main() {
     },
   );
 
-  testWidgets(
-    'Column backgroundColor should be applied',
-    (tester) async {
-      final column = TrinaColumn(
-        title: 'column',
-        field: 'column',
-        type: TrinaColumnType.number(),
-        backgroundColor: Colors.blue,
-      );
+  testWidgets('Column backgroundColor should be applied', (tester) async {
+    final column = TrinaColumn(
+      title: 'column',
+      field: 'column',
+      type: TrinaColumnType.number(),
+      backgroundColor: Colors.blue,
+    );
 
-      await buildWidget(
-        tester: tester,
-        column: column,
-        enableColumnBorderVertical: false,
-      );
+    await buildWidget(
+      tester: tester,
+      column: column,
+      enableColumnBorderVertical: false,
+    );
 
-      final DecoratedBox box = find
-          .byType(DecoratedBox)
-          .first
-          .evaluate()
-          .first
-          .widget as DecoratedBox;
+    final DecoratedBox box =
+        find.byType(DecoratedBox).first.evaluate().first.widget as DecoratedBox;
 
-      final decoration = box.decoration as BoxDecoration;
+    final decoration = box.decoration as BoxDecoration;
 
-      expect(decoration.color, Colors.blue);
-    },
-  );
+    expect(decoration.color, Colors.blue);
+  });
 }

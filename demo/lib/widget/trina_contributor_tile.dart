@@ -17,8 +17,8 @@ class TrinaContributorTile extends StatelessWidget {
     this.description,
     this.linkTitle,
     this.onTapLink,
-  })  : _color = Colors.white,
-        _fontColor = TrinaGridExampleColors.fontColor;
+  }) : _color = Colors.white,
+       _fontColor = TrinaGridExampleColors.fontColor;
 
   const TrinaContributorTile.invisible({
     super.key,
@@ -26,8 +26,8 @@ class TrinaContributorTile extends StatelessWidget {
     this.description,
     this.linkTitle,
     this.onTapLink,
-  })  : _color = Colors.white70,
-        _fontColor = Colors.black54;
+  }) : _color = Colors.white70,
+       _fontColor = Colors.black54;
 
   final Color _color;
   final Color _fontColor;

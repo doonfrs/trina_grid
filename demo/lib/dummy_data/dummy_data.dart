@@ -84,8 +84,9 @@ class DummyData {
 
       // Generate a random date within the last 10 years
       final now = DateTime.now();
-      final daysToSubtract =
-          random.nextInt(3650); // Max 10 years back (365 * 10)
+      final daysToSubtract = random.nextInt(
+        3650,
+      ); // Max 10 years back (365 * 10)
       final joinedDate = now.subtract(Duration(days: daysToSubtract));
 
       return TrinaRow(

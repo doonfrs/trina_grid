@@ -27,51 +27,52 @@ void main() {
     when(stateManager.configuration).thenReturn(configuration);
     when(stateManager.style).thenReturn(configuration.style);
     when(stateManager.keyPressed).thenReturn(TrinaGridKeyPressed());
-    when(stateManager.rowHeight).thenReturn(
-      stateManager.configuration.style.rowHeight,
-    );
-    when(stateManager.getRowHeight(0)).thenReturn(
-      stateManager.configuration.style.rowHeight,
-    );
-    when(stateManager.getRowHeight(1)).thenReturn(
-      stateManager.configuration.style.rowHeight,
-    );
-    when(stateManager.getRowHeight(2)).thenReturn(
-      stateManager.configuration.style.rowHeight,
-    );
-    when(stateManager.getRowHeight(3)).thenReturn(
-      stateManager.configuration.style.rowHeight,
-    );
-    when(stateManager.getRowHeight(4)).thenReturn(
-      stateManager.configuration.style.rowHeight,
-    );
-    when(stateManager.getRowHeight(5)).thenReturn(
-      stateManager.configuration.style.rowHeight,
-    );
-    when(stateManager.getRowHeight(6)).thenReturn(
-      stateManager.configuration.style.rowHeight,
-    );
-    when(stateManager.getRowHeight(7)).thenReturn(
-      stateManager.configuration.style.rowHeight,
-    );
-    when(stateManager.getRowHeight(8)).thenReturn(
-      stateManager.configuration.style.rowHeight,
-    );
-    when(stateManager.getRowHeight(9)).thenReturn(
-      stateManager.configuration.style.rowHeight,
-    );
+    when(
+      stateManager.rowHeight,
+    ).thenReturn(stateManager.configuration.style.rowHeight);
+    when(
+      stateManager.getRowHeight(0),
+    ).thenReturn(stateManager.configuration.style.rowHeight);
+    when(
+      stateManager.getRowHeight(1),
+    ).thenReturn(stateManager.configuration.style.rowHeight);
+    when(
+      stateManager.getRowHeight(2),
+    ).thenReturn(stateManager.configuration.style.rowHeight);
+    when(
+      stateManager.getRowHeight(3),
+    ).thenReturn(stateManager.configuration.style.rowHeight);
+    when(
+      stateManager.getRowHeight(4),
+    ).thenReturn(stateManager.configuration.style.rowHeight);
+    when(
+      stateManager.getRowHeight(5),
+    ).thenReturn(stateManager.configuration.style.rowHeight);
+    when(
+      stateManager.getRowHeight(6),
+    ).thenReturn(stateManager.configuration.style.rowHeight);
+    when(
+      stateManager.getRowHeight(7),
+    ).thenReturn(stateManager.configuration.style.rowHeight);
+    when(
+      stateManager.getRowHeight(8),
+    ).thenReturn(stateManager.configuration.style.rowHeight);
+    when(
+      stateManager.getRowHeight(9),
+    ).thenReturn(stateManager.configuration.style.rowHeight);
     // Add a catch-all for any other row index
-    when(stateManager.getRowHeight(argThat(isA<int>()))).thenReturn(
-      stateManager.configuration.style.rowHeight,
-    );
-    when(stateManager.columnHeight).thenReturn(
-      stateManager.configuration.style.columnHeight,
-    );
-    when(stateManager.columnFilterHeight).thenReturn(
-      stateManager.configuration.style.columnHeight,
-    );
+    when(
+      stateManager.getRowHeight(argThat(isA<int>())),
+    ).thenReturn(stateManager.configuration.style.rowHeight);
+    when(
+      stateManager.columnHeight,
+    ).thenReturn(stateManager.configuration.style.columnHeight);
+    when(
+      stateManager.columnFilterHeight,
+    ).thenReturn(stateManager.configuration.style.columnHeight);
     when(stateManager.rowTotalHeight).thenReturn(
-        RowHelper.resolveRowTotalHeight(stateManager.configuration.style));
+      RowHelper.resolveRowTotalHeight(stateManager.configuration.style),
+    );
     when(stateManager.localeText).thenReturn(const TrinaGridLocaleText());
     when(stateManager.gridFocusNode).thenReturn(FocusNode());
     when(stateManager.keepFocus).thenReturn(true);
@@ -102,8 +103,7 @@ void main() {
     );
   }
 
-  testWidgets(
-      'WHEN If it is not CurrentCell or not in Editing state'
+  testWidgets('WHEN If it is not CurrentCell or not in Editing state'
       'THEN Text widget should be rendered', (WidgetTester tester) async {
     // given
     final TrinaCell cell = TrinaCell(value: 'cell value');
@@ -114,11 +114,7 @@ void main() {
       type: TrinaColumnType.text(),
     );
 
-    final TrinaRow row = TrinaRow(
-      cells: {
-        'header': cell,
-      },
-    );
+    final TrinaRow row = TrinaRow(cells: {'header': cell});
 
     const rowIdx = 0;
 
@@ -128,12 +124,7 @@ void main() {
     when(stateManager.isEditing).thenReturn(false);
 
     await tester.pumpWidget(
-      buildApp(
-        cell: cell,
-        column: column,
-        rowIdx: rowIdx,
-        row: row,
-      ),
+      buildApp(cell: cell, column: column, rowIdx: rowIdx, row: row),
     );
 
     // then
@@ -145,8 +136,7 @@ void main() {
     expect(find.byType(TrinaTextCell), findsNothing);
   });
 
-  testWidgets(
-      'WHEN If it is CurrentCell and not in Editing state'
+  testWidgets('WHEN If it is CurrentCell and not in Editing state'
       'THEN Text widget should be rendered', (WidgetTester tester) async {
     // given
     final TrinaCell cell = TrinaCell(value: 'cell value');
@@ -157,11 +147,7 @@ void main() {
       type: TrinaColumnType.text(),
     );
 
-    final TrinaRow row = TrinaRow(
-      cells: {
-        'header': cell,
-      },
-    );
+    final TrinaRow row = TrinaRow(cells: {'header': cell});
 
     const rowIdx = 0;
 
@@ -170,12 +156,7 @@ void main() {
     when(stateManager.isEditing).thenReturn(false);
 
     await tester.pumpWidget(
-      buildApp(
-        cell: cell,
-        column: column,
-        rowIdx: rowIdx,
-        row: row,
-      ),
+      buildApp(cell: cell, column: column, rowIdx: rowIdx, row: row),
     );
 
     // then
@@ -187,8 +168,7 @@ void main() {
     expect(find.byType(TrinaTextCell), findsNothing);
   });
 
-  testWidgets(
-      'WHEN If it is CurrentCell and in Editing state'
+  testWidgets('WHEN If it is CurrentCell and in Editing state'
       'THEN [TextCellWidget] should be rendered', (WidgetTester tester) async {
     // given
     final TrinaCell cell = TrinaCell(value: 'cell value');
@@ -199,11 +179,7 @@ void main() {
       type: TrinaColumnType.text(),
     );
 
-    final TrinaRow row = TrinaRow(
-      cells: {
-        'header': cell,
-      },
-    );
+    final TrinaRow row = TrinaRow(cells: {'header': cell});
 
     const rowIdx = 0;
 
@@ -212,12 +188,7 @@ void main() {
     when(stateManager.isEditing).thenReturn(true);
 
     await tester.pumpWidget(
-      buildApp(
-        cell: cell,
-        column: column,
-        rowIdx: rowIdx,
-        row: row,
-      ),
+      buildApp(cell: cell, column: column, rowIdx: rowIdx, row: row),
     );
 
     // then
@@ -229,8 +200,7 @@ void main() {
     expect(find.byType(TrinaTextCell), findsOneWidget);
   });
 
-  testWidgets(
-      'WHEN If it is CurrentCell and in Editing state'
+  testWidgets('WHEN If it is CurrentCell and in Editing state'
       'THEN [TimeCellWidget] should be rendered', (WidgetTester tester) async {
     // given
     final TrinaCell cell = TrinaCell(value: '00:00');
@@ -241,11 +211,7 @@ void main() {
       type: TrinaColumnType.time(),
     );
 
-    final TrinaRow row = TrinaRow(
-      cells: {
-        'header': cell,
-      },
-    );
+    final TrinaRow row = TrinaRow(cells: {'header': cell});
 
     const rowIdx = 0;
 
@@ -254,12 +220,7 @@ void main() {
     when(stateManager.isEditing).thenReturn(true);
 
     await tester.pumpWidget(
-      buildApp(
-        cell: cell,
-        column: column,
-        rowIdx: rowIdx,
-        row: row,
-      ),
+      buildApp(cell: cell, column: column, rowIdx: rowIdx, row: row),
     );
 
     // then
@@ -271,8 +232,7 @@ void main() {
     expect(find.byType(TrinaTextCell), findsNothing);
   });
 
-  testWidgets(
-      'WHEN If it is CurrentCell and in Editing state'
+  testWidgets('WHEN If it is CurrentCell and in Editing state'
       'THEN [DateCellWidget] should be rendered', (WidgetTester tester) async {
     // given
     final TrinaCell cell = TrinaCell(value: '2020-01-01');
@@ -283,11 +243,7 @@ void main() {
       type: TrinaColumnType.date(),
     );
 
-    final TrinaRow row = TrinaRow(
-      cells: {
-        'header': cell,
-      },
-    );
+    final TrinaRow row = TrinaRow(cells: {'header': cell});
 
     const rowIdx = 0;
 
@@ -296,12 +252,7 @@ void main() {
     when(stateManager.isEditing).thenReturn(true);
 
     await tester.pumpWidget(
-      buildApp(
-        cell: cell,
-        column: column,
-        rowIdx: rowIdx,
-        row: row,
-      ),
+      buildApp(cell: cell, column: column, rowIdx: rowIdx, row: row),
     );
 
     // then
@@ -313,10 +264,10 @@ void main() {
     expect(find.byType(TrinaTextCell), findsNothing);
   });
 
-  testWidgets(
-      'WHEN If it is CurrentCell and in Editing state'
-      'THEN [NumberCellWidget] should be rendered',
-      (WidgetTester tester) async {
+  testWidgets('WHEN If it is CurrentCell and in Editing state'
+      'THEN [NumberCellWidget] should be rendered', (
+    WidgetTester tester,
+  ) async {
     // given
     final TrinaCell cell = TrinaCell(value: 1234);
 
@@ -326,11 +277,7 @@ void main() {
       type: TrinaColumnType.number(),
     );
 
-    final TrinaRow row = TrinaRow(
-      cells: {
-        'header': cell,
-      },
-    );
+    final TrinaRow row = TrinaRow(cells: {'header': cell});
 
     const rowIdx = 0;
 
@@ -339,12 +286,7 @@ void main() {
     when(stateManager.isEditing).thenReturn(true);
 
     await tester.pumpWidget(
-      buildApp(
-        cell: cell,
-        column: column,
-        rowIdx: rowIdx,
-        row: row,
-      ),
+      buildApp(cell: cell, column: column, rowIdx: rowIdx, row: row),
     );
 
     // then
@@ -356,10 +298,10 @@ void main() {
     expect(find.byType(TrinaTextCell), findsNothing);
   });
 
-  testWidgets(
-      'WHEN If it is CurrentCell and in Editing state'
-      'THEN [SelectCellWidget] should be rendered',
-      (WidgetTester tester) async {
+  testWidgets('WHEN If it is CurrentCell and in Editing state'
+      'THEN [SelectCellWidget] should be rendered', (
+    WidgetTester tester,
+  ) async {
     // given
     final TrinaCell cell = TrinaCell(value: 'one');
 
@@ -369,11 +311,7 @@ void main() {
       type: TrinaColumnType.select<String>(['one', 'two', 'three']),
     );
 
-    final TrinaRow row = TrinaRow(
-      cells: {
-        'header': cell,
-      },
-    );
+    final TrinaRow row = TrinaRow(cells: {'header': cell});
 
     const rowIdx = 0;
 
@@ -382,12 +320,7 @@ void main() {
     when(stateManager.isEditing).thenReturn(true);
 
     await tester.pumpWidget(
-      buildApp(
-        cell: cell,
-        column: column,
-        rowIdx: rowIdx,
-        row: row,
-      ),
+      buildApp(cell: cell, column: column, rowIdx: rowIdx, row: row),
     );
 
     // then
@@ -411,11 +344,7 @@ void main() {
         type: TrinaColumnType.text(),
       );
 
-      final TrinaRow row = TrinaRow(
-        cells: {
-          'header': cell,
-        },
-      );
+      final TrinaRow row = TrinaRow(cells: {'header': cell});
 
       const rowIdx = 0;
 
@@ -425,26 +354,27 @@ void main() {
       when(stateManager.isSelectedCell(any, any, any)).thenReturn(false);
 
       await tester.pumpWidget(
-        buildApp(
-          cell: cell,
-          column: column,
-          rowIdx: rowIdx,
-          row: row,
-        ),
+        buildApp(cell: cell, column: column, rowIdx: rowIdx, row: row),
       );
 
       Finder gesture = find.byType(GestureDetector);
 
       await tester.tap(gesture);
 
-      verify(eventManager!.addEvent(
-        argThat(TrinaObjectMatcher<TrinaGridCellGestureEvent>(rule: (object) {
-          return object.gestureType.isOnTapUp &&
-              object.cell.key == cell.key &&
-              object.column.key == column.key &&
-              object.rowIdx == rowIdx;
-        })),
-      )).called(1);
+      verify(
+        eventManager!.addEvent(
+          argThat(
+            TrinaObjectMatcher<TrinaGridCellGestureEvent>(
+              rule: (object) {
+                return object.gestureType.isOnTapUp &&
+                    object.cell.key == cell.key &&
+                    object.column.key == column.key &&
+                    object.rowIdx == rowIdx;
+              },
+            ),
+          ),
+        ),
+      ).called(1);
     },
   );
 
@@ -460,11 +390,7 @@ void main() {
         type: TrinaColumnType.text(),
       );
 
-      final TrinaRow row = TrinaRow(
-        cells: {
-          'header': cell,
-        },
-      );
+      final TrinaRow row = TrinaRow(cells: {'header': cell});
 
       const rowIdx = 0;
 
@@ -474,26 +400,27 @@ void main() {
       when(stateManager.isSelectedCell(any, any, any)).thenReturn(false);
 
       await tester.pumpWidget(
-        buildApp(
-          cell: cell,
-          column: column,
-          rowIdx: rowIdx,
-          row: row,
-        ),
+        buildApp(cell: cell, column: column, rowIdx: rowIdx, row: row),
       );
 
       Finder gesture = find.byType(GestureDetector);
 
       await tester.longPress(gesture);
 
-      verify(eventManager!.addEvent(
-        argThat(TrinaObjectMatcher<TrinaGridCellGestureEvent>(rule: (object) {
-          return object.gestureType.isOnLongPressStart &&
-              object.cell.key == cell.key &&
-              object.column.key == column.key &&
-              object.rowIdx == rowIdx;
-        })),
-      )).called(1);
+      verify(
+        eventManager!.addEvent(
+          argThat(
+            TrinaObjectMatcher<TrinaGridCellGestureEvent>(
+              rule: (object) {
+                return object.gestureType.isOnLongPressStart &&
+                    object.cell.key == cell.key &&
+                    object.column.key == column.key &&
+                    object.rowIdx == rowIdx;
+              },
+            ),
+          ),
+        ),
+      ).called(1);
     },
   );
 
@@ -509,11 +436,7 @@ void main() {
         type: TrinaColumnType.text(),
       );
 
-      final TrinaRow row = TrinaRow(
-        cells: {
-          'header': cell,
-        },
-      );
+      final TrinaRow row = TrinaRow(cells: {'header': cell});
 
       const rowIdx = 0;
 
@@ -526,17 +449,13 @@ void main() {
 
       // when
       await tester.pumpWidget(
-        buildApp(
-          cell: cell,
-          column: column,
-          rowIdx: rowIdx,
-          row: row,
-        ),
+        buildApp(cell: cell, column: column, rowIdx: rowIdx, row: row),
       );
 
       // then
-      final TestGesture gesture =
-          await tester.startGesture(const Offset(100, 18));
+      final TestGesture gesture = await tester.startGesture(
+        const Offset(100, 18),
+      );
 
       await tester.pump(const Duration(milliseconds: 500));
 
@@ -548,14 +467,20 @@ void main() {
 
       await tester.pumpAndSettle(const Duration(milliseconds: 800));
 
-      verify(eventManager!.addEvent(
-        argThat(TrinaObjectMatcher<TrinaGridCellGestureEvent>(rule: (object) {
-          return object.gestureType.isOnLongPressMoveUpdate &&
-              object.cell.key == cell.key &&
-              object.column.key == column.key &&
-              object.rowIdx == rowIdx;
-        })),
-      )).called(1);
+      verify(
+        eventManager!.addEvent(
+          argThat(
+            TrinaObjectMatcher<TrinaGridCellGestureEvent>(
+              rule: (object) {
+                return object.gestureType.isOnLongPressMoveUpdate &&
+                    object.cell.key == cell.key &&
+                    object.column.key == column.key &&
+                    object.rowIdx == rowIdx;
+              },
+            ),
+          ),
+        ),
+      ).called(1);
     },
   );
 
@@ -588,21 +513,12 @@ void main() {
           enableEditingMode: enableEditingMode,
         );
 
-        final TrinaRow row = TrinaRow(
-          cells: {
-            'header': cell,
-          },
-        );
+        final TrinaRow row = TrinaRow(cells: {'header': cell});
 
         rowIdx = 0;
 
         await tester.pumpWidget(
-          buildApp(
-            cell: cell,
-            column: column!,
-            rowIdx: rowIdx,
-            row: row,
-          ),
+          buildApp(cell: cell, column: column!, rowIdx: rowIdx, row: row),
         );
 
         await tester.pumpAndSettle(const Duration(seconds: 1));
@@ -654,8 +570,9 @@ void main() {
     }) {
       return TrinaWidgetTestHelper('a cell.', (tester) async {
         when(stateManager.isCurrentCell(any)).thenReturn(isCurrentCell);
-        when(stateManager.isSelectedCell(any, any, any))
-            .thenReturn(isSelectedCell);
+        when(
+          stateManager.isSelectedCell(any, any, any),
+        ).thenReturn(isSelectedCell);
         when(stateManager.style).thenReturn(configuration.style);
         when(stateManager.hasFocus).thenReturn(true);
         when(stateManager.isEditing).thenReturn(true);
@@ -669,23 +586,14 @@ void main() {
           type: TrinaColumnType.text(),
         );
 
-        final TrinaRow row = TrinaRow(
-          cells: {
-            'header': cell,
-          },
-        );
+        final TrinaRow row = TrinaRow(cells: {'header': cell});
 
         rowIdx = 0;
 
         when(stateManager.configuration).thenReturn(configuration);
 
         await tester.pumpWidget(
-          buildApp(
-            cell: cell,
-            column: column!,
-            rowIdx: rowIdx,
-            row: row,
-          ),
+          buildApp(cell: cell, column: column!, rowIdx: rowIdx, row: row),
         );
 
         await tester.pumpAndSettle(const Duration(seconds: 1));
@@ -698,11 +606,13 @@ void main() {
       bool isSelectedCell = false,
       bool readOnly = false,
     }) {
-      return TrinaWidgetTestHelper('a cell inside TrinaBaseRow.',
-          (tester) async {
+      return TrinaWidgetTestHelper('a cell inside TrinaBaseRow.', (
+        tester,
+      ) async {
         when(stateManager.isCurrentCell(any)).thenReturn(isCurrentCell);
-        when(stateManager.isSelectedCell(any, any, any))
-            .thenReturn(isSelectedCell);
+        when(
+          stateManager.isSelectedCell(any, any, any),
+        ).thenReturn(isSelectedCell);
         when(stateManager.style).thenReturn(configuration.style);
         when(stateManager.hasFocus).thenReturn(true);
         when(stateManager.isEditing).thenReturn(true);
@@ -716,11 +626,7 @@ void main() {
           type: TrinaColumnType.text(),
         );
 
-        final TrinaRow row = TrinaRow(
-          cells: {
-            'header': cell,
-          },
-        );
+        final TrinaRow row = TrinaRow(cells: {'header': cell});
 
         rowIdx = 0;
 
@@ -783,28 +689,22 @@ void main() {
       ),
       isCurrentCell: false,
       isSelectedCell: false,
-    ).test(
-      'If isCurrentCell, isSelectedCell are false '
-      'and enableColumnBorder is true, '
-      'should be set the border.',
-      (tester) async {
-        final target = find.descendant(
-          of: find.byType(GestureDetector),
-          matching: find.byType(DecoratedBox),
-        );
+    ).test('If isCurrentCell, isSelectedCell are false '
+        'and enableColumnBorder is true, '
+        'should be set the border.', (tester) async {
+      final target = find.descendant(
+        of: find.byType(GestureDetector),
+        matching: find.byType(DecoratedBox),
+      );
 
-        final container = target.evaluate().first.widget as DecoratedBox;
+      final container = target.evaluate().first.widget as DecoratedBox;
 
-        final BoxDecoration decoration = container.decoration as BoxDecoration;
+      final BoxDecoration decoration = container.decoration as BoxDecoration;
 
-        final BorderDirectional border = decoration.border as BorderDirectional;
+      final BorderDirectional border = decoration.border as BorderDirectional;
 
-        expect(
-          border.end.color,
-          stateManager.configuration.style.borderColor,
-        );
-      },
-    );
+      expect(border.end.color, stateManager.configuration.style.borderColor);
+    });
 
     aCellWithConfiguration(
       const TrinaGridConfiguration(
@@ -815,26 +715,22 @@ void main() {
       ),
       isCurrentCell: false,
       isSelectedCell: false,
-    ).test(
-      'If isCurrentCell, isSelectedCell are false '
-      'and enableColumnBorder is false, '
-      'should not be set the border.',
-      (tester) async {
-        final target = find.descendant(
-          of: find.byType(GestureDetector),
-          matching: find.byType(DecoratedBox),
-        );
+    ).test('If isCurrentCell, isSelectedCell are false '
+        'and enableColumnBorder is false, '
+        'should not be set the border.', (tester) async {
+      final target = find.descendant(
+        of: find.byType(GestureDetector),
+        matching: find.byType(DecoratedBox),
+      );
 
-        final container = target.evaluate().first.widget as DecoratedBox;
+      final container = target.evaluate().first.widget as DecoratedBox;
 
-        final BoxDecoration decoration = container.decoration as BoxDecoration;
+      final BoxDecoration decoration = container.decoration as BoxDecoration;
 
-        final BorderDirectional? border =
-            decoration.border as BorderDirectional?;
+      final BorderDirectional? border = decoration.border as BorderDirectional?;
 
-        expect(border, isNull);
-      },
-    );
+      expect(border, isNull);
+    });
 
     aCellInsideTrinaBaseRow(
       const TrinaGridConfiguration(
@@ -843,24 +739,26 @@ void main() {
       isCurrentCell: false,
       isSelectedCell: false,
     ).test(
-        'When enableCellBorderHorizontal is true, cell height should equal stateManager.rowHeight',
-        (tester) async {
-      final cellFinder = find.byType(TrinaBaseCell).first;
+      'When enableCellBorderHorizontal is true, cell height should equal stateManager.rowHeight',
+      (tester) async {
+        final cellFinder = find.byType(TrinaBaseCell).first;
 
-      final size = tester.getSize(cellFinder);
-      expect(size.height, TrinaGridSettings.rowHeight);
-    });
+        final size = tester.getSize(cellFinder);
+        expect(size.height, TrinaGridSettings.rowHeight);
+      },
+    );
     aCellInsideTrinaBaseRow(
       const TrinaGridConfiguration(
         style: TrinaGridStyleConfig(enableCellBorderHorizontal: false),
       ),
     ).test(
-        'When enableCellBorderHorizontal is false, cell height should equal stateManager.rowTotalHeight',
-        (tester) async {
-      final cellFinder = find.byType(TrinaBaseCell).first;
+      'When enableCellBorderHorizontal is false, cell height should equal stateManager.rowTotalHeight',
+      (tester) async {
+        final cellFinder = find.byType(TrinaBaseCell).first;
 
-      final size = tester.getSize(cellFinder);
-      expect(size.height, stateManager.rowTotalHeight);
-    });
+        final size = tester.getSize(cellFinder);
+        expect(size.height, stateManager.rowTotalHeight);
+      },
+    );
   });
 }

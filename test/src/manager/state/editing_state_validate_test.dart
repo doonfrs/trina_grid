@@ -82,35 +82,26 @@ void main() {
         final cell = rows[0].cells['bool_field']!;
 
         // Set null without validation (should succeed)
-        stateManager.changeCellValue(
-          cell,
-          null,
-          validate: false,
-        );
+        stateManager.changeCellValue(cell, null, validate: false);
 
         // Value should be changed to null
         expect(cell.value, isNull);
       });
 
-      test('should accept valid boolean values regardless of validate parameter', () {
-        final cell = rows[0].cells['bool_field']!;
+      test(
+        'should accept valid boolean values regardless of validate parameter',
+        () {
+          final cell = rows[0].cells['bool_field']!;
 
-        // With validation (should succeed)
-        stateManager.changeCellValue(
-          cell,
-          false,
-          validate: true,
-        );
-        expect(cell.value, equals(false));
+          // With validation (should succeed)
+          stateManager.changeCellValue(cell, false, validate: true);
+          expect(cell.value, equals(false));
 
-        // Without validation (should also succeed)
-        stateManager.changeCellValue(
-          cell,
-          true,
-          validate: false,
-        );
-        expect(cell.value, equals(true));
-      });
+          // Without validation (should also succeed)
+          stateManager.changeCellValue(cell, true, validate: false);
+          expect(cell.value, equals(true));
+        },
+      );
     });
 
     group('Number field validation', () {
@@ -119,11 +110,7 @@ void main() {
 
         // Try to set invalid number with validation
         // It will pass validation but get converted to 0 during casting
-        stateManager.changeCellValue(
-          cell,
-          'not_a_number',
-          validate: true,
-        );
+        stateManager.changeCellValue(cell, 'not_a_number', validate: true);
 
         // Value should be converted to 0 (the default for invalid numbers)
         expect(cell.value, equals(0));
@@ -143,85 +130,74 @@ void main() {
         expect(cell.value, equals('bypassed_validation'));
       });
 
-      test('should properly validate negative numbers when negative is false', () {
-        // Create a column that doesn't allow negative numbers
-        final nonNegativeColumn = TrinaColumn(
-          title: 'Non-negative Number',
-          field: 'non_neg',
-          type: TrinaColumnType.number(negative: false),
-        );
-        
-        final testRow = TrinaRow(
-          cells: {
-            'non_neg': TrinaCell(value: 10),
-          },
-        );
-        
-        final testStateManager = TrinaGridStateManager(
-          columns: [nonNegativeColumn],
-          rows: [testRow],
-          gridFocusNode: FocusNode(),
-          scroll: TrinaGridScrollController(),
-        );
-        
-        final cell = testRow.cells['non_neg']!;
+      test(
+        'should properly validate negative numbers when negative is false',
+        () {
+          // Create a column that doesn't allow negative numbers
+          final nonNegativeColumn = TrinaColumn(
+            title: 'Non-negative Number',
+            field: 'non_neg',
+            type: TrinaColumnType.number(negative: false),
+          );
 
-        // Try to set negative number with validation (should fail)
-        testStateManager.changeCellValue(
-          cell,
-          -5,
-          validate: true,
-        );
+          final testRow = TrinaRow(cells: {'non_neg': TrinaCell(value: 10)});
 
-        // Value should be converted to 0 (since negative is not allowed)
-        expect(cell.value, equals(0));
+          final testStateManager = TrinaGridStateManager(
+            columns: [nonNegativeColumn],
+            rows: [testRow],
+            gridFocusNode: FocusNode(),
+            scroll: TrinaGridScrollController(),
+          );
 
-        // But with validation bypassed, it should accept the negative value
-        testStateManager.changeCellValue(
-          cell,
-          -5,
-          validate: false,
-        );
+          final cell = testRow.cells['non_neg']!;
 
-        expect(cell.value, equals(-5));
-      });
+          // Try to set negative number with validation (should fail)
+          testStateManager.changeCellValue(cell, -5, validate: true);
+
+          // Value should be converted to 0 (since negative is not allowed)
+          expect(cell.value, equals(0));
+
+          // But with validation bypassed, it should accept the negative value
+          testStateManager.changeCellValue(cell, -5, validate: false);
+
+          expect(cell.value, equals(-5));
+        },
+      );
     });
 
     group('Custom validator', () {
-      test('should reject empty string when validate is true with custom validator', () {
-        final cell = rows[0].cells['text_field']!;
-        final originalValue = cell.value;
+      test(
+        'should reject empty string when validate is true with custom validator',
+        () {
+          final cell = rows[0].cells['text_field']!;
+          final originalValue = cell.value;
 
-        // Try to set empty string with validation (should fail due to custom validator)
-        stateManager.changeCellValue(
-          cell,
-          '',
-          validate: true,
-        );
+          // Try to set empty string with validation (should fail due to custom validator)
+          stateManager.changeCellValue(cell, '', validate: true);
 
-        // Value should remain unchanged
-        expect(cell.value, equals(originalValue));
-      });
+          // Value should remain unchanged
+          expect(cell.value, equals(originalValue));
+        },
+      );
 
-      test('should accept empty string when validate is false, bypassing custom validator', () {
-        final cell = rows[0].cells['text_field']!;
+      test(
+        'should accept empty string when validate is false, bypassing custom validator',
+        () {
+          final cell = rows[0].cells['text_field']!;
 
-        // Set empty string without validation (should succeed)
-        stateManager.changeCellValue(
-          cell,
-          '',
-          validate: false,
-        );
+          // Set empty string without validation (should succeed)
+          stateManager.changeCellValue(cell, '', validate: false);
 
-        // Value should be changed to empty string
-        expect(cell.value, equals(''));
-      });
+          // Value should be changed to empty string
+          expect(cell.value, equals(''));
+        },
+      );
     });
 
     group('Validation failed callback', () {
       test('should trigger onValidationFailed when validation fails', () {
         TrinaGridValidationEvent? capturedEvent;
-        
+
         stateManager = TrinaGridStateManager(
           columns: columns,
           rows: rows,
@@ -235,11 +211,7 @@ void main() {
         final cell = rows[0].cells['bool_field']!;
 
         // Try to set null with validation (should fail and trigger callback)
-        stateManager.changeCellValue(
-          cell,
-          null,
-          validate: true,
-        );
+        stateManager.changeCellValue(cell, null, validate: true);
 
         // Validation failed callback should have been called
         expect(capturedEvent, isNotNull);
@@ -250,7 +222,7 @@ void main() {
 
       test('should not trigger onValidationFailed when validate is false', () {
         TrinaGridValidationEvent? capturedEvent;
-        
+
         stateManager = TrinaGridStateManager(
           columns: columns,
           rows: rows,
@@ -264,11 +236,7 @@ void main() {
         final cell = rows[0].cells['bool_field']!;
 
         // Set null without validation (should not trigger callback)
-        stateManager.changeCellValue(
-          cell,
-          null,
-          validate: false,
-        );
+        stateManager.changeCellValue(cell, null, validate: false);
 
         // Validation failed callback should NOT have been called
         expect(capturedEvent, isNull);
@@ -285,7 +253,7 @@ void main() {
           gridFocusNode: FocusNode(),
           scroll: TrinaGridScrollController(),
         );
-        
+
         // Enable change tracking
         stateManager.setChangeTracking(true);
 
@@ -293,11 +261,7 @@ void main() {
         final originalValue = cell.value;
 
         // Set invalid value without validation
-        stateManager.changeCellValue(
-          cell,
-          null,
-          validate: false,
-        );
+        stateManager.changeCellValue(cell, null, validate: false);
 
         // Change should be tracked
         expect(cell.isDirty, isTrue);
@@ -307,46 +271,41 @@ void main() {
     });
 
     group('OnChanged callback with validation bypass', () {
-      test('should trigger onChanged callback regardless of validate parameter', () {
-        int onChangedCallCount = 0;
-        TrinaGridOnChangedEvent? lastEvent;
+      test(
+        'should trigger onChanged callback regardless of validate parameter',
+        () {
+          int onChangedCallCount = 0;
+          TrinaGridOnChangedEvent? lastEvent;
 
-        stateManager = TrinaGridStateManager(
-          columns: columns,
-          rows: rows,
-          gridFocusNode: FocusNode(),
-          scroll: TrinaGridScrollController(),
-          onChanged: (event) {
-            onChangedCallCount++;
-            lastEvent = event;
-          },
-        );
+          stateManager = TrinaGridStateManager(
+            columns: columns,
+            rows: rows,
+            gridFocusNode: FocusNode(),
+            scroll: TrinaGridScrollController(),
+            onChanged: (event) {
+              onChangedCallCount++;
+              lastEvent = event;
+            },
+          );
 
-        final cell = rows[0].cells['bool_field']!;
+          final cell = rows[0].cells['bool_field']!;
 
-        // Test with validation bypassed
-        stateManager.changeCellValue(
-          cell,
-          null,
-          validate: false,
-        );
+          // Test with validation bypassed
+          stateManager.changeCellValue(cell, null, validate: false);
 
-        expect(onChangedCallCount, equals(1));
-        expect(lastEvent, isNotNull);
-        expect(lastEvent!.value, isNull);
-        expect(lastEvent!.cell, equals(cell));
+          expect(onChangedCallCount, equals(1));
+          expect(lastEvent, isNotNull);
+          expect(lastEvent!.value, isNull);
+          expect(lastEvent!.cell, equals(cell));
 
-        // Test with validation enabled (should fail, no callback)
-        onChangedCallCount = 0;
-        stateManager.changeCellValue(
-          cell,
-          'invalid_bool',
-          validate: true,
-        );
+          // Test with validation enabled (should fail, no callback)
+          onChangedCallCount = 0;
+          stateManager.changeCellValue(cell, 'invalid_bool', validate: true);
 
-        // Should not trigger onChanged because validation failed
-        expect(onChangedCallCount, equals(0));
-      });
+          // Should not trigger onChanged because validation failed
+          expect(onChangedCallCount, equals(0));
+        },
+      );
     });
 
     group('Edge cases', () {
@@ -363,26 +322,16 @@ void main() {
 
       test('force parameter should work independently of validate parameter', () {
         final cell = rows[0].cells['bool_field']!;
-        
+
         // Make cell read-only
         columns[0].readOnly = true;
 
         // Try to change with validate: false but without force (should fail due to readOnly)
-        stateManager.changeCellValue(
-          cell,
-          null,
-          validate: false,
-          force: false,
-        );
+        stateManager.changeCellValue(cell, null, validate: false, force: false);
         expect(cell.value, isNot(null));
 
         // Try with both validate: false and force: true (should succeed)
-        stateManager.changeCellValue(
-          cell,
-          null,
-          validate: false,
-          force: true,
-        );
+        stateManager.changeCellValue(cell, null, validate: false, force: true);
         expect(cell.value, isNull);
       });
     });

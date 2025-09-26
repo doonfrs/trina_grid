@@ -78,10 +78,7 @@ class _ColumnFooterScreenState extends State<ColumnFooterScreen> {
             numberFormat: NumberFormat('#,###.###'),
             alignment: Alignment.center,
             titleSpanBuilder: (text) {
-              return [
-                const TextSpan(text: 'Average : '),
-                TextSpan(text: text),
-              ];
+              return [const TextSpan(text: 'Average : '), TextSpan(text: text)];
             },
           );
         },
@@ -98,10 +95,7 @@ class _ColumnFooterScreenState extends State<ColumnFooterScreen> {
             numberFormat: NumberFormat('#,###'),
             alignment: Alignment.center,
             titleSpanBuilder: (text) {
-              return [
-                const TextSpan(text: 'Min : '),
-                TextSpan(text: text),
-              ];
+              return [const TextSpan(text: 'Min : '), TextSpan(text: text)];
             },
           );
         },
@@ -118,10 +112,7 @@ class _ColumnFooterScreenState extends State<ColumnFooterScreen> {
             numberFormat: NumberFormat('#,###'),
             alignment: Alignment.center,
             titleSpanBuilder: (text) {
-              return [
-                const TextSpan(text: 'Max : '),
-                TextSpan(text: text),
-              ];
+              return [const TextSpan(text: 'Max : '), TextSpan(text: text)];
             },
           );
         },
@@ -152,9 +143,11 @@ class _ColumnFooterScreenState extends State<ColumnFooterScreen> {
       topTitle: 'Column footer',
       topContents: const [
         Text(
-            'Implement TrinaColumn \'s footerRenderer callback to display information such as sum, average, min, max, etc.'),
+          'Implement TrinaColumn \'s footerRenderer callback to display information such as sum, average, min, max, etc.',
+        ),
         Text(
-            'You can easily implement it with the built-in TrinaAggregateColumnFooter plugin widget, or return the widget you want as a callback return value.'),
+          'You can easily implement it with the built-in TrinaAggregateColumnFooter plugin widget, or return the widget you want as a callback return value.',
+        ),
       ],
       topButtons: [
         TrinaExampleButton(

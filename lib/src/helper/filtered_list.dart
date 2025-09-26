@@ -83,9 +83,7 @@ class FilteredList<E> extends ListBase<E> implements AbstractFilteredList<E> {
   /// FilteredList();
   /// FilteredList(initialList: [1, 2, 3]);
   /// ```
-  FilteredList({
-    List<E>? initialList,
-  }) : _list = initialList ?? [];
+  FilteredList({List<E>? initialList}) : _list = initialList ?? [];
 
   final List<E> _list;
 
@@ -121,11 +119,11 @@ class FilteredList<E> extends ListBase<E> implements AbstractFilteredList<E> {
 
   List<E> get _effectiveList => hasFilter
       ? hasRange
-          ? _filteredList.getRange(_safetyFrom, _safetyTo).toList()
-          : _filteredList
+            ? _filteredList.getRange(_safetyFrom, _safetyTo).toList()
+            : _filteredList
       : hasRange
-          ? _list.getRange(_safetyFrom, _safetyTo).toList()
-          : _list;
+      ? _list.getRange(_safetyFrom, _safetyTo).toList()
+      : _list;
 
   List<E> _filteredList = [];
 
@@ -424,10 +422,7 @@ class FilteredList<E> extends ListBase<E> implements AbstractFilteredList<E> {
   }
 
   bool _isInList(Object? element, List<E> list) {
-    return list.firstWhereOrNull(
-          (e) => e == element,
-        ) !=
-        null;
+    return list.firstWhereOrNull((e) => e == element) != null;
   }
 
   bool _isNotInList(Object? element, List<E> list) {
@@ -451,7 +446,8 @@ class FilteredList<E> extends ListBase<E> implements AbstractFilteredList<E> {
 
     if (found < 1) {
       throw Exception(
-          'With the filter applied, the value cannot be found in the list by that index.');
+        'With the filter applied, the value cannot be found in the list by that index.',
+      );
     }
 
     if (found == 1) {

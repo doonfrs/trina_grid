@@ -17,37 +17,32 @@ void main() {
     TrinaGridStateManager? stateManager;
 
     withEnterKeyAction(TrinaGridEnterKeyAction enterKeyAction) {
-      return TrinaWidgetTestHelper(
-        '2, 2 cell is selected',
-        (tester) async {
-          columns = [
-            ...ColumnHelper.textColumn('header', count: 10),
-          ];
+      return TrinaWidgetTestHelper('2, 2 cell is selected', (tester) async {
+        columns = [...ColumnHelper.textColumn('header', count: 10)];
 
-          rows = RowHelper.count(10, columns);
+        rows = RowHelper.count(10, columns);
 
-          await tester.pumpWidget(
-            MaterialApp(
-              home: Material(
-                child: TrinaGrid(
-                  columns: columns,
-                  rows: rows,
-                  onLoaded: (TrinaGridOnLoadedEvent event) {
-                    stateManager = event.stateManager;
-                  },
-                  configuration: TrinaGridConfiguration(
-                    enterKeyAction: enterKeyAction,
-                  ),
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Material(
+              child: TrinaGrid(
+                columns: columns,
+                rows: rows,
+                onLoaded: (TrinaGridOnLoadedEvent event) {
+                  stateManager = event.stateManager;
+                },
+                configuration: TrinaGridConfiguration(
+                  enterKeyAction: enterKeyAction,
                 ),
               ),
             ),
-          );
+          ),
+        );
 
-          await tester.pump();
+        await tester.pump();
 
-          await tester.tap(find.text('header2 value 2'));
-        },
-      );
+        await tester.tap(find.text('header2 value 2'));
+      });
     }
 
     withEnterKeyAction(TrinaGridEnterKeyAction.none).test(

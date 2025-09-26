@@ -34,16 +34,12 @@ class _PercentageTypeColumnScreenState
       TrinaColumn(
         title: '1 decimal place',
         field: 'one_decimal',
-        type: TrinaColumnType.percentage(
-          decimalDigits: 1,
-        ),
+        type: TrinaColumnType.percentage(decimalDigits: 1),
       ),
       TrinaColumn(
         title: 'No decimals',
         field: 'no_decimal',
-        type: TrinaColumnType.percentage(
-          decimalDigits: 0,
-        ),
+        type: TrinaColumnType.percentage(decimalDigits: 0),
       ),
       TrinaColumn(
         title: 'Symbol before',
@@ -55,31 +51,22 @@ class _PercentageTypeColumnScreenState
       TrinaColumn(
         title: 'No symbol',
         field: 'no_symbol',
-        type: TrinaColumnType.percentage(
-          showSymbol: false,
-        ),
+        type: TrinaColumnType.percentage(showSymbol: false),
       ),
       TrinaColumn(
         title: 'Negative values',
         field: 'negative',
-        type: TrinaColumnType.percentage(
-          negative: true,
-        ),
+        type: TrinaColumnType.percentage(negative: true),
       ),
       TrinaColumn(
         title: 'Denmark locale',
         field: 'denmark_locale',
-        type: TrinaColumnType.percentage(
-          locale: 'da_DK',
-        ),
+        type: TrinaColumnType.percentage(locale: 'da_DK'),
       ),
       TrinaColumn(
         title: 'Decimal Input',
         field: 'decimal_input',
-        type: TrinaColumnType.percentage(
-          decimalInput: true,
-          decimalDigits: 1,
-        ),
+        type: TrinaColumnType.percentage(decimalInput: true, decimalDigits: 1),
       ),
     ]);
 
@@ -132,9 +119,11 @@ class _PercentageTypeColumnScreenState
         Text('A column to display and edit percentage values.'),
         Text('You can customize decimal places, symbol position, and more.'),
         Text(
-            'With decimalInput=true, the column internally stores values as decimals (0.42)'),
+          'With decimalInput=true, the column internally stores values as decimals (0.42)',
+        ),
         Text(
-            'but allows users to input and view values as whole percentages (42%).'),
+          'but allows users to input and view values as whole percentages (42%).',
+        ),
       ],
       topButtons: [
         TrinaExampleButton(

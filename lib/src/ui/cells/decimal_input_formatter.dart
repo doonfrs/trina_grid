@@ -7,8 +7,10 @@ class DecimalTextInputFormatter extends TextInputFormatter {
     required bool activatedNegativeValues,
     required bool allowFirstDot,
     required String decimalSeparator,
-  }) : assert(decimalRange == null || decimalRange >= 0,
-            'DecimalTextInputFormatter declaration error') {
+  }) : assert(
+         decimalRange == null || decimalRange >= 0,
+         'DecimalTextInputFormatter declaration error',
+       ) {
     String dp = (decimalRange != null && decimalRange > 0)
         ? '([$decimalSeparator][0-9]{0,$decimalRange}){0,1}'
         : '';

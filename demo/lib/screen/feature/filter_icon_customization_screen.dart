@@ -37,11 +37,7 @@ class _FilterIconCustomizationScreenState
         width: 200,
         type: TrinaColumnType.text(),
       ),
-      TrinaColumn(
-        title: 'Age',
-        field: 'age',
-        type: TrinaColumnType.number(),
-      ),
+      TrinaColumn(title: 'Age', field: 'age', type: TrinaColumnType.number()),
       TrinaColumn(
         title: 'Role',
         field: 'role',
@@ -180,9 +176,7 @@ class _FilterIconCustomizationScreenState
                   stateManager.setShowColumnFilter(true);
                 },
                 configuration: TrinaGridConfiguration(
-                  style: TrinaGridStyleConfig(
-                    filterIcon: currentFilterIcon,
-                  ),
+                  style: TrinaGridStyleConfig(filterIcon: currentFilterIcon),
                 ),
               ),
             ),

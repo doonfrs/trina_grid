@@ -6,10 +6,7 @@ import 'ui.dart';
 class TrinaRightFrozenRows extends TrinaStatefulWidget {
   final TrinaGridStateManager stateManager;
 
-  const TrinaRightFrozenRows(
-    this.stateManager, {
-    super.key,
-  });
+  const TrinaRightFrozenRows(this.stateManager, {super.key});
 
   @override
   TrinaRightFrozenRowsState createState() => TrinaRightFrozenRowsState();
@@ -61,8 +58,9 @@ class TrinaRightFrozenRowsState
     _frozenBottomRows = stateManager.refRows.originalList
         .where((row) => row.frozen == TrinaRowFrozen.end)
         .toList();
-    _scrollableRows =
-        _rows.where((row) => row.frozen == TrinaRowFrozen.none).toList();
+    _scrollableRows = _rows
+        .where((row) => row.frozen == TrinaRowFrozen.none)
+        .toList();
   }
 
   Widget _buildRow(TrinaRow row, int index) {
@@ -106,8 +104,12 @@ class TrinaRightFrozenRowsState
             children: _frozenBottomRows
                 .asMap()
                 .entries
-                .map((e) => _buildRow(e.value,
-                    e.key + _frozenTopRows.length + _scrollableRows.length))
+                .map(
+                  (e) => _buildRow(
+                    e.value,
+                    e.key + _frozenTopRows.length + _scrollableRows.length,
+                  ),
+                )
                 .toList(),
           ),
       ],

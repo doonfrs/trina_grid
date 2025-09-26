@@ -77,26 +77,20 @@ void main() {
     format: 'yyyy-MM-dd',
     headerFormat: 'yyyy-MM',
     onLoaded: (event) => stateManager = event.stateManager,
-  ).test(
-    'Directionality should be ltr by default',
-    (tester) async {
-      expect(stateManager.isLTR, true);
-      expect(stateManager.isRTL, false);
-    },
-  );
+  ).test('Directionality should be ltr by default', (tester) async {
+    expect(stateManager.isLTR, true);
+    expect(stateManager.isRTL, false);
+  });
 
   buildPopup(
     format: 'yyyy-MM-dd',
     headerFormat: 'yyyy-MM',
     onLoaded: (event) => stateManager = event.stateManager,
     textDirection: TextDirection.rtl,
-  ).test(
-    'When Directionality is rtl, it should be applied',
-    (tester) async {
-      expect(stateManager.isLTR, false);
-      expect(stateManager.isRTL, true);
-    },
-  );
+  ).test('When Directionality is rtl, it should be applied', (tester) async {
+    expect(stateManager.isLTR, false);
+    expect(stateManager.isRTL, true);
+  });
 
   buildPopup(
     format: 'yyyy-MM-dd',
@@ -133,29 +127,19 @@ void main() {
     format: 'yyyy-MM-dd',
     headerFormat: 'yyyy-MM',
     onLoaded: (event) => stateManager = event.stateManager,
-  ).test(
-    'DatePicker should not apply autoSizeMode and resizeMode',
-    (tester) async {
-      expect(stateManager.enableColumnsAutoSize, false);
+  ).test('DatePicker should not apply autoSizeMode and resizeMode', (
+    tester,
+  ) async {
+    expect(stateManager.enableColumnsAutoSize, false);
 
-      expect(stateManager.activatedColumnsAutoSize, false);
+    expect(stateManager.activatedColumnsAutoSize, false);
 
-      expect(
-        stateManager.columnSizeConfig.autoSizeMode,
-        TrinaAutoSizeMode.none,
-      );
+    expect(stateManager.columnSizeConfig.autoSizeMode, TrinaAutoSizeMode.none);
 
-      expect(
-        stateManager.columnSizeConfig.resizeMode,
-        TrinaResizeMode.none,
-      );
-    },
-  );
+    expect(stateManager.columnSizeConfig.resizeMode, TrinaResizeMode.none);
+  });
 
-  buildPopup(
-    format: 'yyyy-MM-dd',
-    headerFormat: 'yyyy-MM',
-  ).test(
+  buildPopup(format: 'yyyy-MM-dd', headerFormat: 'yyyy-MM').test(
     'Widget should be created with the required height and width',
     (tester) async {
       final size = tester.getSize(find.byType(TrinaGrid));
@@ -167,7 +151,8 @@ void main() {
       double rowsHeight = 6 * TrinaGridSettings.rowTotalHeight;
 
       // itemHeight * 2 = Header Height + Column Height
-      double popupHeight = (TrinaGridSettings.rowTotalHeight * 2) +
+      double popupHeight =
+          (TrinaGridSettings.rowTotalHeight * 2) +
           rowsHeight +
           TrinaGridSettings.totalShadowLineWidth +
           TrinaGridSettings.gridInnerSpacing;
@@ -176,20 +161,14 @@ void main() {
     },
   );
 
-  buildPopup(
-    format: 'yyyy-MM-dd',
-    headerFormat: 'yyyy-MM',
-  ).test(
+  buildPopup(format: 'yyyy-MM-dd', headerFormat: 'yyyy-MM').test(
     'Year and month changing IconButtons should be displayed',
     (tester) async {
       expect(find.byType(IconButton), findsNWidgets(4));
     },
   );
 
-  buildPopup(
-    format: 'yyyy-MM-dd',
-    headerFormat: 'yyyy-MM',
-  ).test(
+  buildPopup(format: 'yyyy-MM-dd', headerFormat: 'yyyy-MM').test(
     'When initDate, startDate, and endDate are not provided, '
     'current month should be displayed',
     (tester) async {
@@ -209,59 +188,49 @@ void main() {
     format: 'yyyy-MM-dd',
     headerFormat: 'yyyy-MM',
     startDate: DateTime(2022, 5, 10),
-  ).test(
-    'When startDate is set, that month should be displayed',
-    (tester) async {
-      final headerFormat = intl.DateFormat('yyyy-MM');
+  ).test('When startDate is set, that month should be displayed', (
+    tester,
+  ) async {
+    final headerFormat = intl.DateFormat('yyyy-MM');
 
-      final currentYearMonth = headerFormat.format(DateTime(2022, 5, 10));
+    final currentYearMonth = headerFormat.format(DateTime(2022, 5, 10));
 
-      expect(find.text(currentYearMonth), findsOneWidget);
-    },
-  );
+    expect(find.text(currentYearMonth), findsOneWidget);
+  });
 
   buildPopup(
     format: 'yyyy-MM-dd',
     headerFormat: 'yyyy-MM',
     initDate: DateTime(now.year, now.month, 20),
-  ).test(
-    'When initDate is set, that date should be selected',
-    (tester) async {
-      const selectedDay = '20';
+  ).test('When initDate is set, that date should be selected', (tester) async {
+    const selectedDay = '20';
 
-      final selectedDayText = find.text(selectedDay).first;
+    final selectedDayText = find.text(selectedDay).first;
 
-      final selectedDayTextWidget =
-          selectedDayText.first.evaluate().first.widget as Text;
+    final selectedDayTextWidget =
+        selectedDayText.first.evaluate().first.widget as Text;
 
-      final selectedDayTextStyle = selectedDayTextWidget.style as TextStyle;
+    final selectedDayTextStyle = selectedDayTextWidget.style as TextStyle;
 
-      expect(selectedDayText, findsOneWidget);
+    expect(selectedDayText, findsOneWidget);
 
-      expect(selectedDayTextStyle.color, Colors.white);
+    expect(selectedDayTextStyle.color, Colors.white);
 
-      final selectedDayWidget = find
-          .ancestor(
-            of: selectedDayText,
-            matching: find.byType(DecoratedBox),
-          )
-          .first;
+    final selectedDayWidget = find
+        .ancestor(of: selectedDayText, matching: find.byType(DecoratedBox))
+        .first;
 
-      final selectedDayContainer =
-          selectedDayWidget.first.evaluate().first.widget as DecoratedBox;
+    final selectedDayContainer =
+        selectedDayWidget.first.evaluate().first.widget as DecoratedBox;
 
-      final decoration = selectedDayContainer.decoration as BoxDecoration;
+    final decoration = selectedDayContainer.decoration as BoxDecoration;
 
-      expect(selectedDayWidget, findsOneWidget);
+    expect(selectedDayWidget, findsOneWidget);
 
-      expect(decoration.color, Colors.lightBlue);
-    },
-  );
+    expect(decoration.color, Colors.lightBlue);
+  });
 
-  buildPopup(
-    format: 'yyyy-MM-dd',
-    headerFormat: 'yyyy-MM',
-  ).test(
+  buildPopup(format: 'yyyy-MM-dd', headerFormat: 'yyyy-MM').test(
     'When selecting the 1st day of the current month and pressing the up arrow key, '
     'the previous month should be displayed',
     (tester) async {
@@ -292,122 +261,108 @@ void main() {
     format: 'yyyy-MM-dd',
     headerFormat: 'yyyy-MM',
     initDate: DateTime(2022, 6, 30),
-  ).test(
-    'When selecting June 30, 2022 and pressing the down arrow key, '
-    'the next month should be displayed',
-    (tester) async {
-      final headerFormat = intl.DateFormat('yyyy-MM');
+  ).test('When selecting June 30, 2022 and pressing the down arrow key, '
+      'the next month should be displayed', (tester) async {
+    final headerFormat = intl.DateFormat('yyyy-MM');
 
-      final currentMonthYear = headerFormat.format(DateTime(2022, 6, 30));
+    final currentMonthYear = headerFormat.format(DateTime(2022, 6, 30));
 
-      expect(find.text(currentMonthYear), findsOneWidget);
+    expect(find.text(currentMonthYear), findsOneWidget);
 
-      await tester.sendKeyDownEvent(LogicalKeyboardKey.arrowDown);
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.arrowDown);
 
-      await tester.pumpAndSettle();
+    await tester.pumpAndSettle();
 
-      final expectDate = DateTime(2022, 7);
+    final expectDate = DateTime(2022, 7);
 
-      final expectMonthYear = headerFormat.format(expectDate);
+    final expectMonthYear = headerFormat.format(expectDate);
 
-      expect(find.text(expectMonthYear), findsOneWidget);
-    },
-  );
+    expect(find.text(expectMonthYear), findsOneWidget);
+  });
 
   buildPopup(
     format: 'yyyy-MM-dd',
     headerFormat: 'yyyy-MM',
     initDate: DateTime(2022, 6, 5),
-  ).test(
-    'When selecting June 5, 2022 and pressing the left arrow key, '
-    'the previous year should be displayed',
-    (tester) async {
-      final headerFormat = intl.DateFormat('yyyy-MM');
+  ).test('When selecting June 5, 2022 and pressing the left arrow key, '
+      'the previous year should be displayed', (tester) async {
+    final headerFormat = intl.DateFormat('yyyy-MM');
 
-      final currentMonthYear = headerFormat.format(DateTime(2022, 6, 5));
+    final currentMonthYear = headerFormat.format(DateTime(2022, 6, 5));
 
-      expect(find.text(currentMonthYear), findsOneWidget);
+    expect(find.text(currentMonthYear), findsOneWidget);
 
-      await tester.sendKeyDownEvent(LogicalKeyboardKey.arrowLeft);
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.arrowLeft);
 
-      await tester.pump();
+    await tester.pump();
 
-      final expectDate = DateTime(2021, 6);
+    final expectDate = DateTime(2021, 6);
 
-      final expectMonthYear = headerFormat.format(expectDate);
+    final expectMonthYear = headerFormat.format(expectDate);
 
-      expect(find.text(expectMonthYear), findsOneWidget);
-    },
-  );
+    expect(find.text(expectMonthYear), findsOneWidget);
+  });
 
   buildPopup(
     format: 'yyyy-MM-dd',
     headerFormat: 'yyyy-MM',
     initDate: DateTime(2022, 6, 11),
-  ).test(
-    'When selecting June 11, 2022 and pressing the right arrow key, '
-    'the next year should be displayed',
-    (tester) async {
-      final headerFormat = intl.DateFormat('yyyy-MM');
+  ).test('When selecting June 11, 2022 and pressing the right arrow key, '
+      'the next year should be displayed', (tester) async {
+    final headerFormat = intl.DateFormat('yyyy-MM');
 
-      final currentMonthYear = headerFormat.format(DateTime(2022, 6, 11));
+    final currentMonthYear = headerFormat.format(DateTime(2022, 6, 11));
 
-      expect(find.text(currentMonthYear), findsOneWidget);
+    expect(find.text(currentMonthYear), findsOneWidget);
 
-      await tester.sendKeyDownEvent(LogicalKeyboardKey.arrowRight);
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.arrowRight);
 
-      await tester.pump();
+    await tester.pump();
 
-      final expectDate = DateTime(2023, 6);
+    final expectDate = DateTime(2023, 6);
 
-      final expectMonthYear = headerFormat.format(expectDate);
+    final expectMonthYear = headerFormat.format(expectDate);
 
-      expect(find.text(expectMonthYear), findsOneWidget);
-    },
-  );
+    expect(find.text(expectMonthYear), findsOneWidget);
+  });
 
   buildPopup(
     format: 'yyyy-MM-dd',
     headerFormat: 'yyyy-MM',
     initDate: DateTime(2022, 6, 11),
     onSelected: mockListener.oneParamReturnVoid<TrinaGridOnSelectedEvent>,
-  ).test(
-    'When selecting June 11, 2022 and tapping, '
-    'onSelected callback should be called',
-    (tester) async {
-      await tester.tap(find.text('11'));
+  ).test('When selecting June 11, 2022 and tapping, '
+      'onSelected callback should be called', (tester) async {
+    await tester.tap(find.text('11'));
 
-      await tester.pump();
+    await tester.pump();
 
-      verify(
-        mockListener.oneParamReturnVoid(argThat(
-            TrinaObjectMatcher<TrinaGridOnSelectedEvent>(rule: (object) {
-          return object.cell!.value == '2022-06-11';
-        }))),
-      ).called(1);
-    },
-  );
+    verify(
+      mockListener.oneParamReturnVoid(
+        argThat(
+          TrinaObjectMatcher<TrinaGridOnSelectedEvent>(
+            rule: (object) {
+              return object.cell!.value == '2022-06-11';
+            },
+          ),
+        ),
+      ),
+    ).called(1);
+  });
 
   buildPopup(
     format: 'yyyy-MM-dd',
     headerFormat: 'yyyy-MM',
     initDate: DateTime(2022, 6, 11),
     onLoaded: mockListener.oneParamReturnVoid<TrinaGridOnLoadedEvent>,
-  ).test(
-    'When selecting June 11, 2022 and tapping, '
-    'onLoaded callback should be called',
-    (tester) async {
-      await tester.tap(find.text('11'));
+  ).test('When selecting June 11, 2022 and tapping, '
+      'onLoaded callback should be called', (tester) async {
+    await tester.tap(find.text('11'));
 
-      await tester.pump();
+    await tester.pump();
 
-      verify(
-        mockListener.oneParamReturnVoid(
-          argThat(
-            isA<TrinaGridOnLoadedEvent>(),
-          ),
-        ),
-      ).called(1);
-    },
-  );
+    verify(
+      mockListener.oneParamReturnVoid(argThat(isA<TrinaGridOnLoadedEvent>())),
+    ).called(1);
+  });
 }

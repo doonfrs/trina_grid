@@ -47,8 +47,12 @@ class _ColumnFilterMethodsScreenState extends State<ColumnFilterMethodsScreen> {
       TrinaColumn(
         title: 'Department',
         field: 'department',
-        type:
-            TrinaColumnType.select(['Engineering', 'Sales', 'HR', 'Marketing']),
+        type: TrinaColumnType.select([
+          'Engineering',
+          'Sales',
+          'HR',
+          'Marketing',
+        ]),
         width: 150,
       ),
       TrinaColumn(
@@ -75,7 +79,7 @@ class _ColumnFilterMethodsScreenState extends State<ColumnFilterMethodsScreen> {
       'Charlie',
       'Diana',
       'Eve',
-      'Frank'
+      'Frank',
     ];
 
     for (int i = 1; i <= 50; i++) {
@@ -84,8 +88,9 @@ class _ColumnFilterMethodsScreenState extends State<ColumnFilterMethodsScreen> {
           cells: {
             'id': TrinaCell(value: 'EMP-${i.toString().padLeft(3, '0')}'),
             'name': TrinaCell(
-                value:
-                    '${names[i % names.length]} ${i > names.length ? (i ~/ names.length) : ''}'),
+              value:
+                  '${names[i % names.length]} ${i > names.length ? (i ~/ names.length) : ''}',
+            ),
             'age': TrinaCell(value: 22 + (i % 40)),
             'department': TrinaCell(value: departments[i % departments.length]),
             'active': TrinaCell(value: i % 3 != 0), // ~67% active
@@ -103,7 +108,8 @@ class _ColumnFilterMethodsScreenState extends State<ColumnFilterMethodsScreen> {
       topTitle: 'Programmatic Column Filtering',
       topContents: const [
         Text(
-            'Demonstrates the new setColumnFilter(), removeColumnFilter(), and clearAllColumnFilters() methods for programmatic filtering.'),
+          'Demonstrates the new setColumnFilter(), removeColumnFilter(), and clearAllColumnFilters() methods for programmatic filtering.',
+        ),
         SizedBox(height: 10),
         Text('Click the buttons below to apply different filters dynamically:'),
       ],
@@ -312,7 +318,9 @@ class _ColumnFilterMethodsScreenState extends State<ColumnFilterMethodsScreen> {
                 ? const Text(
                     'No filters applied',
                     style: TextStyle(
-                        fontStyle: FontStyle.italic, color: Colors.grey),
+                      fontStyle: FontStyle.italic,
+                      color: Colors.grey,
+                    ),
                   )
                 : Wrap(
                     spacing: 8,
@@ -320,22 +328,26 @@ class _ColumnFilterMethodsScreenState extends State<ColumnFilterMethodsScreen> {
                     children: stateManager == null
                         ? []
                         : stateManager!.filterRows.map((filterRow) {
-                            final column = filterRow
+                            final column =
+                                filterRow
                                     .cells[FilterHelper.filterFieldColumn]
                                     ?.value ??
                                 'Unknown';
-                            final value = filterRow
+                            final value =
+                                filterRow
                                     .cells[FilterHelper.filterFieldValue]
                                     ?.value ??
                                 '';
-                            final filterType = filterRow
+                            final filterType =
+                                filterRow
                                     .cells[FilterHelper.filterFieldType]
                                     ?.value ??
                                 const TrinaFilterTypeContains();
 
                             return Chip(
                               label: Text(
-                                  '$column ${_getFilterTypeSymbol(filterType)} $value'),
+                                '$column ${_getFilterTypeSymbol(filterType)} $value',
+                              ),
                               deleteIcon: const Icon(Icons.close, size: 16),
                               onDeleted: () {
                                 stateManager?.removeColumnFilter(column);
@@ -352,20 +364,26 @@ class _ColumnFilterMethodsScreenState extends State<ColumnFilterMethodsScreen> {
 
   void _showCurrentFilters() {
     if (stateManager == null) return;
-    
+
     final List<String> filterInfo = [];
-    final List<String> columnFields = ['active', 'name', 'department', 'salary', 'age'];
-    
+    final List<String> columnFields = [
+      'active',
+      'name',
+      'department',
+      'salary',
+      'age',
+    ];
+
     for (String field in columnFields) {
       final filterValue = stateManager!.getColumnFilterValue(field);
       final filterType = stateManager!.getColumnFilterType(field);
-      
+
       if (filterValue != null && filterType != null) {
         final typeSymbol = _getFilterTypeSymbol(filterType);
         filterInfo.add('$field $typeSymbol $filterValue');
       }
     }
-    
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -375,10 +393,14 @@ class _ColumnFilterMethodsScreenState extends State<ColumnFilterMethodsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: filterInfo.isEmpty
               ? [const Text('No filters applied')]
-              : filterInfo.map((info) => Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 2),
-                    child: Text('• $info'),
-                  )).toList(),
+              : filterInfo
+                    .map(
+                      (info) => Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 2),
+                        child: Text('• $info'),
+                      ),
+                    )
+                    .toList(),
         ),
         actions: [
           TextButton(

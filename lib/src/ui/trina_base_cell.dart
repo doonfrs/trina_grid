@@ -130,7 +130,8 @@ class TrinaBaseCell extends StatelessWidget
         rowIdx: rowIdx,
         row: row,
         column: column,
-        cellPadding: cell.padding ??
+        cellPadding:
+            cell.padding ??
             column.cellPadding ??
             stateManager.configuration.style.defaultCellPadding,
         stateManager: stateManager,
@@ -206,7 +207,8 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
           widget.column,
           widget.rowIdx,
         ),
-        isGroupedRowCell: stateManager.enabledRowGroups &&
+        isGroupedRowCell:
+            stateManager.enabledRowGroups &&
             stateManager.rowGroupDelegate!.isExpandableCell(widget.cell),
         enableCellVerticalBorder: style.enableCellBorderVertical,
         borderColor: style.borderColor,
@@ -318,11 +320,11 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
       final defaultColor = isGroupedRowCell
           ? cellColorGroupedRow
           : readOnly
-              ? cellReadonlyColor
-              : cellDefaultColor;
+          ? cellReadonlyColor
+          : cellDefaultColor;
 
       final bool hasCustomColor = isDirty || cellCallbackColor != null;
-      
+
       return BoxDecoration(
         color: isDirty ? dirtyColor : cellCallbackColor ?? defaultColor,
         border: hasCustomColor
@@ -339,13 +341,13 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
                     : BorderSide.none,
               )
             : enableCellVerticalBorder
-                ? BorderDirectional(
-                    end: BorderSide(
-                      color: borderColor,
-                      width: stateManager.style.cellVerticalBorderWidth,
-                    ),
-                  )
-                : null,
+            ? BorderDirectional(
+                end: BorderSide(
+                  color: borderColor,
+                  width: stateManager.style.cellVerticalBorderWidth,
+                ),
+              )
+            : null,
       );
     }
   }
@@ -406,8 +408,12 @@ class _CellState extends TrinaStateWithChange<_Cell> {
   @override
   Widget build(BuildContext context) {
     if (_showTypedCell && widget.column.enableEditingMode == true) {
-      return widget.column.type
-          .buildCell(stateManager, widget.cell, widget.column, widget.row);
+      return widget.column.type.buildCell(
+        stateManager,
+        widget.cell,
+        widget.column,
+        widget.row,
+      );
     }
 
     return TrinaDefaultCell(

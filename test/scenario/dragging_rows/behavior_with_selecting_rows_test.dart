@@ -12,64 +12,67 @@ void main() {
 
   grid
       .buildSelectedRows(
-    numberOfRows: 10,
-    startRowIdx: 3,
-    endRowIdx: 5,
-    columns: columns,
-  )
-      .test(
-          'When the drag icon of an unselected row is dragged, '
+        numberOfRows: 10,
+        startRowIdx: 3,
+        endRowIdx: 5,
+        columns: columns,
+      )
+      .test('When the drag icon of an unselected row is dragged, '
           'the existing selection should be invalidated and the dragged row should be selected, '
           'and dragging should not occur.', (WidgetTester tester) async {
-    final existsSelectingRows = [...grid.stateManager.currentSelectingRows];
+        final existsSelectingRows = [...grid.stateManager.currentSelectingRows];
 
-    final dragRowCellValue =
-        grid.stateManager.refRows[0].cells['column1']!.value;
+        final dragRowCellValue =
+            grid.stateManager.refRows[0].cells['column1']!.value;
 
-    final targetRowCellValue =
-        grid.stateManager.refRows[1].cells['column1']!.value;
+        final targetRowCellValue =
+            grid.stateManager.refRows[1].cells['column1']!.value;
 
-    expect(dragRowCellValue, 'column1 value 1');
+        expect(dragRowCellValue, 'column1 value 1');
 
-    expect(targetRowCellValue, 'column1 value 2');
+        expect(targetRowCellValue, 'column1 value 2');
 
-    final dragRow = find.text(dragRowCellValue);
+        final dragRow = find.text(dragRowCellValue);
 
-    final targetRow = find.text(targetRowCellValue);
+        final targetRow = find.text(targetRowCellValue);
 
-    await grid.gesture.down(tester.getCenter(dragRow));
+        await grid.gesture.down(tester.getCenter(dragRow));
 
-    await tester.longPress(dragRow);
+        await tester.longPress(dragRow);
 
-    await grid.gesture.moveTo(
-      tester.getCenter(targetRow),
-      timeStamp: const Duration(milliseconds: 10),
-    );
+        await grid.gesture.moveTo(
+          tester.getCenter(targetRow),
+          timeStamp: const Duration(milliseconds: 10),
+        );
 
-    await grid.gesture.up();
+        await grid.gesture.up();
 
-    await tester.pumpAndSettle();
+        await tester.pumpAndSettle();
 
-    expect(grid.stateManager.currentSelectingRows.length, 2);
+        expect(grid.stateManager.currentSelectingRows.length, 2);
 
-    expect(
-      existsSelectingRows.contains(grid.stateManager.currentSelectingRows[0]),
-      false,
-    );
+        expect(
+          existsSelectingRows.contains(
+            grid.stateManager.currentSelectingRows[0],
+          ),
+          false,
+        );
 
-    expect(
-      existsSelectingRows.contains(grid.stateManager.currentSelectingRows[1]),
-      false,
-    );
+        expect(
+          existsSelectingRows.contains(
+            grid.stateManager.currentSelectingRows[1],
+          ),
+          false,
+        );
 
-    expect(
-      grid.stateManager.currentSelectingRows[0].cells['column1']!.value,
-      dragRowCellValue,
-    );
+        expect(
+          grid.stateManager.currentSelectingRows[0].cells['column1']!.value,
+          dragRowCellValue,
+        );
 
-    expect(
-      grid.stateManager.currentSelectingRows[1].cells['column1']!.value,
-      targetRowCellValue,
-    );
-  });
+        expect(
+          grid.stateManager.currentSelectingRows[1].cells['column1']!.value,
+          targetRowCellValue,
+        );
+      });
 }

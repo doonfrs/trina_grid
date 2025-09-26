@@ -7,10 +7,7 @@ import 'ui.dart';
 class TrinaRightFrozenColumns extends TrinaStatefulWidget {
   final TrinaGridStateManager stateManager;
 
-  const TrinaRightFrozenColumns(
-    this.stateManager, {
-    super.key,
-  });
+  const TrinaRightFrozenColumns(this.stateManager, {super.key});
 
   @override
   TrinaRightFrozenColumnsState createState() => TrinaRightFrozenColumnsState();
@@ -78,10 +75,7 @@ class TrinaRightFrozenColumnsState
   Widget _makeColumn(TrinaColumn e) {
     return LayoutId(
       id: e.field,
-      child: TrinaBaseColumn(
-        stateManager: stateManager,
-        column: e,
-      ),
+      child: TrinaBaseColumn(stateManager: stateManager, column: e),
     );
   }
 

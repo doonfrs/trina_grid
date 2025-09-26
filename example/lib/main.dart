@@ -13,9 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'TrinaGrid Example',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeData(primarySwatch: Colors.blue),
       home: const TrinaGridExamplePage(),
     );
   }
@@ -33,53 +31,31 @@ class TrinaGridExamplePage extends StatefulWidget {
 
 class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
   final List<TrinaColumn> columns = <TrinaColumn>[
-    TrinaColumn(
-      title: 'Id',
-      field: 'id',
-      type: TrinaColumnType.text(),
-    ),
-    TrinaColumn(
-      title: 'Name',
-      field: 'name',
-      type: TrinaColumnType.text(),
-    ),
-    TrinaColumn(
-      title: 'Age',
-      field: 'age',
-      type: TrinaColumnType.number(),
-    ),
+    TrinaColumn(title: 'Id', field: 'id', type: TrinaColumnType.text()),
+    TrinaColumn(title: 'Name', field: 'name', type: TrinaColumnType.text()),
+    TrinaColumn(title: 'Age', field: 'age', type: TrinaColumnType.number()),
     TrinaColumn(
       title: 'Role',
       field: 'role',
-      type: TrinaColumnType.select(<String>[
-        'Programmer',
-        'Designer',
-        'Owner',
-      ]),
+      type: TrinaColumnType.select(<String>['Programmer', 'Designer', 'Owner']),
     ),
     TrinaColumn(
       title: 'Role 2',
       field: 'role2',
       type: TrinaColumnType.select(
-        <String>[
-          'Programmer',
-          'Designer',
-          'Owner',
-        ],
+        <String>['Programmer', 'Designer', 'Owner'],
         menuItemBuilder: (item) {
-          return Row(children: [
-            Icon(item == 'Programmer' ? Icons.code : Icons.design_services),
-            const SizedBox(width: 8),
-            Text(item),
-          ]);
+          return Row(
+            children: [
+              Icon(item == 'Programmer' ? Icons.code : Icons.design_services),
+              const SizedBox(width: 8),
+              Text(item),
+            ],
+          );
         },
       ),
     ),
-    TrinaColumn(
-      title: 'Joined',
-      field: 'joined',
-      type: TrinaColumnType.date(),
-    ),
+    TrinaColumn(title: 'Joined', field: 'joined', type: TrinaColumnType.date()),
     TrinaColumn(
       title: 'Working time',
       field: 'working_time',
@@ -153,11 +129,16 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
   final List<TrinaColumnGroup> columnGroups = [
     TrinaColumnGroup(title: 'Id', fields: ['id'], expandedColumn: true),
     TrinaColumnGroup(title: 'User information', fields: ['name', 'age']),
-    TrinaColumnGroup(title: 'Status', children: [
-      TrinaColumnGroup(title: 'A', fields: ['role'], expandedColumn: true),
-      TrinaColumnGroup(
-          title: 'Etc.', fields: ['joined', 'working_time', 'role2']),
-    ]),
+    TrinaColumnGroup(
+      title: 'Status',
+      children: [
+        TrinaColumnGroup(title: 'A', fields: ['role'], expandedColumn: true),
+        TrinaColumnGroup(
+          title: 'Etc.',
+          fields: ['joined', 'working_time', 'role2'],
+        ),
+      ],
+    ),
   ];
 
   /// [TrinaGridStateManager] has many methods and properties to dynamically manipulate the grid.
@@ -170,28 +151,31 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
       body: Container(
         padding: const EdgeInsets.all(15),
         child: TrinaGrid(
-            columns: columns,
-            rows: rows,
-            columnGroups: columnGroups,
-            onLoaded: (TrinaGridOnLoadedEvent event) {
-              stateManager = event.stateManager;
-              stateManager.setShowColumnFilter(true);
-            },
-            onChanged: (TrinaGridOnChangedEvent event) {
-              print(event);
-            },
-            configuration: const TrinaGridConfiguration(),
-            selectDateCallback: (TrinaCell cell, TrinaColumn column) async {
-              return showDatePicker(
-                  context: context,
-                  initialDate: TrinaDateTimeHelper.parseOrNullWithFormat(
-                        cell.value,
-                        column.type.date.format,
-                      ) ??
-                      DateTime.now(),
-                  firstDate: column.type.date.startDate ?? DateTime(0),
-                  lastDate: column.type.date.endDate ?? DateTime(9999));
-            }),
+          columns: columns,
+          rows: rows,
+          columnGroups: columnGroups,
+          onLoaded: (TrinaGridOnLoadedEvent event) {
+            stateManager = event.stateManager;
+            stateManager.setShowColumnFilter(true);
+          },
+          onChanged: (TrinaGridOnChangedEvent event) {
+            print(event);
+          },
+          configuration: const TrinaGridConfiguration(),
+          selectDateCallback: (TrinaCell cell, TrinaColumn column) async {
+            return showDatePicker(
+              context: context,
+              initialDate:
+                  TrinaDateTimeHelper.parseOrNullWithFormat(
+                    cell.value,
+                    column.type.date.format,
+                  ) ??
+                  DateTime.now(),
+              firstDate: column.type.date.startDate ?? DateTime(0),
+              lastDate: column.type.date.endDate ?? DateTime(9999),
+            );
+          },
+        ),
       ),
     );
   }

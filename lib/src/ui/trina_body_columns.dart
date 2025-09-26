@@ -8,10 +8,7 @@ import 'ui.dart';
 class TrinaBodyColumns extends TrinaStatefulWidget {
   final TrinaGridStateManager stateManager;
 
-  const TrinaBodyColumns(
-    this.stateManager, {
-    super.key,
-  });
+  const TrinaBodyColumns(this.stateManager, {super.key});
 
   @override
   TrinaBodyColumnsState createState() => TrinaBodyColumnsState();
@@ -57,7 +54,8 @@ class TrinaBodyColumnsState extends TrinaStateWithChange<TrinaBodyColumns> {
     final scrollConfig = stateManager.configuration.scrollbar;
     // Only account for vertical scrollbar width if it's shown
     if (scrollConfig.showVertical && scrollConfig.columnShowScrollWidth) {
-      _verticalScrollbarWidth = scrollConfig.thickness +
+      _verticalScrollbarWidth =
+          scrollConfig.thickness +
           4; // Add padding as in TrinaVerticalScrollBar
     } else {
       _verticalScrollbarWidth = 0;
@@ -115,9 +113,7 @@ class TrinaBodyColumnsState extends TrinaStateWithChange<TrinaBodyColumns> {
       child: TrinaBaseColumnGroup(
         stateManager: stateManager,
         columnGroup: e,
-        depth: stateManager.columnGroupDepth(
-          stateManager.refColumnGroups,
-        ),
+        depth: stateManager.columnGroupDepth(stateManager.refColumnGroups),
       ),
     );
   }
@@ -125,10 +121,7 @@ class TrinaBodyColumnsState extends TrinaStateWithChange<TrinaBodyColumns> {
   TrinaVisibilityLayoutId _makeColumn(TrinaColumn e) {
     return TrinaVisibilityLayoutId(
       id: e.field,
-      child: TrinaBaseColumn(
-        stateManager: stateManager,
-        column: e,
-      ),
+      child: TrinaBaseColumn(stateManager: stateManager, column: e),
     );
   }
 

@@ -79,7 +79,9 @@ class _TrinaDefaultCellState extends TrinaStateWithChange<TrinaDefaultCell> {
     }
 
     if (TrinaDefaultCell.canExpand(
-        stateManager.rowGroupDelegate!, widget.cell)) {
+      stateManager.rowGroupDelegate!,
+      widget.cell,
+    )) {
       return true;
     }
 
@@ -104,10 +106,7 @@ class _TrinaDefaultCellState extends TrinaStateWithChange<TrinaDefaultCell> {
         widget.column.disableRowCheckboxWhen?.call(widget.row) ?? false;
     if (disable) return;
 
-    _hasFocus = update<bool>(
-      _hasFocus,
-      stateManager.hasFocus,
-    );
+    _hasFocus = update<bool>(_hasFocus, stateManager.hasFocus);
 
     _canRowDrag = update<bool>(
       _canRowDrag,
@@ -126,9 +125,7 @@ class _TrinaDefaultCellState extends TrinaStateWithChange<TrinaDefaultCell> {
   }
 
   void _handleToggleExpandedRowGroup() {
-    stateManager.toggleExpandedRowGroup(
-      rowGroup: widget.row,
-    );
+    stateManager.toggleExpandedRowGroup(rowGroup: widget.row);
   }
 
   @override
@@ -161,7 +158,9 @@ class _TrinaDefaultCellState extends TrinaStateWithChange<TrinaDefaultCell> {
 
     Widget? expandIcon;
     if (TrinaDefaultCell.canExpand(
-        stateManager.rowGroupDelegate, widget.cell)) {
+      stateManager.rowGroupDelegate,
+      widget.cell,
+    )) {
       expandIcon = IconButton(
         padding: const EdgeInsets.only(bottom: 0.0),
         onPressed: _isEmptyGroup ? null : _handleToggleExpandedRowGroup,
@@ -172,58 +171,64 @@ class _TrinaDefaultCellState extends TrinaStateWithChange<TrinaDefaultCell> {
                 color: style.iconColor,
               )
             : widget.row.type.group.expanded
-                ? Icon(
-                    style.rowGroupExpandedIcon,
-                    size: style.iconSize,
-                    color: style.iconColor,
-                  )
-                : Icon(
-                    style.rowGroupCollapsedIcon,
-                    size: style.iconSize,
-                    color: style.iconColor,
-                  ),
+            ? Icon(
+                style.rowGroupExpandedIcon,
+                size: style.iconSize,
+                color: style.iconColor,
+              )
+            : Icon(
+                style.rowGroupCollapsedIcon,
+                size: style.iconSize,
+                color: style.iconColor,
+              ),
       );
     }
 
-    return Row(children: [
-      if (_canRowDrag)
-        Flexible(
-          flex: 0,
-          child: _RowDragIconWidget(
-            column: widget.column,
-            row: widget.row,
-            rowIdx: widget.rowIdx,
-            stateManager: stateManager,
-            feedbackWidget: cellWidget,
-            dragIcon: Icon(
-              Icons.drag_indicator,
-              size: style.iconSize,
-              color: style.iconColor,
+    return Row(
+      children: [
+        if (_canRowDrag)
+          Flexible(
+            flex: 0,
+            child: _RowDragIconWidget(
+              column: widget.column,
+              row: widget.row,
+              rowIdx: widget.rowIdx,
+              stateManager: stateManager,
+              feedbackWidget: cellWidget,
+              dragIcon: Icon(
+                Icons.drag_indicator,
+                size: style.iconSize,
+                color: style.iconColor,
+              ),
             ),
           ),
-        ),
-      if (widget.column.enableRowChecked &&
-          depth >= widget.column.rowCheckBoxGroupDepth)
-        Flexible(
-          flex: 0,
-          child: CheckboxSelectionWidget(
-            column: widget.column,
-            row: widget.row,
-            rowIdx: widget.rowIdx,
-            stateManager: stateManager,
+        if (widget.column.enableRowChecked &&
+            depth >= widget.column.rowCheckBoxGroupDepth)
+          Flexible(
+            flex: 0,
+            child: CheckboxSelectionWidget(
+              column: widget.column,
+              row: widget.row,
+              rowIdx: widget.rowIdx,
+              stateManager: stateManager,
+            ),
           ),
-        ),
-      if (spacingWidget != null) spacingWidget,
-      if (expandIcon != null) expandIcon,
-      Expanded(child: cellWidget),
-      if (TrinaDefaultCell.showGroupCount(
-          stateManager.rowGroupDelegate, widget.cell))
-        Text(
-          TrinaDefaultCell.groupCountText(
-              stateManager.rowGroupDelegate!, widget.row),
-          style: TrinaDefaultCell.groupCountTextStyle(stateManager.style),
-        ),
-    ]);
+        if (spacingWidget != null) spacingWidget,
+        if (expandIcon != null) expandIcon,
+        Expanded(child: cellWidget),
+        if (TrinaDefaultCell.showGroupCount(
+          stateManager.rowGroupDelegate,
+          widget.cell,
+        ))
+          Text(
+            TrinaDefaultCell.groupCountText(
+              stateManager.rowGroupDelegate!,
+              widget.row,
+            ),
+            style: TrinaDefaultCell.groupCountTextStyle(stateManager.style),
+          ),
+      ],
+    );
   }
 }
 
@@ -280,13 +285,11 @@ class _RowDragIconWidget extends StatelessWidget {
       return;
     }
 
-    stateManager.eventManager!.addEvent(TrinaGridScrollUpdateEvent(
-      offset: event.position,
-    ));
-
-    int? targetRowIdx = stateManager.getRowIdxByOffset(
-      event.position.dy,
+    stateManager.eventManager!.addEvent(
+      TrinaGridScrollUpdateEvent(offset: event.position),
     );
+
+    int? targetRowIdx = stateManager.getRowIdxByOffset(event.position.dy);
 
     stateManager.setDragTargetRowIdx(targetRowIdx);
   }
@@ -324,9 +327,7 @@ class _RowDragIconWidget extends StatelessWidget {
               child: Row(
                 children: [
                   Flexible(flex: 0, child: dragIcon),
-                  Expanded(
-                    child: feedbackWidget,
-                  ),
+                  Expanded(child: feedbackWidget),
                 ],
               ),
             ),
@@ -495,24 +496,28 @@ class _DefaultCellWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     // Check for cell renderer first
     if (cell.hasRenderer) {
-      return cell.renderer!(TrinaCellRendererContext(
-        column: column,
-        rowIdx: rowIdx,
-        row: row,
-        cell: cell,
-        stateManager: stateManager,
-      ));
+      return cell.renderer!(
+        TrinaCellRendererContext(
+          column: column,
+          rowIdx: rowIdx,
+          row: row,
+          cell: cell,
+          stateManager: stateManager,
+        ),
+      );
     }
 
     // Fall back to column renderer
     if (column.hasRenderer) {
-      return column.renderer!(TrinaColumnRendererContext(
-        column: column,
-        rowIdx: rowIdx,
-        row: row,
-        cell: cell,
-        stateManager: stateManager,
-      ));
+      return column.renderer!(
+        TrinaColumnRendererContext(
+          column: column,
+          rowIdx: rowIdx,
+          row: row,
+          cell: cell,
+          stateManager: stateManager,
+        ),
+      );
     }
 
     return Text(

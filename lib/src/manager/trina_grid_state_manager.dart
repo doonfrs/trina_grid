@@ -98,17 +98,17 @@ class TrinaGridStateChangeNotifier extends TrinaChangeNotifier
     TrinaChangeNotifierFilterResolver? notifierFilterResolver,
     TrinaGridConfiguration configuration = const TrinaGridConfiguration(),
     TrinaGridMode? mode,
-  })  : refColumns = FilteredList(initialList: columns),
-        refRows = FilteredList(initialList: rows),
-        refColumnGroups = FilteredList<TrinaColumnGroup>(
-          initialList: columnGroups,
-        ),
-        columnMenuDelegate =
-            columnMenuDelegate ?? const TrinaColumnMenuDelegateDefault(),
-        notifierFilterResolver = notifierFilterResolver ??
-            const TrinaNotifierFilterResolverDefault(),
-        gridKey = GlobalKey(),
-        _enableChangeTracking = false {
+  }) : refColumns = FilteredList(initialList: columns),
+       refRows = FilteredList(initialList: rows),
+       refColumnGroups = FilteredList<TrinaColumnGroup>(
+         initialList: columnGroups,
+       ),
+       columnMenuDelegate =
+           columnMenuDelegate ?? const TrinaColumnMenuDelegateDefault(),
+       notifierFilterResolver =
+           notifierFilterResolver ?? const TrinaNotifierFilterResolverDefault(),
+       gridKey = GlobalKey(),
+       _enableChangeTracking = false {
     setConfiguration(configuration);
     setGridMode(mode ?? TrinaGridMode.normal);
     _initialize();
@@ -127,7 +127,8 @@ class TrinaGridStateChangeNotifier extends TrinaChangeNotifier
     TextEditingController controller,
     FocusNode focusNode,
     Function(dynamic value)? handleSelected,
-  )? editCellRenderer;
+  )?
+  editCellRenderer;
 
   @override
   final FilteredList<TrinaColumn> refColumns;

@@ -18,46 +18,42 @@ void main() {
     List<TrinaRow> rows;
 
     makeFrozenColumnByMaxWidth(String description, double maxWidth) {
-      return TrinaWidgetTestHelper(
-        'With frozen columns and $description',
-        (tester) async {
-          columns = [
-            ...ColumnHelper.textColumn(
-              'left',
-              count: 1,
-              frozen: TrinaColumnFrozen.start,
-              width: 150,
-            ),
-            ...ColumnHelper.textColumn(
-              'body',
-              count: 3,
-              width: 150,
-            ),
-            ...ColumnHelper.textColumn(
-              'right',
-              count: 1,
-              frozen: TrinaColumnFrozen.end,
-              width: 150,
-            ),
-          ];
+      return TrinaWidgetTestHelper('With frozen columns and $description', (
+        tester,
+      ) async {
+        columns = [
+          ...ColumnHelper.textColumn(
+            'left',
+            count: 1,
+            frozen: TrinaColumnFrozen.start,
+            width: 150,
+          ),
+          ...ColumnHelper.textColumn('body', count: 3, width: 150),
+          ...ColumnHelper.textColumn(
+            'right',
+            count: 1,
+            frozen: TrinaColumnFrozen.end,
+            width: 150,
+          ),
+        ];
 
-          rows = RowHelper.count(10, columns);
+        rows = RowHelper.count(10, columns);
 
-          eventManager = MockTrinaGridEventManager();
+        eventManager = MockTrinaGridEventManager();
 
-          stateManager = TrinaGridStateManager(
-            columns: columns,
-            rows: rows,
-            gridFocusNode: MockFocusNode(),
-            scroll: MockTrinaGridScrollController(),
-          );
+        stateManager = TrinaGridStateManager(
+          columns: columns,
+          rows: rows,
+          gridFocusNode: MockFocusNode(),
+          scroll: MockTrinaGridScrollController(),
+        );
 
-          stateManager.setEventManager(eventManager);
-          stateManager
-              .setLayout(BoxConstraints(maxWidth: maxWidth, maxHeight: 500));
-          stateManager.setGridGlobalOffset(Offset.zero);
-        },
-      );
+        stateManager.setEventManager(eventManager);
+        stateManager.setLayout(
+          BoxConstraints(maxWidth: maxWidth, maxHeight: 500),
+        );
+        stateManager.setGridGlobalOffset(Offset.zero);
+      });
     }
 
     final hasFrozenColumnAndWidthEnough = makeFrozenColumnByMaxWidth(
@@ -114,25 +110,17 @@ void main() {
       450,
     );
 
-    hasFrozenColumnAndWidthNotEnough.test(
-      'bodyLeftOffset value should be 0',
-      (tester) async {
-        expect(
-          stateManager.bodyLeftOffset,
-          0,
-        );
-      },
-    );
+    hasFrozenColumnAndWidthNotEnough.test('bodyLeftOffset value should be 0', (
+      tester,
+    ) async {
+      expect(stateManager.bodyLeftOffset, 0);
+    });
 
-    hasFrozenColumnAndWidthNotEnough.test(
-      'bodyRightOffset value should be 0',
-      (tester) async {
-        expect(
-          stateManager.bodyRightOffset,
-          0,
-        );
-      },
-    );
+    hasFrozenColumnAndWidthNotEnough.test('bodyRightOffset value should be 0', (
+      tester,
+    ) async {
+      expect(stateManager.bodyRightOffset, 0);
+    });
 
     hasFrozenColumnAndWidthNotEnough.test(
       'bodyLeftScrollOffset value should match',

@@ -8,10 +8,7 @@ import 'ui.dart';
 class TrinaBodyColumnsFooter extends TrinaStatefulWidget {
   final TrinaGridStateManager stateManager;
 
-  const TrinaBodyColumnsFooter(
-    this.stateManager, {
-    super.key,
-  });
+  const TrinaBodyColumnsFooter(this.stateManager, {super.key});
 
   @override
   TrinaBodyColumnsFooterState createState() => TrinaBodyColumnsFooterState();
@@ -54,7 +51,8 @@ class TrinaBodyColumnsFooterState
     final scrollConfig = stateManager.configuration.scrollbar;
     // Only account for vertical scrollbar width if it's shown
     if (scrollConfig.showVertical && scrollConfig.columnShowScrollWidth) {
-      _verticalScrollbarWidth = scrollConfig.thickness +
+      _verticalScrollbarWidth =
+          scrollConfig.thickness +
           4; // Add padding as in TrinaVerticalScrollBar
     } else {
       _verticalScrollbarWidth = 0;
@@ -92,10 +90,7 @@ class TrinaBodyColumnsFooterState
   TrinaVisibilityLayoutId _makeFooter(TrinaColumn e) {
     return TrinaVisibilityLayoutId(
       id: e.field,
-      child: TrinaBaseColumnFooter(
-        stateManager: stateManager,
-        column: e,
-      ),
+      child: TrinaBaseColumnFooter(stateManager: stateManager, column: e),
     );
   }
 

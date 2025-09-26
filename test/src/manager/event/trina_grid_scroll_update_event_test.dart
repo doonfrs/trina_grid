@@ -14,12 +14,8 @@ void main() {
   late MockScrollController horizontalController;
   late MockScrollPosition scrollPosition;
 
-  eventBuilder({
-    required Offset offset,
-  }) =>
-      TrinaGridScrollUpdateEvent(
-        offset: offset,
-      );
+  eventBuilder({required Offset offset}) =>
+      TrinaGridScrollUpdateEvent(offset: offset);
 
   setUp(() {
     stateManager = MockTrinaGridStateManager();
@@ -46,140 +42,149 @@ void main() {
   });
 
   group('Argument test', () {
-    test(
-      'If offset is not null, needMovingScroll must be called.',
-      () {
-        const offset = Offset(0, 0);
-        when(stateManager.needMovingScroll(any, any)).thenReturn(false);
-        when(stateManager.toDirectionalOffset(any)).thenReturn(offset);
+    test('If offset is not null, needMovingScroll must be called.', () {
+      const offset = Offset(0, 0);
+      when(stateManager.needMovingScroll(any, any)).thenReturn(false);
+      when(stateManager.toDirectionalOffset(any)).thenReturn(offset);
 
-        var event = eventBuilder(offset: offset);
-        event.handler(stateManager);
+      var event = eventBuilder(offset: offset);
+      event.handler(stateManager);
 
-        verify(stateManager.needMovingScroll(any, any)).called(4);
-      },
-    );
+      verify(stateManager.needMovingScroll(any, any)).called(4);
+    });
 
-    test(
-      'If needMovingScroll(offset, TrinaMoveDirection.left) is true, '
-      'horizontal scroll animateTo offset should be 0.',
-      () {
-        const offset = Offset(0, 0);
-        const scrollOffset = 10.0;
+    test('If needMovingScroll(offset, TrinaMoveDirection.left) is true, '
+        'horizontal scroll animateTo offset should be 0.', () {
+      const offset = Offset(0, 0);
+      const scrollOffset = 10.0;
 
-        when(horizontalController.offset).thenReturn(scrollOffset);
-        when(stateManager.toDirectionalOffset(any)).thenReturn(offset);
+      when(horizontalController.offset).thenReturn(scrollOffset);
+      when(stateManager.toDirectionalOffset(any)).thenReturn(offset);
 
-        when(stateManager.needMovingScroll(offset, TrinaMoveDirection.left))
-            .thenReturn(true);
-        when(stateManager.needMovingScroll(offset, TrinaMoveDirection.right))
-            .thenReturn(false);
-        when(stateManager.needMovingScroll(offset, TrinaMoveDirection.up))
-            .thenReturn(false);
-        when(stateManager.needMovingScroll(offset, TrinaMoveDirection.down))
-            .thenReturn(false);
+      when(
+        stateManager.needMovingScroll(offset, TrinaMoveDirection.left),
+      ).thenReturn(true);
+      when(
+        stateManager.needMovingScroll(offset, TrinaMoveDirection.right),
+      ).thenReturn(false);
+      when(
+        stateManager.needMovingScroll(offset, TrinaMoveDirection.up),
+      ).thenReturn(false);
+      when(
+        stateManager.needMovingScroll(offset, TrinaMoveDirection.down),
+      ).thenReturn(false);
 
-        var event = eventBuilder(offset: offset);
-        event.handler(stateManager);
+      var event = eventBuilder(offset: offset);
+      event.handler(stateManager);
 
-        verify(horizontalController.animateTo(
+      verify(
+        horizontalController.animateTo(
           0.0,
           curve: anyNamed('curve'),
           duration: anyNamed('duration'),
-        ));
-      },
-    );
+        ),
+      );
+    });
 
-    test(
-      'If needMovingScroll(offset, TrinaMoveDirection.right) is true, '
-      'horizontal scroll animateTo offset should be maxScrollExtent.',
-      () {
-        const offset = Offset(10, 10);
-        const scrollOffset = 0.0;
+    test('If needMovingScroll(offset, TrinaMoveDirection.right) is true, '
+        'horizontal scroll animateTo offset should be maxScrollExtent.', () {
+      const offset = Offset(10, 10);
+      const scrollOffset = 0.0;
 
-        when(horizontalController.offset).thenReturn(scrollOffset);
-        when(scrollPosition.maxScrollExtent).thenReturn(100);
-        when(stateManager.toDirectionalOffset(any)).thenReturn(offset);
+      when(horizontalController.offset).thenReturn(scrollOffset);
+      when(scrollPosition.maxScrollExtent).thenReturn(100);
+      when(stateManager.toDirectionalOffset(any)).thenReturn(offset);
 
-        when(stateManager.needMovingScroll(offset, TrinaMoveDirection.left))
-            .thenReturn(false);
-        when(stateManager.needMovingScroll(offset, TrinaMoveDirection.right))
-            .thenReturn(true);
-        when(stateManager.needMovingScroll(offset, TrinaMoveDirection.up))
-            .thenReturn(false);
-        when(stateManager.needMovingScroll(offset, TrinaMoveDirection.down))
-            .thenReturn(false);
+      when(
+        stateManager.needMovingScroll(offset, TrinaMoveDirection.left),
+      ).thenReturn(false);
+      when(
+        stateManager.needMovingScroll(offset, TrinaMoveDirection.right),
+      ).thenReturn(true);
+      when(
+        stateManager.needMovingScroll(offset, TrinaMoveDirection.up),
+      ).thenReturn(false);
+      when(
+        stateManager.needMovingScroll(offset, TrinaMoveDirection.down),
+      ).thenReturn(false);
 
-        var event = eventBuilder(offset: offset);
-        event.handler(stateManager);
+      var event = eventBuilder(offset: offset);
+      event.handler(stateManager);
 
-        verify(horizontalController.animateTo(
+      verify(
+        horizontalController.animateTo(
           100,
           curve: anyNamed('curve'),
           duration: anyNamed('duration'),
-        ));
-      },
-    );
+        ),
+      );
+    });
 
-    test(
-      'If needMovingScroll(offset, TrinaMoveDirection.up) is true, '
-      'vertical scroll animateTo offset should be 0.',
-      () {
-        const offset = Offset(0, 0);
-        const scrollOffset = 10.0;
+    test('If needMovingScroll(offset, TrinaMoveDirection.up) is true, '
+        'vertical scroll animateTo offset should be 0.', () {
+      const offset = Offset(0, 0);
+      const scrollOffset = 10.0;
 
-        when(verticalController.offset).thenReturn(scrollOffset);
-        when(stateManager.toDirectionalOffset(any)).thenReturn(offset);
+      when(verticalController.offset).thenReturn(scrollOffset);
+      when(stateManager.toDirectionalOffset(any)).thenReturn(offset);
 
-        when(stateManager.needMovingScroll(offset, TrinaMoveDirection.left))
-            .thenReturn(false);
-        when(stateManager.needMovingScroll(offset, TrinaMoveDirection.right))
-            .thenReturn(false);
-        when(stateManager.needMovingScroll(offset, TrinaMoveDirection.up))
-            .thenReturn(true);
-        when(stateManager.needMovingScroll(offset, TrinaMoveDirection.down))
-            .thenReturn(false);
+      when(
+        stateManager.needMovingScroll(offset, TrinaMoveDirection.left),
+      ).thenReturn(false);
+      when(
+        stateManager.needMovingScroll(offset, TrinaMoveDirection.right),
+      ).thenReturn(false);
+      when(
+        stateManager.needMovingScroll(offset, TrinaMoveDirection.up),
+      ).thenReturn(true);
+      when(
+        stateManager.needMovingScroll(offset, TrinaMoveDirection.down),
+      ).thenReturn(false);
 
-        var event = eventBuilder(offset: offset);
-        event.handler(stateManager);
+      var event = eventBuilder(offset: offset);
+      event.handler(stateManager);
 
-        verify(verticalController.animateTo(
+      verify(
+        verticalController.animateTo(
           0,
           curve: anyNamed('curve'),
           duration: anyNamed('duration'),
-        ));
-      },
-    );
+        ),
+      );
+    });
 
-    test(
-      'If needMovingScroll(offset, TrinaMoveDirection.down) is true, '
-      'vertical scroll animateTo offset should be maxScrollExtent.',
-      () {
-        const offset = Offset(0, 0);
-        const scrollOffset = 10.0;
+    test('If needMovingScroll(offset, TrinaMoveDirection.down) is true, '
+        'vertical scroll animateTo offset should be maxScrollExtent.', () {
+      const offset = Offset(0, 0);
+      const scrollOffset = 10.0;
 
-        when(verticalController.offset).thenReturn(scrollOffset);
-        when(scrollPosition.maxScrollExtent).thenReturn(200);
-        when(stateManager.toDirectionalOffset(any)).thenReturn(offset);
+      when(verticalController.offset).thenReturn(scrollOffset);
+      when(scrollPosition.maxScrollExtent).thenReturn(200);
+      when(stateManager.toDirectionalOffset(any)).thenReturn(offset);
 
-        when(stateManager.needMovingScroll(offset, TrinaMoveDirection.left))
-            .thenReturn(false);
-        when(stateManager.needMovingScroll(offset, TrinaMoveDirection.right))
-            .thenReturn(false);
-        when(stateManager.needMovingScroll(offset, TrinaMoveDirection.up))
-            .thenReturn(false);
-        when(stateManager.needMovingScroll(offset, TrinaMoveDirection.down))
-            .thenReturn(true);
+      when(
+        stateManager.needMovingScroll(offset, TrinaMoveDirection.left),
+      ).thenReturn(false);
+      when(
+        stateManager.needMovingScroll(offset, TrinaMoveDirection.right),
+      ).thenReturn(false);
+      when(
+        stateManager.needMovingScroll(offset, TrinaMoveDirection.up),
+      ).thenReturn(false);
+      when(
+        stateManager.needMovingScroll(offset, TrinaMoveDirection.down),
+      ).thenReturn(true);
 
-        var event = eventBuilder(offset: offset);
-        event.handler(stateManager);
+      var event = eventBuilder(offset: offset);
+      event.handler(stateManager);
 
-        verify(verticalController.animateTo(
+      verify(
+        verticalController.animateTo(
           200,
           curve: anyNamed('curve'),
           duration: anyNamed('duration'),
-        ));
-      },
-    );
+        ),
+      );
+    });
   });
 }

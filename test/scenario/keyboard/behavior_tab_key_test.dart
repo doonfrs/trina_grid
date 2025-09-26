@@ -17,41 +17,38 @@ void main() {
     late TrinaGridStateManager stateManager;
 
     TrinaWidgetTestHelper buildGrid({String? tapValue}) {
-      return TrinaWidgetTestHelper(
-        '5 columns 5 rows.',
-        (tester) async {
-          await TestHelperUtil.changeWidth(
-            tester: tester,
-            width: 1200,
-            height: 600,
-          );
+      return TrinaWidgetTestHelper('5 columns 5 rows.', (tester) async {
+        await TestHelperUtil.changeWidth(
+          tester: tester,
+          width: 1200,
+          height: 600,
+        );
 
-          columns = ColumnHelper.textColumn('column', count: 5);
+        columns = ColumnHelper.textColumn('column', count: 5);
 
-          rows = RowHelper.count(5, columns);
+        rows = RowHelper.count(5, columns);
 
-          await tester.pumpWidget(
-            MaterialApp(
-              home: Material(
-                child: TrinaGrid(
-                  columns: columns,
-                  rows: rows,
-                  onLoaded: (TrinaGridOnLoadedEvent event) {
-                    stateManager = event.stateManager;
-                  },
-                  configuration: const TrinaGridConfiguration(
-                    tabKeyAction: TrinaGridTabKeyAction.moveToNextOnEdge,
-                  ),
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Material(
+              child: TrinaGrid(
+                columns: columns,
+                rows: rows,
+                onLoaded: (TrinaGridOnLoadedEvent event) {
+                  stateManager = event.stateManager;
+                },
+                configuration: const TrinaGridConfiguration(
+                  tabKeyAction: TrinaGridTabKeyAction.moveToNextOnEdge,
                 ),
               ),
             ),
-          );
+          ),
+        );
 
-          if (tapValue != null) {
-            await tester.tap(find.text(tapValue));
-          }
-        },
-      );
+        if (tapValue != null) {
+          await tester.tap(find.text(tapValue));
+        }
+      });
     }
 
     buildGrid(tapValue: 'column4 value 0').test(
@@ -106,41 +103,38 @@ void main() {
     late TrinaGridStateManager stateManager;
 
     TrinaWidgetTestHelper buildGrid({String? tapValue}) {
-      return TrinaWidgetTestHelper(
-        '5 columns 5 rows.',
-        (tester) async {
-          await TestHelperUtil.changeWidth(
-            tester: tester,
-            width: 1200,
-            height: 600,
-          );
+      return TrinaWidgetTestHelper('5 columns 5 rows.', (tester) async {
+        await TestHelperUtil.changeWidth(
+          tester: tester,
+          width: 1200,
+          height: 600,
+        );
 
-          columns = ColumnHelper.textColumn('column', count: 5);
+        columns = ColumnHelper.textColumn('column', count: 5);
 
-          rows = RowHelper.count(5, columns);
+        rows = RowHelper.count(5, columns);
 
-          await tester.pumpWidget(
-            MaterialApp(
-              home: Material(
-                child: TrinaGrid(
-                  columns: columns,
-                  rows: rows,
-                  onLoaded: (TrinaGridOnLoadedEvent event) {
-                    stateManager = event.stateManager;
-                  },
-                  configuration: const TrinaGridConfiguration(
-                    tabKeyAction: TrinaGridTabKeyAction.moveToNextOnEdge,
-                  ),
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Material(
+              child: TrinaGrid(
+                columns: columns,
+                rows: rows,
+                onLoaded: (TrinaGridOnLoadedEvent event) {
+                  stateManager = event.stateManager;
+                },
+                configuration: const TrinaGridConfiguration(
+                  tabKeyAction: TrinaGridTabKeyAction.moveToNextOnEdge,
                 ),
               ),
             ),
-          );
+          ),
+        );
 
-          if (tapValue != null) {
-            await tester.tap(find.text(tapValue));
-          }
-        },
-      );
+        if (tapValue != null) {
+          await tester.tap(find.text(tapValue));
+        }
+      });
     }
 
     buildGrid(tapValue: 'column0 value 1').test(

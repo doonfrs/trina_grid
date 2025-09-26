@@ -69,9 +69,7 @@ mixin ColumnGroupState implements ITrinaGridState {
 
   @override
   int columnGroupDepth(List<TrinaColumnGroup> columnGroupList) {
-    return TrinaColumnGroupHelper.maxDepth(
-      columnGroupList: columnGroupList,
-    );
+    return TrinaColumnGroupHelper.maxDepth(columnGroupList: columnGroupList);
   }
 
   @override

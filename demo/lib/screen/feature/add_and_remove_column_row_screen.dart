@@ -42,38 +42,26 @@ class _AddAndRemoveColumnRowScreenState
         type: TrinaColumnType.text(),
         readOnly: true,
         checkReadOnly: checkReadOnly,
-        titleSpan: const TextSpan(children: [
-          WidgetSpan(
-              child: Icon(
-            Icons.lock_outlined,
-            size: 17,
-          )),
-          TextSpan(text: 'Id'),
-        ]),
+        titleSpan: const TextSpan(
+          children: [
+            WidgetSpan(child: Icon(Icons.lock_outlined, size: 17)),
+            TextSpan(text: 'Id'),
+          ],
+        ),
       ),
-      TrinaColumn(
-        title: 'Name',
-        field: 'name',
-        type: TrinaColumnType.text(),
-      ),
+      TrinaColumn(title: 'Name', field: 'name', type: TrinaColumnType.text()),
       TrinaColumn(
         title: 'Status',
         field: 'status',
-        type: TrinaColumnType.select(<String>[
-          'saved',
-          'edited',
-          'created',
-        ]),
+        type: TrinaColumnType.select(<String>['saved', 'edited', 'created']),
         enableEditingMode: false,
         frozen: TrinaColumnFrozen.end,
-        titleSpan: const TextSpan(children: [
-          WidgetSpan(
-              child: Icon(
-            Icons.lock,
-            size: 17,
-          )),
-          TextSpan(text: 'Status'),
-        ]),
+        titleSpan: const TextSpan(
+          children: [
+            WidgetSpan(child: Icon(Icons.lock, size: 17)),
+            TextSpan(text: 'Status'),
+          ],
+        ),
         renderer: (rendererContext) {
           Color textColor = Colors.black;
 
@@ -87,10 +75,7 @@ class _AddAndRemoveColumnRowScreenState
 
           return Text(
             rendererContext.cell.value.toString(),
-            style: TextStyle(
-              color: textColor,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(color: textColor, fontWeight: FontWeight.bold),
           );
         },
       ),
@@ -106,21 +91,27 @@ class _AddAndRemoveColumnRowScreenState
     ]);
 
     rows.addAll([
-      TrinaRow(cells: {
-        'id': TrinaCell(value: 'user1'),
-        'name': TrinaCell(value: 'user name 1'),
-        'status': TrinaCell(value: 'saved'),
-      }),
-      TrinaRow(cells: {
-        'id': TrinaCell(value: 'user2'),
-        'name': TrinaCell(value: 'user name 2'),
-        'status': TrinaCell(value: 'saved'),
-      }),
-      TrinaRow(cells: {
-        'id': TrinaCell(value: 'user3'),
-        'name': TrinaCell(value: 'user name 3'),
-        'status': TrinaCell(value: 'saved'),
-      }),
+      TrinaRow(
+        cells: {
+          'id': TrinaCell(value: 'user1'),
+          'name': TrinaCell(value: 'user name 1'),
+          'status': TrinaCell(value: 'saved'),
+        },
+      ),
+      TrinaRow(
+        cells: {
+          'id': TrinaCell(value: 'user2'),
+          'name': TrinaCell(value: 'user name 2'),
+          'status': TrinaCell(value: 'saved'),
+        },
+      ),
+      TrinaRow(
+        cells: {
+          'id': TrinaCell(value: 'user3'),
+          'name': TrinaCell(value: 'user name 3'),
+          'status': TrinaCell(value: 'saved'),
+        },
+      ),
     ]);
   }
 
@@ -132,9 +123,11 @@ class _AddAndRemoveColumnRowScreenState
       topContents: const [
         Text('You can add or delete columns, rows.'),
         Text(
-            'Remove selected Rows is only deleted if there is a row selected in Row mode.'),
+          'Remove selected Rows is only deleted if there is a row selected in Row mode.',
+        ),
         Text(
-            'If you are adding a new row, you can edit the cell regardless of the readOnly of column.'),
+          'If you are adding a new row, you can edit the cell regardless of the readOnly of column.',
+        ),
       ],
       topButtons: [
         TrinaExampleButton(
@@ -165,9 +158,7 @@ class _AddAndRemoveColumnRowScreenState
 }
 
 class _Header extends StatefulWidget {
-  const _Header({
-    required this.stateManager,
-  });
+  const _Header({required this.stateManager});
 
   final TrinaGridStateManager stateManager;
 
@@ -275,8 +266,9 @@ class _HeaderState extends State<_Header> {
   }
 
   void handleFiltering() {
-    widget.stateManager
-        .setShowColumnFilter(!widget.stateManager.showColumnFilter);
+    widget.stateManager.setShowColumnFilter(
+      !widget.stateManager.showColumnFilter,
+    );
   }
 
   void setGridSelectingMode(TrinaGridSelectingMode? mode) {
@@ -303,8 +295,9 @@ class _HeaderState extends State<_Header> {
             DropdownButtonHideUnderline(
               child: DropdownButton(
                 value: addCount,
-                items:
-                    [1, 5, 10, 50, 100].map<DropdownMenuItem<int>>((int count) {
+                items: [1, 5, 10, 50, 100].map<DropdownMenuItem<int>>((
+                  int count,
+                ) {
                   final color = addCount == count ? Colors.blue : null;
 
                   return DropdownMenuItem<int>(
@@ -354,18 +347,19 @@ class _HeaderState extends State<_Header> {
               child: DropdownButton(
                 value: gridSelectingMode,
                 items: TrinaGridSelectingMode.values
-                    .map<DropdownMenuItem<TrinaGridSelectingMode>>(
-                        (TrinaGridSelectingMode item) {
-                  final color = gridSelectingMode == item ? Colors.blue : null;
+                    .map<DropdownMenuItem<TrinaGridSelectingMode>>((
+                      TrinaGridSelectingMode item,
+                    ) {
+                      final color = gridSelectingMode == item
+                          ? Colors.blue
+                          : null;
 
-                  return DropdownMenuItem<TrinaGridSelectingMode>(
-                    value: item,
-                    child: Text(
-                      item.name,
-                      style: TextStyle(color: color),
-                    ),
-                  );
-                }).toList(),
+                      return DropdownMenuItem<TrinaGridSelectingMode>(
+                        value: item,
+                        child: Text(item.name, style: TextStyle(color: color)),
+                      );
+                    })
+                    .toList(),
                 onChanged: (TrinaGridSelectingMode? mode) {
                   setGridSelectingMode(mode);
                 },

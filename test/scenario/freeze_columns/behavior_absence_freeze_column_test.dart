@@ -25,9 +25,7 @@ void main() {
           height: 1080,
         );
 
-        columns = [
-          ...ColumnHelper.textColumn('header', count: 10),
-        ];
+        columns = [...ColumnHelper.textColumn('header', count: 10)];
 
         rows = RowHelper.count(10, columns);
 
@@ -51,12 +49,9 @@ void main() {
       },
     );
 
-    toLeftColumn1.test(
-      'currentCellPosition should be null',
-      (tester) async {
-        expect(stateManager!.currentCellPosition, null);
-      },
-    );
+    toLeftColumn1.test('currentCellPosition should be null', (tester) async {
+      expect(stateManager!.currentCellPosition, null);
+    });
 
     toLeftColumn1.test(
       'currentCellPosition should update when moving cells with keyboard',
@@ -115,9 +110,7 @@ void main() {
     final toLeftColumn1 = TrinaWidgetTestHelper(
       'Select a cell in column 3 and freeze column 3 to the right',
       (tester) async {
-        columns = [
-          ...ColumnHelper.textColumn('header', count: 10),
-        ];
+        columns = [...ColumnHelper.textColumn('header', count: 10)];
 
         rows = RowHelper.count(10, columns);
 
@@ -143,12 +136,11 @@ void main() {
       },
     );
 
-    toLeftColumn1.test(
-      'currentCellPosition should become null',
-      (tester) async {
-        expect(stateManager!.currentCellPosition, null);
-      },
-    );
+    toLeftColumn1.test('currentCellPosition should become null', (
+      tester,
+    ) async {
+      expect(stateManager!.currentCellPosition, null);
+    });
 
     toLeftColumn1.test(
       'When there is no current cell, pressing left key should select the first cell',

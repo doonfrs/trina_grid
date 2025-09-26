@@ -35,29 +35,28 @@ void main() {
   }
 
   group('updateColumnStartPosition', () {
-    testWidgets(
-      'When 5 non-frozen columns'
-      'then startPosition of the columns should be set.',
-      (widgetTester) async {
-        const defaultWidth = TrinaGridSettings.columnWidth;
+    testWidgets('When 5 non-frozen columns'
+        'then startPosition of the columns should be set.', (
+      widgetTester,
+    ) async {
+      const defaultWidth = TrinaGridSettings.columnWidth;
 
-        final columns = ColumnHelper.textColumn(
-          'column',
-          count: 5,
-          frozen: TrinaColumnFrozen.none,
-        );
+      final columns = ColumnHelper.textColumn(
+        'column',
+        count: 5,
+        frozen: TrinaColumnFrozen.none,
+      );
 
-        final stateManager = createStateManager(columns: columns, rows: []);
+      final stateManager = createStateManager(columns: columns, rows: []);
 
-        stateManager.updateVisibilityLayout();
+      stateManager.updateVisibilityLayout();
 
-        expect(stateManager.columns[0].startPosition, 0);
-        expect(stateManager.columns[1].startPosition, defaultWidth * 1);
-        expect(stateManager.columns[2].startPosition, defaultWidth * 2);
-        expect(stateManager.columns[3].startPosition, defaultWidth * 3);
-        expect(stateManager.columns[4].startPosition, defaultWidth * 4);
-      },
-    );
+      expect(stateManager.columns[0].startPosition, 0);
+      expect(stateManager.columns[1].startPosition, defaultWidth * 1);
+      expect(stateManager.columns[2].startPosition, defaultWidth * 2);
+      expect(stateManager.columns[3].startPosition, defaultWidth * 3);
+      expect(stateManager.columns[4].startPosition, defaultWidth * 4);
+    });
 
     testWidgets(
       'Non-frozen 5 columns with modified width. The startPosition of the columns should be set',
@@ -116,89 +115,83 @@ void main() {
       },
     );
 
-    testWidgets(
-      'The grid width is sufficient. '
-      '2 frozen columns on the left, 2 non-frozen columns, and 2 frozen columns on the right. '
-      'The startPosition of the columns should be set.',
-      (tester) async {
-        const defaultWidth = TrinaGridSettings.columnWidth;
+    testWidgets('The grid width is sufficient. '
+        '2 frozen columns on the left, 2 non-frozen columns, and 2 frozen columns on the right. '
+        'The startPosition of the columns should be set.', (tester) async {
+      const defaultWidth = TrinaGridSettings.columnWidth;
 
-        final columns = [
-          ...ColumnHelper.textColumn(
-            'left',
-            count: 2,
-            frozen: TrinaColumnFrozen.start,
-          ),
-          ...ColumnHelper.textColumn(
-            'body',
-            count: 2,
-            frozen: TrinaColumnFrozen.none,
-          ),
-          ...ColumnHelper.textColumn(
-            'right',
-            count: 2,
-            frozen: TrinaColumnFrozen.end,
-          ),
-        ];
+      final columns = [
+        ...ColumnHelper.textColumn(
+          'left',
+          count: 2,
+          frozen: TrinaColumnFrozen.start,
+        ),
+        ...ColumnHelper.textColumn(
+          'body',
+          count: 2,
+          frozen: TrinaColumnFrozen.none,
+        ),
+        ...ColumnHelper.textColumn(
+          'right',
+          count: 2,
+          frozen: TrinaColumnFrozen.end,
+        ),
+      ];
 
-        final stateManager = createStateManager(columns: columns, rows: []);
-        stateManager.setLayout(const BoxConstraints(maxWidth: 1300));
-        expect(stateManager.showFrozenColumn, true);
+      final stateManager = createStateManager(columns: columns, rows: []);
+      stateManager.setLayout(const BoxConstraints(maxWidth: 1300));
+      expect(stateManager.showFrozenColumn, true);
 
-        stateManager.updateVisibilityLayout();
+      stateManager.updateVisibilityLayout();
 
-        expect(stateManager.columns[0].startPosition, 0);
-        expect(stateManager.columns[1].startPosition, defaultWidth * 1);
+      expect(stateManager.columns[0].startPosition, 0);
+      expect(stateManager.columns[1].startPosition, defaultWidth * 1);
 
-        expect(stateManager.columns[2].startPosition, 0);
-        expect(stateManager.columns[3].startPosition, defaultWidth * 1);
+      expect(stateManager.columns[2].startPosition, 0);
+      expect(stateManager.columns[3].startPosition, defaultWidth * 1);
 
-        expect(stateManager.columns[4].startPosition, 0);
-        expect(stateManager.columns[5].startPosition, defaultWidth * 1);
-      },
-    );
+      expect(stateManager.columns[4].startPosition, 0);
+      expect(stateManager.columns[5].startPosition, defaultWidth * 1);
+    });
 
-    testWidgets(
-      'The grid width is insufficient. '
-      '2 frozen columns on the left, 2 non-frozen columns, and 2 frozen columns on the right. '
-      'The startPosition of the columns should be set.',
-      (tester) async {
-        const defaultWidth = TrinaGridSettings.columnWidth;
+    testWidgets('The grid width is insufficient. '
+        '2 frozen columns on the left, 2 non-frozen columns, and 2 frozen columns on the right. '
+        'The startPosition of the columns should be set.', (tester) async {
+      const defaultWidth = TrinaGridSettings.columnWidth;
 
-        final columns = [
-          ...ColumnHelper.textColumn(
-            'left',
-            count: 2,
-            frozen: TrinaColumnFrozen.start,
-          ),
-          ...ColumnHelper.textColumn(
-            'body',
-            count: 2,
-            frozen: TrinaColumnFrozen.none,
-          ),
-          ...ColumnHelper.textColumn(
-            'right',
-            count: 2,
-            frozen: TrinaColumnFrozen.end,
-          ),
-        ];
+      final columns = [
+        ...ColumnHelper.textColumn(
+          'left',
+          count: 2,
+          frozen: TrinaColumnFrozen.start,
+        ),
+        ...ColumnHelper.textColumn(
+          'body',
+          count: 2,
+          frozen: TrinaColumnFrozen.none,
+        ),
+        ...ColumnHelper.textColumn(
+          'right',
+          count: 2,
+          frozen: TrinaColumnFrozen.end,
+        ),
+      ];
 
-        final stateManager = createStateManager(columns: columns, rows: []);
-        stateManager.setLayout(const BoxConstraints(maxWidth: 600));
-        expect(stateManager.showFrozenColumn, false);
+      final stateManager = createStateManager(columns: columns, rows: []);
+      stateManager.setLayout(const BoxConstraints(maxWidth: 600));
+      expect(stateManager.showFrozenColumn, false);
 
-        stateManager.updateVisibilityLayout();
+      stateManager.updateVisibilityLayout();
 
-        expect(stateManager.columns[0].startPosition, 0);
-        expect(stateManager.columns[1].startPosition, defaultWidth * 1);
+      expect(stateManager.columns[0].startPosition, 0);
+      expect(stateManager.columns[1].startPosition, defaultWidth * 1);
 
-        expect(stateManager.columns[2].startPosition, defaultWidth * 2);
-        expect(stateManager.columns[3].startPosition, defaultWidth * 3);
+      expect(stateManager.columns[2].startPosition, defaultWidth * 2);
+      expect(stateManager.columns[3].startPosition, defaultWidth * 3);
 
-        expect(stateManager.columns[4].startPosition, defaultWidth * 4);
-        expect(stateManager.columns[5].startPosition, defaultWidth * 5);
-      },
-    );
+      expect(stateManager.columns[4].startPosition, defaultWidth * 4);
+      expect(stateManager.columns[5].startPosition, defaultWidth * 5);
+    });
 
     testWidgets(
       'Hidden column 1, non-frozen columns 4. The startPosition of the columns should be set.',
@@ -224,10 +217,7 @@ void main() {
         );
 
         // Hidden column is set to 0 by default
-        expect(
-          stateManager.refColumns.originalList[2].startPosition,
-          0,
-        );
+        expect(stateManager.refColumns.originalList[2].startPosition, 0);
 
         expect(
           stateManager.refColumns.originalList[3].startPosition,
@@ -240,108 +230,100 @@ void main() {
       },
     );
 
-    testWidgets(
-      'applyViewportDimension should be called.',
-      (widgetTester) async {
-        final LinkedScrollControllerGroup horizontalScroll =
-            MockLinkedScrollControllerGroup();
+    testWidgets('applyViewportDimension should be called.', (
+      widgetTester,
+    ) async {
+      final LinkedScrollControllerGroup horizontalScroll =
+          MockLinkedScrollControllerGroup();
 
-        final ScrollController rowsScroll = MockScrollController();
+      final ScrollController rowsScroll = MockScrollController();
 
-        final ScrollPosition scrollPosition = MockScrollPosition();
+      final ScrollPosition scrollPosition = MockScrollPosition();
 
-        when(rowsScroll.position).thenReturn(scrollPosition);
+      when(rowsScroll.position).thenReturn(scrollPosition);
 
-        when(rowsScroll.hasClients).thenReturn(true);
+      when(rowsScroll.hasClients).thenReturn(true);
 
-        when(rowsScroll.offset).thenReturn(0.0);
+      when(rowsScroll.offset).thenReturn(0.0);
 
-        when(scrollPosition.hasViewportDimension).thenReturn(true);
+      when(scrollPosition.hasViewportDimension).thenReturn(true);
 
-        when(scrollPosition.maxScrollExtent).thenReturn(0.0);
+      when(scrollPosition.maxScrollExtent).thenReturn(0.0);
 
-        final columns = ColumnHelper.textColumn(
-          'column',
-          count: 5,
-          frozen: TrinaColumnFrozen.none,
-        );
+      final columns = ColumnHelper.textColumn(
+        'column',
+        count: 5,
+        frozen: TrinaColumnFrozen.none,
+      );
 
-        final stateManager = createStateManager(
-          columns: columns,
-          rows: [],
-          scroll: TrinaGridScrollController(
-            horizontal: horizontalScroll,
-          ),
-          layout: const BoxConstraints(maxWidth: 800),
-        );
+      final stateManager = createStateManager(
+        columns: columns,
+        rows: [],
+        scroll: TrinaGridScrollController(horizontal: horizontalScroll),
+        layout: const BoxConstraints(maxWidth: 800),
+      );
 
-        stateManager.scroll.setBodyRowsHorizontal(rowsScroll);
+      stateManager.scroll.setBodyRowsHorizontal(rowsScroll);
 
-        // setLayout method is called once in applyViewportDimension.
-        reset(horizontalScroll);
+      // setLayout method is called once in applyViewportDimension.
+      reset(horizontalScroll);
 
-        stateManager.updateVisibilityLayout();
+      stateManager.updateVisibilityLayout();
 
-        final bodyWidth = stateManager.maxWidth! -
-            stateManager.bodyLeftOffset -
-            stateManager.bodyRightOffset;
+      final bodyWidth =
+          stateManager.maxWidth! -
+          stateManager.bodyLeftOffset -
+          stateManager.bodyRightOffset;
 
-        verify(horizontalScroll.applyViewportDimension(bodyWidth)).called(1);
-      },
-    );
+      verify(horizontalScroll.applyViewportDimension(bodyWidth)).called(1);
+    });
 
-    testWidgets(
-      'If notify = true, notifyListeners should be called.',
-      (widgetTester) async {
-        final LinkedScrollControllerGroup horizontalScroll =
-            MockLinkedScrollControllerGroup();
+    testWidgets('If notify = true, notifyListeners should be called.', (
+      widgetTester,
+    ) async {
+      final LinkedScrollControllerGroup horizontalScroll =
+          MockLinkedScrollControllerGroup();
 
-        final columns = ColumnHelper.textColumn(
-          'column',
-          count: 5,
-          frozen: TrinaColumnFrozen.none,
-        );
+      final columns = ColumnHelper.textColumn(
+        'column',
+        count: 5,
+        frozen: TrinaColumnFrozen.none,
+      );
 
-        final stateManager = createStateManager(
-          columns: columns,
-          rows: [],
-          scroll: TrinaGridScrollController(
-            horizontal: horizontalScroll,
-          ),
-          layout: const BoxConstraints(maxWidth: 800),
-        );
+      final stateManager = createStateManager(
+        columns: columns,
+        rows: [],
+        scroll: TrinaGridScrollController(horizontal: horizontalScroll),
+        layout: const BoxConstraints(maxWidth: 800),
+      );
 
-        stateManager.updateVisibilityLayout(notify: true);
+      stateManager.updateVisibilityLayout(notify: true);
 
-        verify(horizontalScroll.notifyListeners()).called(1);
-      },
-    );
+      verify(horizontalScroll.notifyListeners()).called(1);
+    });
 
-    testWidgets(
-      'If notify = false, notifyListeners should not be called.',
-      (widgetTester) async {
-        final LinkedScrollControllerGroup horizontalScroll =
-            MockLinkedScrollControllerGroup();
+    testWidgets('If notify = false, notifyListeners should not be called.', (
+      widgetTester,
+    ) async {
+      final LinkedScrollControllerGroup horizontalScroll =
+          MockLinkedScrollControllerGroup();
 
-        final columns = ColumnHelper.textColumn(
-          'column',
-          count: 5,
-          frozen: TrinaColumnFrozen.none,
-        );
+      final columns = ColumnHelper.textColumn(
+        'column',
+        count: 5,
+        frozen: TrinaColumnFrozen.none,
+      );
 
-        final stateManager = createStateManager(
-          columns: columns,
-          rows: [],
-          scroll: TrinaGridScrollController(
-            horizontal: horizontalScroll,
-          ),
-          layout: const BoxConstraints(maxWidth: 800),
-        );
+      final stateManager = createStateManager(
+        columns: columns,
+        rows: [],
+        scroll: TrinaGridScrollController(horizontal: horizontalScroll),
+        layout: const BoxConstraints(maxWidth: 800),
+      );
 
-        stateManager.updateVisibilityLayout(notify: false);
+      stateManager.updateVisibilityLayout(notify: false);
 
-        verifyNever(horizontalScroll.notifyListeners());
-      },
-    );
+      verifyNever(horizontalScroll.notifyListeners());
+    });
   });
 }

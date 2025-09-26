@@ -61,7 +61,8 @@ class _CopyAndPasteScreenState extends State<CopyAndPasteScreen> {
       topTitle: 'Copy and Paste',
       topContents: const [
         Text(
-            'Copy and paste are operated depending on the cell and row selection status.'),
+          'Copy and paste are operated depending on the cell and row selection status.',
+        ),
       ],
       topButtons: [
         TrinaExampleButton(

@@ -101,12 +101,19 @@ Future<T?>? showColumnMenu<T>({
   final double logicalWidth = physicalWidth / devicePixelRatio;
 
   // Get the physical height and device pixel ratio
-  final double physicalHeight =
-      WidgetsBinding.instance.platformDispatcher.views.first.physicalSize.height;
+  final double physicalHeight = WidgetsBinding
+      .instance
+      .platformDispatcher
+      .views
+      .first
+      .physicalSize
+      .height;
   final double logicalHeight = physicalHeight / devicePixelRatio;
 
-  final double widthScalingFactor = MediaQuery.of(context).size.width / logicalWidth;
-  final double heightScalingFactor = MediaQuery.of(context).size.height / logicalHeight;
+  final double widthScalingFactor =
+      MediaQuery.of(context).size.width / logicalWidth;
+  final double heightScalingFactor =
+      MediaQuery.of(context).size.height / logicalHeight;
 
   // Adjust positions based on scaling
   final double adjustedLeft = position.dx * widthScalingFactor;

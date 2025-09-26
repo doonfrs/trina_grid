@@ -63,8 +63,10 @@ void main() {
       );
 
       // Verify that dark theme properties are preserved
-      expect(popupConfiguration.style.gridBackgroundColor,
-          const Color(0xFF111111));
+      expect(
+        popupConfiguration.style.gridBackgroundColor,
+        const Color(0xFF111111),
+      );
       expect(popupConfiguration.style.rowColor, const Color(0xFF111111));
       expect(popupConfiguration.style.activatedColor, const Color(0xFF313131));
       expect(popupConfiguration.style.borderColor, const Color(0xFF222222));
@@ -72,8 +74,10 @@ void main() {
       expect(popupConfiguration.style.cellTextStyle.color, Colors.white);
       expect(popupConfiguration.style.columnTextStyle.color, Colors.white);
       expect(popupConfiguration.style.iconColor, Colors.white38);
-      expect(popupConfiguration.style.menuBackgroundColor,
-          const Color(0xFF414141));
+      expect(
+        popupConfiguration.style.menuBackgroundColor,
+        const Color(0xFF414141),
+      );
     });
 
     test('should preserve dark theme when using copyWith', () {

@@ -15,16 +15,9 @@ abstract class IPaginationRowState {
 
   void setPageSize(int pageSize, {bool notify = true});
 
-  void setPage(
-    int page, {
-    bool resetCurrentState = true,
-    bool notify = true,
-  });
+  void setPage(int page, {bool resetCurrentState = true, bool notify = true});
 
-  void resetPage({
-    bool resetCurrentState = true,
-    bool notify = true,
-  });
+  void resetPage({bool resetCurrentState = true, bool notify = true});
 }
 
 class _State {
@@ -86,11 +79,7 @@ mixin PaginationRowState implements ITrinaGridState {
   }
 
   @override
-  void setPage(
-    int page, {
-    bool resetCurrentState = true,
-    bool notify = true,
-  }) {
+  void setPage(int page, {bool resetCurrentState = true, bool notify = true}) {
     _state._page = page;
 
     int from = (page - 1) * pageSize;
@@ -141,14 +130,7 @@ mixin PaginationRowState implements ITrinaGridState {
   }
 
   @override
-  void resetPage({
-    bool resetCurrentState = true,
-    bool notify = true,
-  }) {
-    setPage(
-      _adjustPage,
-      resetCurrentState: resetCurrentState,
-      notify: notify,
-    );
+  void resetPage({bool resetCurrentState = true, bool notify = true}) {
+    setPage(_adjustPage, resetCurrentState: resetCurrentState, notify: notify);
   }
 }

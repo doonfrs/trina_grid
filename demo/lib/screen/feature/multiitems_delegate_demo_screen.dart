@@ -34,7 +34,8 @@ class _MultiItemsDelegateDemoScreenState
         width: 200,
         type: TrinaColumnType.text(),
         filterWidgetDelegate: const TrinaFilterColumnWidgetDelegate.multiItems(
-            caseSensitive: false),
+          caseSensitive: false,
+        ),
       ),
       TrinaColumn(
         title: 'Name',
@@ -44,11 +45,13 @@ class _MultiItemsDelegateDemoScreenState
       ),
     ];
     rows = List.generate(30, (index) {
-      return TrinaRow(cells: {
-        'id': TrinaCell(value: index + 1),
-        'multi': TrinaCell(value: 'Item ${index % 5}'),
-        'name': TrinaCell(value: 'Name $index'),
-      });
+      return TrinaRow(
+        cells: {
+          'id': TrinaCell(value: index + 1),
+          'multi': TrinaCell(value: 'Item ${index % 5}'),
+          'name': TrinaCell(value: 'Name $index'),
+        },
+      );
     });
   }
 
@@ -59,10 +62,12 @@ class _MultiItemsDelegateDemoScreenState
       topTitle: 'MultiItems Filter Delegate',
       topContents: const [
         Text(
-            'This demo shows how to use the TrinaFilterColumnWidgetDelegate.multiItems to allow multi-line or multi-item filtering in a column.'),
+          'This demo shows how to use the TrinaFilterColumnWidgetDelegate.multiItems to allow multi-line or multi-item filtering in a column.',
+        ),
         SizedBox(height: 10),
         Text(
-            'Try filtering the "Multi Filter" column with multiple lines or items.'),
+          'Try filtering the "Multi Filter" column with multiple lines or items.',
+        ),
       ],
       topButtons: [
         TrinaExampleButton(

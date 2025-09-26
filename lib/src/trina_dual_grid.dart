@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:trina_grid/trina_grid.dart';
 
-typedef TrinaDualOnSelectedEventCallback = void Function(
-    TrinaDualOnSelectedEvent event);
+typedef TrinaDualOnSelectedEventCallback =
+    void Function(TrinaDualOnSelectedEvent event);
 
 /// In [TrinaDualGrid], set the separation widget between the two grids.
 class TrinaDualGridDivider {
@@ -160,11 +160,13 @@ class TrinaDualGridState extends State<TrinaDualGrid> {
           }
 
           if (isGridA) {
-            _streamA =
-                onLoadedEvent.stateManager.eventManager!.listener(handleEvent);
+            _streamA = onLoadedEvent.stateManager.eventManager!.listener(
+              handleEvent,
+            );
           } else {
-            _streamB =
-                onLoadedEvent.stateManager.eventManager!.listener(handleEvent);
+            _streamB = onLoadedEvent.stateManager.eventManager!.listener(
+              handleEvent,
+            );
           }
 
           if (props.onLoaded != null) {
@@ -175,10 +177,7 @@ class TrinaDualGridState extends State<TrinaDualGrid> {
         onSelected: (TrinaGridOnSelectedEvent onSelectedEvent) {
           if (onSelectedEvent.row == null || onSelectedEvent.cell == null) {
             widget.onSelected!(
-              TrinaDualOnSelectedEvent(
-                gridA: null,
-                gridB: null,
-              ),
+              TrinaDualOnSelectedEvent(gridA: null, gridB: null),
             );
           } else {
             widget.onSelected!(
@@ -229,11 +228,7 @@ class TrinaDualGridState extends State<TrinaDualGrid> {
         isVertical: isVertical,
       ),
       children: [
-        _buildGrid(
-          props: widget.gridPropsA,
-          isGridA: true,
-          mode: widget.mode,
-        ),
+        _buildGrid(props: widget.gridPropsA, isGridA: true, mode: widget.mode),
         if (widget.divider.show == true)
           LayoutId(
             id: _TrinaDualGridId.divider,
@@ -247,27 +242,27 @@ class TrinaDualGridState extends State<TrinaDualGrid> {
 
                 display.offset = isVertical
                     ? object
-                        .globalToLocal(Offset(
-                          details.globalPosition.dx,
-                          details.globalPosition.dy,
-                        ))
-                        .dy
+                          .globalToLocal(
+                            Offset(
+                              details.globalPosition.dx,
+                              details.globalPosition.dy,
+                            ),
+                          )
+                          .dy
                     : object
-                        .globalToLocal(Offset(
-                          details.globalPosition.dx,
-                          details.globalPosition.dy,
-                        ))
-                        .dx;
+                          .globalToLocal(
+                            Offset(
+                              details.globalPosition.dx,
+                              details.globalPosition.dy,
+                            ),
+                          )
+                          .dx;
 
                 resizeNotifier.resize();
               },
             ),
           ),
-        _buildGrid(
-          props: widget.gridPropsB,
-          isGridA: false,
-          mode: widget.mode,
-        ),
+        _buildGrid(props: widget.gridPropsB, isGridA: false, mode: widget.mode),
       ],
     );
   }
@@ -346,12 +341,13 @@ class TrinaDualGridDividerWidgetState
                       ? -4
                       : (size.maxWidth / 2) - 18,
                   child: Icon(
-                      size.maxHeight > size.maxWidth
-                          ? Icons.drag_indicator
-                          : Icons.drag_handle,
-                      color: widget.indicatorColor,
-                      size: 18),
-                )
+                    size.maxHeight > size.maxWidth
+                        ? Icons.drag_indicator
+                        : Icons.drag_handle,
+                    color: widget.indicatorColor,
+                    size: 18,
+                  ),
+                ),
               ],
             ),
           ),
@@ -361,11 +357,7 @@ class TrinaDualGridDividerWidgetState
   }
 }
 
-enum _TrinaDualGridId {
-  gridA,
-  gridB,
-  divider,
-}
+enum _TrinaDualGridId { gridA, gridB, divider }
 
 class TrinaDualGridLayoutDelegate extends MultiChildLayoutDelegate {
   TrinaDualGridLayoutDelegate({
@@ -391,15 +383,16 @@ class TrinaDualGridLayoutDelegate extends MultiChildLayoutDelegate {
       maxHeight: size.height,
     );
 
-    final dividerHalf =
-        showDraggableDivider ? TrinaDualGrid.dividerWidth / 2 : 0;
+    final dividerHalf = showDraggableDivider
+        ? TrinaDualGrid.dividerWidth / 2
+        : 0;
 
     final dividerWidth = dividerHalf * 2;
 
     double gridAWidth = showDraggableDivider
         ? display.offset == null
-            ? display.gridAWidth(constrains) - dividerHalf
-            : display.offset! - dividerHalf
+              ? display.gridAWidth(constrains) - dividerHalf
+              : display.offset! - dividerHalf
         : display.gridAWidth(constrains) - dividerHalf;
     double gridBWidth = size.width - gridAWidth - dividerWidth;
     double gridAHeight = size.height;
@@ -428,8 +421,8 @@ class TrinaDualGridLayoutDelegate extends MultiChildLayoutDelegate {
       gridBWidth = size.width;
       gridAHeight = showDraggableDivider
           ? display.offset == null
-              ? display.gridAHeight(constrains) - dividerHalf
-              : display.offset! - dividerHalf
+                ? display.gridAHeight(constrains) - dividerHalf
+                : display.offset! - dividerHalf
           : display.gridAHeight(constrains) - dividerHalf;
       gridBHeight = size.height - gridAHeight - dividerWidth;
 
@@ -449,9 +442,7 @@ class TrinaDualGridLayoutDelegate extends MultiChildLayoutDelegate {
     if (hasChild(_TrinaDualGridId.gridA)) {
       layoutChild(
         _TrinaDualGridId.gridA,
-        BoxConstraints.tight(
-          Size(gridAWidth, gridAHeight),
-        ),
+        BoxConstraints.tight(Size(gridAWidth, gridAHeight)),
       );
 
       final double posX = isLTR ? 0 : gridBWidth + dividerWidth;
@@ -486,16 +477,16 @@ class TrinaDualGridLayoutDelegate extends MultiChildLayoutDelegate {
     if (hasChild(_TrinaDualGridId.gridB)) {
       layoutChild(
         _TrinaDualGridId.gridB,
-        BoxConstraints.tight(
-          Size(gridBWidth, gridBHeight),
-        ),
+        BoxConstraints.tight(Size(gridBWidth, gridBHeight)),
       );
 
       final double posX = isLTR ? gridAWidth + dividerWidth : 0;
 
       if (isVertical) {
         positionChild(
-            _TrinaDualGridId.gridB, Offset(0, gridAHeight + dividerWidth));
+          _TrinaDualGridId.gridB,
+          Offset(0, gridAHeight + dividerWidth),
+        );
       } else {
         positionChild(_TrinaDualGridId.gridB, Offset(posX, 0));
       }
@@ -513,10 +504,7 @@ class TrinaDualOnSelectedEvent {
 
   TrinaGridOnSelectedEvent? gridB;
 
-  TrinaDualOnSelectedEvent({
-    this.gridA,
-    this.gridB,
-  });
+  TrinaDualOnSelectedEvent({this.gridA, this.gridB});
 }
 
 abstract class TrinaDualGridDisplay {
@@ -531,9 +519,8 @@ abstract class TrinaDualGridDisplay {
 class TrinaDualGridDisplayRatio implements TrinaDualGridDisplay {
   final double ratio;
 
-  TrinaDualGridDisplayRatio({
-    this.ratio = 0.5,
-  }) : assert(0 < ratio && ratio < 1);
+  TrinaDualGridDisplayRatio({this.ratio = 0.5})
+    : assert(0 < ratio && ratio < 1);
 
   @override
   double? offset;
@@ -554,9 +541,7 @@ class TrinaDualGridDisplayRatio implements TrinaDualGridDisplay {
 class TrinaDualGridDisplayFixedAndExpanded implements TrinaDualGridDisplay {
   final double width;
 
-  TrinaDualGridDisplayFixedAndExpanded({
-    this.width = 206.0,
-  });
+  TrinaDualGridDisplayFixedAndExpanded({this.width = 206.0});
 
   @override
   double? offset;
@@ -577,9 +562,7 @@ class TrinaDualGridDisplayFixedAndExpanded implements TrinaDualGridDisplay {
 class TrinaDualGridDisplayExpandedAndFixed implements TrinaDualGridDisplay {
   final double width;
 
-  TrinaDualGridDisplayExpandedAndFixed({
-    this.width = 206.0,
-  });
+  TrinaDualGridDisplayExpandedAndFixed({this.width = 206.0});
 
   @override
   double? offset;
@@ -714,27 +697,34 @@ class TrinaDualGridProps {
     return TrinaDualGridProps(
       columns: columns ?? this.columns,
       rows: rows ?? this.rows,
-      columnGroups:
-          columnGroups == null ? this.columnGroups : columnGroups.value,
+      columnGroups: columnGroups == null
+          ? this.columnGroups
+          : columnGroups.value,
       onLoaded: onLoaded == null ? this.onLoaded : onLoaded.value,
       onChanged: onChanged == null ? this.onChanged : onChanged.value,
       onSorted: onSorted == null ? this.onSorted : onSorted.value,
-      onRowChecked:
-          onRowChecked == null ? this.onRowChecked : onRowChecked.value,
-      onRowDoubleTap:
-          onRowDoubleTap == null ? this.onRowDoubleTap : onRowDoubleTap.value,
+      onRowChecked: onRowChecked == null
+          ? this.onRowChecked
+          : onRowChecked.value,
+      onRowDoubleTap: onRowDoubleTap == null
+          ? this.onRowDoubleTap
+          : onRowDoubleTap.value,
       onRowSecondaryTap: onRowSecondaryTap == null
           ? this.onRowSecondaryTap
           : onRowSecondaryTap.value,
       onRowsMoved: onRowsMoved == null ? this.onRowsMoved : onRowsMoved.value,
-      onColumnsMoved:
-          onColumnsMoved == null ? this.onColumnsMoved : onColumnsMoved.value,
-      createHeader:
-          createHeader == null ? this.createHeader : createHeader.value,
-      createFooter:
-          createFooter == null ? this.createFooter : createFooter.value,
-      noRowsWidget:
-          noRowsWidget == null ? this.noRowsWidget : noRowsWidget.value,
+      onColumnsMoved: onColumnsMoved == null
+          ? this.onColumnsMoved
+          : onColumnsMoved.value,
+      createHeader: createHeader == null
+          ? this.createHeader
+          : createHeader.value,
+      createFooter: createFooter == null
+          ? this.createFooter
+          : createFooter.value,
+      noRowsWidget: noRowsWidget == null
+          ? this.noRowsWidget
+          : noRowsWidget.value,
       rowColorCallback: rowColorCallback == null
           ? this.rowColorCallback
           : rowColorCallback.value,

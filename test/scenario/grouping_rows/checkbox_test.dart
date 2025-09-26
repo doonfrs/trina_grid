@@ -92,13 +92,25 @@ void main() {
           enableRowChecked: true,
         ),
         TrinaColumn(
-            title: 'column2', field: 'column2', type: TrinaColumnType.text()),
+          title: 'column2',
+          field: 'column2',
+          type: TrinaColumnType.text(),
+        ),
         TrinaColumn(
-            title: 'column3', field: 'column3', type: TrinaColumnType.text()),
+          title: 'column3',
+          field: 'column3',
+          type: TrinaColumnType.text(),
+        ),
         TrinaColumn(
-            title: 'column4', field: 'column4', type: TrinaColumnType.text()),
+          title: 'column4',
+          field: 'column4',
+          type: TrinaColumnType.text(),
+        ),
         TrinaColumn(
-            title: 'column5', field: 'column5', type: TrinaColumnType.text()),
+          title: 'column5',
+          field: 'column5',
+          type: TrinaColumnType.text(),
+        ),
       ];
 
       rows = [
@@ -112,9 +124,21 @@ void main() {
             createRow('B42', 'b42-1', 'b42-2', 'b42-3', 'b42-4', columns),
             createGroup('B43', 'b43-1', 'b43-2', 'b43-3', 'b43-4', columns, [
               createRow(
-                  'B431', 'b431-1', 'b431-2', 'b431-3', 'b431-4', columns),
+                'B431',
+                'b431-1',
+                'b431-2',
+                'b431-3',
+                'b431-4',
+                columns,
+              ),
               createRow(
-                  'B432', 'b432-1', 'b432-2', 'b432-3', 'b432-4', columns),
+                'B432',
+                'b432-1',
+                'b432-2',
+                'b432-3',
+                'b432-4',
+                columns,
+              ),
             ]),
           ]),
         ]),
@@ -134,30 +158,32 @@ void main() {
     });
 
     testWidgets(
-        'When all checkboxes are checked, all groups and rows should be checked',
-        (tester) async {
-      await buildGrid(
-        tester: tester,
-        columns: columns,
-        rows: rows,
-        delegate: delegate,
-      );
+      'When all checkboxes are checked, all groups and rows should be checked',
+      (tester) async {
+        await buildGrid(
+          tester: tester,
+          columns: columns,
+          rows: rows,
+          delegate: delegate,
+        );
 
-      final allCheckBox = findAllCheckbox('column1');
-      expect(allCheckBox, findsOneWidget);
+        final allCheckBox = findAllCheckbox('column1');
+        expect(allCheckBox, findsOneWidget);
 
-      await tester.tap(allCheckBox);
-      await tester.pumpAndSettle();
+        await tester.tap(allCheckBox);
+        await tester.pumpAndSettle();
 
-      expect(findCheckboxWidget('A').value, true);
-      expect(findCheckboxWidget('B').value, true);
-      expect(findCheckboxWidget('C').value, true);
-      expect(findCheckboxWidget('D').value, true);
-      expect(findCheckboxWidget('E').value, true);
-    });
+        expect(findCheckboxWidget('A').value, true);
+        expect(findCheckboxWidget('B').value, true);
+        expect(findCheckboxWidget('C').value, true);
+        expect(findCheckboxWidget('D').value, true);
+        expect(findCheckboxWidget('E').value, true);
+      },
+    );
 
-    testWidgets('When group E is checked, its child rows should be checked',
-        (tester) async {
+    testWidgets('When group E is checked, its child rows should be checked', (
+      tester,
+    ) async {
       await buildGrid(
         tester: tester,
         columns: columns,
@@ -211,56 +237,57 @@ void main() {
     );
 
     testWidgets(
-        'When all checkboxes are checked and then a group is expanded, its child rows should be checked',
-        (tester) async {
-      await buildGrid(
-        tester: tester,
-        columns: columns,
-        rows: rows,
-        delegate: delegate,
-      );
+      'When all checkboxes are checked and then a group is expanded, its child rows should be checked',
+      (tester) async {
+        await buildGrid(
+          tester: tester,
+          columns: columns,
+          rows: rows,
+          delegate: delegate,
+        );
 
-      final allCheckBox = findAllCheckbox('column1');
-      expect(allCheckBox, findsOneWidget);
+        final allCheckBox = findAllCheckbox('column1');
+        expect(allCheckBox, findsOneWidget);
 
-      await tester.tap(allCheckBox);
-      await tester.pumpAndSettle();
+        await tester.tap(allCheckBox);
+        await tester.pumpAndSettle();
 
-      final B_GROUP_EXPAND_ICON = findExpandIcon('B');
-      await tester.tap(B_GROUP_EXPAND_ICON);
-      await tester.pumpAndSettle();
+        final B_GROUP_EXPAND_ICON = findExpandIcon('B');
+        await tester.tap(B_GROUP_EXPAND_ICON);
+        await tester.pumpAndSettle();
 
-      expect(find.text('B1'), findsOneWidget);
-      expect(find.text('B2'), findsOneWidget);
-      expect(find.text('B3'), findsOneWidget);
-      expect(find.text('B4'), findsOneWidget);
-      expect(findCheckboxWidget('B1').value, true);
-      expect(findCheckboxWidget('B2').value, true);
-      expect(findCheckboxWidget('B3').value, true);
-      expect(findCheckboxWidget('B4').value, true);
+        expect(find.text('B1'), findsOneWidget);
+        expect(find.text('B2'), findsOneWidget);
+        expect(find.text('B3'), findsOneWidget);
+        expect(find.text('B4'), findsOneWidget);
+        expect(findCheckboxWidget('B1').value, true);
+        expect(findCheckboxWidget('B2').value, true);
+        expect(findCheckboxWidget('B3').value, true);
+        expect(findCheckboxWidget('B4').value, true);
 
-      // showFirstExpandableIcon is false, so the second column cell has an expand icon.
-      final B4_GROUP_EXPAND_ICON = findExpandIcon('b4-1');
-      await tester.tap(B4_GROUP_EXPAND_ICON);
-      await tester.pumpAndSettle();
+        // showFirstExpandableIcon is false, so the second column cell has an expand icon.
+        final B4_GROUP_EXPAND_ICON = findExpandIcon('b4-1');
+        await tester.tap(B4_GROUP_EXPAND_ICON);
+        await tester.pumpAndSettle();
 
-      expect(find.text('B41'), findsOneWidget);
-      expect(find.text('B42'), findsOneWidget);
-      expect(find.text('B43'), findsOneWidget);
-      expect(findCheckboxWidget('B41').value, true);
-      expect(findCheckboxWidget('B42').value, true);
-      expect(findCheckboxWidget('B43').value, true);
+        expect(find.text('B41'), findsOneWidget);
+        expect(find.text('B42'), findsOneWidget);
+        expect(find.text('B43'), findsOneWidget);
+        expect(findCheckboxWidget('B41').value, true);
+        expect(findCheckboxWidget('B42').value, true);
+        expect(findCheckboxWidget('B43').value, true);
 
-      // showFirstExpandableIcon is false, so the third column cell has an expand icon.
-      final B43_GROUP_EXPAND_ICON = findExpandIcon('b43-2');
-      await tester.tap(B43_GROUP_EXPAND_ICON);
-      await tester.pumpAndSettle();
+        // showFirstExpandableIcon is false, so the third column cell has an expand icon.
+        final B43_GROUP_EXPAND_ICON = findExpandIcon('b43-2');
+        await tester.tap(B43_GROUP_EXPAND_ICON);
+        await tester.pumpAndSettle();
 
-      expect(find.text('B431'), findsOneWidget);
-      expect(find.text('B432'), findsOneWidget);
-      expect(findCheckboxWidget('B431').value, true);
-      expect(findCheckboxWidget('B432').value, true);
-    });
+        expect(find.text('B431'), findsOneWidget);
+        expect(find.text('B432'), findsOneWidget);
+        expect(findCheckboxWidget('B431').value, true);
+        expect(findCheckboxWidget('B432').value, true);
+      },
+    );
   });
 }
 

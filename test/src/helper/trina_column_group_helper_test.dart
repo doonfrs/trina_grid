@@ -6,112 +6,105 @@ import '../../helper/column_helper.dart';
 void main() {
   group('exists', () {
     test(
-        'When the field is in the columnGroup.fields list, true should be returned.',
-        () {
-      const title = 'title';
+      'When the field is in the columnGroup.fields list, true should be returned.',
+      () {
+        const title = 'title';
 
-      const field = 'DUMMY_FIELD';
+        const field = 'DUMMY_FIELD';
 
-      final fields = ['DUMMY_FIELD'];
+        final fields = ['DUMMY_FIELD'];
 
-      final columnGroup = TrinaColumnGroup(
-        title: title,
-        fields: fields,
-      );
+        final columnGroup = TrinaColumnGroup(title: title, fields: fields);
 
-      expect(
-        TrinaColumnGroupHelper.exists(field: field, columnGroup: columnGroup),
-        true,
-      );
-    });
+        expect(
+          TrinaColumnGroupHelper.exists(field: field, columnGroup: columnGroup),
+          true,
+        );
+      },
+    );
 
     test(
-        'When the field is not in the columnGroup.fields list, false should be returned.',
-        () {
-      const title = 'title';
+      'When the field is not in the columnGroup.fields list, false should be returned.',
+      () {
+        const title = 'title';
 
-      const field = 'NON_EXISTS_DUMMY_FIELD';
+        const field = 'NON_EXISTS_DUMMY_FIELD';
 
-      final fields = ['DUMMY_FIELD'];
+        final fields = ['DUMMY_FIELD'];
 
-      final columnGroup = TrinaColumnGroup(
-        title: title,
-        fields: fields,
-      );
+        final columnGroup = TrinaColumnGroup(title: title, fields: fields);
 
-      expect(
-        TrinaColumnGroupHelper.exists(field: field, columnGroup: columnGroup),
-        false,
-      );
-    });
+        expect(
+          TrinaColumnGroupHelper.exists(field: field, columnGroup: columnGroup),
+          false,
+        );
+      },
+    );
 
     test(
-        'When the field is in the columnGroup.children list, true should be returned.',
-        () {
-      const title = 'title';
+      'When the field is in the columnGroup.children list, true should be returned.',
+      () {
+        const title = 'title';
 
-      const field = 'DUMMY_FIELD';
+        const field = 'DUMMY_FIELD';
 
-      final children = [
-        TrinaColumnGroup(title: 'title', fields: ['DUMMY_FIELD']),
-      ];
-
-      final columnGroup = TrinaColumnGroup(
-        title: title,
-        children: children,
-      );
-
-      expect(
-        TrinaColumnGroupHelper.exists(field: field, columnGroup: columnGroup),
-        true,
-      );
-    });
-
-    test(
-        'When the field is not in the columnGroup.children list, false should be returned.',
-        () {
-      const title = 'title';
-
-      const field = 'NON_EXISTS_DUMMY_FIELD';
-
-      final children = [
-        TrinaColumnGroup(title: 'title', fields: ['DUMMY_FIELD']),
-      ];
-
-      final columnGroup = TrinaColumnGroup(
-        title: title,
-        children: children,
-      );
-
-      expect(
-        TrinaColumnGroupHelper.exists(field: field, columnGroup: columnGroup),
-        false,
-      );
-    });
-
-    test(
-        'When the field is in the columnGroup.children list of depth 2, true should be returned.',
-        () {
-      const title = 'title';
-
-      const field = 'DUMMY_FIELD';
-
-      final children = [
-        TrinaColumnGroup(title: 'title', children: [
+        final children = [
           TrinaColumnGroup(title: 'title', fields: ['DUMMY_FIELD']),
-        ]),
-      ];
+        ];
 
-      final columnGroup = TrinaColumnGroup(
-        title: title,
-        children: children,
-      );
+        final columnGroup = TrinaColumnGroup(title: title, children: children);
 
-      expect(
-        TrinaColumnGroupHelper.exists(field: field, columnGroup: columnGroup),
-        true,
-      );
-    });
+        expect(
+          TrinaColumnGroupHelper.exists(field: field, columnGroup: columnGroup),
+          true,
+        );
+      },
+    );
+
+    test(
+      'When the field is not in the columnGroup.children list, false should be returned.',
+      () {
+        const title = 'title';
+
+        const field = 'NON_EXISTS_DUMMY_FIELD';
+
+        final children = [
+          TrinaColumnGroup(title: 'title', fields: ['DUMMY_FIELD']),
+        ];
+
+        final columnGroup = TrinaColumnGroup(title: title, children: children);
+
+        expect(
+          TrinaColumnGroupHelper.exists(field: field, columnGroup: columnGroup),
+          false,
+        );
+      },
+    );
+
+    test(
+      'When the field is in the columnGroup.children list of depth 2, true should be returned.',
+      () {
+        const title = 'title';
+
+        const field = 'DUMMY_FIELD';
+
+        final children = [
+          TrinaColumnGroup(
+            title: 'title',
+            children: [
+              TrinaColumnGroup(title: 'title', fields: ['DUMMY_FIELD']),
+            ],
+          ),
+        ];
+
+        final columnGroup = TrinaColumnGroup(title: title, children: children);
+
+        expect(
+          TrinaColumnGroupHelper.exists(field: field, columnGroup: columnGroup),
+          true,
+        );
+      },
+    );
   });
 
   group('existsFromList', () {
@@ -196,20 +189,22 @@ void main() {
   });
 
   group('separateLinkedGroup', () {
-    test('When the columnGroupList is empty, an empty list should be returned.',
-        () {
-      final columnGroupList = <TrinaColumnGroup>[];
+    test(
+      'When the columnGroupList is empty, an empty list should be returned.',
+      () {
+        final columnGroupList = <TrinaColumnGroup>[];
 
-      final columns = ColumnHelper.textColumn('column', count: 6, start: 1);
+        final columns = ColumnHelper.textColumn('column', count: 6, start: 1);
 
-      expect(
-        TrinaColumnGroupHelper.separateLinkedGroup(
-          columnGroupList: columnGroupList,
-          columns: columns,
-        ),
-        isEmpty,
-      );
-    });
+        expect(
+          TrinaColumnGroupHelper.separateLinkedGroup(
+            columnGroupList: columnGroupList,
+            columns: columns,
+          ),
+          isEmpty,
+        );
+      },
+    );
 
     test('When the columns is empty, an empty list should be returned.', () {
       final columnGroupList = <TrinaColumnGroup>[

@@ -11,7 +11,7 @@ import '../ui/ui.dart';
 /// using the [TrinaLazyPagination] or [TrinaInfinityScrollRows] widgets.
 class TrinaPagination extends TrinaStatefulWidget {
   const TrinaPagination(this.stateManager, {this.pageSizeToMove, super.key})
-      : assert(pageSizeToMove == null || pageSizeToMove > 0);
+    : assert(pageSizeToMove == null || pageSizeToMove > 0);
 
   final TrinaGridStateManager stateManager;
 
@@ -75,8 +75,10 @@ class TrinaPaginationState extends _TrinaPaginationStateWithChange {
     // Initialize color values before calling super.initState()
     // because super.initState() calls updateState which needs these values
     _iconColor = widget.stateManager.configuration.style.iconColor;
-    _disabledIconColor = widget.stateManager.configuration.style.disabledIconColor;
-    _activatedBorderColor = widget.stateManager.configuration.style.activatedBorderColor;
+    _disabledIconColor =
+        widget.stateManager.configuration.style.disabledIconColor;
+    _activatedBorderColor =
+        widget.stateManager.configuration.style.activatedBorderColor;
 
     super.initState();
   }
@@ -198,11 +200,10 @@ class TrinaPaginationState extends _TrinaPaginationStateWithChange {
 
   TextStyle _getNumberTextStyle(bool isCurrentIndex) {
     return TextStyle(
-      fontSize:
-          isCurrentIndex ? stateManager.configuration.style.iconSize : null,
-      color: isCurrentIndex
-          ? _activatedBorderColor
-          : _iconColor,
+      fontSize: isCurrentIndex
+          ? stateManager.configuration.style.iconSize
+          : null,
+      color: isCurrentIndex ? _activatedBorderColor : _iconColor,
     );
   }
 

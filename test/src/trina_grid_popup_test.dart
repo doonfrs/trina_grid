@@ -43,11 +43,7 @@ void main() {
     TrinaGridMode mode = TrinaGridMode.normal,
     TextDirection textDirection = TextDirection.ltr,
   }) async {
-    await TestHelperUtil.changeWidth(
-      tester: tester,
-      width: 1000,
-      height: 450,
-    );
+    await TestHelperUtil.changeWidth(tester: tester, width: 1000, height: 450);
 
     await tester.pumpWidget(
       MaterialApp(
@@ -93,8 +89,7 @@ void main() {
     );
   }
 
-  testWidgets(
-      'When Directionality is ltr, '
+  testWidgets('When Directionality is ltr, '
       'stateManager.isLTR and isRTL should be applied', (tester) async {
     final columns = ColumnHelper.textColumn('title', count: 10);
     final rows = RowHelper.count(10, columns);
@@ -114,8 +109,7 @@ void main() {
     expect(stateManager.isRTL, false);
   });
 
-  testWidgets(
-      'When Directionality is rtl, '
+  testWidgets('When Directionality is rtl, '
       'stateManager.isLTR and isRTL should be applied', (tester) async {
     final columns = ColumnHelper.textColumn('title', count: 10);
     final rows = RowHelper.count(10, columns);
@@ -177,50 +171,50 @@ void main() {
     },
   );
 
-  testWidgets(
-    'When Directionality is rtl, cell positions should be RTL applied',
-    (tester) async {
-      final columns = ColumnHelper.textColumn('title', count: 10);
-      final rows = RowHelper.count(10, columns);
+  testWidgets('When Directionality is rtl, cell positions should be RTL applied', (
+    tester,
+  ) async {
+    final columns = ColumnHelper.textColumn('title', count: 10);
+    final rows = RowHelper.count(10, columns);
 
-      await build(
-        tester: tester,
-        columns: columns,
-        rows: rows,
-        textDirection: TextDirection.rtl,
-      );
+    await build(
+      tester: tester,
+      columns: columns,
+      rows: rows,
+      textDirection: TextDirection.rtl,
+    );
 
-      await tester.tap(find.text(buttonText));
+    await tester.tap(find.text(buttonText));
 
-      await tester.pumpAndSettle();
+    await tester.pumpAndSettle();
 
-      final firstCell = find.text('title0 value 0');
-      final firstStartPosition = tester.getTopRight(firstCell);
+    final firstCell = find.text('title0 value 0');
+    final firstStartPosition = tester.getTopRight(firstCell);
 
-      final secondCell = find.text('title1 value 0');
-      final secondStartPosition = tester.getTopRight(secondCell);
+    final secondCell = find.text('title1 value 0');
+    final secondStartPosition = tester.getTopRight(secondCell);
 
-      stateManager.moveScrollByColumn(TrinaMoveDirection.right, 8);
-      await tester.pumpAndSettle();
+    stateManager.moveScrollByColumn(TrinaMoveDirection.right, 8);
+    await tester.pumpAndSettle();
 
-      final scrollOffset = stateManager.scroll.horizontal!.offset;
+    final scrollOffset = stateManager.scroll.horizontal!.offset;
 
-      final lastCell = find.text('title9 value 0');
-      final lastStartPosition = tester.getTopRight(lastCell);
+    final lastCell = find.text('title9 value 0');
+    final lastStartPosition = tester.getTopRight(lastCell);
 
-      // The first cell's dx is located on the rightmost and is the largest, and the second cell is the width of the column.
-      expect(firstStartPosition.dx - secondStartPosition.dx, columnWidth);
+    // The first cell's dx is located on the rightmost and is the largest, and the second cell is the width of the column.
+    expect(firstStartPosition.dx - secondStartPosition.dx, columnWidth);
 
-      // The last cell is located at the position where the scroll is subtracted from the width of the 9 cells before it.
-      expect(
-        firstStartPosition.dx - lastStartPosition.dx,
-        (columnWidth * 9) - scrollOffset,
-      );
-    },
-  );
+    // The last cell is located at the position where the scroll is subtracted from the width of the 9 cells before it.
+    expect(
+      firstStartPosition.dx - lastStartPosition.dx,
+      (columnWidth * 9) - scrollOffset,
+    );
+  });
 
-  testWidgets('Cell value changes should trigger the onChanged callback',
-      (tester) async {
+  testWidgets('Cell value changes should trigger the onChanged callback', (
+    tester,
+  ) async {
     final columns = ColumnHelper.textColumn('title', count: 10);
     final rows = RowHelper.count(10, columns);
 
@@ -253,65 +247,68 @@ void main() {
   });
 
   testWidgets(
-      'In select mode, double-tapping a row should trigger the onSelected callback',
-      (tester) async {
-    final columns = ColumnHelper.textColumn('title', count: 10);
-    final rows = RowHelper.count(10, columns);
+    'In select mode, double-tapping a row should trigger the onSelected callback',
+    (tester) async {
+      final columns = ColumnHelper.textColumn('title', count: 10);
+      final rows = RowHelper.count(10, columns);
 
-    TrinaGridOnSelectedEvent? event;
+      TrinaGridOnSelectedEvent? event;
 
-    await build(
-      tester: tester,
-      columns: columns,
-      rows: rows,
-      onSelected: (e) => event = e,
-      mode: TrinaGridMode.select,
-    );
+      await build(
+        tester: tester,
+        columns: columns,
+        rows: rows,
+        onSelected: (e) => event = e,
+        mode: TrinaGridMode.select,
+      );
 
-    await tester.tap(find.text(buttonText));
-    await tester.pumpAndSettle();
+      await tester.tap(find.text(buttonText));
+      await tester.pumpAndSettle();
 
-    final cell = find.text('title1 value 3');
-    await tester.tap(cell);
-    await tester.pump();
-    await tester.tap(cell);
-    await tester.pump();
+      final cell = find.text('title1 value 3');
+      await tester.tap(cell);
+      await tester.pump();
+      await tester.tap(cell);
+      await tester.pump();
 
-    expect(event, isNotNull);
-    expect(event!.rowIdx, 3);
-    expect(event!.cell!.value, 'title1 value 3');
-  });
+      expect(event, isNotNull);
+      expect(event!.rowIdx, 3);
+      expect(event!.cell!.value, 'title1 value 3');
+    },
+  );
 
   testWidgets(
-      'In selectWithOneTap mode, tapping a row should trigger the onSelected callback',
-      (tester) async {
-    final columns = ColumnHelper.textColumn('title', count: 10);
-    final rows = RowHelper.count(10, columns);
+    'In selectWithOneTap mode, tapping a row should trigger the onSelected callback',
+    (tester) async {
+      final columns = ColumnHelper.textColumn('title', count: 10);
+      final rows = RowHelper.count(10, columns);
 
-    TrinaGridOnSelectedEvent? event;
+      TrinaGridOnSelectedEvent? event;
 
-    await build(
-      tester: tester,
-      columns: columns,
-      rows: rows,
-      onSelected: (e) => event = e,
-      mode: TrinaGridMode.selectWithOneTap,
-    );
+      await build(
+        tester: tester,
+        columns: columns,
+        rows: rows,
+        onSelected: (e) => event = e,
+        mode: TrinaGridMode.selectWithOneTap,
+      );
 
-    await tester.tap(find.text(buttonText));
-    await tester.pumpAndSettle();
+      await tester.tap(find.text(buttonText));
+      await tester.pumpAndSettle();
 
-    final cell = find.text('title2 value 4');
-    await tester.tap(cell);
-    await tester.pump();
+      final cell = find.text('title2 value 4');
+      await tester.tap(cell);
+      await tester.pump();
 
-    expect(event, isNotNull);
-    expect(event!.rowIdx, 4);
-    expect(event!.cell!.value, 'title2 value 4');
-  });
+      expect(event, isNotNull);
+      expect(event!.rowIdx, 4);
+      expect(event!.cell!.value, 'title2 value 4');
+    },
+  );
 
-  testWidgets('Tapping a column should trigger the onSorted callback',
-      (tester) async {
+  testWidgets('Tapping a column should trigger the onSorted callback', (
+    tester,
+  ) async {
     final columns = ColumnHelper.textColumn('title', count: 10);
     final rows = RowHelper.count(10, columns);
 
@@ -353,10 +350,10 @@ void main() {
     expect(event!.oldSort, TrinaColumnSort.descending);
   });
 
-  testWidgets(
-      'When TrinaColumn.enableRowChecked is true, '
-      'checking a cell checkbox should trigger the onRowChecked callback',
-      (tester) async {
+  testWidgets('When TrinaColumn.enableRowChecked is true, '
+      'checking a cell checkbox should trigger the onRowChecked callback', (
+    tester,
+  ) async {
     final columns = ColumnHelper.textColumn('title', count: 10);
     final rows = RowHelper.count(10, columns);
 
@@ -390,63 +387,66 @@ void main() {
   });
 
   testWidgets(
-      'Double-tapping a cell should trigger the onRowDoubleTap callback',
-      (tester) async {
-    final columns = ColumnHelper.textColumn('title', count: 10);
-    final rows = RowHelper.count(10, columns);
+    'Double-tapping a cell should trigger the onRowDoubleTap callback',
+    (tester) async {
+      final columns = ColumnHelper.textColumn('title', count: 10);
+      final rows = RowHelper.count(10, columns);
 
-    TrinaGridOnRowDoubleTapEvent? event;
+      TrinaGridOnRowDoubleTapEvent? event;
 
-    await build(
-      tester: tester,
-      columns: columns,
-      rows: rows,
-      onRowDoubleTap: (e) => event = e,
-    );
+      await build(
+        tester: tester,
+        columns: columns,
+        rows: rows,
+        onRowDoubleTap: (e) => event = e,
+      );
 
-    await tester.tap(find.text(buttonText));
-    await tester.pumpAndSettle();
+      await tester.tap(find.text(buttonText));
+      await tester.pumpAndSettle();
 
-    final cell = find.text('title2 value 2');
-    await tester.tap(cell);
-    await tester.pump(kDoubleTapMinTime);
-    await tester.tap(cell);
-    await tester.pumpAndSettle();
+      final cell = find.text('title2 value 2');
+      await tester.tap(cell);
+      await tester.pump(kDoubleTapMinTime);
+      await tester.tap(cell);
+      await tester.pumpAndSettle();
 
-    expect(event, isNotNull);
-    expect(event!.rowIdx, 2);
-    expect(event!.cell.value, 'title2 value 2');
-  });
+      expect(event, isNotNull);
+      expect(event!.rowIdx, 2);
+      expect(event!.cell.value, 'title2 value 2');
+    },
+  );
 
   testWidgets(
-      'Secondary button tap should trigger the onRowSecondaryTap callback',
-      (tester) async {
-    final columns = ColumnHelper.textColumn('title', count: 10);
-    final rows = RowHelper.count(10, columns);
+    'Secondary button tap should trigger the onRowSecondaryTap callback',
+    (tester) async {
+      final columns = ColumnHelper.textColumn('title', count: 10);
+      final rows = RowHelper.count(10, columns);
 
-    TrinaGridOnRowSecondaryTapEvent? event;
+      TrinaGridOnRowSecondaryTapEvent? event;
 
-    await build(
-      tester: tester,
-      columns: columns,
-      rows: rows,
-      onRowSecondaryTap: (e) => event = e,
-    );
+      await build(
+        tester: tester,
+        columns: columns,
+        rows: rows,
+        onRowSecondaryTap: (e) => event = e,
+      );
 
-    await tester.tap(find.text(buttonText));
-    await tester.pumpAndSettle();
+      await tester.tap(find.text(buttonText));
+      await tester.pumpAndSettle();
 
-    final cell = find.text('title3 value 5');
-    await tester.tap(cell, buttons: kSecondaryButton);
-    await tester.pump();
+      final cell = find.text('title3 value 5');
+      await tester.tap(cell, buttons: kSecondaryButton);
+      await tester.pump();
 
-    expect(event, isNotNull);
-    expect(event!.rowIdx, 5);
-    expect(event!.cell.value, 'title3 value 5');
-  });
+      expect(event, isNotNull);
+      expect(event!.rowIdx, 5);
+      expect(event!.cell.value, 'title3 value 5');
+    },
+  );
 
-  testWidgets('Dragging a row should trigger the onRowsMoved callback',
-      (tester) async {
+  testWidgets('Dragging a row should trigger the onRowsMoved callback', (
+    tester,
+  ) async {
     final columns = ColumnHelper.textColumn('title', count: 10);
     final rows = RowHelper.count(10, columns);
 
@@ -528,9 +528,8 @@ void main() {
       columns: columns,
       rows: rows,
       configuration: const TrinaGridConfiguration(
-          style: TrinaGridStyleConfig(
-        enableRowColorAnimation: true,
-      )),
+        style: TrinaGridStyleConfig(enableRowColorAnimation: true),
+      ),
       rowColorCallback: (context) {
         return context.rowIdx % 2 == 0 ? Colors.pink : Colors.cyan;
       },
@@ -557,8 +556,9 @@ void main() {
     expect(colors.elementAt(3), Colors.cyan);
   });
 
-  testWidgets('When columnMenuDelegate is set, column menu should be changed',
-      (tester) async {
+  testWidgets('When columnMenuDelegate is set, column menu should be changed', (
+    tester,
+  ) async {
     final columns = ColumnHelper.textColumn('title', count: 10);
     final rows = RowHelper.count(10, columns);
 
@@ -585,59 +585,73 @@ void main() {
     expect(find.text('test menu 2'), findsOneWidget);
   });
 
-  testWidgets('Left-fixing a column should trigger the onColumnsMoved callback',
-      (tester) async {
-    final mock = MockMethods();
-    final columns = ColumnHelper.textColumn('column', count: 10);
-    final rows = RowHelper.count(10, columns);
+  testWidgets(
+    'Left-fixing a column should trigger the onColumnsMoved callback',
+    (tester) async {
+      final mock = MockMethods();
+      final columns = ColumnHelper.textColumn('column', count: 10);
+      final rows = RowHelper.count(10, columns);
 
-    await build(
-      tester: tester,
-      columns: columns,
-      rows: rows,
-      onColumnsMoved: mock.oneParamReturnVoid<TrinaGridOnColumnsMovedEvent>,
-    );
+      await build(
+        tester: tester,
+        columns: columns,
+        rows: rows,
+        onColumnsMoved: mock.oneParamReturnVoid<TrinaGridOnColumnsMovedEvent>,
+      );
 
-    await tester.tap(find.text(buttonText));
-    await tester.pumpAndSettle();
+      await tester.tap(find.text(buttonText));
+      await tester.pumpAndSettle();
 
-    stateManager.toggleFrozenColumn(columns[1], TrinaColumnFrozen.start);
-    await tester.pump();
+      stateManager.toggleFrozenColumn(columns[1], TrinaColumnFrozen.start);
+      await tester.pump();
 
-    verify(mock.oneParamReturnVoid(
-        TrinaObjectMatcher<TrinaGridOnColumnsMovedEvent>(rule: (e) {
-      return e.idx == 1 && e.visualIdx == 0 && e.columns.length == 1;
-    }))).called(1);
-  });
+      verify(
+        mock.oneParamReturnVoid(
+          TrinaObjectMatcher<TrinaGridOnColumnsMovedEvent>(
+            rule: (e) {
+              return e.idx == 1 && e.visualIdx == 0 && e.columns.length == 1;
+            },
+          ),
+        ),
+      ).called(1);
+    },
+  );
 
   testWidgets(
-      'Right-fixing a column should trigger the onColumnsMoved callback',
-      (tester) async {
-    final mock = MockMethods();
-    final columns = ColumnHelper.textColumn('column', count: 10);
-    final rows = RowHelper.count(10, columns);
+    'Right-fixing a column should trigger the onColumnsMoved callback',
+    (tester) async {
+      final mock = MockMethods();
+      final columns = ColumnHelper.textColumn('column', count: 10);
+      final rows = RowHelper.count(10, columns);
 
-    await build(
-      tester: tester,
-      columns: columns,
-      rows: rows,
-      onColumnsMoved: mock.oneParamReturnVoid<TrinaGridOnColumnsMovedEvent>,
-    );
+      await build(
+        tester: tester,
+        columns: columns,
+        rows: rows,
+        onColumnsMoved: mock.oneParamReturnVoid<TrinaGridOnColumnsMovedEvent>,
+      );
 
-    await tester.tap(find.text(buttonText));
-    await tester.pumpAndSettle();
+      await tester.tap(find.text(buttonText));
+      await tester.pumpAndSettle();
 
-    stateManager.toggleFrozenColumn(columns[1], TrinaColumnFrozen.end);
-    await tester.pump();
+      stateManager.toggleFrozenColumn(columns[1], TrinaColumnFrozen.end);
+      await tester.pump();
 
-    verify(mock.oneParamReturnVoid(
-        TrinaObjectMatcher<TrinaGridOnColumnsMovedEvent>(rule: (e) {
-      return e.idx == 1 && e.visualIdx == 9 && e.columns.length == 1;
-    }))).called(1);
-  });
+      verify(
+        mock.oneParamReturnVoid(
+          TrinaObjectMatcher<TrinaGridOnColumnsMovedEvent>(
+            rule: (e) {
+              return e.idx == 1 && e.visualIdx == 9 && e.columns.length == 1;
+            },
+          ),
+        ),
+      ).called(1);
+    },
+  );
 
-  testWidgets('Dragging a column should trigger the onColumnsMoved callback',
-      (tester) async {
+  testWidgets('Dragging a column should trigger the onColumnsMoved callback', (
+    tester,
+  ) async {
     final mock = MockMethods();
     final columns = ColumnHelper.textColumn('column', count: 10);
     final rows = RowHelper.count(10, columns);
@@ -658,15 +672,21 @@ void main() {
 
     await tester.pumpAndSettle(const Duration(milliseconds: 300));
 
-    verify(mock.oneParamReturnVoid(
-        TrinaObjectMatcher<TrinaGridOnColumnsMovedEvent>(rule: (e) {
-      return e.idx == 3 && e.visualIdx == 3 && e.columns.length == 1;
-    }))).called(1);
+    verify(
+      mock.oneParamReturnVoid(
+        TrinaObjectMatcher<TrinaGridOnColumnsMovedEvent>(
+          rule: (e) {
+            return e.idx == 3 && e.visualIdx == 3 && e.columns.length == 1;
+          },
+        ),
+      ),
+    ).called(1);
   });
 
   group('noRowsWidget', () {
-    testWidgets('When there are no rows, noRowsWidget should be rendered',
-        (tester) async {
+    testWidgets('When there are no rows, noRowsWidget should be rendered', (
+      tester,
+    ) async {
       final columns = ColumnHelper.textColumn('column', count: 10);
       final rows = <TrinaRow>[];
       const noRowsWidget = Center(
@@ -687,8 +707,9 @@ void main() {
       expect(find.byKey(noRowsWidget.key!), findsOneWidget);
     });
 
-    testWidgets('When rows are deleted, noRowsWidget should be rendered',
-        (tester) async {
+    testWidgets('When rows are deleted, noRowsWidget should be rendered', (
+      tester,
+    ) async {
       final columns = ColumnHelper.textColumn('column', count: 10);
       final rows = RowHelper.count(10, columns);
       const noRowsWidget = Center(
@@ -715,8 +736,9 @@ void main() {
       expect(find.byKey(noRowsWidget.key!), findsOneWidget);
     });
 
-    testWidgets('When rows are added, noRowsWidget should not be rendered',
-        (tester) async {
+    testWidgets('When rows are added, noRowsWidget should not be rendered', (
+      tester,
+    ) async {
       final columns = ColumnHelper.textColumn('column', count: 10);
       final rows = <TrinaRow>[];
       const noRowsWidget = Center(

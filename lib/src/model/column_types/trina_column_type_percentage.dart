@@ -44,12 +44,12 @@ class TrinaColumnTypePercentage
     this.allowFirstDot = false,
     this.locale,
     this.decimalInput = false,
-  })  : format = decimalDigits > 0 ? '#,##0.${'0' * decimalDigits}' : '#,##0',
-        // Create a NumberFormat WITHOUT the % symbol to avoid automatic multiplication
-        numberFormat = decimalDigits > 0
-            ? intl.NumberFormat('#,##0.${'0' * decimalDigits}', locale)
-            : intl.NumberFormat('#,##0', locale),
-        decimalPoint = decimalDigits;
+  }) : format = decimalDigits > 0 ? '#,##0.${'0' * decimalDigits}' : '#,##0',
+       // Create a NumberFormat WITHOUT the % symbol to avoid automatic multiplication
+       numberFormat = decimalDigits > 0
+           ? intl.NumberFormat('#,##0.${'0' * decimalDigits}', locale)
+           : intl.NumberFormat('#,##0', locale),
+       decimalPoint = decimalDigits;
 
   @override
   final intl.NumberFormat numberFormat;

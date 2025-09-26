@@ -148,15 +148,17 @@ class _RowInfinityScrollScreenState extends State<RowInfinityScrollScreen> {
         fetchedRows.isEmpty || tempList.last.key == fetchedRows.last.key;
 
     if (isLast && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Last Page!')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Last Page!')));
     }
 
-    return Future.value(TrinaInfinityScrollRowsResponse(
-      isLast: isLast,
-      rows: fetchedRows.toList(),
-    ));
+    return Future.value(
+      TrinaInfinityScrollRowsResponse(
+        isLast: isLast,
+        rows: fetchedRows.toList(),
+      ),
+    );
   }
 
   @override
@@ -166,9 +168,11 @@ class _RowInfinityScrollScreenState extends State<RowInfinityScrollScreen> {
       topTitle: 'Row infinity scroll',
       topContents: const [
         Text(
-            'New rows are loaded when scrolling reaches the end or when you can no longer move from the last row with the keyboard arrow keys or the PageDown button.'),
+          'New rows are loaded when scrolling reaches the end or when you can no longer move from the last row with the keyboard arrow keys or the PageDown button.',
+        ),
         Text(
-            'The example behaves similarly to pre-creating fake rows instead of fetching data from the server and processing them on the server.'),
+          'The example behaves similarly to pre-creating fake rows instead of fetching data from the server and processing them on the server.',
+        ),
       ],
       topButtons: [
         TrinaExampleButton(

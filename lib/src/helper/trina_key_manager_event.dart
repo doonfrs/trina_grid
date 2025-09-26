@@ -76,18 +76,18 @@ class TrinaKeyManagerEvent {
   /// LogicalKeyboardKey.shiftLeft
   /// LogicalKeyboardKey.shiftRight
   bool get isShift => [
-        LogicalKeyboardKey.shift,
-        LogicalKeyboardKey.shiftLeft,
-        LogicalKeyboardKey.shiftRight,
-      ].any((lKey) => lKey.keyId == event.logicalKey.keyId);
+    LogicalKeyboardKey.shift,
+    LogicalKeyboardKey.shiftLeft,
+    LogicalKeyboardKey.shiftRight,
+  ].any((lKey) => lKey.keyId == event.logicalKey.keyId);
 
   bool get isLeftShift => [
-        LogicalKeyboardKey.shiftLeft,
-      ].any((lKey) => lKey.keyId == event.logicalKey.keyId);
+    LogicalKeyboardKey.shiftLeft,
+  ].any((lKey) => lKey.keyId == event.logicalKey.keyId);
 
   bool get isRightShift => [
-        LogicalKeyboardKey.shiftRight,
-      ].any((lKey) => lKey.keyId == event.logicalKey.keyId);
+    LogicalKeyboardKey.shiftRight,
+  ].any((lKey) => lKey.keyId == event.logicalKey.keyId);
 
   /// This can be:
   ///
@@ -95,18 +95,18 @@ class TrinaKeyManagerEvent {
   /// LogicalKeyboardKey.controlLeft
   /// LogicalKeyboardKey.controlRight
   bool get isControl => [
-        LogicalKeyboardKey.control,
-        LogicalKeyboardKey.controlLeft,
-        LogicalKeyboardKey.controlRight,
-      ].any((lKey) => lKey.keyId == event.logicalKey.keyId);
+    LogicalKeyboardKey.control,
+    LogicalKeyboardKey.controlLeft,
+    LogicalKeyboardKey.controlRight,
+  ].any((lKey) => lKey.keyId == event.logicalKey.keyId);
 
   bool get isLeftControl => [
-        LogicalKeyboardKey.controlLeft,
-      ].any((lKey) => lKey.keyId == event.logicalKey.keyId);
+    LogicalKeyboardKey.controlLeft,
+  ].any((lKey) => lKey.keyId == event.logicalKey.keyId);
 
   bool get isRightControl => [
-        LogicalKeyboardKey.controlRight,
-      ].any((lKey) => lKey.keyId == event.logicalKey.keyId);
+    LogicalKeyboardKey.controlRight,
+  ].any((lKey) => lKey.keyId == event.logicalKey.keyId);
 
   bool get isCharacter => _characters.contains(event.logicalKey.keyId);
 

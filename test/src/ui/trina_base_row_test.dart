@@ -62,59 +62,54 @@ void main() {
     bool isCurrentCell = false,
     bool isSelectedCell = false,
   }) {
-    return TrinaWidgetTestHelper(
-      'build row widget.',
-      (tester) async {
-        when(stateManager.isDraggingRow).thenReturn(isDraggingRow);
-        when(stateManager.isRowIdxDragTarget(any)).thenReturn(isDragTarget);
-        when(stateManager.isRowIdxTopDragTarget(any))
-            .thenReturn(isTopDragTarget);
-        when(stateManager.isRowIdxBottomDragTarget(any))
-            .thenReturn(isBottomDragTarget);
-        when(stateManager.dragRows).thenReturn(dragRows);
-        when(stateManager.isSelectedRow(any)).thenReturn(isSelectedRow);
-        when(stateManager.isCurrentCell(any)).thenReturn(isCurrentCell);
-        when(stateManager.isSelectedCell(any, any, any))
-            .thenReturn(isSelectedCell);
+    return TrinaWidgetTestHelper('build row widget.', (tester) async {
+      when(stateManager.isDraggingRow).thenReturn(isDraggingRow);
+      when(stateManager.isRowIdxDragTarget(any)).thenReturn(isDragTarget);
+      when(stateManager.isRowIdxTopDragTarget(any)).thenReturn(isTopDragTarget);
+      when(
+        stateManager.isRowIdxBottomDragTarget(any),
+      ).thenReturn(isBottomDragTarget);
+      when(stateManager.dragRows).thenReturn(dragRows);
+      when(stateManager.isSelectedRow(any)).thenReturn(isSelectedRow);
+      when(stateManager.isCurrentCell(any)).thenReturn(isCurrentCell);
+      when(
+        stateManager.isSelectedCell(any, any, any),
+      ).thenReturn(isSelectedCell);
 
-        // given
-        columns = ColumnHelper.textColumn('header', count: 3);
-        rows = RowHelper.count(10, columns);
+      // given
+      columns = ColumnHelper.textColumn('header', count: 3);
+      rows = RowHelper.count(10, columns);
 
-        when(stateManager.columns).thenReturn(columns);
+      when(stateManager.columns).thenReturn(columns);
 
-        final row = rows[rowIdx];
+      final row = rows[rowIdx];
 
-        if (checked) {
-          row.setChecked(true);
-        }
+      if (checked) {
+        row.setChecked(true);
+      }
 
-        // when
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Material(
-              child: TrinaBaseRow(
-                rowIdx: rowIdx,
-                row: row,
-                columns: columns,
-                stateManager: stateManager,
-              ),
+      // when
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Material(
+            child: TrinaBaseRow(
+              rowIdx: rowIdx,
+              row: row,
+              columns: columns,
+              stateManager: stateManager,
             ),
           ),
-        );
-      },
-    );
+        ),
+      );
+    });
   }
 
   buildRowWidget(checked: false).test(
     'When row is not checked, rowColor should not have alphaBlend applied',
     (tester) async {
-      final rowContainerWidget = find
-          .byType(DecoratedBox)
-          .first
-          .evaluate()
-          .first
-          .widget as DecoratedBox;
+      final rowContainerWidget =
+          find.byType(DecoratedBox).first.evaluate().first.widget
+              as DecoratedBox;
 
       final rowContainerDecoration =
           rowContainerWidget.decoration as BoxDecoration;
@@ -130,12 +125,9 @@ void main() {
   ).test(
     'When isDragTarget and isTopDragTarget are true, border top should be set',
     (tester) async {
-      final rowContainerWidget = find
-          .byType(DecoratedBox)
-          .first
-          .evaluate()
-          .first
-          .widget as DecoratedBox;
+      final rowContainerWidget =
+          find.byType(DecoratedBox).first.evaluate().first.widget
+              as DecoratedBox;
 
       final rowContainerDecoration =
           rowContainerWidget.decoration as BoxDecoration;
@@ -147,18 +139,12 @@ void main() {
     },
   );
 
-  buildRowWidget(
-    isDragTarget: true,
-    isBottomDragTarget: true,
-  ).test(
+  buildRowWidget(isDragTarget: true, isBottomDragTarget: true).test(
     'When isDragTarget and isBottomDragTarget are true, border bottom should be set',
     (tester) async {
-      final rowContainerWidget = find
-          .byType(DecoratedBox)
-          .first
-          .evaluate()
-          .first
-          .widget as DecoratedBox;
+      final rowContainerWidget =
+          find.byType(DecoratedBox).first.evaluate().first.widget
+              as DecoratedBox;
 
       final rowContainerDecoration =
           rowContainerWidget.decoration as BoxDecoration;

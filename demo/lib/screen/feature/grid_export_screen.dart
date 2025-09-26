@@ -132,10 +132,7 @@ class _GridExportScreenState extends State<GridExportScreen> {
     for (var i = 0; i < 3 && i < rows.length; i++) {
       // Create a new row with frozen property set to start (top)
       final cells = rows[i].cells;
-      final newRow = TrinaRow(
-        cells: cells,
-        frozen: TrinaRowFrozen.start,
-      );
+      final newRow = TrinaRow(cells: cells, frozen: TrinaRowFrozen.start);
       rows[i] = newRow;
     }
 
@@ -230,8 +227,10 @@ class _GridExportScreenState extends State<GridExportScreen> {
 
                       if (formatName == formatPdf) ...[
                         const SizedBox(height: 16),
-                        const Text('PDF Options:',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        const Text(
+                          'PDF Options:',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                         const SizedBox(height: 8),
                         TextField(
                           decoration: const InputDecoration(
@@ -273,8 +272,10 @@ class _GridExportScreenState extends State<GridExportScreen> {
                           ],
                         ),
                         const SizedBox(height: 16),
-                        const Text('Theme Options:',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        const Text(
+                          'Theme Options:',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                         const SizedBox(height: 8),
                         const SizedBox(height: 8),
                         Row(
@@ -294,9 +295,7 @@ class _GridExportScreenState extends State<GridExportScreen> {
                                           children: [
                                             for (final colorGroup in [
                                               Colors.primaries,
-                                              [
-                                                Colors.black,
-                                              ]
+                                              [Colors.black],
                                             ])
                                               Wrap(
                                                 children: [
@@ -305,25 +304,26 @@ class _GridExportScreenState extends State<GridExportScreen> {
                                                     Padding(
                                                       padding:
                                                           const EdgeInsets.all(
-                                                              4.0),
+                                                            4.0,
+                                                          ),
                                                       child: InkWell(
                                                         onTap: () =>
                                                             Navigator.of(
-                                                                    context)
-                                                                .pop(color),
+                                                              context,
+                                                            ).pop(color),
                                                         child: Container(
                                                           width: 32,
                                                           height: 32,
-                                                          decoration:
-                                                              BoxDecoration(
+                                                          decoration: BoxDecoration(
                                                             color: color,
                                                             border: Border.all(
-                                                                color: Colors
-                                                                    .grey),
+                                                              color:
+                                                                  Colors.grey,
+                                                            ),
                                                             borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        4),
+                                                                BorderRadius.circular(
+                                                                  4,
+                                                                ),
                                                           ),
                                                         ),
                                                       ),
@@ -380,9 +380,7 @@ class _GridExportScreenState extends State<GridExportScreen> {
                                           children: [
                                             for (final colorGroup in [
                                               Colors.primaries,
-                                              [
-                                                Colors.black,
-                                              ]
+                                              [Colors.black],
                                             ])
                                               Wrap(
                                                 children: [
@@ -391,25 +389,26 @@ class _GridExportScreenState extends State<GridExportScreen> {
                                                     Padding(
                                                       padding:
                                                           const EdgeInsets.all(
-                                                              4.0),
+                                                            4.0,
+                                                          ),
                                                       child: InkWell(
                                                         onTap: () =>
                                                             Navigator.of(
-                                                                    context)
-                                                                .pop(color),
+                                                              context,
+                                                            ).pop(color),
                                                         child: Container(
                                                           width: 32,
                                                           height: 32,
-                                                          decoration:
-                                                              BoxDecoration(
+                                                          decoration: BoxDecoration(
                                                             color: color,
                                                             border: Border.all(
-                                                                color: Colors
-                                                                    .grey),
+                                                              color:
+                                                                  Colors.grey,
+                                                            ),
                                                             borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        4),
+                                                                BorderRadius.circular(
+                                                                  4,
+                                                                ),
                                                           ),
                                                         ),
                                                       ),
@@ -542,8 +541,10 @@ class _GridExportScreenState extends State<GridExportScreen> {
     );
   }
 
-  Future<void> _exportGrid(String formatName,
-      {List<String>? selectedColumns}) async {
+  Future<void> _exportGrid(
+    String formatName, {
+    List<String>? selectedColumns,
+  }) async {
     setState(() {
       isExporting = true;
       exportStatus = 'Exporting as $formatName...';
@@ -582,21 +583,21 @@ class _GridExportScreenState extends State<GridExportScreen> {
         );
       } else if (formatName == formatPdf) {
         // Create page format based on orientation
-        final format =
-            pdfLandscape ? PdfPageFormat.a4.landscape : PdfPageFormat.a4;
+        final format = pdfLandscape
+            ? PdfPageFormat.a4.landscape
+            : PdfPageFormat.a4;
 
         // Function to convert Flutter Color to PdfColor
         PdfColor flutterToPdfColor(Color color) {
           return PdfColor.fromInt(
-              // ignore: deprecated_member_use
-              color.value); // compatibility with Flutter 3.27
+            // ignore: deprecated_member_use
+            color.value,
+          ); // compatibility with Flutter 3.27
         }
 
         // Create theme data
         final themeData = pw.ThemeData(
-          tableHeader: pw.TextStyle(
-            color: flutterToPdfColor(headerColor),
-          ),
+          tableHeader: pw.TextStyle(color: flutterToPdfColor(headerColor)),
           defaultTextStyle: pw.TextStyle(
             color: flutterToPdfColor(textColor),
             fontSize: 12,
@@ -604,42 +605,38 @@ class _GridExportScreenState extends State<GridExportScreen> {
         );
 
         final content = await TrinaGridExportPdf().export(
-            stateManager: stateManager,
-            columns: selectedColumns,
-            includeHeaders: includeHeaders,
-            ignoreFixedRows: ignoreFixedRows,
-            title: pdfTitle,
-            creator: pdfCreator,
-            pdfSettings: TrinaGridExportPdfSettings(
-              pageTheme: pw.PageTheme(
-                pageFormat: format,
-                theme: themeData,
-              ),
-              cellStyle: pw.TextStyle(
-                color: flutterToPdfColor(textColor),
-                fontSize: 12,
-              ),
-              cellDecoration: (index, data, rowNum) {
-                return pw.BoxDecoration(
-                  border: pw.Border.all(
-                    color: PdfColor.fromInt(0x000000),
-                    width: 0.5,
-                  ),
-                );
-              },
-              headerCellDecoration: pw.BoxDecoration(
+          stateManager: stateManager,
+          columns: selectedColumns,
+          includeHeaders: includeHeaders,
+          ignoreFixedRows: ignoreFixedRows,
+          title: pdfTitle,
+          creator: pdfCreator,
+          pdfSettings: TrinaGridExportPdfSettings(
+            pageTheme: pw.PageTheme(pageFormat: format, theme: themeData),
+            cellStyle: pw.TextStyle(
+              color: flutterToPdfColor(textColor),
+              fontSize: 12,
+            ),
+            cellDecoration: (index, data, rowNum) {
+              return pw.BoxDecoration(
                 border: pw.Border.all(
                   color: PdfColor.fromInt(0x000000),
                   width: 0.5,
                 ),
+              );
+            },
+            headerCellDecoration: pw.BoxDecoration(
+              border: pw.Border.all(
+                color: PdfColor.fromInt(0x000000),
+                width: 0.5,
               ),
-              headerStyle: pw.TextStyle(
-                color: flutterToPdfColor(Colors.white),
-              ),
-              headerDecoration: pw.BoxDecoration(
-                color: flutterToPdfColor(headerColor),
-              ),
-            ));
+            ),
+            headerStyle: pw.TextStyle(color: flutterToPdfColor(Colors.white)),
+            headerDecoration: pw.BoxDecoration(
+              color: flutterToPdfColor(headerColor),
+            ),
+          ),
+        );
         saveFilePath = await FileSaver.instance.saveFile(
           name: fileName,
           bytes: content,
@@ -659,11 +656,9 @@ class _GridExportScreenState extends State<GridExportScreen> {
         return;
       }
       if (saveFilePath.isNotEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('File saved to $saveFilePath'),
-          ),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('File saved to $saveFilePath')));
       }
     } catch (e) {
       setState(() {
@@ -691,7 +686,8 @@ class _GridExportScreenState extends State<GridExportScreen> {
         Text('CSV Export with column selection and headers option'),
         SizedBox(height: 10),
         Text(
-            'Export grid data as PDF, CSV, Excel, or JSON. You can export all visible columns or select specific columns to export.'),
+          'Export grid data as PDF, CSV, Excel, or JSON. You can export all visible columns or select specific columns to export.',
+        ),
       ],
       topButtons: [
         TrinaExampleButton(
@@ -748,8 +744,8 @@ class _GridExportScreenState extends State<GridExportScreen> {
                       color: exportStatus.contains('failed')
                           ? Colors.red
                           : exportStatus.contains('Successfully')
-                              ? Colors.green
-                              : Colors.black,
+                          ? Colors.green
+                          : Colors.black,
                     ),
                   ),
                 ],
@@ -795,10 +791,7 @@ class _GridExportScreenState extends State<GridExportScreen> {
   ) {
     return ElevatedButton.icon(
       icon: FaIcon(icon, size: 16, color: Colors.white),
-      label: Text(
-        label,
-        style: const TextStyle(color: Colors.white),
-      ),
+      label: Text(label, style: const TextStyle(color: Colors.white)),
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),

@@ -77,7 +77,8 @@ class _RowWithCheckboxScreenState extends State<RowWithCheckboxScreen> {
       topContents: const [
         Text('You can select rows with checkbox.'),
         Text(
-            'If you set the enableRowChecked property of a column to true, a checkbox appears in the cell of that column.'),
+          'If you set the enableRowChecked property of a column to true, a checkbox appears in the cell of that column.',
+        ),
       ],
       topButtons: [
         TrinaExampleButton(

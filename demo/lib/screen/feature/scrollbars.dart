@@ -172,8 +172,9 @@ class _ScrollbarsScreenState extends State<ScrollbarsScreen> {
                 // Scrollbar direction controls
                 Row(
                   children: [
-                    _buildSwitchControl('Show Horizontal', showHorizontal,
-                        (value) {
+                    _buildSwitchControl('Show Horizontal', showHorizontal, (
+                      value,
+                    ) {
                       setState(() {
                         showHorizontal = value;
 
@@ -355,7 +356,8 @@ class _ScrollbarsScreenState extends State<ScrollbarsScreen> {
                               'Light Blue',
                               trackColor == Colors.lightBlue.withAlpha(50),
                               () => _setTrackColor(
-                                  Colors.lightBlue.withAlpha(50)),
+                                Colors.lightBlue.withAlpha(50),
+                              ),
                             ),
                             _buildColorButton(
                               Colors.pink.withAlpha(50),
@@ -420,7 +422,8 @@ class _ScrollbarsScreenState extends State<ScrollbarsScreen> {
                               'Deep Purple',
                               thumbHoverColor == Colors.deepPurple.shade700,
                               () => _setThumbHoverColor(
-                                  Colors.deepPurple.shade700),
+                                Colors.deepPurple.shade700,
+                              ),
                             ),
                           ],
                         ),
@@ -448,7 +451,8 @@ class _ScrollbarsScreenState extends State<ScrollbarsScreen> {
                               'Grey',
                               trackHoverColor == Colors.grey.withAlpha(100),
                               () => _setTrackHoverColor(
-                                  Colors.grey.withAlpha(100)),
+                                Colors.grey.withAlpha(100),
+                              ),
                             ),
                             _buildColorButton(
                               Colors.lightBlue.withAlpha(100),
@@ -456,21 +460,24 @@ class _ScrollbarsScreenState extends State<ScrollbarsScreen> {
                               trackHoverColor ==
                                   Colors.lightBlue.withAlpha(100),
                               () => _setTrackHoverColor(
-                                  Colors.lightBlue.withAlpha(100)),
+                                Colors.lightBlue.withAlpha(100),
+                              ),
                             ),
                             _buildColorButton(
                               Colors.pink.withAlpha(100),
                               'Pink',
                               trackHoverColor == Colors.pink.withAlpha(100),
                               () => _setTrackHoverColor(
-                                  Colors.pink.withAlpha(100)),
+                                Colors.pink.withAlpha(100),
+                              ),
                             ),
                             _buildColorButton(
                               Colors.amber.withAlpha(100),
                               'Amber',
                               trackHoverColor == Colors.amber.withAlpha(100),
                               () => _setTrackHoverColor(
-                                  Colors.amber.withAlpha(100)),
+                                Colors.amber.withAlpha(100),
+                              ),
                             ),
                           ],
                         ),
@@ -487,21 +494,25 @@ class _ScrollbarsScreenState extends State<ScrollbarsScreen> {
   }
 
   Widget _buildSwitchControl(
-      String label, bool value, Function(bool) onChanged) {
+    String label,
+    bool value,
+    Function(bool) onChanged,
+  ) {
     return Row(
       children: [
         Text(label),
         const SizedBox(width: 8),
-        Switch(
-          value: value,
-          onChanged: onChanged,
-        ),
+        Switch(value: value, onChanged: onChanged),
       ],
     );
   }
 
   Widget _buildColorButton(
-      Color? color, String label, bool isSelected, VoidCallback onPressed) {
+    Color? color,
+    String label,
+    bool isSelected,
+    VoidCallback onPressed,
+  ) {
     color = color ?? Colors.grey.shade300;
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
@@ -512,9 +523,7 @@ class _ScrollbarsScreenState extends State<ScrollbarsScreen> {
         elevation: isSelected ? 4 : 0,
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         side: isSelected ? BorderSide(color: Colors.black45, width: 1) : null,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
       ),
       onPressed: onPressed,
       child: Text(

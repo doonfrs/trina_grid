@@ -63,7 +63,7 @@ enum TrinaMoveDirection {
     return switch (this) {
       TrinaMoveDirection.left => TrinaMoveDirection.right,
       TrinaMoveDirection.right => TrinaMoveDirection.left,
-      TrinaMoveDirection.up || TrinaMoveDirection.down => this
+      TrinaMoveDirection.up || TrinaMoveDirection.down => this,
     };
   }
 }

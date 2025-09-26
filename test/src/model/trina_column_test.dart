@@ -6,8 +6,7 @@ import '../../helper/row_helper.dart';
 
 void main() {
   group('titleWithGroup', () {
-    test(
-        'When group is null'
+    test('When group is null'
         'then titleWithGroup should be title.', () {
       final column = TrinaColumn(
         title: 'column',
@@ -19,8 +18,7 @@ void main() {
       expect(column.titleWithGroup, 'column');
     });
 
-    test(
-        'When group has one element'
+    test('When group has one element'
         'then titleWithGroup should be group name and column name.', () {
       final column = TrinaColumn(
         title: 'column',
@@ -33,8 +31,7 @@ void main() {
       expect(column.titleWithGroup, 'group column');
     });
 
-    test(
-        'When group has multiple elements'
+    test('When group has multiple elements'
         'then titleWithGroup should be group name and column name.', () {
       final column = TrinaColumn(
         title: 'column',
@@ -57,8 +54,7 @@ void main() {
       expect(column.titleWithGroup, 'groupA groupA2 groupA2-1 column');
     });
 
-    test(
-        'When group has multiple elements'
+    test('When group has multiple elements'
         'and expandedColumn is true'
         'then titleWithGroup should be group name and column name.', () {
       final column = TrinaColumn(
@@ -236,8 +232,7 @@ void main() {
   });
 
   group('TrinaColumnTypeText 의 defaultValue', () {
-    test(
-        'When defaultValue is set'
+    test('When defaultValue is set'
         'then defaultValue should be set.', () {
       final TrinaColumnTypeText column =
           TrinaColumnType.text(defaultValue: 'default') as TrinaColumnTypeText;
@@ -245,8 +240,7 @@ void main() {
       expect(column.defaultValue, 'default');
     });
 
-    test(
-        'When defaultValue is set'
+    test('When defaultValue is set'
         'then defaultValue should be set.', () {
       final TrinaColumnTypeNumber column =
           TrinaColumnType.number(defaultValue: 123) as TrinaColumnTypeNumber;
@@ -254,8 +248,7 @@ void main() {
       expect(column.defaultValue, 123);
     });
 
-    test(
-        'When defaultValue is set'
+    test('When defaultValue is set'
         'then defaultValue should be set.', () {
       final TrinaColumnTypeSelect column =
           TrinaColumnType.select(<String>['One'], defaultValue: 'One')
@@ -264,8 +257,7 @@ void main() {
       expect(column.defaultValue, 'One');
     });
 
-    test(
-        'When defaultValue is set'
+    test('When defaultValue is set'
         'then defaultValue should be set.', () {
       final TrinaColumnTypeDate column =
           TrinaColumnType.date(defaultValue: DateTime.parse('2020-01-01'))
@@ -274,8 +266,7 @@ void main() {
       expect(column.defaultValue, DateTime.parse('2020-01-01'));
     });
 
-    test(
-        'When defaultValue is set'
+    test('When defaultValue is set'
         'then defaultValue should be set.', () {
       final TrinaColumnTypeTime column =
           TrinaColumnType.time(defaultValue: '20:30') as TrinaColumnTypeTime;
@@ -300,32 +291,28 @@ void main() {
     });
 
     group('isValid', () {
-      test(
-          'When value is string'
+      test('When value is string'
           'then isValid should be true.', () {
         final TrinaColumnTypeText textColumn =
             TrinaColumnType.text() as TrinaColumnTypeText;
         expect(textColumn.isValid('text'), isTrue);
       });
 
-      test(
-          'When value is number'
+      test('When value is number'
           'then isValid should be true.', () {
         final TrinaColumnTypeText textColumn =
             TrinaColumnType.text() as TrinaColumnTypeText;
         expect(textColumn.isValid(1234), isTrue);
       });
 
-      test(
-          'When value is empty'
+      test('When value is empty'
           'then isValid should be true.', () {
         final TrinaColumnTypeText textColumn =
             TrinaColumnType.text() as TrinaColumnTypeText;
         expect(textColumn.isValid(''), isTrue);
       });
 
-      test(
-          'When value is null'
+      test('When value is null'
           'then isValid should be false.', () {
         final TrinaColumnTypeText textColumn =
             TrinaColumnType.text() as TrinaColumnTypeText;
@@ -334,24 +321,21 @@ void main() {
     });
 
     group('compare', () {
-      test(
-          'When value1 is less than value2'
+      test('When value1 is less than value2'
           'then compare should return -1.', () {
         final TrinaColumnTypeText textColumn =
             TrinaColumnType.text() as TrinaColumnTypeText;
         expect(textColumn.compare('가', '나'), -1);
       });
 
-      test(
-          'When value1 is greater than value2'
+      test('When value1 is greater than value2'
           'then compare should return 1.', () {
         final TrinaColumnTypeText textColumn =
             TrinaColumnType.text() as TrinaColumnTypeText;
         expect(textColumn.compare('나', '가'), 1);
       });
 
-      test(
-          'When value1 is equal to value2'
+      test('When value1 is equal to value2'
           'then compare should return 0.', () {
         final TrinaColumnTypeText textColumn =
             TrinaColumnType.text() as TrinaColumnTypeText;
@@ -382,32 +366,28 @@ void main() {
     });
 
     group('isValid', () {
-      test(
-          'When value is string'
+      test('When value is string'
           'then isValid should be false.', () {
         final TrinaColumnTypeNumber numberColumn =
             TrinaColumnType.number() as TrinaColumnTypeNumber;
         expect(numberColumn.isValid('text'), isFalse);
       });
 
-      test(
-          'When value is number'
+      test('When value is number'
           'then isValid should be true.', () {
         final TrinaColumnTypeNumber numberColumn =
             TrinaColumnType.number() as TrinaColumnTypeNumber;
         expect(numberColumn.isValid(123), isTrue);
       });
 
-      test(
-          'When value is negative'
+      test('When value is negative'
           'then isValid should be true.', () {
         final TrinaColumnTypeNumber numberColumn =
             TrinaColumnType.number() as TrinaColumnTypeNumber;
         expect(numberColumn.isValid(-123), isTrue);
       });
 
-      test(
-          'When negative is false'
+      test('When negative is false'
           'and value is negative'
           'then isValid should be false.', () {
         final TrinaColumnTypeNumber numberColumn =
@@ -417,24 +397,21 @@ void main() {
     });
 
     group('compare', () {
-      test(
-          'When value1 is less than value2'
+      test('When value1 is less than value2'
           'then compare should return -1.', () {
         final TrinaColumnTypeNumber column =
             TrinaColumnType.number() as TrinaColumnTypeNumber;
         expect(column.compare(1, 2), -1);
       });
 
-      test(
-          'When value1 is greater than value2'
+      test('When value1 is greater than value2'
           'then compare should return 1.', () {
         final TrinaColumnTypeNumber column =
             TrinaColumnType.number() as TrinaColumnTypeNumber;
         expect(column.compare(2, 1), 1);
       });
 
-      test(
-          'When value1 is equal to value2'
+      test('When value1 is equal to value2'
           'then compare should return 0.', () {
         final TrinaColumnTypeNumber column =
             TrinaColumnType.number() as TrinaColumnTypeNumber;
@@ -445,8 +422,7 @@ void main() {
 
   group('TrinaColumnTypeSelect', () {
     group('isValid', () {
-      test(
-          'When item is in items'
+      test('When item is in items'
           'then isValid should be true.', () {
         final TrinaColumnTypeSelect selectColumn =
             TrinaColumnType.select(<String>['A', 'B', 'C'])
@@ -454,8 +430,7 @@ void main() {
         expect(selectColumn.isValid('A'), isTrue);
       });
 
-      test(
-          'When item is not in items'
+      test('When item is not in items'
           'then isValid should be false.', () {
         final TrinaColumnTypeSelect selectColumn =
             TrinaColumnType.select(<String>['A', 'B', 'C'])
@@ -465,8 +440,7 @@ void main() {
     });
 
     group('compare', () {
-      test(
-          'When value1 is less than value2'
+      test('When value1 is less than value2'
           'then compare should return -1.', () {
         final TrinaColumnTypeSelect column =
             TrinaColumnType.select(<String>['One', 'Two', 'Three'])
@@ -474,8 +448,7 @@ void main() {
         expect(column.compare('Two', 'Three'), -1);
       });
 
-      test(
-          'When value1 is greater than value2'
+      test('When value1 is greater than value2'
           'then compare should return 1.', () {
         final TrinaColumnTypeSelect column =
             TrinaColumnType.select(<String>['One', 'Two', 'Three'])
@@ -483,8 +456,7 @@ void main() {
         expect(column.compare('Three', 'Two'), 1);
       });
 
-      test(
-          'When value1 is equal to value2'
+      test('When value1 is equal to value2'
           'then compare should return 0.', () {
         final TrinaColumnTypeSelect column =
             TrinaColumnType.select(<String>['One', 'Two', 'Three'])
@@ -496,24 +468,21 @@ void main() {
 
   group('TrinaColumnTypeDate', () {
     group('isValid', () {
-      test(
-          'When value is not date'
+      test('When value is not date'
           'then isValid should be false.', () {
         final TrinaColumnTypeDate dateColumn =
             TrinaColumnType.date() as TrinaColumnTypeDate;
         expect(dateColumn.isValid('Not a date'), isFalse);
       });
 
-      test(
-          'When value is date'
+      test('When value is date'
           'then isValid should be true.', () {
         final TrinaColumnTypeDate dateColumn =
             TrinaColumnType.date() as TrinaColumnTypeDate;
         expect(dateColumn.isValid('2020-01-01'), isTrue);
       });
 
-      test(
-          'When value is date'
+      test('When value is date'
           'and startDate is not null'
           'and value is less than startDate'
           'then isValid should be false.', () {
@@ -523,8 +492,7 @@ void main() {
         expect(dateColumn.isValid('2020-01-01'), isFalse);
       });
 
-      test(
-          'When value is date'
+      test('When value is date'
           'and startDate is not null'
           'and value is equal to startDate'
           'then isValid should be true.', () {
@@ -534,8 +502,7 @@ void main() {
         expect(dateColumn.isValid('2020-02-01'), isTrue);
       });
 
-      test(
-          'When value is date'
+      test('When value is date'
           'and startDate is not null'
           'and value is greater than startDate'
           'then isValid should be true.', () {
@@ -545,8 +512,7 @@ void main() {
         expect(dateColumn.isValid('2020-02-03'), isTrue);
       });
 
-      test(
-          'When value is date'
+      test('When value is date'
           'and endDate is not null'
           'and value is less than endDate'
           'then isValid should be true.', () {
@@ -556,8 +522,7 @@ void main() {
         expect(dateColumn.isValid('2020-01-01'), isTrue);
       });
 
-      test(
-          'When value is date'
+      test('When value is date'
           'and endDate is not null'
           'and value is equal to endDate'
           'then isValid should be true.', () {
@@ -567,8 +532,7 @@ void main() {
         expect(dateColumn.isValid('2020-02-01'), isTrue);
       });
 
-      test(
-          'When value is date'
+      test('When value is date'
           'and endDate is not null'
           'and value is greater than endDate'
           'then isValid should be false.', () {
@@ -578,49 +542,51 @@ void main() {
         expect(dateColumn.isValid('2020-02-03'), isFalse);
       });
 
-      test(
-          'When value is date'
+      test('When value is date'
           'and startDate is not null'
           'and endDate is not null'
           'and value is in range'
           'then isValid should be true.', () {
-        final TrinaColumnTypeDate dateColumn = TrinaColumnType.date(
-          startDate: DateTime.parse('2020-02-01'),
-          endDate: DateTime.parse('2020-02-05'),
-        ) as TrinaColumnTypeDate;
+        final TrinaColumnTypeDate dateColumn =
+            TrinaColumnType.date(
+                  startDate: DateTime.parse('2020-02-01'),
+                  endDate: DateTime.parse('2020-02-05'),
+                )
+                as TrinaColumnTypeDate;
         expect(dateColumn.isValid('2020-02-03'), isTrue);
       });
 
-      test(
-          'When value is date'
+      test('When value is date'
           'and startDate is not null'
           'and endDate is not null'
           'and value is less than startDate'
           'then isValid should be false.', () {
-        final TrinaColumnTypeDate dateColumn = TrinaColumnType.date(
-          startDate: DateTime.parse('2020-02-01'),
-          endDate: DateTime.parse('2020-02-05'),
-        ) as TrinaColumnTypeDate;
+        final TrinaColumnTypeDate dateColumn =
+            TrinaColumnType.date(
+                  startDate: DateTime.parse('2020-02-01'),
+                  endDate: DateTime.parse('2020-02-05'),
+                )
+                as TrinaColumnTypeDate;
         expect(dateColumn.isValid('2020-01-03'), isFalse);
       });
 
-      test(
-          'When value is date'
+      test('When value is date'
           'and startDate is not null'
           'and endDate is not null'
           'and value is greater than endDate'
           'then isValid should be false.', () {
-        final TrinaColumnTypeDate dateColumn = TrinaColumnType.date(
-          startDate: DateTime.parse('2020-02-01'),
-          endDate: DateTime.parse('2020-02-05'),
-        ) as TrinaColumnTypeDate;
+        final TrinaColumnTypeDate dateColumn =
+            TrinaColumnType.date(
+                  startDate: DateTime.parse('2020-02-01'),
+                  endDate: DateTime.parse('2020-02-05'),
+                )
+                as TrinaColumnTypeDate;
         expect(dateColumn.isValid('2020-02-06'), isFalse);
       });
     });
 
     group('compare', () {
-      test(
-          'When value1 is less than value2'
+      test('When value1 is less than value2'
           'then compare should return -1.', () {
         final TrinaColumnTypeDate column =
             TrinaColumnType.date() as TrinaColumnTypeDate;
@@ -636,8 +602,7 @@ void main() {
         expect(column.compare('12/30/2019', '01/01/2020'), 1);
       });
 
-      test(
-          'When value1 is greater than value2'
+      test('When value1 is greater than value2'
           'then compare should return 1.', () {
         final TrinaColumnTypeDate column =
             TrinaColumnType.date() as TrinaColumnTypeDate;
@@ -653,16 +618,14 @@ void main() {
         expect(column.compare('01/01/2020', '12/30/2019'), -1);
       });
 
-      test(
-          'When value1 is equal to value2'
+      test('When value1 is equal to value2'
           'then compare should return 0.', () {
         final TrinaColumnTypeDate column =
             TrinaColumnType.date() as TrinaColumnTypeDate;
         expect(column.compare('2020-01-01', '2020-01-01'), 0);
       });
 
-      test(
-          'When value1 is equal to value2'
+      test('When value1 is equal to value2'
           'then compare should return 0.', () {
         final TrinaColumnTypeDate column =
             TrinaColumnType.date(format: 'MM/dd/yyyy') as TrinaColumnTypeDate;
@@ -673,56 +636,49 @@ void main() {
 
   group('TrinaColumnTypeTime', () {
     group('isValid', () {
-      test(
-          'When value is not time'
+      test('When value is not time'
           'then isValid should be false.', () {
         final TrinaColumnTypeTime timeColumn =
             TrinaColumnType.time() as TrinaColumnTypeTime;
         expect(timeColumn.isValid('24:00'), isFalse);
       });
 
-      test(
-          'When value is not time'
+      test('When value is not time'
           'then isValid should be false.', () {
         final TrinaColumnTypeTime timeColumn =
             TrinaColumnType.time() as TrinaColumnTypeTime;
         expect(timeColumn.isValid('00:60'), isFalse);
       });
 
-      test(
-          'When value is not time'
+      test('When value is not time'
           'then isValid should be false.', () {
         final TrinaColumnTypeTime timeColumn =
             TrinaColumnType.time() as TrinaColumnTypeTime;
         expect(timeColumn.isValid('24:60'), isFalse);
       });
 
-      test(
-          'When value is time'
+      test('When value is time'
           'then isValid should be true.', () {
         final TrinaColumnTypeTime timeColumn =
             TrinaColumnType.time() as TrinaColumnTypeTime;
         expect(timeColumn.isValid('00:00'), isTrue);
       });
 
-      test(
-          'When value is time'
+      test('When value is time'
           'then isValid should be true.', () {
         final TrinaColumnTypeTime timeColumn =
             TrinaColumnType.time() as TrinaColumnTypeTime;
         expect(timeColumn.isValid('00:59'), isTrue);
       });
 
-      test(
-          'When value is time'
+      test('When value is time'
           'then isValid should be true.', () {
         final TrinaColumnTypeTime timeColumn =
             TrinaColumnType.time() as TrinaColumnTypeTime;
         expect(timeColumn.isValid('23:00'), isTrue);
       });
 
-      test(
-          'When value is time'
+      test('When value is time'
           'then isValid should be true.', () {
         final TrinaColumnTypeTime timeColumn =
             TrinaColumnType.time() as TrinaColumnTypeTime;
@@ -732,8 +688,7 @@ void main() {
   });
 
   group('formattedValueForType', () {
-    test(
-        'When column type is number'
+    test('When column type is number'
         'then formatted value should be formatted by default format.', () {
       final TrinaColumn column = TrinaColumn(
         title: 'number column',
@@ -744,8 +699,7 @@ void main() {
       expect(column.formattedValueForType(12345), '12,345');
     });
 
-    test(
-        'When column type is number'
+    test('When column type is number'
         'then formatted value should be formatted by default format.', () {
       final TrinaColumn column = TrinaColumn(
         title: 'number column',
@@ -756,8 +710,7 @@ void main() {
       expect(column.formattedValueForType(12345678), '12,345,678');
     });
 
-    test(
-        'When column type is not number'
+    test('When column type is not number'
         'then formatted value should not be formatted by default format.', () {
       final TrinaColumn column = TrinaColumn(
         title: 'number column',
@@ -768,67 +721,54 @@ void main() {
       expect(column.formattedValueForType('12345'), '12345');
     });
 
-    test(
-        'When column type is currency'
+    test('When column type is currency'
         'then formatted value should be formatted by currency format.', () {
       final TrinaColumn column = TrinaColumn(
         title: 'currency column',
         field: 'currency_column',
-        type: TrinaColumnType.currency(
-          symbol: '\$',
-          decimalDigits: 2,
-        ),
+        type: TrinaColumnType.currency(symbol: '\$', decimalDigits: 2),
       );
 
       expect(column.formattedValueForType(12345.67), '\$12,345.67');
     });
 
-    test(
-        'When column type is percentage'
+    test('When column type is percentage'
         'then formatted value should be formatted by percentage format.', () {
       final TrinaColumn column = TrinaColumn(
         title: 'percentage column',
         field: 'percentage_column',
-        type: TrinaColumnType.percentage(
-          decimalDigits: 1,
-          showSymbol: true,
-        ),
+        type: TrinaColumnType.percentage(decimalDigits: 1, showSymbol: true),
       );
 
       expect(column.formattedValueForType(0.42), '42.0%');
     });
 
-    test(
-        'When column type is date'
+    test('When column type is date'
         'then formatted value should be formatted by date format.', () {
       final TrinaColumn column = TrinaColumn(
         title: 'date column',
         field: 'date_column',
-        type: TrinaColumnType.date(
-          format: 'yyyy-MM-dd',
-        ),
+        type: TrinaColumnType.date(format: 'yyyy-MM-dd'),
       );
 
       expect(column.formattedValueForType('2023-12-25'), '2023-12-25');
     });
 
-    test(
-        'When column type is dateTime'
+    test('When column type is dateTime'
         'then formatted value should be formatted by dateTime format.', () {
       final TrinaColumn column = TrinaColumn(
         title: 'dateTime column',
         field: 'dateTime_column',
-        type: TrinaColumnType.dateTime(
-          format: 'yyyy-MM-dd HH:mm',
-        ),
+        type: TrinaColumnType.dateTime(format: 'yyyy-MM-dd HH:mm'),
       );
 
-      expect(column.formattedValueForType('2023-12-25 14:30:00'),
-          '2023-12-25 14:30');
+      expect(
+        column.formattedValueForType('2023-12-25 14:30:00'),
+        '2023-12-25 14:30',
+      );
     });
 
-    test(
-        'When column type is boolean'
+    test('When column type is boolean'
         'then formatted value should be formatted by boolean text.', () {
       final TrinaColumn column = TrinaColumn(
         title: 'boolean column',
@@ -846,8 +786,7 @@ void main() {
   });
 
   group('formattedValueForDisplay', () {
-    test(
-        'When formatter is null'
+    test('When formatter is null'
         'then formatted value should be formatted by default format.', () {
       final TrinaColumn column = TrinaColumn(
         title: 'number column',
@@ -858,8 +797,7 @@ void main() {
       expect(column.formattedValueForDisplay(12345), '12,345');
     });
 
-    test(
-        'When formatter is not null'
+    test('When formatter is not null'
         'then formatted value should be formatted by formatter.', () {
       final TrinaColumn column = TrinaColumn(
         title: 'number column',
@@ -890,8 +828,7 @@ void main() {
       return RowHelper.count(1, [column]).first;
     }
 
-    test(
-        'When readOnly is false'
+    test('When readOnly is false'
         'and checkReadOnly is null'
         'then checkReadOnly should return false.', () {
       final column = makeColumn(readOnly: false);
@@ -899,8 +836,7 @@ void main() {
       expect(column.readOnly, false);
     });
 
-    test(
-        'When readOnly is true'
+    test('When readOnly is true'
         'and checkReadOnly is null'
         'then checkReadOnly should return true.', () {
       final column = makeColumn(readOnly: true);
@@ -908,14 +844,10 @@ void main() {
       expect(column.readOnly, true);
     });
 
-    test(
-        'When readOnly is false'
+    test('When readOnly is false'
         'and checkReadOnly is not null'
         'then checkReadOnly should return true.', () {
-      final column = makeColumn(
-        readOnly: false,
-        checkReadOnly: (_, __) => true,
-      );
+      final column = makeColumn(readOnly: false, checkReadOnly: (_, _) => true);
 
       final row = makeRow(column);
 
@@ -924,14 +856,10 @@ void main() {
       expect(column.checkReadOnly(row, cell!), true);
     });
 
-    test(
-        'When readOnly is true'
+    test('When readOnly is true'
         'and checkReadOnly is not null'
         'then checkReadOnly should return false.', () {
-      final column = makeColumn(
-        readOnly: true,
-        checkReadOnly: (_, __) => false,
-      );
+      final column = makeColumn(readOnly: true, checkReadOnly: (_, _) => false);
 
       final row = makeRow(column);
 
@@ -943,8 +871,7 @@ void main() {
 
   group('formattedValueForDisplayInEditing', () {
     group('When column type is not TrinaColumnTypeWithNumberFormat', () {
-      test(
-          'When formatter is not null'
+      test('When formatter is not null'
           'and readOnly is true'
           'then formatted value should be formatted by formatter.', () {
         final column = TrinaColumn(
@@ -962,8 +889,7 @@ void main() {
         );
       });
 
-      test(
-          'When readOnly is false'
+      test('When readOnly is false'
           'and formatter is not null'
           'and type is select'
           'then formatted value should be formatted by formatter.', () {
@@ -982,8 +908,7 @@ void main() {
         );
       });
 
-      test(
-          'When readOnly is false'
+      test('When readOnly is false'
           'and formatter is not null'
           'and type is time'
           'then formatted value should be formatted by formatter.', () {
@@ -1002,8 +927,7 @@ void main() {
         );
       });
 
-      test(
-          'When readOnly is false'
+      test('When readOnly is false'
           'and formatter is not null'
           'and type is date'
           'then formatted value should be formatted by formatter.', () {
@@ -1022,8 +946,7 @@ void main() {
         );
       });
 
-      test(
-          'When readOnly is false'
+      test('When readOnly is false'
           'and formatter is not null'
           'and type is date'
           'then formatted value should be formatted by formatter.', () {
@@ -1042,8 +965,7 @@ void main() {
         );
       });
 
-      test(
-          'When readOnly is false'
+      test('When readOnly is false'
           'and formatter is not null'
           'and applyFormatterInEditing is false'
           'then formatted value should not be formatted by formatter.', () {

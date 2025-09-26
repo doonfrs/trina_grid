@@ -35,7 +35,8 @@ void main() {
     when(stateManager.configuration).thenReturn(const TrinaGridConfiguration());
     when(stateManager.keyPressed).thenReturn(TrinaGridKeyPressed());
     when(stateManager.rowTotalHeight).thenReturn(
-        RowHelper.resolveRowTotalHeight(stateManager.configuration.style));
+      RowHelper.resolveRowTotalHeight(stateManager.configuration.style),
+    );
     when(stateManager.localeText).thenReturn(const TrinaGridLocaleText());
     when(stateManager.keepFocus).thenReturn(true);
     when(stateManager.hasFocus).thenReturn(true);
@@ -63,11 +64,7 @@ void main() {
 
     final TrinaCell cell = TrinaCell(value: 'default cell value');
 
-    final TrinaRow row = TrinaRow(
-      cells: {
-        'column_field_name': cell,
-      },
-    );
+    final TrinaRow row = TrinaRow(cells: {'column_field_name': cell});
 
     final cellWidget = TrinaWidgetTestHelper('cell widget', (tester) async {
       await tester.pumpWidget(
@@ -85,13 +82,10 @@ void main() {
       );
     });
 
-    cellWidget.test(
-      'Text widget should be rendered',
-      (tester) async {
-        expect(find.byType(Text), findsOneWidget);
-        expect(find.text('default cell value'), findsOneWidget);
-      },
-    );
+    cellWidget.test('Text widget should be rendered', (tester) async {
+      expect(find.byType(Text), findsOneWidget);
+      expect(find.text('default cell value'), findsOneWidget);
+    });
 
     cellWidget.test(
       'enableRowDrag is false by default, so Draggable widget should not be rendered',
@@ -121,11 +115,7 @@ void main() {
 
       final TrinaCell cell = TrinaCell(value: 'default cell value');
 
-      final TrinaRow row = TrinaRow(
-        cells: {
-          'column_field_name': cell,
-        },
-      );
+      final TrinaRow row = TrinaRow(cells: {'column_field_name': cell});
 
       return TrinaWidgetTestHelper('cell widget', (tester) async {
         await tester.pumpWidget(
@@ -144,20 +134,21 @@ void main() {
       });
     }
 
-    final renderText = buildCellWidgetWithRenderer(
-        (TrinaColumnRendererContext rendererContext) {
+    final renderText = buildCellWidgetWithRenderer((
+      TrinaColumnRendererContext rendererContext,
+    ) {
       return const Text('renderer value');
     });
 
-    renderText.test(
-      'Widget returned by renderer should be displayed',
-      (tester) async {
-        expect(find.text('renderer value'), findsOneWidget);
-      },
-    );
+    renderText.test('Widget returned by renderer should be displayed', (
+      tester,
+    ) async {
+      expect(find.text('renderer value'), findsOneWidget);
+    });
 
-    final renderTextWithCellValue = buildCellWidgetWithRenderer(
-        (TrinaColumnRendererContext rendererContext) {
+    final renderTextWithCellValue = buildCellWidgetWithRenderer((
+      TrinaColumnRendererContext rendererContext,
+    ) {
       return Text(rendererContext.cell.value.toString());
     });
 
@@ -179,15 +170,9 @@ void main() {
 
     final TrinaCell cell = TrinaCell(value: 'default cell value');
 
-    final TrinaRow row = TrinaRow(
-      cells: {
-        'column_field_name': cell,
-      },
-    );
+    final TrinaRow row = TrinaRow(cells: {'column_field_name': cell});
 
-    cellWidget({
-      bool? canRowDrag,
-    }) {
+    cellWidget({bool? canRowDrag}) {
       return TrinaWidgetTestHelper('cell widget', (tester) async {
         when(stateManager.canRowDrag).thenReturn(canRowDrag!);
 
@@ -240,16 +225,19 @@ void main() {
 
         verify(stateManager.setIsDraggingRow(true, notify: false)).called(1);
 
-        verify(stateManager.setDragRows(
-          [row],
-        )).called(1);
+        verify(stateManager.setDragRows([row])).called(1);
 
-        verify(eventManager!.addEvent(
-          argThat(
-              TrinaObjectMatcher<TrinaGridScrollUpdateEvent>(rule: (object) {
-            return true;
-          })),
-        )).called(greaterThan(1));
+        verify(
+          eventManager!.addEvent(
+            argThat(
+              TrinaObjectMatcher<TrinaGridScrollUpdateEvent>(
+                rule: (object) {
+                  return true;
+                },
+              ),
+            ),
+          ),
+        ).called(greaterThan(1));
 
         verify(stateManager.getRowIdxByOffset(any)).called(greaterThan(1));
 
@@ -272,10 +260,7 @@ void main() {
 
         final TrinaCell cell = TrinaCell(value: 'default cell value');
 
-        row = TrinaRow(
-          cells: {},
-          checked: checked,
-        );
+        row = TrinaRow(cells: {}, checked: checked);
 
         when(stateManager.getRowByIdx(any)).thenReturn(row);
 
@@ -297,35 +282,32 @@ void main() {
 
     final checkedCellWidget = buildCellWidget(true);
 
-    checkedCellWidget.test(
-      'Checkbox widget should be rendered',
-      (tester) async {
-        expect(find.byType(Checkbox), findsOneWidget);
-      },
-    );
+    checkedCellWidget.test('Checkbox widget should be rendered', (
+      tester,
+    ) async {
+      expect(find.byType(Checkbox), findsOneWidget);
+    });
 
-    checkedCellWidget.test(
-      'Tapping the Checkbox should toggle its value',
-      (tester) async {
-        await tester.tap(find.byType(Checkbox));
+    checkedCellWidget.test('Tapping the Checkbox should toggle its value', (
+      tester,
+    ) async {
+      await tester.tap(find.byType(Checkbox));
 
-        expect(row!.checked, isTrue);
+      expect(row!.checked, isTrue);
 
-        verify(stateManager.setRowChecked(row, false)).called(1);
-      },
-    );
+      verify(stateManager.setRowChecked(row, false)).called(1);
+    });
 
     final uncheckedCellWidget = buildCellWidget(false);
 
-    uncheckedCellWidget.test(
-      'Tapping the Checkbox should toggle its value',
-      (tester) async {
-        await tester.tap(find.byType(Checkbox));
+    uncheckedCellWidget.test('Tapping the Checkbox should toggle its value', (
+      tester,
+    ) async {
+      await tester.tap(find.byType(Checkbox));
 
-        expect(row!.checked, isFalse);
+      expect(row!.checked, isFalse);
 
-        verify(stateManager.setRowChecked(row, true)).called(1);
-      },
-    );
+      verify(stateManager.setRowChecked(row, true)).called(1);
+    });
   });
 }

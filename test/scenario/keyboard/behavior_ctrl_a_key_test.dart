@@ -15,34 +15,31 @@ void main() {
 
     TrinaGridStateManager? stateManager;
 
-    final withTheCellSelected = TrinaWidgetTestHelper(
-      '0, 0 cell is selected',
-      (tester) async {
-        columns = [
-          ...ColumnHelper.textColumn('header', count: 10),
-        ];
+    final withTheCellSelected = TrinaWidgetTestHelper('0, 0 cell is selected', (
+      tester,
+    ) async {
+      columns = [...ColumnHelper.textColumn('header', count: 10)];
 
-        rows = RowHelper.count(10, columns);
+      rows = RowHelper.count(10, columns);
 
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Material(
-              child: TrinaGrid(
-                columns: columns,
-                rows: rows,
-                onLoaded: (TrinaGridOnLoadedEvent event) {
-                  stateManager = event.stateManager;
-                },
-              ),
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Material(
+            child: TrinaGrid(
+              columns: columns,
+              rows: rows,
+              onLoaded: (TrinaGridOnLoadedEvent event) {
+                stateManager = event.stateManager;
+              },
             ),
           ),
-        );
+        ),
+      );
 
-        await tester.pump();
+      await tester.pump();
 
-        await tester.tap(find.text('header0 value 0'));
-      },
-    );
+      await tester.tap(find.text('header0 value 0'));
+    });
 
     withTheCellSelected.test(
       'When Ctrl+A is pressed in normal mode, all cells should be selected',

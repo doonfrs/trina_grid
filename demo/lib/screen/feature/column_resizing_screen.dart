@@ -61,9 +61,7 @@ class _ColumnResizingScreenState extends State<ColumnResizingScreen> {
         onLoaded: (TrinaGridOnLoadedEvent event) {
           stateManager = event.stateManager;
         },
-        createHeader: (stateManager) => _Header(
-          setConfig: setColumnSizeConfig,
-        ),
+        createHeader: (stateManager) => _Header(setConfig: setColumnSizeConfig),
         configuration: const TrinaGridConfiguration(
           columnSize: TrinaGridColumnSizeConfig(
             autoSizeMode: TrinaAutoSizeMode.none,
@@ -76,9 +74,7 @@ class _ColumnResizingScreenState extends State<ColumnResizingScreen> {
 }
 
 class _Header extends StatefulWidget {
-  const _Header({
-    required this.setConfig,
-  });
+  const _Header({required this.setConfig});
 
   final void Function(TrinaGridColumnSizeConfig) setConfig;
 
@@ -110,18 +106,14 @@ class _HeaderState extends State<_Header> {
 
   void _setAutoSize(TrinaAutoSizeMode mode) {
     setState(() {
-      columnSizeConfig = columnSizeConfig.copyWith(
-        autoSizeMode: mode,
-      );
+      columnSizeConfig = columnSizeConfig.copyWith(autoSizeMode: mode);
       widget.setConfig(columnSizeConfig);
     });
   }
 
   void _setResizeMode(TrinaResizeMode mode) {
     setState(() {
-      columnSizeConfig = columnSizeConfig.copyWith(
-        resizeMode: mode,
-      );
+      columnSizeConfig = columnSizeConfig.copyWith(resizeMode: mode);
       widget.setConfig(columnSizeConfig);
     });
   }
@@ -131,16 +123,21 @@ class _HeaderState extends State<_Header> {
       restoreOptions[option] = flag == true;
 
       columnSizeConfig = columnSizeConfig.copyWith(
-        restoreAutoSizeAfterHideColumn: restoreOptions[
-            _RestoreAutoSizeOptions.restoreAutoSizeAfterHideColumn],
-        restoreAutoSizeAfterFrozenColumn: restoreOptions[
-            _RestoreAutoSizeOptions.restoreAutoSizeAfterFrozenColumn],
-        restoreAutoSizeAfterMoveColumn: restoreOptions[
-            _RestoreAutoSizeOptions.restoreAutoSizeAfterMoveColumn],
-        restoreAutoSizeAfterInsertColumn: restoreOptions[
-            _RestoreAutoSizeOptions.restoreAutoSizeAfterInsertColumn],
-        restoreAutoSizeAfterRemoveColumn: restoreOptions[
-            _RestoreAutoSizeOptions.restoreAutoSizeAfterRemoveColumn],
+        restoreAutoSizeAfterHideColumn:
+            restoreOptions[_RestoreAutoSizeOptions
+                .restoreAutoSizeAfterHideColumn],
+        restoreAutoSizeAfterFrozenColumn:
+            restoreOptions[_RestoreAutoSizeOptions
+                .restoreAutoSizeAfterFrozenColumn],
+        restoreAutoSizeAfterMoveColumn:
+            restoreOptions[_RestoreAutoSizeOptions
+                .restoreAutoSizeAfterMoveColumn],
+        restoreAutoSizeAfterInsertColumn:
+            restoreOptions[_RestoreAutoSizeOptions
+                .restoreAutoSizeAfterInsertColumn],
+        restoreAutoSizeAfterRemoveColumn:
+            restoreOptions[_RestoreAutoSizeOptions
+                .restoreAutoSizeAfterRemoveColumn],
       );
 
       widget.setConfig(columnSizeConfig);
@@ -240,30 +237,34 @@ class _HeaderState extends State<_Header> {
                 hint: const Text('restoreAutoSizeOptions'),
                 onChanged: (_RestoreAutoSizeOptions? option) {},
                 items: _RestoreAutoSizeOptions.values
-                    .map<DropdownMenuItem<_RestoreAutoSizeOptions>>(
-                        (_RestoreAutoSizeOptions option) {
-                  return DropdownMenuItem<_RestoreAutoSizeOptions>(
-                    value: option,
-                    onTap: () {
-                      _setRestoreOptions(option, !restoreOptions[option]!);
-                    },
-                    child: Row(
-                      children: [
-                        StatefulBuilder(builder: (_, setter) {
-                          return TrinaScaledCheckbox(
-                            value: restoreOptions[option],
-                            handleOnChanged: (flag) {
-                              setter(() {
-                                _setRestoreOptions(option, flag);
-                              });
-                            },
-                          );
-                        }),
-                        Text(option.name),
-                      ],
-                    ),
-                  );
-                }).toList(),
+                    .map<DropdownMenuItem<_RestoreAutoSizeOptions>>((
+                      _RestoreAutoSizeOptions option,
+                    ) {
+                      return DropdownMenuItem<_RestoreAutoSizeOptions>(
+                        value: option,
+                        onTap: () {
+                          _setRestoreOptions(option, !restoreOptions[option]!);
+                        },
+                        child: Row(
+                          children: [
+                            StatefulBuilder(
+                              builder: (_, setter) {
+                                return TrinaScaledCheckbox(
+                                  value: restoreOptions[option],
+                                  handleOnChanged: (flag) {
+                                    setter(() {
+                                      _setRestoreOptions(option, flag);
+                                    });
+                                  },
+                                );
+                              },
+                            ),
+                            Text(option.name),
+                          ],
+                        ),
+                      );
+                    })
+                    .toList(),
               ),
             ),
           ],

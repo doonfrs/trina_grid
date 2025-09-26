@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 /// A callback function to implement when the scroll reaches the end.
-typedef TrinaInfinityScrollRowsFetch = Future<TrinaInfinityScrollRowsResponse>
-    Function(TrinaInfinityScrollRowsRequest);
+typedef TrinaInfinityScrollRowsFetch =
+    Future<TrinaInfinityScrollRowsResponse> Function(
+      TrinaInfinityScrollRowsRequest,
+    );
 
 /// Request data to get data when scrolling has reached the end.
 class TrinaInfinityScrollRowsRequest {
@@ -49,10 +51,7 @@ class TrinaInfinityScrollRowsRequest {
 /// The return value of the fetch callback function of [TrinaInfinityScrollRow]
 /// when the scroll reaches the end.
 class TrinaInfinityScrollRowsResponse {
-  TrinaInfinityScrollRowsResponse({
-    required this.isLast,
-    required this.rows,
-  });
+  TrinaInfinityScrollRowsResponse({required this.isLast, required this.rows});
 
   /// Set this value to true if all items are returned.
   final bool isLast;
@@ -203,8 +202,9 @@ class _TrinaInfinityScrollRowsState extends State<TrinaInfinityScrollRows> {
       if (!_isLast) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (scroll.hasClients && scroll.position.maxScrollExtent == 0) {
-            var lastRow =
-                stateManager.rows.isNotEmpty ? stateManager.rows.last : null;
+            var lastRow = stateManager.rows.isNotEmpty
+                ? stateManager.rows.last
+                : null;
             _update(lastRow);
           }
         });

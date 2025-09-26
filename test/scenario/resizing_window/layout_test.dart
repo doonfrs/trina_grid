@@ -27,11 +27,7 @@ void main() {
   testWidgets(
     'When the window size is widened, the columns and cells should be displayed in the correct width.',
     (tester) async {
-      await TestHelperUtil.changeWidth(
-        tester: tester,
-        width: 450,
-        height: 600,
-      );
+      await TestHelperUtil.changeWidth(tester: tester, width: 450, height: 600);
 
       final columns = ColumnHelper.textColumn('column', count: 10);
 
@@ -121,11 +117,7 @@ void main() {
       expect(firstRowCells.evaluate().length, 7);
 
       // resize
-      await TestHelperUtil.changeWidth(
-        tester: tester,
-        width: 350,
-        height: 600,
-      );
+      await TestHelperUtil.changeWidth(tester: tester, width: 350, height: 600);
 
       final columnWidgetsAfterResize = find.byType(TrinaBaseColumn);
 
@@ -142,25 +134,23 @@ void main() {
   testWidgets(
     'When TrinaAutoSizeMode.equal is set, the columns and cells should be displayed in the correct width.',
     (tester) async {
-      await TestHelperUtil.changeWidth(
-        tester: tester,
-        width: 550,
-        height: 600,
-      );
+      await TestHelperUtil.changeWidth(tester: tester, width: 550, height: 600);
 
       final columns = ColumnHelper.textColumn('column', count: 10);
 
       final rows = RowHelper.count(10, columns);
 
-      await tester.pumpWidget(buildGrid(
-        columns: columns,
-        rows: rows,
-        configuration: const TrinaGridConfiguration(
-          columnSize: TrinaGridColumnSizeConfig(
-            autoSizeMode: TrinaAutoSizeMode.equal,
+      await tester.pumpWidget(
+        buildGrid(
+          columns: columns,
+          rows: rows,
+          configuration: const TrinaGridConfiguration(
+            columnSize: TrinaGridColumnSizeConfig(
+              autoSizeMode: TrinaAutoSizeMode.equal,
+            ),
           ),
         ),
-      ));
+      );
 
       await tester.pump();
 
@@ -176,11 +166,7 @@ void main() {
       expect(firstRowCells.evaluate().length, 7);
 
       // resize
-      await TestHelperUtil.changeWidth(
-        tester: tester,
-        width: 700,
-        height: 600,
-      );
+      await TestHelperUtil.changeWidth(tester: tester, width: 700, height: 600);
 
       final columnWidgetsAfterResize = find.byType(TrinaBaseColumn);
 
@@ -198,25 +184,23 @@ void main() {
   testWidgets(
     'When TrinaAutoSizeMode.equal is set, the columns and cells should be displayed in the correct width.',
     (tester) async {
-      await TestHelperUtil.changeWidth(
-        tester: tester,
-        width: 550,
-        height: 600,
-      );
+      await TestHelperUtil.changeWidth(tester: tester, width: 550, height: 600);
 
       final columns = ColumnHelper.textColumn('column', count: 10);
 
       final rows = RowHelper.count(10, columns);
 
-      await tester.pumpWidget(buildGrid(
-        columns: columns,
-        rows: rows,
-        configuration: const TrinaGridConfiguration(
-          columnSize: TrinaGridColumnSizeConfig(
-            autoSizeMode: TrinaAutoSizeMode.equal,
+      await tester.pumpWidget(
+        buildGrid(
+          columns: columns,
+          rows: rows,
+          configuration: const TrinaGridConfiguration(
+            columnSize: TrinaGridColumnSizeConfig(
+              autoSizeMode: TrinaAutoSizeMode.equal,
+            ),
           ),
         ),
-      ));
+      );
 
       await tester.pump();
 
@@ -264,15 +248,17 @@ void main() {
 
       final rows = RowHelper.count(10, columns);
 
-      await tester.pumpWidget(buildGrid(
-        columns: columns,
-        rows: rows,
-        configuration: const TrinaGridConfiguration(
-          columnSize: TrinaGridColumnSizeConfig(
-            autoSizeMode: TrinaAutoSizeMode.equal,
+      await tester.pumpWidget(
+        buildGrid(
+          columns: columns,
+          rows: rows,
+          configuration: const TrinaGridConfiguration(
+            columnSize: TrinaGridColumnSizeConfig(
+              autoSizeMode: TrinaAutoSizeMode.equal,
+            ),
           ),
         ),
-      ));
+      );
 
       await tester.pump();
 
@@ -288,11 +274,7 @@ void main() {
       expect(firstRowCells.evaluate().length, 10);
 
       // resize
-      await TestHelperUtil.changeWidth(
-        tester: tester,
-        width: 360,
-        height: 600,
-      );
+      await TestHelperUtil.changeWidth(tester: tester, width: 360, height: 600);
 
       final columnWidgetsAfterResize = find.byType(TrinaBaseColumn);
 
@@ -310,25 +292,23 @@ void main() {
   testWidgets(
     'When TrinaAutoSizeMode.scale is set, the columns and cells should be displayed in the correct width.',
     (tester) async {
-      await TestHelperUtil.changeWidth(
-        tester: tester,
-        width: 550,
-        height: 600,
-      );
+      await TestHelperUtil.changeWidth(tester: tester, width: 550, height: 600);
 
       final columns = ColumnHelper.textColumn('column', count: 10);
 
       final rows = RowHelper.count(10, columns);
 
-      await tester.pumpWidget(buildGrid(
-        columns: columns,
-        rows: rows,
-        configuration: const TrinaGridConfiguration(
-          columnSize: TrinaGridColumnSizeConfig(
-            autoSizeMode: TrinaAutoSizeMode.scale,
+      await tester.pumpWidget(
+        buildGrid(
+          columns: columns,
+          rows: rows,
+          configuration: const TrinaGridConfiguration(
+            columnSize: TrinaGridColumnSizeConfig(
+              autoSizeMode: TrinaAutoSizeMode.scale,
+            ),
           ),
         ),
-      ));
+      );
 
       await tester.pump();
 
@@ -344,11 +324,7 @@ void main() {
       expect(firstRowCells.evaluate().length, 7);
 
       // resize
-      await TestHelperUtil.changeWidth(
-        tester: tester,
-        width: 700,
-        height: 600,
-      );
+      await TestHelperUtil.changeWidth(tester: tester, width: 700, height: 600);
 
       final columnWidgetsAfterResize = find.byType(TrinaBaseColumn);
 
@@ -366,25 +342,23 @@ void main() {
   testWidgets(
     'When TrinaAutoSizeMode.scale is set, the columns and cells should be displayed in the correct width.',
     (tester) async {
-      await TestHelperUtil.changeWidth(
-        tester: tester,
-        width: 550,
-        height: 600,
-      );
+      await TestHelperUtil.changeWidth(tester: tester, width: 550, height: 600);
 
       final columns = ColumnHelper.textColumn('column', count: 10);
 
       final rows = RowHelper.count(10, columns);
 
-      await tester.pumpWidget(buildGrid(
-        columns: columns,
-        rows: rows,
-        configuration: const TrinaGridConfiguration(
-          columnSize: TrinaGridColumnSizeConfig(
-            autoSizeMode: TrinaAutoSizeMode.scale,
+      await tester.pumpWidget(
+        buildGrid(
+          columns: columns,
+          rows: rows,
+          configuration: const TrinaGridConfiguration(
+            columnSize: TrinaGridColumnSizeConfig(
+              autoSizeMode: TrinaAutoSizeMode.scale,
+            ),
           ),
         ),
-      ));
+      );
 
       await tester.pump();
 
@@ -432,15 +406,17 @@ void main() {
 
       final rows = RowHelper.count(10, columns);
 
-      await tester.pumpWidget(buildGrid(
-        columns: columns,
-        rows: rows,
-        configuration: const TrinaGridConfiguration(
-          columnSize: TrinaGridColumnSizeConfig(
-            autoSizeMode: TrinaAutoSizeMode.scale,
+      await tester.pumpWidget(
+        buildGrid(
+          columns: columns,
+          rows: rows,
+          configuration: const TrinaGridConfiguration(
+            columnSize: TrinaGridColumnSizeConfig(
+              autoSizeMode: TrinaAutoSizeMode.scale,
+            ),
           ),
         ),
-      ));
+      );
 
       await tester.pump();
 
@@ -456,11 +432,7 @@ void main() {
       expect(firstRowCells.evaluate().length, 10);
 
       // resize
-      await TestHelperUtil.changeWidth(
-        tester: tester,
-        width: 360,
-        height: 600,
-      );
+      await TestHelperUtil.changeWidth(tester: tester, width: 360, height: 600);
 
       final columnWidgetsAfterResize = find.byType(TrinaBaseColumn);
 

@@ -20,10 +20,7 @@ void main() {
       );
 
       expect(() {
-        stateManager.getColumnsAutoSizeHelper(
-          columns: [],
-          maxWidth: 500,
-        );
+        stateManager.getColumnsAutoSizeHelper(columns: [], maxWidth: 500);
       }, throwsAssertionError);
     });
 
@@ -43,10 +40,7 @@ void main() {
       );
 
       expect(() {
-        stateManager.getColumnsAutoSizeHelper(
-          columns: columns,
-          maxWidth: 500,
-        );
+        stateManager.getColumnsAutoSizeHelper(columns: columns, maxWidth: 500);
       }, throwsAssertionError);
     });
 

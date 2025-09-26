@@ -17,7 +17,7 @@ void main() {
       'Banana',
       'Cherry',
       'Date',
-      'Elderberry'
+      'Elderberry',
     ];
     Future<void> buildMenu<T>(
       WidgetTester tester, {
@@ -111,8 +111,9 @@ void main() {
     });
 
     group('Search', () {
-      testWidgets('filters items correctly with search',
-          (WidgetTester tester) async {
+      testWidgets('filters items correctly with search', (
+        WidgetTester tester,
+      ) async {
         await buildStringMenu(
           tester,
           items: strTestItems,
@@ -132,47 +133,48 @@ void main() {
       });
 
       testWidgets(
-          'shows emptySearchResultBuilder when search yields no results',
-          (WidgetTester tester) async {
-        await buildMenu<String>(
-          tester,
-          items: strTestItems,
-          variant: TrinaDropdownMenuVariant.selectWithSearch,
-          itemToString: (item) => item,
-          initialValue: strTestItems.first,
-          emptySearchResultBuilder: (context) =>
-              const Text('No search results!'),
-        );
+        'shows emptySearchResultBuilder when search yields no results',
+        (WidgetTester tester) async {
+          await buildMenu<String>(
+            tester,
+            items: strTestItems,
+            variant: TrinaDropdownMenuVariant.selectWithSearch,
+            itemToString: (item) => item,
+            initialValue: strTestItems.first,
+            emptySearchResultBuilder: (context) =>
+                const Text('No search results!'),
+          );
 
-        await tester.enterText(find.byType(TextField), 'nonexistent');
-        await tester.pumpAndSettle(const Duration(milliseconds: 300));
+          await tester.enterText(find.byType(TextField), 'nonexistent');
+          await tester.pumpAndSettle(const Duration(milliseconds: 300));
 
-        expect(find.text('No search results!'), findsOneWidget);
-      });
+          expect(find.text('No search results!'), findsOneWidget);
+        },
+      );
     });
 
     group('Selection Logic', () {
-      testWidgets(
-        'calls onItemSelected when an item is tapped',
-        (WidgetTester tester) async {
-          String? selectedItem;
-          await buildStringMenu(
-            tester,
-            items: strTestItems,
-            onItemSelected: (item) {
-              selectedItem = item;
-            },
-          );
-          await tester.ensureVisible(find.text('Cherry'));
-          await tester.tap(find.text('Cherry'));
-          await tester.pump();
+      testWidgets('calls onItemSelected when an item is tapped', (
+        WidgetTester tester,
+      ) async {
+        String? selectedItem;
+        await buildStringMenu(
+          tester,
+          items: strTestItems,
+          onItemSelected: (item) {
+            selectedItem = item;
+          },
+        );
+        await tester.ensureVisible(find.text('Cherry'));
+        await tester.tap(find.text('Cherry'));
+        await tester.pump();
 
-          expect(selectedItem, 'Cherry');
-        },
-      );
+        expect(selectedItem, 'Cherry');
+      });
 
-      testWidgets('selects initial value correctly with itemToValue',
-          (WidgetTester tester) async {
+      testWidgets('selects initial value correctly with itemToValue', (
+        WidgetTester tester,
+      ) async {
         final items = [
           const _TestObject(10, 'Ten'),
           const _TestObject(20, 'Twenty'),
@@ -202,36 +204,31 @@ void main() {
     });
 
     group('withFilters', () {
-      testWidgets(
-        'when `filtersInitiallyExpanded` is `true`'
-        'it should render filters section',
-        (tester) async {
-          await buildStringMenu(
-            tester,
-            items: strTestItems,
-            variant: TrinaDropdownMenuVariant.selectWithFilters,
-            filters: [TrinaDropdownMenuFilter.equals],
-          );
-          expect(find.widgetWithText(ListTile, 'Filters'), findsOneWidget);
-        },
-      );
-      testWidgets(
-        'when `filtersInitiallyExpanded` is `false`'
-        'it should NOT render filters section',
-        (tester) async {
-          await buildStringMenu(
-            tester,
-            items: strTestItems,
-            variant: TrinaDropdownMenuVariant.selectWithFilters,
-            filters: [TrinaDropdownMenuFilter.equals],
-            filtersInitiallyExpanded: false,
-          );
-          expect(find.byKey(TrinaDropdownMenu.filterSectionKey), findsNothing);
-        },
-      );
+      testWidgets('when `filtersInitiallyExpanded` is `true`'
+          'it should render filters section', (tester) async {
+        await buildStringMenu(
+          tester,
+          items: strTestItems,
+          variant: TrinaDropdownMenuVariant.selectWithFilters,
+          filters: [TrinaDropdownMenuFilter.equals],
+        );
+        expect(find.widgetWithText(ListTile, 'Filters'), findsOneWidget);
+      });
+      testWidgets('when `filtersInitiallyExpanded` is `false`'
+          'it should NOT render filters section', (tester) async {
+        await buildStringMenu(
+          tester,
+          items: strTestItems,
+          variant: TrinaDropdownMenuVariant.selectWithFilters,
+          filters: [TrinaDropdownMenuFilter.equals],
+          filtersInitiallyExpanded: false,
+        );
+        expect(find.byKey(TrinaDropdownMenu.filterSectionKey), findsNothing);
+      });
 
-      testWidgets('filters items with a custom filter',
-          (WidgetTester tester) async {
+      testWidgets('filters items with a custom filter', (
+        WidgetTester tester,
+      ) async {
         final filters = [
           TrinaDropdownMenuFilter(
             title: 'Starts with',
@@ -266,43 +263,46 @@ void main() {
       });
 
       testWidgets(
-          'shows emptyFilterResultBuilder when filter yields no results',
-          (WidgetTester tester) async {
-        await buildMenu<String>(
-          tester,
-          items: strTestItems,
-          variant: TrinaDropdownMenuVariant.selectWithFilters,
-          filters: [TrinaDropdownMenuFilter.equals],
-          initialValue: strTestItems.first,
-          itemToString: (item) => item,
-          emptyFilterResultBuilder: (context) =>
-              const Text('No filter results!'),
-        );
+        'shows emptyFilterResultBuilder when filter yields no results',
+        (WidgetTester tester) async {
+          await buildMenu<String>(
+            tester,
+            items: strTestItems,
+            variant: TrinaDropdownMenuVariant.selectWithFilters,
+            filters: [TrinaDropdownMenuFilter.equals],
+            initialValue: strTestItems.first,
+            itemToString: (item) => item,
+            emptyFilterResultBuilder: (context) =>
+                const Text('No filter results!'),
+          );
 
-        await tester.enterText(find.byType(TextField), 'nonexistent');
-        await tester.pumpAndSettle(const Duration(milliseconds: 300));
+          await tester.enterText(find.byType(TextField), 'nonexistent');
+          await tester.pumpAndSettle(const Duration(milliseconds: 300));
 
-        expect(find.text('No filter results!'), findsOneWidget);
-      });
+          expect(find.text('No filter results!'), findsOneWidget);
+        },
+      );
       testWidgets(
-          'it should NOT use emptyFilterResultBuilder when filter has no value',
-          (WidgetTester tester) async {
-        await buildMenu<String>(
-          tester,
-          items: strTestItems,
-          variant: TrinaDropdownMenuVariant.selectWithFilters,
-          filters: [TrinaDropdownMenuFilter.equals],
-          initialValue: strTestItems.first,
-          itemToString: (item) => item,
-          emptyFilterResultBuilder: (context) =>
-              const Text('No filter results!'),
-        );
+        'it should NOT use emptyFilterResultBuilder when filter has no value',
+        (WidgetTester tester) async {
+          await buildMenu<String>(
+            tester,
+            items: strTestItems,
+            variant: TrinaDropdownMenuVariant.selectWithFilters,
+            filters: [TrinaDropdownMenuFilter.equals],
+            initialValue: strTestItems.first,
+            itemToString: (item) => item,
+            emptyFilterResultBuilder: (context) =>
+                const Text('No filter results!'),
+          );
 
-        expect(find.text('No filter results!'), findsNothing);
-      });
+          expect(find.text('No filter results!'), findsNothing);
+        },
+      );
 
-      testWidgets('applies multiple filters correctly (AND logic)',
-          (tester) async {
+      testWidgets('applies multiple filters correctly (AND logic)', (
+        tester,
+      ) async {
         final filters = [
           TrinaDropdownMenuFilter.startsWith,
           TrinaDropdownMenuFilter.endsWith,
@@ -341,11 +341,13 @@ void main() {
       testWidgets('toggling a filter off removes the filter', (tester) async {
         final filters = [TrinaDropdownMenuFilter.equals];
 
-        await buildStringMenu(tester,
-            items: strTestItems,
-            variant: TrinaDropdownMenuVariant.selectWithFilters,
-            filters: filters,
-            filtersInitiallyExpanded: true);
+        await buildStringMenu(
+          tester,
+          items: strTestItems,
+          variant: TrinaDropdownMenuVariant.selectWithFilters,
+          filters: filters,
+          filtersInitiallyExpanded: true,
+        );
 
         // 1. Apply the filter
         await tester.enterText(find.byType(TextField), 'Apple');
@@ -367,8 +369,9 @@ void main() {
         expect(find.widgetWithText(MenuItemButton, 'Cherry'), findsOneWidget);
       });
 
-      testWidgets('throws an error if filter titles are not unique',
-          (WidgetTester tester) async {
+      testWidgets('throws an error if filter titles are not unique', (
+        WidgetTester tester,
+      ) async {
         final filters = [
           TrinaDropdownMenuFilter.contains,
           TrinaDropdownMenuFilter.contains, // Duplicate
@@ -387,8 +390,9 @@ void main() {
     });
 
     group('Custom Builders', () {
-      testWidgets('uses custom itemBuilder to render items',
-          (WidgetTester tester) async {
+      testWidgets('uses custom itemBuilder to render items', (
+        WidgetTester tester,
+      ) async {
         await buildMenu<String>(
           tester,
           items: strTestItems,
@@ -413,56 +417,48 @@ void main() {
       Size getMenuSize(WidgetTester tester) =>
           tester.getSize(find.byType(TrinaDropdownMenu<String>));
 
-      testWidgets(
-        'when `items` is empty then it should not give any error',
-        (tester) async {
-          await buildStringMenu(tester, items: [], initialValue: '');
-        },
-      );
-      testWidgets(
-        'it should use the provided `width`',
-        (tester) async {
-          const menuWidth = 300.0;
-          await buildStringMenu(tester, items: strTestItems, width: menuWidth);
-          final menuSize = getMenuSize(tester);
-          expect(menuSize.width, menuWidth);
-        },
-      );
-      testWidgets(
-        'it should enforce `maxHeight`',
-        (tester) async {
-          const maxHeight = 200.0;
-          await buildStringMenu(
-            tester,
-            items: List.generate(10, (i) => 'Item$i'),
-            itemHeight: 40,
-            maxHeight: maxHeight,
-          );
-          final menuSize = getMenuSize(tester);
-          expect(menuSize.height, maxHeight);
-        },
-      );
+      testWidgets('when `items` is empty then it should not give any error', (
+        tester,
+      ) async {
+        await buildStringMenu(tester, items: [], initialValue: '');
+      });
+      testWidgets('it should use the provided `width`', (tester) async {
+        const menuWidth = 300.0;
+        await buildStringMenu(tester, items: strTestItems, width: menuWidth);
+        final menuSize = getMenuSize(tester);
+        expect(menuSize.width, menuWidth);
+      });
+      testWidgets('it should enforce `maxHeight`', (tester) async {
+        const maxHeight = 200.0;
+        await buildStringMenu(
+          tester,
+          items: List.generate(10, (i) => 'Item$i'),
+          itemHeight: 40,
+          maxHeight: maxHeight,
+        );
+        final menuSize = getMenuSize(tester);
+        expect(menuSize.height, maxHeight);
+      });
 
-      testWidgets(
-        'it should scroll to initially selected item',
-        (tester) async {
-          await buildStringMenu(
-            tester,
-            items: List.generate(20, (i) => 'Item $i'),
-            initialValue: 'Item 15',
-            itemHeight: 40,
-            maxHeight: 200, // 5 items visible at a time
-          );
+      testWidgets('it should scroll to initially selected item', (
+        tester,
+      ) async {
+        await buildStringMenu(
+          tester,
+          items: List.generate(20, (i) => 'Item $i'),
+          initialValue: 'Item 15',
+          itemHeight: 40,
+          maxHeight: 200, // 5 items visible at a time
+        );
 
-          final scrollable = tester.widget<Scrollable>(find.byType(Scrollable));
-          // Item 15 is the 16th item (index 15).
-          // Each item is 40px high. Expected offset should be around 15 * 40 = 600.
-          expect(scrollable.controller?.offset, greaterThan(500));
-          expect(find.text('Item 15'), findsOneWidget);
-          // Top items should be scrolled off-screen
-          expect(find.text('Item 0'), findsNothing);
-        },
-      );
+        final scrollable = tester.widget<Scrollable>(find.byType(Scrollable));
+        // Item 15 is the 16th item (index 15).
+        // Each item is 40px high. Expected offset should be around 15 * 40 = 600.
+        expect(scrollable.controller?.offset, greaterThan(500));
+        expect(find.text('Item 15'), findsOneWidget);
+        // Top items should be scrolled off-screen
+        expect(find.text('Item 0'), findsNothing);
+      });
     });
   });
 }

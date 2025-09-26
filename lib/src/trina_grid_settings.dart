@@ -43,8 +43,9 @@ abstract class TrinaGridSettings {
   static const EdgeInsets cellPadding = EdgeInsets.symmetric(horizontal: 10);
 
   /// Column title - padding
-  static const EdgeInsets columnTitlePadding =
-      EdgeInsets.symmetric(horizontal: 10);
+  static const EdgeInsets columnTitlePadding = EdgeInsets.symmetric(
+    horizontal: 10,
+  );
 
   static const EdgeInsets columnFilterPadding = EdgeInsets.all(5);
 

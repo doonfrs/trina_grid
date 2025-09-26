@@ -28,19 +28,15 @@ enum TrinaRowGroupDelegateType {
 ///
 /// If [expanded] is true, the group row is expanded, if false, it is collapsed.
 /// {@endtemplate}
-typedef TrinaRowGroupOnToggled = void Function({
-  required TrinaRow row,
-  required bool expanded,
-});
+typedef TrinaRowGroupOnToggled =
+    void Function({required TrinaRow row, required bool expanded});
 
 /// Abstract class that defines a base interface for grouping rows.
 ///
 /// [TrinaRowGroupTreeDelegate] or [TrinaRowGroupByColumnDelegate]
 /// class implements this abstract class.
 abstract class TrinaRowGroupDelegate {
-  TrinaRowGroupDelegate({
-    this.onToggled,
-  });
+  TrinaRowGroupDelegate({this.onToggled});
 
   final countFormat = NumberFormat.compact();
 
@@ -178,9 +174,7 @@ class TrinaRowGroupTreeDelegate extends TrinaRowGroupDelegate {
 
   /// {@macro trina_row_group_delegate_toGroup}
   @override
-  List<TrinaRow> toGroup({
-    required Iterable<TrinaRow> rows,
-  }) {
+  List<TrinaRow> toGroup({required Iterable<TrinaRow> rows}) {
     if (rows.isEmpty) return rows.toList();
 
     final children = TrinaRowGroupHelper.iterateWithFilter(
@@ -286,17 +280,16 @@ class TrinaRowGroupByColumnDelegate extends TrinaRowGroupDelegate {
 
   /// {@macro trina_row_group_delegate_toGroup}
   @override
-  List<TrinaRow> toGroup({
-    required Iterable<TrinaRow> rows,
-  }) {
+  List<TrinaRow> toGroup({required Iterable<TrinaRow> rows}) {
     if (rows.isEmpty) return rows.toList();
     assert(visibleColumns.isNotEmpty);
 
     final List<TrinaRow> groups = [];
     final List<List<TrinaRow>> groupStack = [];
     final List<TrinaRow> parentStack = [];
-    final List<String> groupFields =
-        visibleColumns.map((e) => e.field).toList();
+    final List<String> groupFields = visibleColumns
+        .map((e) => e.field)
+        .toList();
     final List<String> groupKeyStack = [];
     final maxDepth = groupFields.length;
 
@@ -441,20 +434,21 @@ class TrinaRowGroupByColumnDelegate extends TrinaRowGroupDelegate {
       key: ValueKey(groupKey),
       cells: cells,
       sortIdx: sortIdx,
-      type: TrinaRowType.group(
-        children: FilteredList(initialList: []),
-      ),
+      type: TrinaRowType.group(children: FilteredList(initialList: [])),
     );
 
     for (var e in sampleRow.cells.entries) {
-      cells[e.key] = TrinaCell(
-        value: visibleColumns.firstWhereOrNull((c) => c.field == e.key) != null
-            ? e.value.value
-            : null,
-        key: ValueKey('${groupKey}_${e.key}_cell'),
-      )
-        ..setColumn(e.value.column)
-        ..setRow(row);
+      cells[e.key] =
+          TrinaCell(
+              value:
+                  visibleColumns.firstWhereOrNull((c) => c.field == e.key) !=
+                      null
+                  ? e.value.value
+                  : null,
+              key: ValueKey('${groupKey}_${e.key}_cell'),
+            )
+            ..setColumn(e.value.column)
+            ..setRow(row);
     }
 
     return row;

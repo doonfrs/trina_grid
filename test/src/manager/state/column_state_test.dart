@@ -45,8 +45,9 @@ void main() {
     )..setEventManager(eventManager);
   }
 
-  testWidgets('columnIndexes - columns should return the index list.',
-      (WidgetTester tester) async {
+  testWidgets('columnIndexes - columns should return the index list.', (
+    WidgetTester tester,
+  ) async {
     // given
     TrinaGridStateManager stateManager = getStateManager(
       columns: [
@@ -68,302 +69,319 @@ void main() {
   });
 
   testWidgets(
-      'columnIndexesForShowFrozen - frozen columns should return the index list.',
-      (WidgetTester tester) async {
-    // given
-    TrinaGridStateManager stateManager = getStateManager(
-      columns: [
-        TrinaColumn(
-          title: '',
-          field: '',
-          type: TrinaColumnType.text(),
-          frozen: TrinaColumnFrozen.end,
-        ),
-        TrinaColumn(title: '', field: '', type: TrinaColumnType.text()),
-        TrinaColumn(
-          title: '',
-          field: '',
-          type: TrinaColumnType.text(),
-          frozen: TrinaColumnFrozen.start,
-        ),
-      ],
-      rows: [],
-      gridFocusNode: null,
-      scroll: scroll,
-    );
+    'columnIndexesForShowFrozen - frozen columns should return the index list.',
+    (WidgetTester tester) async {
+      // given
+      TrinaGridStateManager stateManager = getStateManager(
+        columns: [
+          TrinaColumn(
+            title: '',
+            field: '',
+            type: TrinaColumnType.text(),
+            frozen: TrinaColumnFrozen.end,
+          ),
+          TrinaColumn(title: '', field: '', type: TrinaColumnType.text()),
+          TrinaColumn(
+            title: '',
+            field: '',
+            type: TrinaColumnType.text(),
+            frozen: TrinaColumnFrozen.start,
+          ),
+        ],
+        rows: [],
+        gridFocusNode: null,
+        scroll: scroll,
+      );
 
-    // when
-    final List<int> result = stateManager.columnIndexesForShowFrozen;
+      // when
+      final List<int> result = stateManager.columnIndexesForShowFrozen;
 
-    // then
-    expect(result.length, 3);
-    expect(result, [2, 1, 0]);
-  });
-
-  testWidgets('columnsWidth - columns should return the sum of column widths.',
-      (WidgetTester tester) async {
-    // given
-    TrinaGridStateManager stateManager = getStateManager(
-      columns: [
-        TrinaColumn(
-          title: '',
-          field: '',
-          type: TrinaColumnType.text(),
-          width: 150,
-        ),
-        TrinaColumn(
-          title: '',
-          field: '',
-          type: TrinaColumnType.text(),
-          width: 200,
-        ),
-        TrinaColumn(
-          title: '',
-          field: '',
-          type: TrinaColumnType.text(),
-          width: 250,
-        ),
-      ],
-      rows: [],
-      gridFocusNode: null,
-      scroll: scroll,
-    );
-
-    // when
-    final double result = stateManager.columnsWidth;
-
-    // then
-    expect(result, 600);
-  });
-
-  testWidgets('leftFrozenColumns - left frozen columns should return the list.',
-      (WidgetTester tester) async {
-    // given
-    TrinaGridStateManager stateManager = getStateManager(
-      columns: [
-        TrinaColumn(
-          title: 'left1',
-          field: '',
-          type: TrinaColumnType.text(),
-          frozen: TrinaColumnFrozen.start,
-        ),
-        TrinaColumn(title: 'body', field: '', type: TrinaColumnType.text()),
-        TrinaColumn(
-          title: 'left2',
-          field: '',
-          type: TrinaColumnType.text(),
-          frozen: TrinaColumnFrozen.start,
-        ),
-      ],
-      rows: [],
-      gridFocusNode: null,
-      scroll: scroll,
-    );
-
-    // when
-    final List<TrinaColumn> result = stateManager.leftFrozenColumns;
-
-    // then
-    expect(result.length, 2);
-    expect(result[0].title, 'left1');
-    expect(result[1].title, 'left2');
-  });
+      // then
+      expect(result.length, 3);
+      expect(result, [2, 1, 0]);
+    },
+  );
 
   testWidgets(
-      'leftFrozenColumnIndexes - left frozen column indexes should return the list.',
-      (WidgetTester tester) async {
-    // given
-    TrinaGridStateManager stateManager = getStateManager(
-      columns: [
-        TrinaColumn(
-          title: 'right1',
-          field: '',
-          type: TrinaColumnType.text(),
-          frozen: TrinaColumnFrozen.end,
-        ),
-        TrinaColumn(title: 'body', field: '', type: TrinaColumnType.text()),
-        TrinaColumn(
-          title: 'left2',
-          field: '',
-          type: TrinaColumnType.text(),
-          frozen: TrinaColumnFrozen.start,
-        ),
-      ],
-      rows: [],
-      gridFocusNode: null,
-      scroll: scroll,
-    );
+    'columnsWidth - columns should return the sum of column widths.',
+    (WidgetTester tester) async {
+      // given
+      TrinaGridStateManager stateManager = getStateManager(
+        columns: [
+          TrinaColumn(
+            title: '',
+            field: '',
+            type: TrinaColumnType.text(),
+            width: 150,
+          ),
+          TrinaColumn(
+            title: '',
+            field: '',
+            type: TrinaColumnType.text(),
+            width: 200,
+          ),
+          TrinaColumn(
+            title: '',
+            field: '',
+            type: TrinaColumnType.text(),
+            width: 250,
+          ),
+        ],
+        rows: [],
+        gridFocusNode: null,
+        scroll: scroll,
+      );
 
-    // when
-    final List<int> result = stateManager.leftFrozenColumnIndexes;
+      // when
+      final double result = stateManager.columnsWidth;
 
-    // then
-    expect(result.length, 1);
-    expect(result[0], 2);
-  });
-
-  testWidgets(
-      'leftFrozenColumnsWidth - left frozen columns width should return the sum of column widths.',
-      (WidgetTester tester) async {
-    // given
-    TrinaGridStateManager stateManager = getStateManager(
-      columns: [
-        TrinaColumn(
-          title: 'right1',
-          field: '',
-          type: TrinaColumnType.text(),
-          frozen: TrinaColumnFrozen.start,
-          width: 150,
-        ),
-        TrinaColumn(
-          title: 'body',
-          field: '',
-          type: TrinaColumnType.text(),
-          width: 150,
-        ),
-        TrinaColumn(
-          title: 'left2',
-          field: '',
-          type: TrinaColumnType.text(),
-          frozen: TrinaColumnFrozen.start,
-          width: 150,
-        ),
-      ],
-      rows: [],
-      gridFocusNode: null,
-      scroll: scroll,
-    );
-
-    // when
-    final double result = stateManager.leftFrozenColumnsWidth;
-
-    // then
-    expect(result, 300);
-  });
+      // then
+      expect(result, 600);
+    },
+  );
 
   testWidgets(
-      'rightFrozenColumns - right frozen columns should return the list.',
-      (WidgetTester tester) async {
-    // given
-    TrinaGridStateManager stateManager = getStateManager(
-      columns: [
-        TrinaColumn(
-          title: 'left1',
-          field: '',
-          type: TrinaColumnType.text(),
-          frozen: TrinaColumnFrozen.start,
-        ),
-        TrinaColumn(title: 'body', field: '', type: TrinaColumnType.text()),
-        TrinaColumn(
-          title: 'right1',
-          field: '',
-          type: TrinaColumnType.text(),
-          frozen: TrinaColumnFrozen.end,
-        ),
-      ],
-      rows: [],
-      gridFocusNode: null,
-      scroll: scroll,
-    );
+    'leftFrozenColumns - left frozen columns should return the list.',
+    (WidgetTester tester) async {
+      // given
+      TrinaGridStateManager stateManager = getStateManager(
+        columns: [
+          TrinaColumn(
+            title: 'left1',
+            field: '',
+            type: TrinaColumnType.text(),
+            frozen: TrinaColumnFrozen.start,
+          ),
+          TrinaColumn(title: 'body', field: '', type: TrinaColumnType.text()),
+          TrinaColumn(
+            title: 'left2',
+            field: '',
+            type: TrinaColumnType.text(),
+            frozen: TrinaColumnFrozen.start,
+          ),
+        ],
+        rows: [],
+        gridFocusNode: null,
+        scroll: scroll,
+      );
 
-    // when
-    final List<TrinaColumn> result = stateManager.rightFrozenColumns;
+      // when
+      final List<TrinaColumn> result = stateManager.leftFrozenColumns;
 
-    // then
-    expect(result.length, 1);
-    expect(result[0].title, 'right1');
-  });
-
-  testWidgets(
-      'rightFrozenColumnIndexes - right frozen column indexes should return the list.',
-      (WidgetTester tester) async {
-    // given
-    TrinaGridStateManager stateManager = getStateManager(
-      columns: [
-        TrinaColumn(
-          title: 'right1',
-          field: '',
-          type: TrinaColumnType.text(),
-          frozen: TrinaColumnFrozen.end,
-        ),
-        TrinaColumn(title: 'body', field: '', type: TrinaColumnType.text()),
-        TrinaColumn(
-          title: 'right2',
-          field: '',
-          type: TrinaColumnType.text(),
-          frozen: TrinaColumnFrozen.end,
-        ),
-      ],
-      rows: [],
-      gridFocusNode: null,
-      scroll: scroll,
-    );
-
-    // when
-    final List<int> result = stateManager.rightFrozenColumnIndexes;
-
-    // then
-    expect(result.length, 2);
-    expect(result[0], 0);
-    expect(result[1], 2);
-  });
+      // then
+      expect(result.length, 2);
+      expect(result[0].title, 'left1');
+      expect(result[1].title, 'left2');
+    },
+  );
 
   testWidgets(
-      'rightFrozenColumnsWidth - right frozen columns width should return the sum of column widths.',
-      (WidgetTester tester) async {
+    'leftFrozenColumnIndexes - left frozen column indexes should return the list.',
+    (WidgetTester tester) async {
+      // given
+      TrinaGridStateManager stateManager = getStateManager(
+        columns: [
+          TrinaColumn(
+            title: 'right1',
+            field: '',
+            type: TrinaColumnType.text(),
+            frozen: TrinaColumnFrozen.end,
+          ),
+          TrinaColumn(title: 'body', field: '', type: TrinaColumnType.text()),
+          TrinaColumn(
+            title: 'left2',
+            field: '',
+            type: TrinaColumnType.text(),
+            frozen: TrinaColumnFrozen.start,
+          ),
+        ],
+        rows: [],
+        gridFocusNode: null,
+        scroll: scroll,
+      );
+
+      // when
+      final List<int> result = stateManager.leftFrozenColumnIndexes;
+
+      // then
+      expect(result.length, 1);
+      expect(result[0], 2);
+    },
+  );
+
+  testWidgets(
+    'leftFrozenColumnsWidth - left frozen columns width should return the sum of column widths.',
+    (WidgetTester tester) async {
+      // given
+      TrinaGridStateManager stateManager = getStateManager(
+        columns: [
+          TrinaColumn(
+            title: 'right1',
+            field: '',
+            type: TrinaColumnType.text(),
+            frozen: TrinaColumnFrozen.start,
+            width: 150,
+          ),
+          TrinaColumn(
+            title: 'body',
+            field: '',
+            type: TrinaColumnType.text(),
+            width: 150,
+          ),
+          TrinaColumn(
+            title: 'left2',
+            field: '',
+            type: TrinaColumnType.text(),
+            frozen: TrinaColumnFrozen.start,
+            width: 150,
+          ),
+        ],
+        rows: [],
+        gridFocusNode: null,
+        scroll: scroll,
+      );
+
+      // when
+      final double result = stateManager.leftFrozenColumnsWidth;
+
+      // then
+      expect(result, 300);
+    },
+  );
+
+  testWidgets(
+    'rightFrozenColumns - right frozen columns should return the list.',
+    (WidgetTester tester) async {
+      // given
+      TrinaGridStateManager stateManager = getStateManager(
+        columns: [
+          TrinaColumn(
+            title: 'left1',
+            field: '',
+            type: TrinaColumnType.text(),
+            frozen: TrinaColumnFrozen.start,
+          ),
+          TrinaColumn(title: 'body', field: '', type: TrinaColumnType.text()),
+          TrinaColumn(
+            title: 'right1',
+            field: '',
+            type: TrinaColumnType.text(),
+            frozen: TrinaColumnFrozen.end,
+          ),
+        ],
+        rows: [],
+        gridFocusNode: null,
+        scroll: scroll,
+      );
+
+      // when
+      final List<TrinaColumn> result = stateManager.rightFrozenColumns;
+
+      // then
+      expect(result.length, 1);
+      expect(result[0].title, 'right1');
+    },
+  );
+
+  testWidgets(
+    'rightFrozenColumnIndexes - right frozen column indexes should return the list.',
+    (WidgetTester tester) async {
+      // given
+      TrinaGridStateManager stateManager = getStateManager(
+        columns: [
+          TrinaColumn(
+            title: 'right1',
+            field: '',
+            type: TrinaColumnType.text(),
+            frozen: TrinaColumnFrozen.end,
+          ),
+          TrinaColumn(title: 'body', field: '', type: TrinaColumnType.text()),
+          TrinaColumn(
+            title: 'right2',
+            field: '',
+            type: TrinaColumnType.text(),
+            frozen: TrinaColumnFrozen.end,
+          ),
+        ],
+        rows: [],
+        gridFocusNode: null,
+        scroll: scroll,
+      );
+
+      // when
+      final List<int> result = stateManager.rightFrozenColumnIndexes;
+
+      // then
+      expect(result.length, 2);
+      expect(result[0], 0);
+      expect(result[1], 2);
+    },
+  );
+
+  testWidgets(
+    'rightFrozenColumnsWidth - right frozen columns width should return the sum of column widths.',
+    (WidgetTester tester) async {
+      // given
+      TrinaGridStateManager stateManager = getStateManager(
+        columns: [
+          TrinaColumn(
+            title: 'right1',
+            field: '',
+            type: TrinaColumnType.text(),
+            frozen: TrinaColumnFrozen.end,
+            width: 120,
+          ),
+          TrinaColumn(
+            title: 'right2',
+            field: '',
+            type: TrinaColumnType.text(),
+            frozen: TrinaColumnFrozen.end,
+            width: 120,
+          ),
+          TrinaColumn(
+            title: 'body',
+            field: '',
+            type: TrinaColumnType.text(),
+            width: 100,
+          ),
+          TrinaColumn(
+            title: 'left1',
+            field: '',
+            type: TrinaColumnType.text(),
+            frozen: TrinaColumnFrozen.start,
+            width: 120,
+          ),
+        ],
+        rows: [],
+        gridFocusNode: null,
+        scroll: scroll,
+      );
+
+      // when
+      final double result = stateManager.rightFrozenColumnsWidth;
+
+      // then
+      expect(result, 240);
+    },
+  );
+
+  testWidgets('bodyColumns - body columns should return the list.', (
+    WidgetTester tester,
+  ) async {
     // given
     TrinaGridStateManager stateManager = getStateManager(
       columns: [
-        TrinaColumn(
-          title: 'right1',
-          field: '',
-          type: TrinaColumnType.text(),
-          frozen: TrinaColumnFrozen.end,
-          width: 120,
-        ),
-        TrinaColumn(
-          title: 'right2',
-          field: '',
-          type: TrinaColumnType.text(),
-          frozen: TrinaColumnFrozen.end,
-          width: 120,
-        ),
-        TrinaColumn(
-          title: 'body',
-          field: '',
-          type: TrinaColumnType.text(),
-          width: 100,
-        ),
-        TrinaColumn(
-          title: 'left1',
-          field: '',
-          type: TrinaColumnType.text(),
+        ...ColumnHelper.textColumn(
+          'left',
+          count: 3,
           frozen: TrinaColumnFrozen.start,
-          width: 120,
         ),
-      ],
-      rows: [],
-      gridFocusNode: null,
-      scroll: scroll,
-    );
-
-    // when
-    final double result = stateManager.rightFrozenColumnsWidth;
-
-    // then
-    expect(result, 240);
-  });
-
-  testWidgets('bodyColumns - body columns should return the list.',
-      (WidgetTester tester) async {
-    // given
-    TrinaGridStateManager stateManager = getStateManager(
-      columns: [
-        ...ColumnHelper.textColumn('left',
-            count: 3, frozen: TrinaColumnFrozen.start),
         ...ColumnHelper.textColumn('body', count: 3),
-        ...ColumnHelper.textColumn('right',
-            count: 3, frozen: TrinaColumnFrozen.end),
+        ...ColumnHelper.textColumn(
+          'right',
+          count: 3,
+          frozen: TrinaColumnFrozen.end,
+        ),
       ],
       rows: [],
       gridFocusNode: null,
@@ -382,66 +400,88 @@ void main() {
     expect(result[2].title, 'body2');
   });
 
-  testWidgets('bodyColumnIndexes - body column indexes should return the list.',
-      (WidgetTester tester) async {
-    // given
-    TrinaGridStateManager stateManager = getStateManager(
-      columns: [
-        ...ColumnHelper.textColumn('left',
-            count: 3, frozen: TrinaColumnFrozen.start),
-        ...ColumnHelper.textColumn('body', count: 3),
-        ...ColumnHelper.textColumn('right',
-            count: 3, frozen: TrinaColumnFrozen.end),
-      ],
-      rows: [],
-      gridFocusNode: null,
-      scroll: scroll,
-    );
+  testWidgets(
+    'bodyColumnIndexes - body column indexes should return the list.',
+    (WidgetTester tester) async {
+      // given
+      TrinaGridStateManager stateManager = getStateManager(
+        columns: [
+          ...ColumnHelper.textColumn(
+            'left',
+            count: 3,
+            frozen: TrinaColumnFrozen.start,
+          ),
+          ...ColumnHelper.textColumn('body', count: 3),
+          ...ColumnHelper.textColumn(
+            'right',
+            count: 3,
+            frozen: TrinaColumnFrozen.end,
+          ),
+        ],
+        rows: [],
+        gridFocusNode: null,
+        scroll: scroll,
+      );
 
-    // when
-    final List<int> result = stateManager.bodyColumnIndexes;
+      // when
+      final List<int> result = stateManager.bodyColumnIndexes;
 
-    // then
-    expect(result.length, 3);
-    expect(result[0], 3);
-    expect(result[1], 4);
-    expect(result[2], 5);
-  });
+      // then
+      expect(result.length, 3);
+      expect(result[0], 3);
+      expect(result[1], 4);
+      expect(result[2], 5);
+    },
+  );
 
   testWidgets(
-      'bodyColumnsWidth - body columns width should return the sum of column widths.',
-      (WidgetTester tester) async {
+    'bodyColumnsWidth - body columns width should return the sum of column widths.',
+    (WidgetTester tester) async {
+      // given
+      TrinaGridStateManager stateManager = getStateManager(
+        columns: [
+          ...ColumnHelper.textColumn(
+            'left',
+            count: 3,
+            frozen: TrinaColumnFrozen.start,
+          ),
+          ...ColumnHelper.textColumn('body', count: 3, width: 150),
+          ...ColumnHelper.textColumn(
+            'right',
+            count: 3,
+            frozen: TrinaColumnFrozen.end,
+          ),
+        ],
+        rows: [],
+        gridFocusNode: null,
+        scroll: scroll,
+      );
+
+      // when
+      final double result = stateManager.bodyColumnsWidth;
+
+      // then
+      expect(result, 450);
+    },
+  );
+
+  testWidgets('When currentColumnField is null, return null.', (
+    WidgetTester tester,
+  ) async {
     // given
     TrinaGridStateManager stateManager = getStateManager(
       columns: [
-        ...ColumnHelper.textColumn('left',
-            count: 3, frozen: TrinaColumnFrozen.start),
+        ...ColumnHelper.textColumn(
+          'left',
+          count: 3,
+          frozen: TrinaColumnFrozen.start,
+        ),
         ...ColumnHelper.textColumn('body', count: 3, width: 150),
-        ...ColumnHelper.textColumn('right',
-            count: 3, frozen: TrinaColumnFrozen.end),
-      ],
-      rows: [],
-      gridFocusNode: null,
-      scroll: scroll,
-    );
-
-    // when
-    final double result = stateManager.bodyColumnsWidth;
-
-    // then
-    expect(result, 450);
-  });
-
-  testWidgets('When currentColumnField is null, return null.',
-      (WidgetTester tester) async {
-    // given
-    TrinaGridStateManager stateManager = getStateManager(
-      columns: [
-        ...ColumnHelper.textColumn('left',
-            count: 3, frozen: TrinaColumnFrozen.start),
-        ...ColumnHelper.textColumn('body', count: 3, width: 150),
-        ...ColumnHelper.textColumn('right',
-            count: 3, frozen: TrinaColumnFrozen.end),
+        ...ColumnHelper.textColumn(
+          'right',
+          count: 3,
+          frozen: TrinaColumnFrozen.end,
+        ),
       ],
       rows: [],
       gridFocusNode: null,
@@ -455,15 +495,22 @@ void main() {
     expect(currentColumn, null);
   });
 
-  testWidgets('currentColumn - currentCell is selected, return currentColumn',
-      (WidgetTester tester) async {
+  testWidgets('currentColumn - currentCell is selected, return currentColumn', (
+    WidgetTester tester,
+  ) async {
     // given
     List<TrinaColumn> columns = [
-      ...ColumnHelper.textColumn('left',
-          count: 3, frozen: TrinaColumnFrozen.start),
+      ...ColumnHelper.textColumn(
+        'left',
+        count: 3,
+        frozen: TrinaColumnFrozen.start,
+      ),
       ...ColumnHelper.textColumn('body', count: 3, width: 150),
-      ...ColumnHelper.textColumn('right',
-          count: 3, frozen: TrinaColumnFrozen.end),
+      ...ColumnHelper.textColumn(
+        'right',
+        count: 3,
+        frozen: TrinaColumnFrozen.end,
+      ),
     ];
 
     List<TrinaRow> rows = RowHelper.count(10, columns);
@@ -492,66 +539,80 @@ void main() {
   });
 
   testWidgets(
-      'currentColumnField - currentCell is not selected, null should be returned',
-      (WidgetTester tester) async {
-    // given
-    List<TrinaColumn> columns = [
-      ...ColumnHelper.textColumn('left',
-          count: 3, frozen: TrinaColumnFrozen.start),
-      ...ColumnHelper.textColumn('body', count: 3, width: 150),
-      ...ColumnHelper.textColumn('right',
-          count: 3, frozen: TrinaColumnFrozen.end),
-    ];
+    'currentColumnField - currentCell is not selected, null should be returned',
+    (WidgetTester tester) async {
+      // given
+      List<TrinaColumn> columns = [
+        ...ColumnHelper.textColumn(
+          'left',
+          count: 3,
+          frozen: TrinaColumnFrozen.start,
+        ),
+        ...ColumnHelper.textColumn('body', count: 3, width: 150),
+        ...ColumnHelper.textColumn(
+          'right',
+          count: 3,
+          frozen: TrinaColumnFrozen.end,
+        ),
+      ];
 
-    List<TrinaRow> rows = RowHelper.count(10, columns);
+      List<TrinaRow> rows = RowHelper.count(10, columns);
 
-    TrinaGridStateManager stateManager = getStateManager(
-      columns: columns,
-      rows: rows,
-      gridFocusNode: null,
-      scroll: scroll,
-    );
+      TrinaGridStateManager stateManager = getStateManager(
+        columns: columns,
+        rows: rows,
+        gridFocusNode: null,
+        scroll: scroll,
+      );
 
-    // when
-    String? currentColumnField = stateManager.currentColumnField;
+      // when
+      String? currentColumnField = stateManager.currentColumnField;
 
-    // when
-    expect(currentColumnField, null);
-  });
+      // when
+      expect(currentColumnField, null);
+    },
+  );
 
   testWidgets(
-      'currentColumnField - currentCell is selected, return the field of the selected column',
-      (WidgetTester tester) async {
-    // given
-    List<TrinaColumn> columns = [
-      ...ColumnHelper.textColumn('left',
-          count: 3, frozen: TrinaColumnFrozen.start),
-      ...ColumnHelper.textColumn('body', count: 3, width: 150),
-      ...ColumnHelper.textColumn('right',
-          count: 3, frozen: TrinaColumnFrozen.end),
-    ];
+    'currentColumnField - currentCell is selected, return the field of the selected column',
+    (WidgetTester tester) async {
+      // given
+      List<TrinaColumn> columns = [
+        ...ColumnHelper.textColumn(
+          'left',
+          count: 3,
+          frozen: TrinaColumnFrozen.start,
+        ),
+        ...ColumnHelper.textColumn('body', count: 3, width: 150),
+        ...ColumnHelper.textColumn(
+          'right',
+          count: 3,
+          frozen: TrinaColumnFrozen.end,
+        ),
+      ];
 
-    List<TrinaRow> rows = RowHelper.count(10, columns);
+      List<TrinaRow> rows = RowHelper.count(10, columns);
 
-    TrinaGridStateManager stateManager = getStateManager(
-      columns: columns,
-      rows: rows,
-      gridFocusNode: null,
-      scroll: scroll,
-    );
+      TrinaGridStateManager stateManager = getStateManager(
+        columns: columns,
+        rows: rows,
+        gridFocusNode: null,
+        scroll: scroll,
+      );
 
-    stateManager.setLayout(const BoxConstraints());
+      stateManager.setLayout(const BoxConstraints());
 
-    // when
-    String selectColumnField = 'body1';
-    stateManager.setCurrentCell(rows[2].cells[selectColumnField], 2);
+      // when
+      String selectColumnField = 'body1';
+      stateManager.setCurrentCell(rows[2].cells[selectColumnField], 2);
 
-    String? currentColumnField = stateManager.currentColumnField;
+      String? currentColumnField = stateManager.currentColumnField;
 
-    // when
-    expect(currentColumnField, isNot(null));
-    expect(currentColumnField, selectColumnField);
-  });
+      // when
+      expect(currentColumnField, isNot(null));
+      expect(currentColumnField, selectColumnField);
+    },
+  );
 
   group('getSortedColumn', () {
     test('If there is no sort column, return null', () {
@@ -583,8 +644,7 @@ void main() {
   });
 
   group('columnIndexesByShowFrozen', () {
-    testWidgets(
-        'If there are no frozen columns, '
+    testWidgets('If there are no frozen columns, '
         'columnIndexes should be returned.', (WidgetTester tester) async {
       // given
       List<TrinaColumn> columns = [
@@ -607,12 +667,12 @@ void main() {
       expect(stateManager.columnIndexesByShowFrozen, [0, 1, 2]);
     });
 
-    testWidgets(
-        'If there are no frozen columns, '
+    testWidgets('If there are no frozen columns, '
         '3rd column toggle left frozen and '
         'If the width is sufficient, '
-        'columnIndexesForShowFrozen should be returned.',
-        (WidgetTester tester) async {
+        'columnIndexesForShowFrozen should be returned.', (
+      WidgetTester tester,
+    ) async {
       // given
       List<TrinaColumn> columns = [
         ...ColumnHelper.textColumn('body', count: 5, width: 150),
@@ -643,8 +703,7 @@ void main() {
       expect(stateManager.columnIndexesByShowFrozen, [2, 0, 1, 3, 4]);
     });
 
-    testWidgets(
-        'If there are no frozen columns, '
+    testWidgets('If there are no frozen columns, '
         '3rd column toggle left frozen and '
         'If the width is insufficient, '
         'columnIndexes should be returned.', (WidgetTester tester) async {
@@ -677,8 +736,7 @@ void main() {
       expect(stateManager.columnIndexesByShowFrozen, [0, 1, 2, 3, 4]);
     });
 
-    testWidgets(
-        'If there are frozen columns, '
+    testWidgets('If there are frozen columns, '
         'If the width is sufficient, '
         'columnIndexes should be returned.', (WidgetTester tester) async {
       // given
@@ -707,20 +765,21 @@ void main() {
         scroll: scroll,
       );
 
-      stateManager
-          .setLayout(const BoxConstraints(maxWidth: 500, maxHeight: 600));
+      stateManager.setLayout(
+        const BoxConstraints(maxWidth: 500, maxHeight: 600),
+      );
 
       // when
       // then
       expect(stateManager.columnIndexesByShowFrozen, [0, 1, 2, 3, 4]);
     });
 
-    testWidgets(
-        'If there are frozen columns, '
+    testWidgets('If there are frozen columns, '
         'If one frozen column is toggled to the left, '
         'If the width is sufficient, '
-        'columnIndexesForShowFrozen should be returned.',
-        (WidgetTester tester) async {
+        'columnIndexesForShowFrozen should be returned.', (
+      WidgetTester tester,
+    ) async {
       // given
       List<TrinaColumn> columns = [
         ...ColumnHelper.textColumn(
@@ -762,12 +821,12 @@ void main() {
       expect(stateManager.columnIndexesByShowFrozen, [0, 2, 1, 3, 4]);
     });
 
-    testWidgets(
-        'If there are frozen columns, '
+    testWidgets('If there are frozen columns, '
         'If one frozen column is toggled to the right, '
         'If the width is sufficient, '
-        'columnIndexesForShowFrozen should be returned.',
-        (WidgetTester tester) async {
+        'columnIndexesForShowFrozen should be returned.', (
+      WidgetTester tester,
+    ) async {
       // given
       List<TrinaColumn> columns = [
         ...ColumnHelper.textColumn(
@@ -810,102 +869,102 @@ void main() {
     });
   });
 
-  testWidgets(
-    'If there are frozen columns, '
-    'If one frozen column is toggled to the right, '
-    'If the width is sufficient, '
-    'columnIndexesForShowFrozen should be returned.',
-    (WidgetTester tester) async {
-      List<TrinaColumn> columns = [
-        ...ColumnHelper.textColumn(
-          'left',
-          count: 1,
-          frozen: TrinaColumnFrozen.start,
-          width: 150,
-        ),
-        ...ColumnHelper.textColumn('body', count: 3, width: 150),
-        ...ColumnHelper.textColumn(
-          'right',
-          count: 1,
-          frozen: TrinaColumnFrozen.end,
-          width: 150,
-        ),
-      ];
+  testWidgets('If there are frozen columns, '
+      'If one frozen column is toggled to the right, '
+      'If the width is sufficient, '
+      'columnIndexesForShowFrozen should be returned.', (
+    WidgetTester tester,
+  ) async {
+    List<TrinaColumn> columns = [
+      ...ColumnHelper.textColumn(
+        'left',
+        count: 1,
+        frozen: TrinaColumnFrozen.start,
+        width: 150,
+      ),
+      ...ColumnHelper.textColumn('body', count: 3, width: 150),
+      ...ColumnHelper.textColumn(
+        'right',
+        count: 1,
+        frozen: TrinaColumnFrozen.end,
+        width: 150,
+      ),
+    ];
 
-      List<TrinaRow> rows = RowHelper.count(10, columns);
+    List<TrinaRow> rows = RowHelper.count(10, columns);
 
-      TrinaGridStateManager stateManager = getStateManager(
-        columns: columns,
-        rows: rows,
-        gridFocusNode: null,
-        scroll: scroll,
-      );
+    TrinaGridStateManager stateManager = getStateManager(
+      columns: columns,
+      rows: rows,
+      gridFocusNode: null,
+      scroll: scroll,
+    );
 
-      // 150 + 200 + 150 = minimum width 500
-      stateManager
-          .setLayout(const BoxConstraints(maxWidth: 550, maxHeight: 600));
+    // 150 + 200 + 150 = minimum width 500
+    stateManager.setLayout(const BoxConstraints(maxWidth: 550, maxHeight: 600));
 
-      expect(stateManager.showFrozenColumn, true);
-      expect(columns.first.width, 150);
+    expect(stateManager.showFrozenColumn, true);
+    expect(columns.first.width, 150);
 
-      // When the width is 550, the columns and cells should be displayed in the correct width.
-      stateManager.resizeColumn(columns.first, 60);
+    // When the width is 550, the columns and cells should be displayed in the correct width.
+    stateManager.resizeColumn(columns.first, 60);
 
-      expect(stateManager.showFrozenColumn, true);
-      expect(columns.first.width, 150);
-    },
-  );
+    expect(stateManager.showFrozenColumn, true);
+    expect(columns.first.width, 150);
+  });
 
-  testWidgets(
-    'If there are frozen columns, '
-    'If one frozen column is toggled to the right, '
-    'If the width is insufficient, '
-    'columnIndexesForShowFrozen should be returned.',
-    (WidgetTester tester) async {
-      List<TrinaColumn> columns = [
-        ...ColumnHelper.textColumn(
-          'left',
-          count: 1,
-          frozen: TrinaColumnFrozen.start,
-          width: 150,
-        ),
-        ...ColumnHelper.textColumn('body', count: 3, width: 150),
-        ...ColumnHelper.textColumn(
-          'right',
-          count: 1,
-          frozen: TrinaColumnFrozen.end,
-          width: 150,
-        ),
-      ];
+  testWidgets('If there are frozen columns, '
+      'If one frozen column is toggled to the right, '
+      'If the width is insufficient, '
+      'columnIndexesForShowFrozen should be returned.', (
+    WidgetTester tester,
+  ) async {
+    List<TrinaColumn> columns = [
+      ...ColumnHelper.textColumn(
+        'left',
+        count: 1,
+        frozen: TrinaColumnFrozen.start,
+        width: 150,
+      ),
+      ...ColumnHelper.textColumn('body', count: 3, width: 150),
+      ...ColumnHelper.textColumn(
+        'right',
+        count: 1,
+        frozen: TrinaColumnFrozen.end,
+        width: 150,
+      ),
+    ];
 
-      List<TrinaRow> rows = RowHelper.count(10, columns);
+    List<TrinaRow> rows = RowHelper.count(10, columns);
 
-      TrinaGridStateManager stateManager = getStateManager(
-        columns: columns,
-        rows: rows,
-        gridFocusNode: null,
-        scroll: scroll,
-      );
+    TrinaGridStateManager stateManager = getStateManager(
+      columns: columns,
+      rows: rows,
+      gridFocusNode: null,
+      scroll: scroll,
+    );
 
-      // 150 + 200 + 150 = 최소 500 필요
-      stateManager.setLayout(
-        const BoxConstraints(maxWidth: 450, maxHeight: 600),
-      );
+    // 150 + 200 + 150 = 최소 500 필요
+    stateManager.setLayout(const BoxConstraints(maxWidth: 450, maxHeight: 600));
 
-      expect(stateManager.showFrozenColumn, false);
-      expect(stateManager.columns[0].frozen, TrinaColumnFrozen.start,
-          reason: 'Frozen state should be preserved even when not shown.');
-      expect(stateManager.columns[1].frozen, TrinaColumnFrozen.none);
-      expect(stateManager.columns[2].frozen, TrinaColumnFrozen.none);
-      expect(stateManager.columns[3].frozen, TrinaColumnFrozen.none);
-      expect(stateManager.columns[4].frozen, TrinaColumnFrozen.end,
-          reason: 'Frozen state should be preserved even when not shown.');
-    },
-  );
+    expect(stateManager.showFrozenColumn, false);
+    expect(
+      stateManager.columns[0].frozen,
+      TrinaColumnFrozen.start,
+      reason: 'Frozen state should be preserved even when not shown.',
+    );
+    expect(stateManager.columns[1].frozen, TrinaColumnFrozen.none);
+    expect(stateManager.columns[2].frozen, TrinaColumnFrozen.none);
+    expect(stateManager.columns[3].frozen, TrinaColumnFrozen.none);
+    expect(
+      stateManager.columns[4].frozen,
+      TrinaColumnFrozen.end,
+      reason: 'Frozen state should be preserved even when not shown.',
+    );
+  });
 
   group('toggleFrozenColumn', () {
-    test(
-        'columnSizeConfig.restoreAutoSizeAfterFrozenColumn is false, '
+    test('columnSizeConfig.restoreAutoSizeAfterFrozenColumn is false, '
         'activatedColumnsAutoSize should be false.', () {
       final columns = ColumnHelper.textColumn('title', count: 5);
 
@@ -1033,47 +1092,42 @@ void main() {
 
         stateManager.insertColumns(columnIdxToInsert, columnsToInsert);
 
-        expect(
-          stateManager.refRows[0].cells['column1']!.value,
-          defaultValue,
-        );
+        expect(stateManager.refRows[0].cells['column1']!.value, defaultValue);
 
-        expect(
-          stateManager.refRows[1].cells['column1']!.value,
-          defaultValue,
-        );
+        expect(stateManager.refRows[1].cells['column1']!.value, defaultValue);
       },
     );
 
     test(
-        'When columnSizeConfig.restoreAutoSizeAfterInsertColumn is false, '
-        'activatedColumnsAutoSize should be false after inserting a column',
-        () {
-      final columns = ColumnHelper.textColumn('title', count: 5);
+      'When columnSizeConfig.restoreAutoSizeAfterInsertColumn is false, '
+      'activatedColumnsAutoSize should be false after inserting a column',
+      () {
+        final columns = ColumnHelper.textColumn('title', count: 5);
 
-      TrinaGridStateManager stateManager = getStateManager(
-        columns: columns,
-        rows: [],
-        gridFocusNode: null,
-        scroll: scroll,
-        configuration: const TrinaGridConfiguration(
-          columnSize: TrinaGridColumnSizeConfig(
-            autoSizeMode: TrinaAutoSizeMode.equal,
-            restoreAutoSizeAfterInsertColumn: false,
+        TrinaGridStateManager stateManager = getStateManager(
+          columns: columns,
+          rows: [],
+          gridFocusNode: null,
+          scroll: scroll,
+          configuration: const TrinaGridConfiguration(
+            columnSize: TrinaGridColumnSizeConfig(
+              autoSizeMode: TrinaAutoSizeMode.equal,
+              restoreAutoSizeAfterInsertColumn: false,
+            ),
           ),
-        ),
-      );
+        );
 
-      stateManager.setLayout(
-        const BoxConstraints(maxWidth: 450, maxHeight: 600),
-      );
+        stateManager.setLayout(
+          const BoxConstraints(maxWidth: 450, maxHeight: 600),
+        );
 
-      expect(stateManager.activatedColumnsAutoSize, true);
+        expect(stateManager.activatedColumnsAutoSize, true);
 
-      stateManager.insertColumns(0, ColumnHelper.textColumn('title'));
+        stateManager.insertColumns(0, ColumnHelper.textColumn('title'));
 
-      expect(stateManager.activatedColumnsAutoSize, false);
-    });
+        expect(stateManager.activatedColumnsAutoSize, false);
+      },
+    );
   });
 
   group('removeColumns', () {
@@ -1167,11 +1221,12 @@ void main() {
         final List<TrinaColumnGroup> columnGroups = [
           TrinaColumnGroup(title: 'a', fields: ['column0']),
           TrinaColumnGroup(
-              title: 'b',
-              fields: columns
-                  .where((element) => element.field != 'column0')
-                  .map((e) => e.field)
-                  .toList()),
+            title: 'b',
+            fields: columns
+                .where((element) => element.field != 'column0')
+                .map((e) => e.field)
+                .toList(),
+          ),
         ];
 
         final List<TrinaRow> rows = RowHelper.count(2, columns);
@@ -1205,11 +1260,12 @@ void main() {
         final List<TrinaColumnGroup> columnGroups = [
           TrinaColumnGroup(title: 'a', fields: ['column0']),
           TrinaColumnGroup(
-              title: 'b',
-              fields: columns
-                  .where((element) => element.field != 'column0')
-                  .map((e) => e.field)
-                  .toList()),
+            title: 'b',
+            fields: columns
+                .where((element) => element.field != 'column0')
+                .map((e) => e.field)
+                .toList(),
+          ),
         ];
 
         final List<TrinaRow> rows = RowHelper.count(2, columns);
@@ -1228,10 +1284,7 @@ void main() {
 
         expect(stateManager.columnGroups.length, 2);
 
-        expect(
-          stateManager.columnGroups[1].fields!.contains('column1'),
-          false,
-        );
+        expect(stateManager.columnGroups[1].fields!.contains('column1'), false);
 
         expect(stateManager.columnGroups[1].fields!.length, 8);
       },
@@ -1252,12 +1305,15 @@ void main() {
             children: [
               TrinaColumnGroup(title: 'c', fields: ['column1']),
               TrinaColumnGroup(
-                  title: 'd',
-                  fields: columns
-                      .where((element) =>
-                          !['column0', 'column1'].contains(element.field))
-                      .map((e) => e.field)
-                      .toList()),
+                title: 'd',
+                fields: columns
+                    .where(
+                      (element) =>
+                          !['column0', 'column1'].contains(element.field),
+                    )
+                    .map((e) => e.field)
+                    .toList(),
+              ),
             ],
           ),
         ];
@@ -1326,8 +1382,7 @@ void main() {
       },
     );
 
-    test(
-        'columnSizeConfig.restoreAutoSizeAfterRemoveColumn is false, '
+    test('columnSizeConfig.restoreAutoSizeAfterRemoveColumn is false, '
         'activatedColumnsAutoSize should be false.', () {
       final columns = ColumnHelper.textColumn('title', count: 5);
 
@@ -1358,201 +1413,188 @@ void main() {
 
   group('moveColumn', () {
     test(
-        'If the column movement is not possible due to frozen column limit, notifyListeners should not be called.',
-        () async {
-      final columns = ColumnHelper.textColumn('title', count: 5);
+      'If the column movement is not possible due to frozen column limit, notifyListeners should not be called.',
+      () async {
+        final columns = ColumnHelper.textColumn('title', count: 5);
 
-      TrinaGridStateManager stateManager = getStateManager(
-        columns: columns,
-        rows: [],
-        gridFocusNode: null,
-        scroll: scroll,
-      );
+        TrinaGridStateManager stateManager = getStateManager(
+          columns: columns,
+          rows: [],
+          gridFocusNode: null,
+          scroll: scroll,
+        );
 
-      stateManager.setLayout(const BoxConstraints(maxWidth: 500));
+        stateManager.setLayout(const BoxConstraints(maxWidth: 500));
 
-      final listeners = MockMethods();
+        final listeners = MockMethods();
 
-      stateManager.addListener(listeners.noParamReturnVoid);
+        stateManager.addListener(listeners.noParamReturnVoid);
 
-      final column = columns[0];
+        final column = columns[0];
 
-      final targetColumn = columns[1]..frozen = TrinaColumnFrozen.start;
+        final targetColumn = columns[1]..frozen = TrinaColumnFrozen.start;
 
-      stateManager.moveColumn(
-        column: column,
-        targetColumn: targetColumn,
-      );
+        stateManager.moveColumn(column: column, targetColumn: targetColumn);
 
-      verifyNever(listeners.noParamReturnVoid());
-    });
+        verifyNever(listeners.noParamReturnVoid());
+      },
+    );
 
     test(
-        'When the frozen column width is sufficient, notifyListeners should be called',
-        () async {
-      final columns = ColumnHelper.textColumn('title', count: 5);
+      'When the frozen column width is sufficient, notifyListeners should be called',
+      () async {
+        final columns = ColumnHelper.textColumn('title', count: 5);
 
-      TrinaGridStateManager stateManager = getStateManager(
-        columns: columns,
-        rows: [],
-        gridFocusNode: null,
-        scroll: scroll,
-      );
+        TrinaGridStateManager stateManager = getStateManager(
+          columns: columns,
+          rows: [],
+          gridFocusNode: null,
+          scroll: scroll,
+        );
 
-      stateManager.setLayout(const BoxConstraints(maxWidth: 500));
+        stateManager.setLayout(const BoxConstraints(maxWidth: 500));
 
-      final listeners = MockMethods();
+        final listeners = MockMethods();
 
-      stateManager.addListener(listeners.noParamReturnVoid);
+        stateManager.addListener(listeners.noParamReturnVoid);
 
-      final column = columns[0]..width = 50;
+        final column = columns[0]..width = 50;
 
-      final targetColumn = columns[1]..frozen = TrinaColumnFrozen.start;
+        final targetColumn = columns[1]..frozen = TrinaColumnFrozen.start;
 
-      stateManager.moveColumn(
-        column: column,
-        targetColumn: targetColumn,
-      );
+        stateManager.moveColumn(column: column, targetColumn: targetColumn);
 
-      verify(listeners.noParamReturnVoid()).called(1);
-    });
+        verify(listeners.noParamReturnVoid()).called(1);
+      },
+    );
 
     test(
-        'When the 0th column is moved to the 4th right frozen column, the column order should be changed',
-        () async {
-      final columns = ColumnHelper.textColumn('title', count: 5);
+      'When the 0th column is moved to the 4th right frozen column, the column order should be changed',
+      () async {
+        final columns = ColumnHelper.textColumn('title', count: 5);
 
-      columns[0].frozen = TrinaColumnFrozen.none;
-      columns[1].frozen = TrinaColumnFrozen.none;
-      columns[2].frozen = TrinaColumnFrozen.start;
-      columns[3].frozen = TrinaColumnFrozen.start;
-      columns[4].frozen = TrinaColumnFrozen.end;
+        columns[0].frozen = TrinaColumnFrozen.none;
+        columns[1].frozen = TrinaColumnFrozen.none;
+        columns[2].frozen = TrinaColumnFrozen.start;
+        columns[3].frozen = TrinaColumnFrozen.start;
+        columns[4].frozen = TrinaColumnFrozen.end;
 
-      TrinaGridStateManager stateManager = getStateManager(
-        columns: columns,
-        rows: [],
-        gridFocusNode: null,
-        scroll: scroll,
-      );
+        TrinaGridStateManager stateManager = getStateManager(
+          columns: columns,
+          rows: [],
+          gridFocusNode: null,
+          scroll: scroll,
+        );
 
-      stateManager.setLayout(const BoxConstraints(maxWidth: 1200));
+        stateManager.setLayout(const BoxConstraints(maxWidth: 1200));
 
-      stateManager.moveColumn(
-        column: columns[0],
-        targetColumn: columns[4],
-      );
+        stateManager.moveColumn(column: columns[0], targetColumn: columns[4]);
 
-      expect(stateManager.refColumns[0].title, 'title1');
-      expect(stateManager.refColumns[1].title, 'title2');
-      expect(stateManager.refColumns[2].title, 'title3');
-      expect(stateManager.refColumns[3].title, 'title4');
-      expect(stateManager.refColumns[4].title, 'title0');
-    });
+        expect(stateManager.refColumns[0].title, 'title1');
+        expect(stateManager.refColumns[1].title, 'title2');
+        expect(stateManager.refColumns[2].title, 'title3');
+        expect(stateManager.refColumns[3].title, 'title4');
+        expect(stateManager.refColumns[4].title, 'title0');
+      },
+    );
 
     test(
-        'When the 4th column is moved to the 1st left frozen column, the column order should be changed',
-        () async {
-      final columns = ColumnHelper.textColumn('title', count: 5);
+      'When the 4th column is moved to the 1st left frozen column, the column order should be changed',
+      () async {
+        final columns = ColumnHelper.textColumn('title', count: 5);
 
-      columns[0].frozen = TrinaColumnFrozen.none;
-      columns[1].frozen = TrinaColumnFrozen.start;
-      columns[2].frozen = TrinaColumnFrozen.none;
-      columns[3].frozen = TrinaColumnFrozen.none;
-      columns[4].frozen = TrinaColumnFrozen.none;
+        columns[0].frozen = TrinaColumnFrozen.none;
+        columns[1].frozen = TrinaColumnFrozen.start;
+        columns[2].frozen = TrinaColumnFrozen.none;
+        columns[3].frozen = TrinaColumnFrozen.none;
+        columns[4].frozen = TrinaColumnFrozen.none;
 
-      TrinaGridStateManager stateManager = getStateManager(
-        columns: columns,
-        rows: [],
-        gridFocusNode: null,
-        scroll: scroll,
-      );
+        TrinaGridStateManager stateManager = getStateManager(
+          columns: columns,
+          rows: [],
+          gridFocusNode: null,
+          scroll: scroll,
+        );
 
-      stateManager.setLayout(const BoxConstraints(maxWidth: 1200));
+        stateManager.setLayout(const BoxConstraints(maxWidth: 1200));
 
-      stateManager.moveColumn(
-        column: columns[4],
-        targetColumn: columns[1],
-      );
+        stateManager.moveColumn(column: columns[4], targetColumn: columns[1]);
 
-      expect(stateManager.refColumns[0].title, 'title0');
-      expect(stateManager.refColumns[1].title, 'title4');
-      expect(stateManager.refColumns[2].title, 'title1');
-      expect(stateManager.refColumns[3].title, 'title2');
-      expect(stateManager.refColumns[4].title, 'title3');
-    });
+        expect(stateManager.refColumns[0].title, 'title0');
+        expect(stateManager.refColumns[1].title, 'title4');
+        expect(stateManager.refColumns[2].title, 'title1');
+        expect(stateManager.refColumns[3].title, 'title2');
+        expect(stateManager.refColumns[4].title, 'title3');
+      },
+    );
 
     test(
-        'When the 3rd left frozen column is moved to the 1st non-frozen column, the column order should be changed',
-        () async {
-      final columns = ColumnHelper.textColumn('title', count: 5);
+      'When the 3rd left frozen column is moved to the 1st non-frozen column, the column order should be changed',
+      () async {
+        final columns = ColumnHelper.textColumn('title', count: 5);
 
-      columns[0].frozen = TrinaColumnFrozen.none;
-      columns[1].frozen = TrinaColumnFrozen.none;
-      columns[2].frozen = TrinaColumnFrozen.none;
-      columns[3].frozen = TrinaColumnFrozen.start;
-      columns[4].frozen = TrinaColumnFrozen.none;
+        columns[0].frozen = TrinaColumnFrozen.none;
+        columns[1].frozen = TrinaColumnFrozen.none;
+        columns[2].frozen = TrinaColumnFrozen.none;
+        columns[3].frozen = TrinaColumnFrozen.start;
+        columns[4].frozen = TrinaColumnFrozen.none;
 
-      TrinaGridStateManager stateManager = getStateManager(
-        columns: columns,
-        rows: [],
-        gridFocusNode: null,
-        scroll: scroll,
-      );
+        TrinaGridStateManager stateManager = getStateManager(
+          columns: columns,
+          rows: [],
+          gridFocusNode: null,
+          scroll: scroll,
+        );
 
-      stateManager.setLayout(const BoxConstraints(maxWidth: 1200));
+        stateManager.setLayout(const BoxConstraints(maxWidth: 1200));
 
-      stateManager.moveColumn(
-        column: columns[3],
-        targetColumn: columns[1],
-      );
+        stateManager.moveColumn(column: columns[3], targetColumn: columns[1]);
 
-      // 3rd is left frozen and is to the right of 1st.
-      // When the 3rd column moves to the right of the 1st column,
-      // the 3rd column will be removed from the left of the 1st column.
-      expect(stateManager.refColumns[0].title, 'title0');
-      expect(stateManager.refColumns[1].title, 'title1');
-      expect(stateManager.refColumns[2].title, 'title3');
-      expect(stateManager.refColumns[3].title, 'title2');
-      expect(stateManager.refColumns[4].title, 'title4');
-    });
+        // 3rd is left frozen and is to the right of 1st.
+        // When the 3rd column moves to the right of the 1st column,
+        // the 3rd column will be removed from the left of the 1st column.
+        expect(stateManager.refColumns[0].title, 'title0');
+        expect(stateManager.refColumns[1].title, 'title1');
+        expect(stateManager.refColumns[2].title, 'title3');
+        expect(stateManager.refColumns[3].title, 'title2');
+        expect(stateManager.refColumns[4].title, 'title4');
+      },
+    );
 
     test(
-        'When the 1st right frozen column is moved to the 4th non-frozen column, the column order should be changed',
-        () async {
-      final columns = ColumnHelper.textColumn('title', count: 5);
+      'When the 1st right frozen column is moved to the 4th non-frozen column, the column order should be changed',
+      () async {
+        final columns = ColumnHelper.textColumn('title', count: 5);
 
-      columns[0].frozen = TrinaColumnFrozen.none;
-      columns[1].frozen = TrinaColumnFrozen.end;
-      columns[2].frozen = TrinaColumnFrozen.none;
-      columns[3].frozen = TrinaColumnFrozen.none;
-      columns[4].frozen = TrinaColumnFrozen.none;
+        columns[0].frozen = TrinaColumnFrozen.none;
+        columns[1].frozen = TrinaColumnFrozen.end;
+        columns[2].frozen = TrinaColumnFrozen.none;
+        columns[3].frozen = TrinaColumnFrozen.none;
+        columns[4].frozen = TrinaColumnFrozen.none;
 
-      TrinaGridStateManager stateManager = getStateManager(
-        columns: columns,
-        rows: [],
-        gridFocusNode: null,
-        scroll: scroll,
-      );
+        TrinaGridStateManager stateManager = getStateManager(
+          columns: columns,
+          rows: [],
+          gridFocusNode: null,
+          scroll: scroll,
+        );
 
-      stateManager.setLayout(const BoxConstraints(maxWidth: 1200));
+        stateManager.setLayout(const BoxConstraints(maxWidth: 1200));
 
-      stateManager.moveColumn(
-        column: columns[1],
-        targetColumn: columns[4],
-      );
+        stateManager.moveColumn(column: columns[1], targetColumn: columns[4]);
 
-      // 1st is right frozen and is to the right of 4th.
-      // When the 1st column moves to the right of the 4th column,
-      // the 1st column will be removed from the left of the 4th column.
-      expect(stateManager.refColumns[0].title, 'title0');
-      expect(stateManager.refColumns[1].title, 'title2');
-      expect(stateManager.refColumns[2].title, 'title3');
-      expect(stateManager.refColumns[3].title, 'title1');
-      expect(stateManager.refColumns[4].title, 'title4');
-    });
+        // 1st is right frozen and is to the right of 4th.
+        // When the 1st column moves to the right of the 4th column,
+        // the 1st column will be removed from the left of the 4th column.
+        expect(stateManager.refColumns[0].title, 'title0');
+        expect(stateManager.refColumns[1].title, 'title2');
+        expect(stateManager.refColumns[2].title, 'title3');
+        expect(stateManager.refColumns[3].title, 'title1');
+        expect(stateManager.refColumns[4].title, 'title4');
+      },
+    );
 
-    test(
-        'When columnSizeConfig.restoreAutoSizeAfterMoveColumn is false, '
+    test('When columnSizeConfig.restoreAutoSizeAfterMoveColumn is false, '
         'activatedColumnsAutoSize should be false after moving a column', () {
       final columns = ColumnHelper.textColumn('title', count: 5);
 
@@ -1586,12 +1628,12 @@ void main() {
 
   group('resizeColumn', () {
     test(
-        'When columnsResizeMode is none, notifyResizingListeners should not be called',
-        () {
-      final columns = ColumnHelper.textColumn('title', count: 5);
-      final mockListener = MockMethods();
+      'When columnsResizeMode is none, notifyResizingListeners should not be called',
+      () {
+        final columns = ColumnHelper.textColumn('title', count: 5);
+        final mockListener = MockMethods();
 
-      TrinaGridStateManager stateManager = getStateManager(
+        TrinaGridStateManager stateManager = getStateManager(
           columns: columns,
           rows: [],
           gridFocusNode: null,
@@ -1600,30 +1642,32 @@ void main() {
             columnSize: TrinaGridColumnSizeConfig(
               resizeMode: TrinaResizeMode.none,
             ),
-          ));
+          ),
+        );
 
-      stateManager.setLayout(const BoxConstraints(maxWidth: 800));
+        stateManager.setLayout(const BoxConstraints(maxWidth: 800));
 
-      stateManager.resizingChangeNotifier.addListener(
-        mockListener.noParamReturnVoid,
-      );
+        stateManager.resizingChangeNotifier.addListener(
+          mockListener.noParamReturnVoid,
+        );
 
-      stateManager.resizeColumn(columns.first, 10);
+        stateManager.resizeColumn(columns.first, 10);
 
-      verifyNever(mockListener.noParamReturnVoid());
+        verifyNever(mockListener.noParamReturnVoid());
 
-      stateManager.resizingChangeNotifier.removeListener(
-        mockListener.noParamReturnVoid,
-      );
-    });
+        stateManager.resizingChangeNotifier.removeListener(
+          mockListener.noParamReturnVoid,
+        );
+      },
+    );
 
     test(
-        'When column.enableDropToResize is false, notifyResizingListeners should not be called',
-        () {
-      final columns = ColumnHelper.textColumn('title', count: 5);
-      final mockListener = MockMethods();
+      'When column.enableDropToResize is false, notifyResizingListeners should not be called',
+      () {
+        final columns = ColumnHelper.textColumn('title', count: 5);
+        final mockListener = MockMethods();
 
-      TrinaGridStateManager stateManager = getStateManager(
+        TrinaGridStateManager stateManager = getStateManager(
           columns: columns,
           rows: [],
           gridFocusNode: null,
@@ -1632,37 +1676,43 @@ void main() {
             columnSize: TrinaGridColumnSizeConfig(
               resizeMode: TrinaResizeMode.normal,
             ),
-          ));
+          ),
+        );
 
-      stateManager.setLayout(const BoxConstraints(maxWidth: 800));
+        stateManager.setLayout(const BoxConstraints(maxWidth: 800));
 
-      stateManager.resizingChangeNotifier.addListener(
-        mockListener.noParamReturnVoid,
-      );
+        stateManager.resizingChangeNotifier.addListener(
+          mockListener.noParamReturnVoid,
+        );
 
-      stateManager.resizeColumn(columns.first..enableDropToResize = false, 10);
+        stateManager.resizeColumn(
+          columns.first..enableDropToResize = false,
+          10,
+        );
 
-      verifyNever(mockListener.noParamReturnVoid());
+        verifyNever(mockListener.noParamReturnVoid());
 
-      stateManager.resizingChangeNotifier.removeListener(
-        mockListener.noParamReturnVoid,
-      );
-    });
+        stateManager.resizingChangeNotifier.removeListener(
+          mockListener.noParamReturnVoid,
+        );
+      },
+    );
 
     test('When offset is 10, the column width should increase', () {
       final columns = ColumnHelper.textColumn('title', count: 5);
       final mockListener = MockMethods();
 
       TrinaGridStateManager stateManager = getStateManager(
-          columns: columns,
-          rows: [],
-          gridFocusNode: null,
-          scroll: scroll,
-          configuration: const TrinaGridConfiguration(
-            columnSize: TrinaGridColumnSizeConfig(
-              resizeMode: TrinaResizeMode.normal,
-            ),
-          ));
+        columns: columns,
+        rows: [],
+        gridFocusNode: null,
+        scroll: scroll,
+        configuration: const TrinaGridConfiguration(
+          columnSize: TrinaGridColumnSizeConfig(
+            resizeMode: TrinaResizeMode.normal,
+          ),
+        ),
+      );
 
       stateManager.setLayout(const BoxConstraints(maxWidth: 800));
 
@@ -1688,15 +1738,16 @@ void main() {
         final columns = ColumnHelper.textColumn('title', count: 5);
 
         TrinaGridStateManager stateManager = getStateManager(
-            columns: columns,
-            rows: [],
-            gridFocusNode: null,
-            scroll: scroll,
-            configuration: const TrinaGridConfiguration(
-              columnSize: TrinaGridColumnSizeConfig(
-                resizeMode: TrinaResizeMode.pushAndPull,
-              ),
-            ));
+          columns: columns,
+          rows: [],
+          gridFocusNode: null,
+          scroll: scroll,
+          configuration: const TrinaGridConfiguration(
+            columnSize: TrinaGridColumnSizeConfig(
+              resizeMode: TrinaResizeMode.pushAndPull,
+            ),
+          ),
+        );
 
         stateManager.setLayout(const BoxConstraints(maxWidth: 800));
 
@@ -1711,51 +1762,52 @@ void main() {
 
   group('autoFitColumn', () {
     testWidgets(
-        'When the widest cell is smaller than the column minimum width, '
-        'it should be changed to the minimum width', (tester) async {
-      final columns = ColumnHelper.textColumn('title');
+      'When the widest cell is smaller than the column minimum width, '
+      'it should be changed to the minimum width',
+      (tester) async {
+        final columns = ColumnHelper.textColumn('title');
 
-      final rows = RowHelper.count(3, columns);
-      rows[0].cells['title0']!.value = 'a';
-      rows[1].cells['title0']!.value = 'ab';
-      rows[2].cells['title0']!.value = 'abc';
+        final rows = RowHelper.count(3, columns);
+        rows[0].cells['title0']!.value = 'a';
+        rows[1].cells['title0']!.value = 'ab';
+        rows[2].cells['title0']!.value = 'abc';
 
-      late final BuildContext context;
+        late final BuildContext context;
 
-      TrinaGridStateManager stateManager = getStateManager(
-        columns: columns,
-        rows: rows,
-        gridFocusNode: null,
-        scroll: scroll,
-      );
+        TrinaGridStateManager stateManager = getStateManager(
+          columns: columns,
+          rows: rows,
+          gridFocusNode: null,
+          scroll: scroll,
+        );
 
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Material(
-            child: Builder(
-              builder: (builderContext) {
-                context = builderContext;
-                return Directionality(
-                  textDirection: TextDirection.ltr,
-                  child: TrinaBaseColumn(
-                    stateManager: stateManager,
-                    column: columns.first,
-                  ),
-                );
-              },
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Material(
+              child: Builder(
+                builder: (builderContext) {
+                  context = builderContext;
+                  return Directionality(
+                    textDirection: TextDirection.ltr,
+                    child: TrinaBaseColumn(
+                      stateManager: stateManager,
+                      column: columns.first,
+                    ),
+                  );
+                },
+              ),
             ),
           ),
-        ),
-      );
+        );
 
-      double oldWidth = columns.first.width;
-      stateManager.autoFitColumn(context, columns.first);
+        double oldWidth = columns.first.width;
+        stateManager.autoFitColumn(context, columns.first);
 
-      expect(columns.first.width, lessThan(oldWidth));
-    });
+        expect(columns.first.width, lessThan(oldWidth));
+      },
+    );
 
-    testWidgets(
-        'When the widest cell is larger than the column minimum width, '
+    testWidgets('When the widest cell is larger than the column minimum width, '
         'it should be changed to the minimum width', (tester) async {
       final columns = ColumnHelper.textColumn('title');
 
@@ -1799,8 +1851,9 @@ void main() {
   });
 
   group('hideColumn', () {
-    testWidgets('When the flag is true, the column hide should be true',
-        (WidgetTester tester) async {
+    testWidgets('When the flag is true, the column hide should be true', (
+      WidgetTester tester,
+    ) async {
       // given
       var columns = [
         TrinaColumn(title: '', field: '', type: TrinaColumnType.text()),
@@ -1826,8 +1879,9 @@ void main() {
       expect(stateManager.refColumns.originalList.first.hide, isTrue);
     });
 
-    testWidgets('When the flag is false, the column hide should be false',
-        (WidgetTester tester) async {
+    testWidgets('When the flag is false, the column hide should be false', (
+      WidgetTester tester,
+    ) async {
       // given
       var columns = [
         TrinaColumn(
@@ -1904,8 +1958,9 @@ void main() {
       },
     );
 
-    testWidgets('If the flag is true, notifyListeners should be called.',
-        (WidgetTester tester) async {
+    testWidgets('If the flag is true, notifyListeners should be called.', (
+      WidgetTester tester,
+    ) async {
       // given
       var columns = [
         TrinaColumn(title: '', field: '', type: TrinaColumnType.text()),
@@ -1935,8 +1990,9 @@ void main() {
       verify(listeners.noParamReturnVoid()).called(1);
     });
 
-    testWidgets('If hide is false, notifyListeners should not be called.',
-        (WidgetTester tester) async {
+    testWidgets('If hide is false, notifyListeners should not be called.', (
+      WidgetTester tester,
+    ) async {
       // given
       var columns = [
         TrinaColumn(title: '', field: '', type: TrinaColumnType.text()),
@@ -1966,47 +2022,51 @@ void main() {
   });
 
   group('hideColumns', () {
-    test('If columns is empty, notifyListeners should not be called.',
-        () async {
-      final columns = <TrinaColumn>[];
+    test(
+      'If columns is empty, notifyListeners should not be called.',
+      () async {
+        final columns = <TrinaColumn>[];
 
-      TrinaGridStateManager stateManager = getStateManager(
-        columns: columns,
-        rows: [],
-        gridFocusNode: null,
-        scroll: scroll,
-      );
+        TrinaGridStateManager stateManager = getStateManager(
+          columns: columns,
+          rows: [],
+          gridFocusNode: null,
+          scroll: scroll,
+        );
 
-      var listeners = MockMethods();
+        var listeners = MockMethods();
 
-      stateManager.addListener(listeners.noParamReturnVoid);
+        stateManager.addListener(listeners.noParamReturnVoid);
 
-      stateManager.hideColumns(columns, true);
+        stateManager.hideColumns(columns, true);
 
-      verifyNever(listeners.noParamReturnVoid());
-    });
+        verifyNever(listeners.noParamReturnVoid());
+      },
+    );
 
-    test('If columns is not empty, notifyListeners should be called.',
-        () async {
-      final columns = ColumnHelper.textColumn('title', count: 5);
+    test(
+      'If columns is not empty, notifyListeners should be called.',
+      () async {
+        final columns = ColumnHelper.textColumn('title', count: 5);
 
-      TrinaGridStateManager stateManager = getStateManager(
-        columns: columns,
-        rows: [],
-        gridFocusNode: null,
-        scroll: scroll,
-      );
+        TrinaGridStateManager stateManager = getStateManager(
+          columns: columns,
+          rows: [],
+          gridFocusNode: null,
+          scroll: scroll,
+        );
 
-      stateManager.setLayout(const BoxConstraints(maxWidth: 800));
+        stateManager.setLayout(const BoxConstraints(maxWidth: 800));
 
-      var listeners = MockMethods();
+        var listeners = MockMethods();
 
-      stateManager.addListener(listeners.noParamReturnVoid);
+        stateManager.addListener(listeners.noParamReturnVoid);
 
-      stateManager.hideColumns(columns, true);
+        stateManager.hideColumns(columns, true);
 
-      verify(listeners.noParamReturnVoid()).called(1);
-    });
+        verify(listeners.noParamReturnVoid()).called(1);
+      },
+    );
 
     test('When hide is true, columns should be updated.', () async {
       final columns = ColumnHelper.textColumn('title', count: 5);
@@ -2029,31 +2089,28 @@ void main() {
       expect(hideList.length, 5);
     });
 
-    test(
-      'When hide is false, columns should be updated.',
-      () async {
-        final columns = ColumnHelper.textColumn('title', count: 5, hide: true);
+    test('When hide is false, columns should be updated.', () async {
+      final columns = ColumnHelper.textColumn('title', count: 5, hide: true);
 
-        TrinaGridStateManager stateManager = getStateManager(
-          columns: columns,
-          rows: [],
-          gridFocusNode: null,
-          scroll: scroll,
-        );
+      TrinaGridStateManager stateManager = getStateManager(
+        columns: columns,
+        rows: [],
+        gridFocusNode: null,
+        scroll: scroll,
+      );
 
-        stateManager.setLayout(const BoxConstraints(maxWidth: 1000));
+      stateManager.setLayout(const BoxConstraints(maxWidth: 1000));
 
-        stateManager.hideColumns(columns.getRange(0, 2).toList(), false);
+      stateManager.hideColumns(columns.getRange(0, 2).toList(), false);
 
-        // called columns
-        expect(columns[0].hide, false);
-        expect(columns[1].hide, false);
-        // not called columns
-        expect(columns[2].hide, true);
-        expect(columns[3].hide, true);
-        expect(columns[4].hide, true);
-      },
-    );
+      // called columns
+      expect(columns[0].hide, false);
+      expect(columns[1].hide, false);
+      // not called columns
+      expect(columns[2].hide, true);
+      expect(columns[3].hide, true);
+      expect(columns[4].hide, true);
+    });
 
     test(
       'When hide is false, columns frozen property should not change.',
@@ -2208,326 +2265,305 @@ void main() {
   });
 
   group('limitMoveColumn', () {
-    test(
-      'When column frozen is start, false should be returned.',
-      () async {
-        final TrinaColumn column = TrinaColumn(
-          title: 'title1',
-          field: 'field1',
-          type: TrinaColumnType.text(),
-          frozen: TrinaColumnFrozen.start,
-          width: 100,
-        );
+    test('When column frozen is start, false should be returned.', () async {
+      final TrinaColumn column = TrinaColumn(
+        title: 'title1',
+        field: 'field1',
+        type: TrinaColumnType.text(),
+        frozen: TrinaColumnFrozen.start,
+        width: 100,
+      );
 
-        final TrinaColumn targetColumn = TrinaColumn(
-          title: 'title2',
-          field: 'field2',
-          type: TrinaColumnType.text(),
-          frozen: TrinaColumnFrozen.end,
-          width: 100,
-        );
+      final TrinaColumn targetColumn = TrinaColumn(
+        title: 'title2',
+        field: 'field2',
+        type: TrinaColumnType.text(),
+        frozen: TrinaColumnFrozen.end,
+        width: 100,
+      );
 
-        TrinaGridStateManager stateManager = getStateManager(
-          columns: [
-            column,
-            ...ColumnHelper.textColumn('title', count: 3, width: 100),
-          ],
-          rows: [],
-          gridFocusNode: null,
-          scroll: scroll,
-        );
+      TrinaGridStateManager stateManager = getStateManager(
+        columns: [
+          column,
+          ...ColumnHelper.textColumn('title', count: 3, width: 100),
+        ],
+        rows: [],
+        gridFocusNode: null,
+        scroll: scroll,
+      );
 
-        stateManager.setLayout(const BoxConstraints(maxWidth: 500));
+      stateManager.setLayout(const BoxConstraints(maxWidth: 500));
 
-        // The size can be increased by up to 194, which is less than 500 - 306.
-        // print(stateManager.maxWidth);
-        // One left frozen column of 100
-        // print(stateManager.leftFrozenColumnsWidth);
-        // One right frozen column of 100
-        // print(stateManager.rightFrozenColumnsWidth);
-        // 200
-        // print(TrinaGridSettings.bodyMinWidth);
-        // 6
-        // print(TrinaGridSettings.totalShadowLineWidth);
+      // The size can be increased by up to 194, which is less than 500 - 306.
+      // print(stateManager.maxWidth);
+      // One left frozen column of 100
+      // print(stateManager.leftFrozenColumnsWidth);
+      // One right frozen column of 100
+      // print(stateManager.rightFrozenColumnsWidth);
+      // 200
+      // print(TrinaGridSettings.bodyMinWidth);
+      // 6
+      // print(TrinaGridSettings.totalShadowLineWidth);
 
-        expect(
-          stateManager.limitMoveColumn(
-            column: column,
-            targetColumn: targetColumn,
-          ),
-          false,
-        );
-      },
-    );
+      expect(
+        stateManager.limitMoveColumn(
+          column: column,
+          targetColumn: targetColumn,
+        ),
+        false,
+      );
+    });
 
-    test(
-      'When column frozen is none, false should be returned.',
-      () async {
-        final TrinaColumn column = TrinaColumn(
-          title: 'title1',
-          field: 'field1',
-          type: TrinaColumnType.text(),
-          frozen: TrinaColumnFrozen.start,
-          width: 100,
-        );
+    test('When column frozen is none, false should be returned.', () async {
+      final TrinaColumn column = TrinaColumn(
+        title: 'title1',
+        field: 'field1',
+        type: TrinaColumnType.text(),
+        frozen: TrinaColumnFrozen.start,
+        width: 100,
+      );
 
-        final TrinaColumn targetColumn = TrinaColumn(
-          title: 'title2',
-          field: 'field2',
-          type: TrinaColumnType.text(),
-          frozen: TrinaColumnFrozen.none,
-          width: 100,
-        );
+      final TrinaColumn targetColumn = TrinaColumn(
+        title: 'title2',
+        field: 'field2',
+        type: TrinaColumnType.text(),
+        frozen: TrinaColumnFrozen.none,
+        width: 100,
+      );
 
-        TrinaGridStateManager stateManager = getStateManager(
-          columns: [
-            column,
-            ...ColumnHelper.textColumn('title', count: 3, width: 100),
-          ],
-          rows: [],
-          gridFocusNode: null,
-          scroll: scroll,
-        );
+      TrinaGridStateManager stateManager = getStateManager(
+        columns: [
+          column,
+          ...ColumnHelper.textColumn('title', count: 3, width: 100),
+        ],
+        rows: [],
+        gridFocusNode: null,
+        scroll: scroll,
+      );
 
-        stateManager.setLayout(const BoxConstraints(maxWidth: 500));
+      stateManager.setLayout(const BoxConstraints(maxWidth: 500));
 
-        // The size can be increased by up to 294, which is less than 500 - 306.
-        // print(stateManager.maxWidth);
-        // One left frozen column of 100
-        // print(stateManager.leftFrozenColumnsWidth);
-        // One right frozen column of 100
-        // print(stateManager.rightFrozenColumnsWidth);
-        // 200
-        // print(TrinaGridSettings.bodyMinWidth);
-        // 6
-        // print(TrinaGridSettings.totalShadowLineWidth);
+      // The size can be increased by up to 294, which is less than 500 - 306.
+      // print(stateManager.maxWidth);
+      // One left frozen column of 100
+      // print(stateManager.leftFrozenColumnsWidth);
+      // One right frozen column of 100
+      // print(stateManager.rightFrozenColumnsWidth);
+      // 200
+      // print(TrinaGridSettings.bodyMinWidth);
+      // 6
+      // print(TrinaGridSettings.totalShadowLineWidth);
 
-        expect(
-          stateManager.limitMoveColumn(
-            column: column,
-            targetColumn: targetColumn,
-          ),
-          false,
-        );
-      },
-    );
+      expect(
+        stateManager.limitMoveColumn(
+          column: column,
+          targetColumn: targetColumn,
+        ),
+        false,
+      );
+    });
 
-    test(
-      'When column frozen is none, false should be returned.',
-      () async {
-        final TrinaColumn column = TrinaColumn(
-          title: 'title1',
-          field: 'field1',
-          type: TrinaColumnType.text(),
-          frozen: TrinaColumnFrozen.none,
-          width: 100,
-        );
+    test('When column frozen is none, false should be returned.', () async {
+      final TrinaColumn column = TrinaColumn(
+        title: 'title1',
+        field: 'field1',
+        type: TrinaColumnType.text(),
+        frozen: TrinaColumnFrozen.none,
+        width: 100,
+      );
 
-        final TrinaColumn targetColumn = TrinaColumn(
-          title: 'title2',
-          field: 'field2',
-          type: TrinaColumnType.text(),
-          frozen: TrinaColumnFrozen.start,
-          width: 100,
-        );
+      final TrinaColumn targetColumn = TrinaColumn(
+        title: 'title2',
+        field: 'field2',
+        type: TrinaColumnType.text(),
+        frozen: TrinaColumnFrozen.start,
+        width: 100,
+      );
 
-        TrinaGridStateManager stateManager = getStateManager(
-          columns: [
-            column,
-            ...ColumnHelper.textColumn('title', count: 3, width: 100),
-          ],
-          rows: [],
-          gridFocusNode: null,
-          scroll: scroll,
-        );
+      TrinaGridStateManager stateManager = getStateManager(
+        columns: [
+          column,
+          ...ColumnHelper.textColumn('title', count: 3, width: 100),
+        ],
+        rows: [],
+        gridFocusNode: null,
+        scroll: scroll,
+      );
 
-        stateManager.setLayout(const BoxConstraints(maxWidth: 500));
+      stateManager.setLayout(const BoxConstraints(maxWidth: 500));
 
-        // The size can be increased by up to 294, which is less than 500 - 306.
-        // print(stateManager.maxWidth);
-        // One left frozen column of 100
-        // print(stateManager.leftFrozenColumnsWidth);
-        // One right frozen column of 100
-        // print(stateManager.rightFrozenColumnsWidth);
-        // 200
-        // print(TrinaGridSettings.bodyMinWidth);
-        // 6
-        // print(TrinaGridSettings.totalShadowLineWidth);
+      // The size can be increased by up to 294, which is less than 500 - 306.
+      // print(stateManager.maxWidth);
+      // One left frozen column of 100
+      // print(stateManager.leftFrozenColumnsWidth);
+      // One right frozen column of 100
+      // print(stateManager.rightFrozenColumnsWidth);
+      // 200
+      // print(TrinaGridSettings.bodyMinWidth);
+      // 6
+      // print(TrinaGridSettings.totalShadowLineWidth);
 
-        expect(
-          stateManager.limitMoveColumn(
-            column: column,
-            targetColumn: targetColumn,
-          ),
-          false,
-        );
-      },
-    );
+      expect(
+        stateManager.limitMoveColumn(
+          column: column,
+          targetColumn: targetColumn,
+        ),
+        false,
+      );
+    });
 
-    test(
-      'When column frozen is none, true should be returned.',
-      () async {
-        final TrinaColumn column = TrinaColumn(
-          title: 'title1',
-          field: 'field1',
-          type: TrinaColumnType.text(),
-          frozen: TrinaColumnFrozen.none,
-          width: 294,
-        );
+    test('When column frozen is none, true should be returned.', () async {
+      final TrinaColumn column = TrinaColumn(
+        title: 'title1',
+        field: 'field1',
+        type: TrinaColumnType.text(),
+        frozen: TrinaColumnFrozen.none,
+        width: 294,
+      );
 
-        final TrinaColumn targetColumn = TrinaColumn(
-          title: 'title2',
-          field: 'field2',
-          type: TrinaColumnType.text(),
-          frozen: TrinaColumnFrozen.start,
-          width: 100,
-        );
+      final TrinaColumn targetColumn = TrinaColumn(
+        title: 'title2',
+        field: 'field2',
+        type: TrinaColumnType.text(),
+        frozen: TrinaColumnFrozen.start,
+        width: 100,
+      );
 
-        TrinaGridStateManager stateManager = getStateManager(
-          columns: [
-            column,
-            ...ColumnHelper.textColumn('title', count: 3, width: 100),
-          ],
-          rows: [],
-          gridFocusNode: null,
-          scroll: scroll,
-        );
+      TrinaGridStateManager stateManager = getStateManager(
+        columns: [
+          column,
+          ...ColumnHelper.textColumn('title', count: 3, width: 100),
+        ],
+        rows: [],
+        gridFocusNode: null,
+        scroll: scroll,
+      );
 
-        stateManager.setLayout(const BoxConstraints(maxWidth: 500));
+      stateManager.setLayout(const BoxConstraints(maxWidth: 500));
 
-        // The size can be increased by up to 294, which is less than 500 - 306.
-        // print(stateManager.maxWidth! - column.width);
-        // One left frozen column of 100
-        // print(stateManager.leftFrozenColumnsWidth);
-        // One right frozen column of 100
-        // print(stateManager.rightFrozenColumnsWidth);
-        // 200
-        // print(TrinaGridSettings.bodyMinWidth);
-        // 6
-        // print(TrinaGridSettings.totalShadowLineWidth);
+      // The size can be increased by up to 294, which is less than 500 - 306.
+      // print(stateManager.maxWidth! - column.width);
+      // One left frozen column of 100
+      // print(stateManager.leftFrozenColumnsWidth);
+      // One right frozen column of 100
+      // print(stateManager.rightFrozenColumnsWidth);
+      // 200
+      // print(TrinaGridSettings.bodyMinWidth);
+      // 6
+      // print(TrinaGridSettings.totalShadowLineWidth);
 
-        expect(
-          stateManager.limitMoveColumn(
-            column: column,
-            targetColumn: targetColumn,
-          ),
-          true,
-        );
-      },
-    );
+      expect(
+        stateManager.limitMoveColumn(
+          column: column,
+          targetColumn: targetColumn,
+        ),
+        true,
+      );
+    });
   });
 
   group('limitToggleFrozenColumn', () {
-    test(
-      'When column frozen is start, false should be returned.',
-      () async {
-        final TrinaColumn column = TrinaColumn(
-          title: 'title1',
-          field: 'field1',
-          type: TrinaColumnType.text(),
-          frozen: TrinaColumnFrozen.start,
-          width: 100,
-        );
+    test('When column frozen is start, false should be returned.', () async {
+      final TrinaColumn column = TrinaColumn(
+        title: 'title1',
+        field: 'field1',
+        type: TrinaColumnType.text(),
+        frozen: TrinaColumnFrozen.start,
+        width: 100,
+      );
 
-        TrinaGridStateManager stateManager = getStateManager(
-          columns: [
-            column,
-            ...ColumnHelper.textColumn('title', count: 3, width: 100),
-          ],
-          rows: [],
-          gridFocusNode: null,
-          scroll: scroll,
-        );
+      TrinaGridStateManager stateManager = getStateManager(
+        columns: [
+          column,
+          ...ColumnHelper.textColumn('title', count: 3, width: 100),
+        ],
+        rows: [],
+        gridFocusNode: null,
+        scroll: scroll,
+      );
 
-        stateManager.setLayout(const BoxConstraints(maxWidth: 500));
+      stateManager.setLayout(const BoxConstraints(maxWidth: 500));
 
-        expect(
-          stateManager.limitToggleFrozenColumn(column, TrinaColumnFrozen.none),
-          false,
-        );
-      },
-    );
+      expect(
+        stateManager.limitToggleFrozenColumn(column, TrinaColumnFrozen.none),
+        false,
+      );
+    });
 
-    test(
-      'When column frozen is none, false should be returned.',
-      () async {
-        final TrinaColumn column = TrinaColumn(
-          title: 'title1',
-          field: 'field1',
-          type: TrinaColumnType.text(),
-          frozen: TrinaColumnFrozen.none,
-          width: 100,
-        );
+    test('When column frozen is none, false should be returned.', () async {
+      final TrinaColumn column = TrinaColumn(
+        title: 'title1',
+        field: 'field1',
+        type: TrinaColumnType.text(),
+        frozen: TrinaColumnFrozen.none,
+        width: 100,
+      );
 
-        TrinaGridStateManager stateManager = getStateManager(
-          columns: [
-            column,
-            ...ColumnHelper.textColumn('title', count: 3, width: 100),
-          ],
-          rows: [],
-          gridFocusNode: null,
-          scroll: scroll,
-        );
+      TrinaGridStateManager stateManager = getStateManager(
+        columns: [
+          column,
+          ...ColumnHelper.textColumn('title', count: 3, width: 100),
+        ],
+        rows: [],
+        gridFocusNode: null,
+        scroll: scroll,
+      );
 
-        stateManager.setLayout(const BoxConstraints(maxWidth: 500));
+      stateManager.setLayout(const BoxConstraints(maxWidth: 500));
 
-        // The size can be increased by up to 394, which is less than 500 - 206.
-        // print(stateManager.maxWidth! - column.width);
-        // One left frozen column of 100
-        // print(stateManager.leftFrozenColumnsWidth);
-        // One right frozen column of 100
-        // print(stateManager.rightFrozenColumnsWidth);
-        // 200
-        // print(TrinaGridSettings.bodyMinWidth);
-        // 6
-        // print(TrinaGridSettings.totalShadowLineWidth);
+      // The size can be increased by up to 394, which is less than 500 - 206.
+      // print(stateManager.maxWidth! - column.width);
+      // One left frozen column of 100
+      // print(stateManager.leftFrozenColumnsWidth);
+      // One right frozen column of 100
+      // print(stateManager.rightFrozenColumnsWidth);
+      // 200
+      // print(TrinaGridSettings.bodyMinWidth);
+      // 6
+      // print(TrinaGridSettings.totalShadowLineWidth);
 
-        expect(
-          stateManager.limitToggleFrozenColumn(column, TrinaColumnFrozen.start),
-          false,
-        );
-      },
-    );
+      expect(
+        stateManager.limitToggleFrozenColumn(column, TrinaColumnFrozen.start),
+        false,
+      );
+    });
 
-    test(
-      'When column frozen is none, true should be returned.',
-      () async {
-        final TrinaColumn column = TrinaColumn(
-          title: 'title1',
-          field: 'field1',
-          type: TrinaColumnType.text(),
-          frozen: TrinaColumnFrozen.none,
-          width: 394,
-        );
+    test('When column frozen is none, true should be returned.', () async {
+      final TrinaColumn column = TrinaColumn(
+        title: 'title1',
+        field: 'field1',
+        type: TrinaColumnType.text(),
+        frozen: TrinaColumnFrozen.none,
+        width: 394,
+      );
 
-        TrinaGridStateManager stateManager = getStateManager(
-          columns: [
-            column,
-            ...ColumnHelper.textColumn('title', count: 3, width: 100),
-          ],
-          rows: [],
-          gridFocusNode: null,
-          scroll: scroll,
-        );
+      TrinaGridStateManager stateManager = getStateManager(
+        columns: [
+          column,
+          ...ColumnHelper.textColumn('title', count: 3, width: 100),
+        ],
+        rows: [],
+        gridFocusNode: null,
+        scroll: scroll,
+      );
 
-        stateManager.setLayout(const BoxConstraints(maxWidth: 500));
+      stateManager.setLayout(const BoxConstraints(maxWidth: 500));
 
-        // The size can be increased by up to 394, which is less than 500 - 206.
-        // print(stateManager.maxWidth! - column.width);
-        // One left frozen column of 100
-        // print(stateManager.leftFrozenColumnsWidth);
-        // One right frozen column of 100
-        // print(stateManager.rightFrozenColumnsWidth);
-        // 200
-        // print(TrinaGridSettings.bodyMinWidth);
-        // 6
-        // print(TrinaGridSettings.totalShadowLineWidth);
+      // The size can be increased by up to 394, which is less than 500 - 206.
+      // print(stateManager.maxWidth! - column.width);
+      // One left frozen column of 100
+      // print(stateManager.leftFrozenColumnsWidth);
+      // One right frozen column of 100
+      // print(stateManager.rightFrozenColumnsWidth);
+      // 200
+      // print(TrinaGridSettings.bodyMinWidth);
+      // 6
+      // print(TrinaGridSettings.totalShadowLineWidth);
 
-        expect(
-          stateManager.limitToggleFrozenColumn(column, TrinaColumnFrozen.start),
-          true,
-        );
-      },
-    );
+      expect(
+        stateManager.limitToggleFrozenColumn(column, TrinaColumnFrozen.start),
+        true,
+      );
+    });
   });
 }

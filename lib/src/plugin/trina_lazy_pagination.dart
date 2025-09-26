@@ -5,13 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 /// Callback function to implement to add lazy pagination data.
-typedef TrinaLazyPaginationFetch = Future<TrinaLazyPaginationResponse> Function(
-    TrinaLazyPaginationRequest);
+typedef TrinaLazyPaginationFetch =
+    Future<TrinaLazyPaginationResponse> Function(TrinaLazyPaginationRequest);
 
 /// Callback function to build a custom pagination widget.
 ///
-typedef TrinaPaginationBuilder = Widget Function(
-    BuildContext context, TrinaLazyPaginationState paginationState);
+typedef TrinaPaginationBuilder =
+    Widget Function(
+      BuildContext context,
+      TrinaLazyPaginationState paginationState,
+    );
 
 /// Request data for lazy pagination processing.
 class TrinaLazyPaginationRequest {
@@ -62,8 +65,9 @@ class TrinaLazyPaginationResponse {
     required this.rows,
     this.totalRecords,
   }) {
-    final frozenStartRows =
-        rows.where((row) => row.frozen == TrinaRowFrozen.start).toList();
+    final frozenStartRows = rows
+        .where((row) => row.frozen == TrinaRowFrozen.start)
+        .toList();
     if (frozenStartRows.isNotEmpty) {
       rows.removeWhere((row) => row.frozen == TrinaRowFrozen.start);
       for (var row in frozenStartRows) {
@@ -71,8 +75,9 @@ class TrinaLazyPaginationResponse {
       }
     }
 
-    final frozenEndRows =
-        rows.where((row) => row.frozen == TrinaRowFrozen.end).toList();
+    final frozenEndRows = rows
+        .where((row) => row.frozen == TrinaRowFrozen.end)
+        .toList();
     if (frozenEndRows.isNotEmpty) {
       rows.removeWhere((row) => row.frozen == TrinaRowFrozen.end);
       for (var row in frozenEndRows) {
@@ -148,9 +153,9 @@ class TrinaLazyPagination extends StatefulWidget {
     this.builder,
     super.key,
   }) : assert(
-          !showPageSizeSelector || pageSizes.contains(initialPageSize),
-          'initialPageSize must be included in pageSizes list when showPageSizeSelector is true',
-        );
+         !showPageSizeSelector || pageSizes.contains(initialPageSize),
+         'initialPageSize must be included in pageSizes list when showPageSizeSelector is true',
+       );
 
   /// Set the first page.
   final int initialPage;
@@ -204,7 +209,7 @@ class TrinaLazyPagination extends StatefulWidget {
   final TrinaGridStateManager stateManager;
 
   final void Function(int page, int totalPage, int? totalRecords)?
-      onLazyFetchCompleted;
+  onLazyFetchCompleted;
 
   /// A callback function that returns a widget for custom pagination.
   final TrinaPaginationBuilder? builder;
@@ -298,46 +303,46 @@ class TrinaLazyPaginationState extends State<TrinaLazyPagination> {
 
     widget
         .fetch(
-      TrinaLazyPaginationRequest(
-        page: page,
-        pageSize: _pageSize,
-        sortColumn: stateManager.getSortedColumn,
-        filterRows: stateManager.filterRows,
-      ),
-    )
-        .then((data) {
-      if (!mounted) return;
-      stateManager.scroll.bodyRowsVertical!.jumpTo(0);
-
-      stateManager.refRows.clearFromOriginal();
-      stateManager.insertRows(0, data.rows);
-
-      setState(() {
-        _page = page;
-        _totalPage = data.totalPage;
-        _totalRecords = data.totalRecords;
-        _isFetching = false;
-      });
-
-      stateManager.setShowLoading(false);
-
-      // Call the onLazyFetchCompleted callback if provided
-      if (widget.onLazyFetchCompleted != null) {
-        widget.onLazyFetchCompleted!(_page, _totalPage, _totalRecords);
-      }
-
-      // Call the grid-level onLazyFetchCompleted callback if provided
-      if (stateManager.onLazyFetchCompleted != null) {
-        stateManager.onLazyFetchCompleted!(
-          TrinaGridOnLazyFetchCompletedEvent(
-            stateManager: stateManager,
-            page: _page,
-            totalPage: _totalPage,
-            totalRecords: _totalRecords,
+          TrinaLazyPaginationRequest(
+            page: page,
+            pageSize: _pageSize,
+            sortColumn: stateManager.getSortedColumn,
+            filterRows: stateManager.filterRows,
           ),
-        );
-      }
-    });
+        )
+        .then((data) {
+          if (!mounted) return;
+          stateManager.scroll.bodyRowsVertical!.jumpTo(0);
+
+          stateManager.refRows.clearFromOriginal();
+          stateManager.insertRows(0, data.rows);
+
+          setState(() {
+            _page = page;
+            _totalPage = data.totalPage;
+            _totalRecords = data.totalRecords;
+            _isFetching = false;
+          });
+
+          stateManager.setShowLoading(false);
+
+          // Call the onLazyFetchCompleted callback if provided
+          if (widget.onLazyFetchCompleted != null) {
+            widget.onLazyFetchCompleted!(_page, _totalPage, _totalRecords);
+          }
+
+          // Call the grid-level onLazyFetchCompleted callback if provided
+          if (stateManager.onLazyFetchCompleted != null) {
+            stateManager.onLazyFetchCompleted!(
+              TrinaGridOnLazyFetchCompletedEvent(
+                stateManager: stateManager,
+                page: _page,
+                totalPage: _totalPage,
+                totalRecords: _totalRecords,
+              ),
+            );
+          }
+        });
   }
 
   void setPageSize(int size) {
@@ -622,8 +627,9 @@ class _PageSizeDropdownPaginationWidgetState
       color: widget.iconColor,
       disabledColor: widget.disabledIconColor,
       splashRadius: _iconSplashRadius,
-      mouseCursor:
-          _isLastPage ? SystemMouseCursors.basic : SystemMouseCursors.click,
+      mouseCursor: _isLastPage
+          ? SystemMouseCursors.basic
+          : SystemMouseCursors.click,
     );
   }
 
@@ -634,8 +640,9 @@ class _PageSizeDropdownPaginationWidgetState
       color: widget.iconColor,
       disabledColor: widget.disabledIconColor,
       splashRadius: _iconSplashRadius,
-      mouseCursor:
-          _isLastPage ? SystemMouseCursors.basic : SystemMouseCursors.click,
+      mouseCursor: _isLastPage
+          ? SystemMouseCursors.basic
+          : SystemMouseCursors.click,
     );
   }
 
@@ -646,8 +653,9 @@ class _PageSizeDropdownPaginationWidgetState
       color: widget.iconColor,
       disabledColor: widget.disabledIconColor,
       splashRadius: _iconSplashRadius,
-      mouseCursor:
-          _isFirstPage ? SystemMouseCursors.basic : SystemMouseCursors.click,
+      mouseCursor: _isFirstPage
+          ? SystemMouseCursors.basic
+          : SystemMouseCursors.click,
     );
   }
 
@@ -658,8 +666,9 @@ class _PageSizeDropdownPaginationWidgetState
       color: widget.iconColor,
       disabledColor: widget.disabledIconColor,
       splashRadius: _iconSplashRadius,
-      mouseCursor:
-          _isFirstPage ? SystemMouseCursors.basic : SystemMouseCursors.click,
+      mouseCursor: _isFirstPage
+          ? SystemMouseCursors.basic
+          : SystemMouseCursors.click,
     );
   }
 
@@ -675,7 +684,8 @@ class _PageSizeDropdownPaginationWidgetState
               focusColor: Colors.transparent,
               underline: const SizedBox.shrink(),
               isDense: true,
-              icon: widget.pageSizeDropdownIcon ??
+              icon:
+                  widget.pageSizeDropdownIcon ??
                   Icon(Icons.view_list, color: widget.iconColor),
               items: widget.pageSizes.map<DropdownMenuItem<int>>((int value) {
                 return DropdownMenuItem<int>(

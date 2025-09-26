@@ -83,10 +83,10 @@ void main() {
       expect(find.text('3,133'), findsOneWidget);
     });
 
-    testWidgets(
-        'When filtering with "greater than" condition and value "300", '
-        'only rows with values greater than 300 should be shown',
-        (tester) async {
+    testWidgets('When filtering with "greater than" condition and value "300", '
+        'only rows with values greater than 300 should be shown', (
+      tester,
+    ) async {
       await tester.pumpWidget(buildGrid(columns: columns, rows: rows));
       await tester.pump();
 
@@ -101,22 +101,25 @@ void main() {
     });
 
     testWidgets(
-        'When filtering with "greater than or equal to" condition and value "300", '
-        'only rows with values greater than or equal to 300 should be shown',
-        (tester) async {
-      await tester.pumpWidget(buildGrid(columns: columns, rows: rows));
-      await tester.pump();
+      'When filtering with "greater than or equal to" condition and value "300", '
+      'only rows with values greater than or equal to 300 should be shown',
+      (tester) async {
+        await tester.pumpWidget(buildGrid(columns: columns, rows: rows));
+        await tester.pump();
 
-      columns.first.setDefaultFilter(
-        const TrinaFilterTypeGreaterThanOrEqualTo(),
-      );
+        columns.first.setDefaultFilter(
+          const TrinaFilterTypeGreaterThanOrEqualTo(),
+        );
 
-      await tapAndEnterTextColumnFilter(tester, '300');
-      await tester.pumpAndSettle(const Duration(seconds: 1));
+        await tapAndEnterTextColumnFilter(tester, '300');
+        await tester.pumpAndSettle(const Duration(seconds: 1));
 
-      final values = stateManager.refRows.map((e) => e.cells['column']!.value);
+        final values = stateManager.refRows.map(
+          (e) => e.cells['column']!.value,
+        );
 
-      expect(values, [123000, 300, 311, 3133]);
-    });
+        expect(values, [123000, 300, 311, 3133]);
+      },
+    );
   });
 }

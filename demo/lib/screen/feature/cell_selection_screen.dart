@@ -37,7 +37,9 @@ class _CellSelectionScreenState extends State<CellSelectionScreen> {
 
     for (var element in stateManager.currentSelectingPositionList) {
       final cellValue = stateManager
-          .rows[element.rowIdx!].cells[element.field!]!.value
+          .rows[element.rowIdx!]
+          .cells[element.field!]!
+          .value
           .toString();
 
       value +=
@@ -49,29 +51,28 @@ class _CellSelectionScreenState extends State<CellSelectionScreen> {
     }
 
     await showDialog<void>(
-        context: context,
-        builder: (BuildContext ctx) {
-          return Dialog(
-            child: LayoutBuilder(
-              builder: (ctx, size) {
-                return Container(
-                  padding: const EdgeInsets.all(15),
-                  width: 400,
-                  height: 500,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(value),
-                      ],
-                    ),
+      context: context,
+      builder: (BuildContext ctx) {
+        return Dialog(
+          child: LayoutBuilder(
+            builder: (ctx, size) {
+              return Container(
+                padding: const EdgeInsets.all(15),
+                width: 400,
+                height: 500,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [Text(value)],
                   ),
-                );
-              },
-            ),
-          );
-        });
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -81,7 +82,8 @@ class _CellSelectionScreenState extends State<CellSelectionScreen> {
       topTitle: 'Cell selection',
       topContents: const [
         Text(
-            'In cell selection mode, Shift + tap or long tap and then move to select cells.'),
+          'In cell selection mode, Shift + tap or long tap and then move to select cells.',
+        ),
       ],
       topButtons: [
         TrinaExampleButton(
@@ -110,8 +112,9 @@ class _CellSelectionScreenState extends State<CellSelectionScreen> {
                 print(event);
               },
               onLoaded: (TrinaGridOnLoadedEvent event) {
-                event.stateManager
-                    .setSelectingMode(TrinaGridSelectingMode.cell);
+                event.stateManager.setSelectingMode(
+                  TrinaGridSelectingMode.cell,
+                );
 
                 stateManager = event.stateManager;
               },

@@ -72,7 +72,8 @@ class _ColumnMovingScreenState extends State<ColumnMovingScreen> {
       topTitle: 'Column moving',
       topContents: const [
         Text(
-            'You can change the column position by dragging the column title left or right.'),
+          'You can change the column position by dragging the column title left or right.',
+        ),
       ],
       topButtons: [
         TrinaExampleButton(

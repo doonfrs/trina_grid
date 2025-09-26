@@ -5,7 +5,7 @@ import '../ui/ui.dart';
 
 class TrinaChangeNotifierFilter<T> {
   TrinaChangeNotifierFilter(this._filter, [this._debugNotifierNames])
-      : _type = T;
+    : _type = T;
 
   static bool enabled = true;
 
@@ -248,7 +248,8 @@ class TrinaNotifierFilterResolverDefault
   }
 
   static Set<int> defaultAggregateColumnFooterFilter(
-      TrinaGridStateManager stateManager) {
+    TrinaGridStateManager stateManager,
+  ) {
     return {
       stateManager.toggleAllRowChecked.hashCode,
       stateManager.setRowChecked.hashCode,

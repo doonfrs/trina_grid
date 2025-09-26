@@ -76,67 +76,62 @@ class _ListingModeScreenState extends State<ListingModeScreen> {
 
   void openNewRecord() async {
     String? value = await showDialog(
-        context: context,
-        builder: (BuildContext ctx) {
-          final textController = TextEditingController();
-          return Dialog(
-            child: LayoutBuilder(
-              builder: (ctx, size) {
-                return Container(
-                  padding: const EdgeInsets.all(15),
-                  width: 400,
-                  height: 500,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text('Implement a screen to add a new record.'),
-                        const Text('Input some text, and Press Create Button.'),
-                        TextField(
-                          controller: textController,
-                          autofocus: true,
-                        ),
-                        const SizedBox(height: 15),
-                        Center(
-                          child: Wrap(
-                            spacing: 10,
-                            children: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pop(ctx, null);
-                                },
-                                child: const Text('Cancel.'),
-                              ),
-                              ElevatedButton(
-                                onPressed: () {
-                                  print(textController.text);
-                                  Navigator.pop(ctx, textController.text);
-                                },
-                                style: ButtonStyle(
-                                  backgroundColor:
-                                      WidgetStateProperty.all<Color>(
-                                    Colors.blue,
-                                  ),
-                                ),
-                                child: const Text(
-                                  'Create.',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
+      context: context,
+      builder: (BuildContext ctx) {
+        final textController = TextEditingController();
+        return Dialog(
+          child: LayoutBuilder(
+            builder: (ctx, size) {
+              return Container(
+                padding: const EdgeInsets.all(15),
+                width: 400,
+                height: 500,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Implement a screen to add a new record.'),
+                      const Text('Input some text, and Press Create Button.'),
+                      TextField(controller: textController, autofocus: true),
+                      const SizedBox(height: 15),
+                      Center(
+                        child: Wrap(
+                          spacing: 10,
+                          children: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(ctx, null);
+                              },
+                              child: const Text('Cancel.'),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                print(textController.text);
+                                Navigator.pop(ctx, textController.text);
+                              },
+                              style: ButtonStyle(
+                                backgroundColor: WidgetStateProperty.all<Color>(
+                                  Colors.blue,
                                 ),
                               ),
-                            ],
-                          ),
+                              child: const Text(
+                                'Create.',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                );
-              },
-            ),
-          );
-        });
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
 
     if (value == null || value.isEmpty) {
       return;
@@ -159,71 +154,68 @@ class _ListingModeScreenState extends State<ListingModeScreen> {
 
   void openDetail(TrinaRow? row) async {
     String? value = await showDialog(
-        context: context,
-        builder: (BuildContext ctx) {
-          final textController = TextEditingController();
-          return Dialog(
-            child: LayoutBuilder(
-              builder: (ctx, size) {
-                return Container(
-                  padding: const EdgeInsets.all(15),
-                  width: 400,
-                  height: 500,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text('Implement a screen to update a record.'),
-                        const Text('Input some text, and Press Update Button.'),
-                        TextField(
-                          controller: textController,
-                          autofocus: true,
+      context: context,
+      builder: (BuildContext ctx) {
+        final textController = TextEditingController();
+        return Dialog(
+          child: LayoutBuilder(
+            builder: (ctx, size) {
+              return Container(
+                padding: const EdgeInsets.all(15),
+                width: 400,
+                height: 500,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Implement a screen to update a record.'),
+                      const Text('Input some text, and Press Update Button.'),
+                      TextField(controller: textController, autofocus: true),
+                      const SizedBox(height: 20),
+                      ...row!.cells.entries.map(
+                        (e) => Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(e.value.value.toString()),
                         ),
-                        const SizedBox(height: 20),
-                        ...row!.cells.entries.map((e) => Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(e.value.value.toString()),
-                            )),
-                        const SizedBox(height: 20),
-                        Center(
-                          child: Wrap(
-                            spacing: 10,
-                            children: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pop(ctx, null);
-                                },
-                                child: const Text('Cancel.'),
-                              ),
-                              ElevatedButton(
-                                onPressed: () {
-                                  Navigator.pop(ctx, textController.text);
-                                },
-                                style: ButtonStyle(
-                                  backgroundColor:
-                                      WidgetStateProperty.all<Color>(
-                                    Colors.blue,
-                                  ),
-                                ),
-                                child: const Text(
-                                  'Update.',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
+                      ),
+                      const SizedBox(height: 20),
+                      Center(
+                        child: Wrap(
+                          spacing: 10,
+                          children: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(ctx, null);
+                              },
+                              child: const Text('Cancel.'),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.pop(ctx, textController.text);
+                              },
+                              style: ButtonStyle(
+                                backgroundColor: WidgetStateProperty.all<Color>(
+                                  Colors.blue,
                                 ),
                               ),
-                            ],
-                          ),
+                              child: const Text(
+                                'Update.',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                );
-              },
-            ),
-          );
-        });
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
 
     if (value == null || value.isEmpty) {
       return;
@@ -245,7 +237,8 @@ class _ListingModeScreenState extends State<ListingModeScreen> {
         Text('Listing mode to open or navigate to the Detail page.'),
         Text('Press Enter or tap to call up the Detail popup.'),
         Text(
-            'Pressing the Ctrl(Meta on MacOS) + C keys can invoke a popup to enter a new record.'),
+          'Pressing the Ctrl(Meta on MacOS) + C keys can invoke a popup to enter a new record.',
+        ),
       ],
       topButtons: [
         TrinaExampleButton(
@@ -260,8 +253,8 @@ class _ListingModeScreenState extends State<ListingModeScreen> {
         onLoaded: (TrinaGridOnLoadedEvent event) {
           stateManager = event.stateManager;
 
-          removeKeyboardListener =
-              stateManager.keyManager!.subject.stream.listen(handleKeyboard);
+          removeKeyboardListener = stateManager.keyManager!.subject.stream
+              .listen(handleKeyboard);
 
           stateManager.setSelectingMode(TrinaGridSelectingMode.none);
         },

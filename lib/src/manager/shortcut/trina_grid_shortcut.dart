@@ -39,8 +39,8 @@ class TrinaGridShortcut {
     return false;
   }
 
-  static final Map<ShortcutActivator, TrinaGridShortcutAction> defaultActions =
-      {
+  static final Map<ShortcutActivator, TrinaGridShortcutAction>
+  defaultActions = {
     // Move cell focus
     LogicalKeySet(LogicalKeyboardKey.arrowLeft):
         const TrinaGridActionMoveCellFocus(TrinaMoveDirection.left),
@@ -67,9 +67,12 @@ class TrinaGridShortcut {
     // Move cell focus by page vertically
     LogicalKeySet(LogicalKeyboardKey.shift, LogicalKeyboardKey.pageUp):
         const TrinaGridActionMoveSelectedCellFocusByPage(TrinaMoveDirection.up),
-    LogicalKeySet(LogicalKeyboardKey.shift, LogicalKeyboardKey.pageDown):
-        const TrinaGridActionMoveSelectedCellFocusByPage(
-            TrinaMoveDirection.down),
+    LogicalKeySet(
+      LogicalKeyboardKey.shift,
+      LogicalKeyboardKey.pageDown,
+    ): const TrinaGridActionMoveSelectedCellFocusByPage(
+      TrinaMoveDirection.down,
+    ),
     // Move page when pagination is enabled
     LogicalKeySet(LogicalKeyboardKey.alt, LogicalKeyboardKey.pageUp):
         const TrinaGridActionMoveCellFocusByPage(TrinaMoveDirection.left),
@@ -99,19 +102,32 @@ class TrinaGridShortcut {
     LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.end):
         const TrinaGridActionMoveCellFocusToEdge(TrinaMoveDirection.down),
     // Move selected cell focus to edge
-    LogicalKeySet(LogicalKeyboardKey.shift, LogicalKeyboardKey.home):
-        const TrinaGridActionMoveSelectedCellFocusToEdge(
-            TrinaMoveDirection.left),
-    LogicalKeySet(LogicalKeyboardKey.shift, LogicalKeyboardKey.end):
-        const TrinaGridActionMoveSelectedCellFocusToEdge(
-            TrinaMoveDirection.right),
-    LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.shift,
-            LogicalKeyboardKey.home):
-        const TrinaGridActionMoveSelectedCellFocusToEdge(TrinaMoveDirection.up),
-    LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.shift,
-            LogicalKeyboardKey.end):
-        const TrinaGridActionMoveSelectedCellFocusToEdge(
-            TrinaMoveDirection.down),
+    LogicalKeySet(
+      LogicalKeyboardKey.shift,
+      LogicalKeyboardKey.home,
+    ): const TrinaGridActionMoveSelectedCellFocusToEdge(
+      TrinaMoveDirection.left,
+    ),
+    LogicalKeySet(
+      LogicalKeyboardKey.shift,
+      LogicalKeyboardKey.end,
+    ): const TrinaGridActionMoveSelectedCellFocusToEdge(
+      TrinaMoveDirection.right,
+    ),
+    LogicalKeySet(
+      LogicalKeyboardKey.control,
+      LogicalKeyboardKey.shift,
+      LogicalKeyboardKey.home,
+    ): const TrinaGridActionMoveSelectedCellFocusToEdge(
+      TrinaMoveDirection.up,
+    ),
+    LogicalKeySet(
+      LogicalKeyboardKey.control,
+      LogicalKeyboardKey.shift,
+      LogicalKeyboardKey.end,
+    ): const TrinaGridActionMoveSelectedCellFocusToEdge(
+      TrinaMoveDirection.down,
+    ),
     // Set editing
     LogicalKeySet(LogicalKeyboardKey.f2): const TrinaGridActionSetEditing(),
     // Focus to column filter

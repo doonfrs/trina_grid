@@ -88,12 +88,14 @@ class _ChangeTrackingScreenState extends State<ChangeTrackingScreen> {
             'name': TrinaCell(value: 'Employee $i'),
             'age': TrinaCell(value: 25 + (i % 20)),
             'job': TrinaCell(
-                value: i % 3 == 0
-                    ? 'Developer'
-                    : (i % 3 == 1 ? 'Designer' : 'Manager')),
+              value: i % 3 == 0
+                  ? 'Developer'
+                  : (i % 3 == 1 ? 'Designer' : 'Manager'),
+            ),
             'salary': TrinaCell(value: 50000 + (i * 1000)),
-            'joinDate':
-                TrinaCell(value: DateTime(2020, (i % 12) + 1, (i % 28) + 1)),
+            'joinDate': TrinaCell(
+              value: DateTime(2020, (i % 12) + 1, (i % 28) + 1),
+            ),
           },
         ),
       );
@@ -163,11 +165,13 @@ class _ChangeTrackingScreenState extends State<ChangeTrackingScreen> {
       topTitle: 'Change Tracking',
       topContents: const [
         Text(
-            'Track changes in cells and highlight dirty cells. You can commit or revert changes for all cells or just the selected cell.'),
+          'Track changes in cells and highlight dirty cells. You can commit or revert changes for all cells or just the selected cell.',
+        ),
         SizedBox(height: 10),
         Text('1. Enable change tracking with the switch'),
         Text(
-            '2. Edit some cells - they will be highlighted with a yellow background'),
+          '2. Edit some cells - they will be highlighted with a yellow background',
+        ),
         Text('3. Use the buttons to commit or revert changes'),
       ],
       topButtons: [
@@ -226,14 +230,16 @@ class _ChangeTrackingScreenState extends State<ChangeTrackingScreen> {
                         ),
                         const SizedBox(width: 20),
                         ElevatedButton(
-                          onPressed:
-                              selectedCell != null ? commitSelectedCell : null,
+                          onPressed: selectedCell != null
+                              ? commitSelectedCell
+                              : null,
                           child: const Text('Commit Selected Cell'),
                         ),
                         const SizedBox(width: 10),
                         ElevatedButton(
-                          onPressed:
-                              selectedCell != null ? revertSelectedCell : null,
+                          onPressed: selectedCell != null
+                              ? revertSelectedCell
+                              : null,
                           child: const Text('Revert Selected Cell'),
                         ),
                       ],
@@ -253,17 +259,16 @@ class _ChangeTrackingScreenState extends State<ChangeTrackingScreen> {
                 }
               },
               onLoaded: (TrinaGridOnLoadedEvent event) {
-                event.stateManager
-                    .setSelectingMode(TrinaGridSelectingMode.cell);
+                event.stateManager.setSelectingMode(
+                  TrinaGridSelectingMode.cell,
+                );
                 stateManager = event.stateManager;
               },
               onActiveCellChanged: (TrinaGridOnActiveCellChangedEvent event) {
                 selectedCellNotifier.value = event.cell;
               },
               configuration: TrinaGridConfiguration(
-                style: TrinaGridStyleConfig(
-                  cellDirtyColor: Colors.amber[100]!,
-                ),
+                style: TrinaGridStyleConfig(cellDirtyColor: Colors.amber[100]!),
               ),
             ),
           ),

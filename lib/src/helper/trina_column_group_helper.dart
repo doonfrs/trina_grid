@@ -13,10 +13,7 @@ class TrinaColumnGroupHelper {
     }
 
     for (int i = 0; i < columnGroup.children!.length; i += 1) {
-      if (exists(
-        field: field,
-        columnGroup: columnGroup.children![i],
-      )) {
+      if (exists(field: field, columnGroup: columnGroup.children![i])) {
         return true;
       }
     }
@@ -104,7 +101,8 @@ class TrinaColumnGroupHelper {
 
       final field = column.field;
 
-      final foundGroup = getGroupIfExistsFromList(
+      final foundGroup =
+          getGroupIfExistsFromList(
             field: field,
             columnGroupList: columnGroupList,
           ) ??
@@ -118,10 +116,9 @@ class TrinaColumnGroupHelper {
       previousGroup ??= foundGroup;
 
       if (previousGroup.key != foundGroup.key) {
-        separatedColumns.add(TrinaColumnGroupPair(
-          group: previousGroup,
-          columns: linkedColumns,
-        ));
+        separatedColumns.add(
+          TrinaColumnGroupPair(group: previousGroup, columns: linkedColumns),
+        );
 
         linkedColumns = [];
 
@@ -131,10 +128,9 @@ class TrinaColumnGroupHelper {
       linkedColumns.add(column);
 
       if (i == columns.length - 1) {
-        separatedColumns.add(TrinaColumnGroupPair(
-          group: foundGroup,
-          columns: linkedColumns,
-        ));
+        separatedColumns.add(
+          TrinaColumnGroupPair(group: foundGroup, columns: linkedColumns),
+        );
       }
     }
 

@@ -6,10 +6,7 @@ import '../helper/launch_url.dart';
 class TrinaDocsButton extends StatelessWidget {
   final String url;
 
-  TrinaDocsButton({
-    super.key,
-    required this.url,
-  }) : assert(url.isNotEmpty);
+  TrinaDocsButton({super.key, required this.url}) : assert(url.isNotEmpty);
 
   @override
   Widget build(BuildContext context) {

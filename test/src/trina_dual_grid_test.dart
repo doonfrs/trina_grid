@@ -8,56 +8,55 @@ import '../helper/trina_widget_test_helper.dart';
 import '../helper/row_helper.dart';
 
 void main() {
-  testWidgets(
-    'When two grids are created, the cells should be displayed.',
-    (WidgetTester tester) async {
-      // given
-      final gridAColumns = ColumnHelper.textColumn('headerA');
-      final gridARows = RowHelper.count(3, gridAColumns);
+  testWidgets('When two grids are created, the cells should be displayed.', (
+    WidgetTester tester,
+  ) async {
+    // given
+    final gridAColumns = ColumnHelper.textColumn('headerA');
+    final gridARows = RowHelper.count(3, gridAColumns);
 
-      final gridBColumns = ColumnHelper.textColumn('headerB');
-      final gridBRows = RowHelper.count(3, gridBColumns);
+    final gridBColumns = ColumnHelper.textColumn('headerB');
+    final gridBRows = RowHelper.count(3, gridBColumns);
 
-      // when
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Material(
-            child: TrinaDualGrid(
-              gridPropsA: TrinaDualGridProps(
-                columns: gridAColumns,
-                rows: gridARows,
-              ),
-              gridPropsB: TrinaDualGridProps(
-                columns: gridBColumns,
-                rows: gridBRows,
-              ),
+    // when
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Material(
+          child: TrinaDualGrid(
+            gridPropsA: TrinaDualGridProps(
+              columns: gridAColumns,
+              rows: gridARows,
+            ),
+            gridPropsB: TrinaDualGridProps(
+              columns: gridBColumns,
+              rows: gridBRows,
             ),
           ),
         ),
-      );
+      ),
+    );
 
-      await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
 
-      // then
-      final gridACell1 = find.text('headerA0 value 0');
-      expect(gridACell1, findsOneWidget);
+    // then
+    final gridACell1 = find.text('headerA0 value 0');
+    expect(gridACell1, findsOneWidget);
 
-      final gridACell2 = find.text('headerA0 value 1');
-      expect(gridACell2, findsOneWidget);
+    final gridACell2 = find.text('headerA0 value 1');
+    expect(gridACell2, findsOneWidget);
 
-      final gridACell3 = find.text('headerA0 value 2');
-      expect(gridACell3, findsOneWidget);
+    final gridACell3 = find.text('headerA0 value 2');
+    expect(gridACell3, findsOneWidget);
 
-      final gridBCell1 = find.text('headerB0 value 0');
-      expect(gridBCell1, findsOneWidget);
+    final gridBCell1 = find.text('headerB0 value 0');
+    expect(gridBCell1, findsOneWidget);
 
-      final gridBCell2 = find.text('headerB0 value 1');
-      expect(gridBCell2, findsOneWidget);
+    final gridBCell2 = find.text('headerB0 value 1');
+    expect(gridBCell2, findsOneWidget);
 
-      final gridBCell3 = find.text('headerB0 value 2');
-      expect(gridBCell3, findsOneWidget);
-    },
-  );
+    final gridBCell3 = find.text('headerB0 value 2');
+    expect(gridBCell3, findsOneWidget);
+  });
 
   testWidgets(
     'When Directionality is LTR, grid A should be on the left, and grid B should be on the right.',
@@ -145,8 +144,7 @@ void main() {
     },
   );
 
-  group('When the divider is created, the following tests should be performed.',
-      () {
+  group('When the divider is created, the following tests should be performed.', () {
     GlobalKey gridAKey = GlobalKey();
     GlobalKey gridBKey = GlobalKey();
 
@@ -216,31 +214,30 @@ void main() {
       },
     );
 
-    dualGrid(const TrinaDualGridDivider(
-      backgroundColor: Colors.deepOrange,
-      indicatorColor: Colors.indigoAccent,
-    )).test(
-      'The Divider should be rendered with custom colors.',
-      (tester) async {
-        final findDivider = find.byType(TrinaDualGridDividerWidget);
+    dualGrid(
+      const TrinaDualGridDivider(
+        backgroundColor: Colors.deepOrange,
+        indicatorColor: Colors.indigoAccent,
+      ),
+    ).test('The Divider should be rendered with custom colors.', (
+      tester,
+    ) async {
+      final findDivider = find.byType(TrinaDualGridDividerWidget);
 
-        final coloredBox = tester.widget<ColoredBox>(
-          find.descendant(of: findDivider, matching: find.byType(ColoredBox)),
-        );
+      final coloredBox = tester.widget<ColoredBox>(
+        find.descendant(of: findDivider, matching: find.byType(ColoredBox)),
+      );
 
-        expect(coloredBox.color, Colors.deepOrange);
+      expect(coloredBox.color, Colors.deepOrange);
 
-        final icon = tester.widget<Icon>(
-          find.descendant(of: findDivider, matching: find.byType(Icon)),
-        );
+      final icon = tester.widget<Icon>(
+        find.descendant(of: findDivider, matching: find.byType(Icon)),
+      );
 
-        expect(icon.color, Colors.indigoAccent);
-      },
-    );
+      expect(icon.color, Colors.indigoAccent);
+    });
 
-    dualGrid(const TrinaDualGridDivider(
-      show: false,
-    )).test(
+    dualGrid(const TrinaDualGridDivider(show: false)).test(
       'When show is false, the Divider should not be rendered.',
       (tester) async {
         final findDivider = find.byType(TrinaDualGridDividerWidget);
@@ -308,10 +305,7 @@ void main() {
       },
     );
 
-    dualGrid(
-      const TrinaDualGridDivider(),
-      textDirection: TextDirection.rtl,
-    ).test(
+    dualGrid(const TrinaDualGridDivider(), textDirection: TextDirection.rtl).test(
       'When Directionality is RTL, '
       'the position of the Divider should increase when dragged to the right by 100, '
       'GridB should increase by 100, '
@@ -362,10 +356,7 @@ void main() {
       },
     );
 
-    dualGrid(
-      const TrinaDualGridDivider(),
-      textDirection: TextDirection.rtl,
-    ).test(
+    dualGrid(const TrinaDualGridDivider(), textDirection: TextDirection.rtl).test(
       'When Directionality is RTL, '
       'the position of the Divider should increase when dragged to the left by 100, '
       'GridB should increase by 100, '
@@ -392,149 +383,145 @@ void main() {
     );
   });
 
-  group(
-    'Grid cell movement test',
-    () {
-      TrinaGridStateManager? stateManagerA;
-      TrinaGridStateManager? stateManagerB;
+  group('Grid cell movement test', () {
+    TrinaGridStateManager? stateManagerA;
+    TrinaGridStateManager? stateManagerB;
 
-      group('Left grid', () {
-        buildLeftGridCellSelected({
-          TextDirection textDirection = TextDirection.ltr,
-        }) {
-          return TrinaWidgetTestHelper('First cell is selected',
-              (tester) async {
-            final gridAColumns = ColumnHelper.textColumn('headerA', count: 3);
-            final gridARows = RowHelper.count(3, gridAColumns);
+    group('Left grid', () {
+      buildLeftGridCellSelected({
+        TextDirection textDirection = TextDirection.ltr,
+      }) {
+        return TrinaWidgetTestHelper('First cell is selected', (tester) async {
+          final gridAColumns = ColumnHelper.textColumn('headerA', count: 3);
+          final gridARows = RowHelper.count(3, gridAColumns);
 
-            final gridBColumns = ColumnHelper.textColumn('headerB', count: 3);
-            final gridBRows = RowHelper.count(3, gridBColumns);
+          final gridBColumns = ColumnHelper.textColumn('headerB', count: 3);
+          final gridBRows = RowHelper.count(3, gridBColumns);
 
-            await tester.pumpWidget(
-              MaterialApp(
-                home: Material(
-                  child: TrinaDualGrid(
-                    gridPropsA: TrinaDualGridProps(
-                      columns: gridAColumns,
-                      rows: gridARows,
-                      onLoaded: (TrinaGridOnLoadedEvent event) =>
-                          stateManagerA = event.stateManager,
-                    ),
-                    gridPropsB: TrinaDualGridProps(
-                      columns: gridBColumns,
-                      rows: gridBRows,
-                      onLoaded: (TrinaGridOnLoadedEvent event) =>
-                          stateManagerB = event.stateManager,
-                    ),
+          await tester.pumpWidget(
+            MaterialApp(
+              home: Material(
+                child: TrinaDualGrid(
+                  gridPropsA: TrinaDualGridProps(
+                    columns: gridAColumns,
+                    rows: gridARows,
+                    onLoaded: (TrinaGridOnLoadedEvent event) =>
+                        stateManagerA = event.stateManager,
+                  ),
+                  gridPropsB: TrinaDualGridProps(
+                    columns: gridBColumns,
+                    rows: gridBRows,
+                    onLoaded: (TrinaGridOnLoadedEvent event) =>
+                        stateManagerB = event.stateManager,
                   ),
                 ),
               ),
-            );
+            ),
+          );
 
-            await tester.pump();
+          await tester.pump();
 
-            await tester.tap(find.text('headerA0 value 0'));
-          });
-        }
+          await tester.tap(find.text('headerA0 value 0'));
+        });
+      }
 
-        buildLeftGridCellSelected().test(
-          'When moving to the right end and then pressing the right arrow key again, '
-          'the focus should be transferred to the right grid.'
-          'And then pressing the right arrow key again, '
-          'the first cell of the right grid should be selected.',
-          (tester) async {
-            // 0 > 1
-            await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
-            await tester.pumpAndSettle();
-            // 1 > 2
-            await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
-            await tester.pumpAndSettle();
+      buildLeftGridCellSelected().test(
+        'When moving to the right end and then pressing the right arrow key again, '
+        'the focus should be transferred to the right grid.'
+        'And then pressing the right arrow key again, '
+        'the first cell of the right grid should be selected.',
+        (tester) async {
+          // 0 > 1
+          await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+          await tester.pumpAndSettle();
+          // 1 > 2
+          await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+          await tester.pumpAndSettle();
 
-            expect(stateManagerA!.gridFocusNode.hasFocus, isTrue);
-            expect(stateManagerB!.gridFocusNode.hasFocus, isFalse);
+          expect(stateManagerA!.gridFocusNode.hasFocus, isTrue);
+          expect(stateManagerB!.gridFocusNode.hasFocus, isFalse);
 
-            // 2 > right grid
-            await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
-            await tester.pumpAndSettle();
+          // 2 > right grid
+          await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+          await tester.pumpAndSettle();
 
-            expect(stateManagerA!.gridFocusNode.hasFocus, isFalse);
-            expect(stateManagerB!.gridFocusNode.hasFocus, isTrue);
+          expect(stateManagerA!.gridFocusNode.hasFocus, isFalse);
+          expect(stateManagerB!.gridFocusNode.hasFocus, isTrue);
 
-            // right grid > 0
-            await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
-            expect(stateManagerB!.currentCell!.value, 'headerB0 value 0');
-          },
-        );
+          // right grid > 0
+          await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+          expect(stateManagerB!.currentCell!.value, 'headerB0 value 0');
+        },
+      );
 
-        buildLeftGridCellSelected().test(
-          'When moving to the right end and then pressing the tab key, '
-          'the focus should be transferred to the right grid.'
-          'And then pressing the tab key, '
-          'the first cell of the right grid should be selected.',
-          (tester) async {
-            // 0 > 1
-            await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
-            await tester.pumpAndSettle();
-            // 1 > 2
-            await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
-            await tester.pumpAndSettle();
-            // 2 > right grid
-            await tester.sendKeyEvent(LogicalKeyboardKey.tab);
-            await tester.pumpAndSettle();
+      buildLeftGridCellSelected().test(
+        'When moving to the right end and then pressing the tab key, '
+        'the focus should be transferred to the right grid.'
+        'And then pressing the tab key, '
+        'the first cell of the right grid should be selected.',
+        (tester) async {
+          // 0 > 1
+          await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+          await tester.pumpAndSettle();
+          // 1 > 2
+          await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+          await tester.pumpAndSettle();
+          // 2 > right grid
+          await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+          await tester.pumpAndSettle();
 
-            expect(stateManagerA!.gridFocusNode.hasFocus, isFalse);
-            expect(stateManagerB!.gridFocusNode.hasFocus, isTrue);
+          expect(stateManagerA!.gridFocusNode.hasFocus, isFalse);
+          expect(stateManagerB!.gridFocusNode.hasFocus, isTrue);
 
-            // right grid > 0
-            await tester.sendKeyEvent(LogicalKeyboardKey.tab);
-            expect(stateManagerB!.currentCell!.value, 'headerB0 value 0');
-          },
-        );
+          // right grid > 0
+          await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+          expect(stateManagerB!.currentCell!.value, 'headerB0 value 0');
+        },
+      );
 
-        buildLeftGridCellSelected().test(
-          'When moving to the right end and then pressing the tab key, '
-          'the focus should be transferred to the right grid.'
-          'And then pressing the tab key, '
-          'the first cell of the right grid should be selected.'
-          'And then pressing the tab key, '
-          'the focus should be transferred back to the left grid.',
-          (tester) async {
-            // 0 > 1
-            await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
-            await tester.pumpAndSettle();
-            // 1 > 2
-            await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
-            await tester.pumpAndSettle();
-            // 2 > right grid
-            await tester.sendKeyEvent(LogicalKeyboardKey.tab);
-            await tester.pumpAndSettle();
+      buildLeftGridCellSelected().test(
+        'When moving to the right end and then pressing the tab key, '
+        'the focus should be transferred to the right grid.'
+        'And then pressing the tab key, '
+        'the first cell of the right grid should be selected.'
+        'And then pressing the tab key, '
+        'the focus should be transferred back to the left grid.',
+        (tester) async {
+          // 0 > 1
+          await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+          await tester.pumpAndSettle();
+          // 1 > 2
+          await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+          await tester.pumpAndSettle();
+          // 2 > right grid
+          await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+          await tester.pumpAndSettle();
 
-            expect(stateManagerA!.gridFocusNode.hasFocus, isFalse);
-            expect(stateManagerB!.gridFocusNode.hasFocus, isTrue);
+          expect(stateManagerA!.gridFocusNode.hasFocus, isFalse);
+          expect(stateManagerB!.gridFocusNode.hasFocus, isTrue);
 
-            // right grid > 0
-            await tester.sendKeyDownEvent(LogicalKeyboardKey.shift);
-            await tester.pumpAndSettle();
-            await tester.sendKeyEvent(LogicalKeyboardKey.tab);
-            await tester.pumpAndSettle();
-            await tester.sendKeyUpEvent(LogicalKeyboardKey.shift);
-            await tester.pumpAndSettle();
-            expect(stateManagerB!.currentCell!.value, 'headerB0 value 0');
+          // right grid > 0
+          await tester.sendKeyDownEvent(LogicalKeyboardKey.shift);
+          await tester.pumpAndSettle();
+          await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+          await tester.pumpAndSettle();
+          await tester.sendKeyUpEvent(LogicalKeyboardKey.shift);
+          await tester.pumpAndSettle();
+          expect(stateManagerB!.currentCell!.value, 'headerB0 value 0');
 
-            // right grid > left grid
-            await tester.sendKeyDownEvent(LogicalKeyboardKey.shift);
-            await tester.pumpAndSettle();
-            await tester.sendKeyEvent(LogicalKeyboardKey.tab);
-            await tester.pumpAndSettle();
-            await tester.sendKeyUpEvent(LogicalKeyboardKey.shift);
+          // right grid > left grid
+          await tester.sendKeyDownEvent(LogicalKeyboardKey.shift);
+          await tester.pumpAndSettle();
+          await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+          await tester.pumpAndSettle();
+          await tester.sendKeyUpEvent(LogicalKeyboardKey.shift);
 
-            expect(stateManagerA!.gridFocusNode.hasFocus, isTrue);
-            expect(stateManagerB!.gridFocusNode.hasFocus, isFalse);
-          },
-        );
-      });
-    },
-  );
+          expect(stateManagerA!.gridFocusNode.hasFocus, isTrue);
+          expect(stateManagerB!.gridFocusNode.hasFocus, isFalse);
+        },
+      );
+    });
+  });
 
   group('TrinaDualGridDisplayRatio', () {
     test('When ratio is 0, an assert error should be thrown', () {

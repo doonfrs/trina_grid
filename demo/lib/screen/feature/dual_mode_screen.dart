@@ -66,10 +66,9 @@ class _DualModeScreenState extends State<DualModeScreen> {
       ),
     ]);
 
-    gridARows.addAll(DummyData.rowsByColumns(
-      length: 30,
-      columns: gridAColumns,
-    ));
+    gridARows.addAll(
+      DummyData.rowsByColumns(length: 30, columns: gridAColumns),
+    );
 
     gridBColumns.addAll([
       TrinaColumn(
@@ -78,16 +77,8 @@ class _DualModeScreenState extends State<DualModeScreen> {
         type: TrinaColumnType.text(),
         enableRowChecked: true,
       ),
-      TrinaColumn(
-        title: 'Date',
-        field: 'date',
-        type: TrinaColumnType.date(),
-      ),
-      TrinaColumn(
-        title: 'Time',
-        field: 'time',
-        type: TrinaColumnType.time(),
-      ),
+      TrinaColumn(title: 'Date', field: 'date', type: TrinaColumnType.date()),
+      TrinaColumn(title: 'Time', field: 'time', type: TrinaColumnType.time()),
     ]);
   }
 
@@ -136,22 +127,25 @@ class _DualModeScreenState extends State<DualModeScreen> {
       topTitle: 'Dual mode',
       topContents: [
         Text(
-            'Place the grid on the left and right and move or edit with the keyboard.'),
+          'Place the grid on the left and right and move or edit with the keyboard.',
+        ),
         Text('Refer to the display property for the width of the grid.'),
         Text(
-            'This is an example in which the right list is randomly generated whenever the current row of the left grid changes.'),
+          'This is an example in which the right list is randomly generated whenever the current row of the left grid changes.',
+        ),
         Row(
           children: [
             Switch(
-                value: isVertical,
-                onChanged: (bool value) {
-                  setState(() {
-                    isVertical = value;
-                  });
-                }),
-            Text('Toggle to switch between vertical and horizontal mode')
+              value: isVertical,
+              onChanged: (bool value) {
+                setState(() {
+                  isVertical = value;
+                });
+              },
+            ),
+            Text('Toggle to switch between vertical and horizontal mode'),
           ],
-        )
+        ),
       ],
       topButtons: [
         TrinaExampleButton(

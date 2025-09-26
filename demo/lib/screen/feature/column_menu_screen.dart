@@ -39,7 +39,8 @@ class _ColumnMenuScreenState extends State<ColumnMenuScreen> {
         Text('You can customize the menu on the right side of the column.'),
         Text('A different menu can be displayed for each column.'),
         Text(
-            'You can also customize the menu items. For example, you can remove the from the default menu.'),
+          'You can also customize the menu items. For example, you can remove the from the default menu.',
+        ),
       ],
       topButtons: [
         TrinaExampleButton(
@@ -97,9 +98,12 @@ class UserColumnMenuDelegate implements TrinaColumnMenuDelegate<dynamic> {
           height: 36,
           enabled: true,
           child: Container(
-              color: Colors.amber,
-              child: Text('Only show in first column',
-                  style: TextStyle(fontSize: 13))),
+            color: Colors.amber,
+            child: Text(
+              'Only show in first column',
+              style: TextStyle(fontSize: 13),
+            ),
+          ),
         ),
 
       // Custom menu items

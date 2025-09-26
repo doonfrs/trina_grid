@@ -53,15 +53,23 @@ class _CellRendererScreenState extends State<CellRendererScreen> {
       TrinaColumn(
         title: 'Status',
         field: 'status',
-        type: TrinaColumnType.select(
-            <String>['Pending', 'In Progress', 'Completed', 'Cancelled']),
+        type: TrinaColumnType.select(<String>[
+          'Pending',
+          'In Progress',
+          'Completed',
+          'Cancelled',
+        ]),
         width: 150,
       ),
       TrinaColumn(
         title: 'Priority',
         field: 'priority',
-        type: TrinaColumnType.select(
-            <String>['Low', 'Medium', 'High', 'Critical']),
+        type: TrinaColumnType.select(<String>[
+          'Low',
+          'Medium',
+          'High',
+          'Critical',
+        ]),
         width: 150,
       ),
       TrinaColumn(
@@ -77,8 +85,8 @@ class _CellRendererScreenState extends State<CellRendererScreen> {
       final statusValue = i % 4 == 0
           ? 'Completed'
           : (i % 4 == 1
-              ? 'In Progress'
-              : (i % 4 == 2 ? 'Pending' : 'Cancelled'));
+                ? 'In Progress'
+                : (i % 4 == 2 ? 'Pending' : 'Cancelled'));
 
       final priorityValue = i % 4 == 0
           ? 'Low'
@@ -119,10 +127,7 @@ class _CellRendererScreenState extends State<CellRendererScreen> {
               ),
               child: Text(
                 rendererContext.cell.value.toString(),
-                style: TextStyle(
-                  color: textColor,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(color: textColor, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
             );
@@ -160,11 +165,7 @@ class _CellRendererScreenState extends State<CellRendererScreen> {
             return Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Icon(
-                  iconData,
-                  color: iconColor,
-                  size: 16,
-                ),
+                Icon(iconData, color: iconColor, size: 16),
                 const SizedBox(width: 4),
                 Text(
                   rendererContext.cell.value.toString(),
@@ -228,7 +229,8 @@ class _CellRendererScreenState extends State<CellRendererScreen> {
       topContents: const [
         Text('You can customize individual cells with cell-level renderers.'),
         Text(
-            'Cell renderers take precedence over column renderers when both are defined.'),
+          'Cell renderers take precedence over column renderers when both are defined.',
+        ),
       ],
       topButtons: [
         TrinaExampleButton(

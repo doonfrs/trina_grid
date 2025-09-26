@@ -37,7 +37,8 @@ class _RTLScreenState extends State<RTLScreen> {
       topTitle: 'Text direction.',
       topContents: const [
         Text(
-            'Wrap the TrinaGrid with a Directionality widget and pass rtl to textDirection to enable RTL.'),
+          'Wrap the TrinaGrid with a Directionality widget and pass rtl to textDirection to enable RTL.',
+        ),
       ],
       topButtons: [
         TrinaExampleButton(

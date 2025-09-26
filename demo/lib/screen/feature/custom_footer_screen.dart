@@ -57,8 +57,12 @@ class _CustomFooterScreenState extends State<CustomFooterScreen> {
       TrinaColumn(
         title: 'Department',
         field: 'department',
-        type:
-            TrinaColumnType.select(['Engineering', 'Sales', 'Marketing', 'HR']),
+        type: TrinaColumnType.select([
+          'Engineering',
+          'Sales',
+          'Marketing',
+          'HR',
+        ]),
         width: 130,
       ),
       TrinaColumn(
@@ -108,9 +112,7 @@ class _CustomFooterScreenState extends State<CustomFooterScreen> {
           print(event);
         },
         configuration: const TrinaGridConfiguration(
-          style: TrinaGridStyleConfig(
-            enableRowColorAnimation: true,
-          ),
+          style: TrinaGridStyleConfig(enableRowColorAnimation: true),
         ),
         createFooter: (stateManager) {
           // Only create footer when state manager is ready and has data
@@ -132,10 +134,7 @@ class _CustomFooterScreenState extends State<CustomFooterScreen> {
 class PaginationFooterWidget extends StatefulWidget {
   final TrinaGridStateManager stateManager;
 
-  const PaginationFooterWidget({
-    super.key,
-    required this.stateManager,
-  });
+  const PaginationFooterWidget({super.key, required this.stateManager});
 
   @override
   State<PaginationFooterWidget> createState() => _PaginationFooterWidgetState();
@@ -189,10 +188,7 @@ class _PaginationFooterWidgetState extends State<PaginationFooterWidget> {
               DropdownButton<int>(
                 value: pageSize,
                 items: availablePageSizes.map((size) {
-                  return DropdownMenuItem(
-                    value: size,
-                    child: Text('$size'),
-                  );
+                  return DropdownMenuItem(value: size, child: Text('$size'));
                 }).toList(),
                 onChanged: (newSize) {
                   if (newSize != null) {
@@ -217,14 +213,17 @@ class _PaginationFooterWidgetState extends State<PaginationFooterWidget> {
                 ),
                 IconButton(
                   icon: const Icon(Icons.chevron_left),
-                  onPressed:
-                      currentPage > 1 ? () => _goToPage(currentPage - 1) : null,
+                  onPressed: currentPage > 1
+                      ? () => _goToPage(currentPage - 1)
+                      : null,
                   tooltip: 'Previous Page',
                 ),
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 16),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(20),
@@ -335,7 +334,8 @@ class _PaginationFooterWidgetState extends State<PaginationFooterWidget> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-              'Please enter a valid page number between 1 and ${widget.stateManager.totalPage}'),
+            'Please enter a valid page number between 1 and ${widget.stateManager.totalPage}',
+          ),
           duration: const Duration(seconds: 2),
           backgroundColor: Colors.red,
         ),

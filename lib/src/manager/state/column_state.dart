@@ -112,18 +112,10 @@ abstract class IColumnState {
   void autoFitColumn(BuildContext context, TrinaColumn column);
 
   /// Hide or show the [column] with [hide] value.
-  void hideColumn(
-    TrinaColumn column,
-    bool hide, {
-    bool notify = true,
-  });
+  void hideColumn(TrinaColumn column, bool hide, {bool notify = true});
 
   /// Hide or show the [columns] with [hide] value.
-  void hideColumns(
-    List<TrinaColumn> columns,
-    bool hide, {
-    bool notify = true,
-  });
+  void hideColumns(List<TrinaColumn> columns, bool hide, {bool notify = true});
 
   void sortAscending(TrinaColumn column, {bool notify = true});
 
@@ -156,11 +148,8 @@ mixin ColumnState implements ITrinaGridState {
   List<TrinaColumn> get columns => List.from(refColumns, growable: false);
 
   @override
-  List<int> get columnIndexes => List.generate(
-        refColumns.length,
-        (index) => index,
-        growable: false,
-      );
+  List<int> get columnIndexes =>
+      List.generate(refColumns.length, (index) => index, growable: false);
 
   @override
   List<int> get columnIndexesForShowFrozen {
@@ -173,8 +162,8 @@ mixin ColumnState implements ITrinaGridState {
       refColumns[i].frozen.isNone
           ? bodyIndexes.add(i)
           : refColumns[i].frozen.isStart
-              ? leftIndexes.add(i)
-              : rightIndexes.add(i);
+          ? leftIndexes.add(i)
+          : rightIndexes.add(i);
     }
 
     return leftIndexes + bodyIndexes + rightIndexes;
@@ -343,11 +332,13 @@ mixin ColumnState implements ITrinaGridState {
     updateVisibilityLayout();
 
     if (onColumnsMoved != null) {
-      onColumnsMoved!(TrinaGridOnColumnsMovedEvent(
-        idx: refColumns.indexOf(column),
-        visualIdx: columnIndex(column)!,
-        columns: [column],
-      ));
+      onColumnsMoved!(
+        TrinaGridOnColumnsMovedEvent(
+          idx: refColumns.indexOf(column),
+          visualIdx: columnIndex(column)!,
+          columns: [column],
+        ),
+      );
     }
 
     notifyListeners(true, toggleFrozenColumn.hashCode);
@@ -504,11 +495,13 @@ mixin ColumnState implements ITrinaGridState {
     updateVisibilityLayout();
 
     if (onColumnsMoved != null) {
-      onColumnsMoved!(TrinaGridOnColumnsMovedEvent(
-        idx: targetIndex,
-        visualIdx: columnIndex(columnToMove)!,
-        columns: [columnToMove],
-      ));
+      onColumnsMoved!(
+        TrinaGridOnColumnsMovedEvent(
+          idx: targetIndex,
+          visualIdx: columnIndex(columnToMove)!,
+          columns: [columnToMove],
+        ),
+      );
     }
 
     notifyListeners(true, moveColumn.hashCode);
@@ -544,10 +537,7 @@ mixin ColumnState implements ITrinaGridState {
 
     notifyResizingListeners();
 
-    scrollByDirection(
-      TrinaMoveDirection.right,
-      correctHorizontalOffset,
-    );
+    scrollByDirection(TrinaMoveDirection.right, correctHorizontalOffset);
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       activateColumnsAutoSize();
@@ -565,15 +555,19 @@ mixin ColumnState implements ITrinaGridState {
       var value = column.formattedValueForDisplay(cell.value);
       if (hasRowGroups) {
         if (TrinaDefaultCell.showGroupCount(rowGroupDelegate!, cell)) {
-          final groupCountValue =
-              TrinaDefaultCell.groupCountText(rowGroupDelegate!, row);
+          final groupCountValue = TrinaDefaultCell.groupCountText(
+            rowGroupDelegate!,
+            row,
+          );
           if (groupCountValue.isNotEmpty) {
             value = '$value $groupCountValue';
           }
         }
 
-        hasExpandableRowGroup |=
-            TrinaDefaultCell.canExpand(rowGroupDelegate!, cell);
+        hasExpandableRowGroup |= TrinaDefaultCell.canExpand(
+          rowGroupDelegate!,
+          cell,
+        );
       }
       if (maxValue.length < value.length) {
         maxValue = value;
@@ -582,13 +576,16 @@ mixin ColumnState implements ITrinaGridState {
 
     // Get size after rendering virtually
     // https://stackoverflow.com/questions/54351655/flutter-textfield-width-should-match-width-of-contained-text
-    final titleTextWidth =
-        _visualTextWidth(column.title, style.columnTextStyle);
+    final titleTextWidth = _visualTextWidth(
+      column.title,
+      style.columnTextStyle,
+    );
     final maxValueTextWidth = _visualTextWidth(maxValue, style.cellTextStyle);
 
     // todo : Handle (renderer) width
 
-    final calculatedTileWidth = titleTextWidth -
+    final calculatedTileWidth =
+        titleTextWidth -
         column.width +
         [
           (column.titlePadding ?? style.defaultColumnTitlePadding).horizontal,
@@ -598,7 +595,8 @@ mixin ColumnState implements ITrinaGridState {
           8,
         ].reduce((acc, a) => acc + a);
 
-    final calculatedCellWidth = maxValueTextWidth -
+    final calculatedCellWidth =
+        maxValueTextWidth -
         column.width +
         [
           (column.cellPadding ?? style.defaultCellPadding).horizontal,
@@ -615,21 +613,14 @@ mixin ColumnState implements ITrinaGridState {
   double _visualTextWidth(String text, TextStyle style) {
     if (text.isEmpty) return 0;
     final painter = TextPainter(
-      text: TextSpan(
-        style: style,
-        text: text,
-      ),
+      text: TextSpan(style: style, text: text),
       textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
     )..layout();
     return painter.width;
   }
 
   @override
-  void hideColumn(
-    TrinaColumn column,
-    bool hide, {
-    bool notify = true,
-  }) {
+  void hideColumn(TrinaColumn column, bool hide, {bool notify = true}) {
     if (column.hide == hide) {
       return;
     }
@@ -639,11 +630,7 @@ mixin ColumnState implements ITrinaGridState {
   }
 
   @override
-  void hideColumns(
-    List<TrinaColumn> columns,
-    bool hide, {
-    bool notify = true,
-  }) {
+  void hideColumns(List<TrinaColumn> columns, bool hide, {bool notify = true}) {
     if (columns.isEmpty) {
       return;
     }
@@ -667,9 +654,9 @@ mixin ColumnState implements ITrinaGridState {
     if (sortOnlyEvent) return;
 
     compare(a, b) => column.type.compare(
-          a.cells[column.field]!.valueForSorting,
-          b.cells[column.field]!.valueForSorting,
-        );
+      a.cells[column.field]!.valueForSorting,
+      b.cells[column.field]!.valueForSorting,
+    );
 
     if (enabledRowGroups) {
       sortRowGroup(column: column, compare: compare);
@@ -689,9 +676,9 @@ mixin ColumnState implements ITrinaGridState {
     if (sortOnlyEvent) return;
 
     compare(b, a) => column.type.compare(
-          a.cells[column.field]!.valueForSorting,
-          b.cells[column.field]!.valueForSorting,
-        );
+      a.cells[column.field]!.valueForSorting,
+      b.cells[column.field]!.valueForSorting,
+    );
 
     if (enabledRowGroups) {
       sortRowGroup(column: column, compare: compare);
@@ -736,15 +723,16 @@ mixin ColumnState implements ITrinaGridState {
 
     final columns = [
       TrinaColumn(
-          title: configuration.localeText.setColumnsTitle,
-          field: titleField,
-          type: TrinaColumnType.text(),
-          enableRowChecked: true,
-          enableEditingMode: false,
-          enableDropToResize: true,
-          enableContextMenu: false,
-          enableColumnDrag: false,
-          backgroundColor: configuration.style.filterPopupHeaderColor),
+        title: configuration.localeText.setColumnsTitle,
+        field: titleField,
+        type: TrinaColumnType.text(),
+        enableRowChecked: true,
+        enableEditingMode: false,
+        enableDropToResize: true,
+        enableContextMenu: false,
+        enableColumnDrag: false,
+        backgroundColor: configuration.style.filterPopupHeaderColor,
+      ),
       TrinaColumn(
         title: 'hidden column',
         field: columnField,
@@ -844,10 +832,7 @@ mixin ColumnState implements ITrinaGridState {
   /// by subtracting the offsetWidth value from the total width of the grid.
   /// Assume that a column has been added by subtracting the [offsetWidth] value
   /// from the total width while no column has been added yet.
-  bool _limitFrozenColumn(
-    TrinaColumnFrozen frozen,
-    double offsetWidth,
-  ) {
+  bool _limitFrozenColumn(TrinaColumnFrozen frozen, double offsetWidth) {
     if (frozen.isNone) {
       return false;
     }
@@ -951,10 +936,7 @@ mixin ColumnState implements ITrinaGridState {
     double accumulateWidth = 0;
 
     for (final column in columns) {
-      if (_limitFrozenColumn(
-        column.frozen,
-        column.width + accumulateWidth,
-      )) {
+      if (_limitFrozenColumn(column.frozen, column.width + accumulateWidth)) {
         column.frozen = TrinaColumnFrozen.none;
       }
 
@@ -1006,8 +988,10 @@ mixin ColumnState implements ITrinaGridState {
     return resizeHelper.update();
   }
 
-  double _getEffectiveButtonWidth(BuildContext context,
-      {bool checkBox = false}) {
+  double _getEffectiveButtonWidth(
+    BuildContext context, {
+    bool checkBox = false,
+  }) {
     final theme = Theme.of(context);
     late double width;
     switch (theme.materialTapTargetSize) {

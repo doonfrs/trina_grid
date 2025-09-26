@@ -39,12 +39,12 @@ class TrinaColumnTypeCurrency
     this.symbol,
     int? decimalDigits,
   }) : numberFormat = intl.NumberFormat.currency(
-          locale: locale,
-          name: name,
-          symbol: symbol,
-          decimalDigits: decimalDigits,
-          customPattern: format,
-        ) {
+         locale: locale,
+         name: name,
+         symbol: symbol,
+         decimalDigits: decimalDigits,
+         customPattern: format,
+       ) {
     decimalPoint = numberFormat.decimalDigits ?? 0;
   }
 

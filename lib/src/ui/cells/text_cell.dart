@@ -161,8 +161,8 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
     _cellEditingStatus = formattedValue != value.toString()
         ? _CellEditingStatus.changed
         : _initialCellValue.toString() == value.toString()
-            ? _CellEditingStatus.init
-            : _CellEditingStatus.updated;
+        ? _CellEditingStatus.init
+        : _CellEditingStatus.updated;
   }
 
   void _handleOnComplete() {
@@ -202,16 +202,17 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
         logicalKey: event.logicalKey,
         currentValue: _textController.text,
       );
-      
+
       widget.cell.onKeyPressed!(keyEvent);
     }
 
-    final skip = !(keyManager.isVertical ||
-        _moveHorizontal(keyManager) ||
-        keyManager.isEsc ||
-        keyManager.isTab ||
-        keyManager.isF3 ||
-        keyManager.isEnter);
+    final skip =
+        !(keyManager.isVertical ||
+            _moveHorizontal(keyManager) ||
+            keyManager.isEsc ||
+            keyManager.isTab ||
+            keyManager.isF3 ||
+            keyManager.isEnter);
 
     // Movement and enter key, non-editable cell left and right movement, etc. key input is propagated to text field.
     if (skip) {

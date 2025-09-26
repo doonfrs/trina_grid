@@ -58,30 +58,27 @@ void main() {
         expect(stateManager.isEditing, true);
       },
     );
-    testWidgets(
-      'When a character key is pressed, '
-      'the typed character should appear in the cell.',
-      (tester) async {
-        await buildGrid(tester);
+    testWidgets('When a character key is pressed, '
+        'the typed character should appear in the cell.', (tester) async {
+      await buildGrid(tester);
 
-        // given
-        // press on a cell to set it as current
-        await tester.tap(find.text('column0 value 0'));
-        await tester.pumpAndSettle();
+      // given
+      // press on a cell to set it as current
+      await tester.tap(find.text('column0 value 0'));
+      await tester.pumpAndSettle();
 
-        // when
-        await tester.sendKeyEvent(LogicalKeyboardKey.keyA);
-        // We need to pump and settle to allow the Future.delayed to complete.
-        await tester.pumpAndSettle();
+      // when
+      await tester.sendKeyEvent(LogicalKeyboardKey.keyA);
+      // We need to pump and settle to allow the Future.delayed to complete.
+      await tester.pumpAndSettle();
 
-        // assert text controller should contain the typed character.
-        expect(stateManager.textEditingController!.text, 'a');
-        // assert the displayed cell value is updated.
-        expect(find.text('a'), findsOneWidget);
-        // The underlying cell value should NOT have changed yet.
-        expect(stateManager.currentCell?.value, 'column0 value 0');
-      },
-    );
+      // assert text controller should contain the typed character.
+      expect(stateManager.textEditingController!.text, 'a');
+      // assert the displayed cell value is updated.
+      expect(find.text('a'), findsOneWidget);
+      // The underlying cell value should NOT have changed yet.
+      expect(stateManager.currentCell?.value, 'column0 value 0');
+    });
 
     // This commented-out test fails due to a Flutter issue.
     // discussed in: https://github.com/flutter/flutter/issues/93873

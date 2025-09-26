@@ -62,9 +62,12 @@ void main() {
 
       // Resize back to a wide window
       await TestHelperUtil.changeWidth(tester: tester, width: 800, height: 500);
-      expect(stateManager.showFrozenColumn, isTrue,
-          reason:
-              'Frozen columns should be restored after resizing back to wide.');
+      expect(
+        stateManager.showFrozenColumn,
+        isTrue,
+        reason:
+            'Frozen columns should be restored after resizing back to wide.',
+      );
     },
   );
 
@@ -78,16 +81,25 @@ void main() {
       // Resize to just below the threshold where frozen columns are hidden
       await TestHelperUtil.changeWidth(tester: tester, width: 250, height: 500);
       expect(stateManager.showFrozenColumn, isFalse);
-      expect(stateManager.columns[0].frozen, TrinaColumnFrozen.start,
-          reason: 'Frozen state should be preserved even if not shown.');
-      expect(stateManager.columns.last.frozen, TrinaColumnFrozen.end,
-          reason: 'Frozen state should be preserved even if not shown.');
+      expect(
+        stateManager.columns[0].frozen,
+        TrinaColumnFrozen.start,
+        reason: 'Frozen state should be preserved even if not shown.',
+      );
+      expect(
+        stateManager.columns.last.frozen,
+        TrinaColumnFrozen.end,
+        reason: 'Frozen state should be preserved even if not shown.',
+      );
 
       // Resize back to wide
       await TestHelperUtil.changeWidth(tester: tester, width: 800, height: 500);
-      expect(stateManager.showFrozenColumn, isTrue,
-          reason:
-              'Frozen columns should be restored after resizing back to wide.');
+      expect(
+        stateManager.showFrozenColumn,
+        isTrue,
+        reason:
+            'Frozen columns should be restored after resizing back to wide.',
+      );
     },
   );
 
@@ -153,14 +165,19 @@ void main() {
       expect(stateManager.columns[0].frozen, TrinaColumnFrozen.start);
       expect(stateManager.columns[1].frozen, TrinaColumnFrozen.start);
       expect(stateManager.columns.last.frozen, TrinaColumnFrozen.end);
-      expect(stateManager.columns[multiFrozenColumns.length - 2].frozen,
-          TrinaColumnFrozen.end);
+      expect(
+        stateManager.columns[multiFrozenColumns.length - 2].frozen,
+        TrinaColumnFrozen.end,
+      );
 
       // Resize back to wide
       await TestHelperUtil.changeWidth(tester: tester, width: 900, height: 500);
-      expect(stateManager.showFrozenColumn, isTrue,
-          reason:
-              'All frozen columns should be restored after resizing back to wide.');
+      expect(
+        stateManager.showFrozenColumn,
+        isTrue,
+        reason:
+            'All frozen columns should be restored after resizing back to wide.',
+      );
     },
   );
 

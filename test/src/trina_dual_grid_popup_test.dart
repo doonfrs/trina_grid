@@ -89,52 +89,53 @@ void main() {
   );
 
   testWidgets(
-      'When the grid popup is called, the cell values should be displayed.',
-      (WidgetTester tester) async {
-    // given
-    final gridAColumns = ColumnHelper.textColumn('headerA');
-    final gridARows = RowHelper.count(3, gridAColumns);
+    'When the grid popup is called, the cell values should be displayed.',
+    (WidgetTester tester) async {
+      // given
+      final gridAColumns = ColumnHelper.textColumn('headerA');
+      final gridARows = RowHelper.count(3, gridAColumns);
 
-    final gridBColumns = ColumnHelper.textColumn('headerB');
-    final gridBRows = RowHelper.count(3, gridBColumns);
+      final gridBColumns = ColumnHelper.textColumn('headerB');
+      final gridBRows = RowHelper.count(3, gridBColumns);
 
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Material(
-          child: Builder(
-            builder: (BuildContext context) {
-              return TextButton(
-                onPressed: () {
-                  TrinaDualGridPopup(
-                    context: context,
-                    gridPropsA: TrinaDualGridProps(
-                      columns: gridAColumns,
-                      rows: gridARows,
-                    ),
-                    gridPropsB: TrinaDualGridProps(
-                      columns: gridBColumns,
-                      rows: gridBRows,
-                    ),
-                  );
-                },
-                child: const Text(buttonText),
-              );
-            },
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Material(
+            child: Builder(
+              builder: (BuildContext context) {
+                return TextButton(
+                  onPressed: () {
+                    TrinaDualGridPopup(
+                      context: context,
+                      gridPropsA: TrinaDualGridProps(
+                        columns: gridAColumns,
+                        rows: gridARows,
+                      ),
+                      gridPropsB: TrinaDualGridProps(
+                        columns: gridBColumns,
+                        rows: gridBRows,
+                      ),
+                    );
+                  },
+                  child: const Text(buttonText),
+                );
+              },
+            ),
           ),
         ),
-      ),
-    );
+      );
 
-    // when
-    await tester.tap(find.byType(TextButton));
+      // when
+      await tester.tap(find.byType(TextButton));
 
-    await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
 
-    // then
-    final gridACell1 = find.text('headerA0 value 0');
-    expect(gridACell1, findsOneWidget);
+      // then
+      final gridACell1 = find.text('headerA0 value 0');
+      expect(gridACell1, findsOneWidget);
 
-    final gridBCell1 = find.text('headerB0 value 0');
-    expect(gridBCell1, findsOneWidget);
-  });
+      final gridBCell1 = find.text('headerB0 value 0');
+      expect(gridBCell1, findsOneWidget);
+    },
+  );
 }

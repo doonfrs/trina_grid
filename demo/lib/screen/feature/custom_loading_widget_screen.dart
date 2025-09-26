@@ -37,11 +37,7 @@ class _LoadingOptionsScreenState extends State<LoadingOptionsScreen> {
           const CircleAvatar(
             radius: 40,
             backgroundColor: Colors.blue,
-            child: Icon(
-              Icons.grid_on,
-              color: Colors.white,
-              size: 40,
-            ),
+            child: Icon(Icons.grid_on, color: Colors.white, size: 40),
           ),
           const SizedBox(height: 20),
           const Text(
@@ -110,9 +106,7 @@ class _LoadingOptionsScreenState extends State<LoadingOptionsScreen> {
           height: 100,
           child: CircularProgressIndicator(
             strokeWidth: 8,
-            valueColor: AlwaysStoppedAnimation<Color>(
-              Colors.purple.shade400,
-            ),
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.purple.shade400),
           ),
         ),
       ),
@@ -237,18 +231,9 @@ class _LoadingOptionsScreenState extends State<LoadingOptionsScreen> {
               DropdownButton<int>(
                 value: _selectedLoadingWidget,
                 items: const [
-                  DropdownMenuItem(
-                    value: 0,
-                    child: Text('Branded Loading'),
-                  ),
-                  DropdownMenuItem(
-                    value: 1,
-                    child: Text('Shimmer Effect'),
-                  ),
-                  DropdownMenuItem(
-                    value: 2,
-                    child: Text('Simple Spinner'),
-                  ),
+                  DropdownMenuItem(value: 0, child: Text('Branded Loading')),
+                  DropdownMenuItem(value: 1, child: Text('Shimmer Effect')),
+                  DropdownMenuItem(value: 2, child: Text('Simple Spinner')),
                 ],
                 onChanged: (value) {
                   setState(() {

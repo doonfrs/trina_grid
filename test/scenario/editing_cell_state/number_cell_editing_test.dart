@@ -30,136 +30,144 @@ void main() {
 
   group('Number Cell Editing Test', () {
     testWidgets(
-        'Decimal points should be used as the decimal separator in the default locale.',
-        (tester) async {
-      final columns = [
-        TrinaColumn(
-          title: 'column',
-          field: 'column',
-          type: TrinaColumnType.number(format: '#,###.##'),
-        ),
-      ];
+      'Decimal points should be used as the decimal separator in the default locale.',
+      (tester) async {
+        final columns = [
+          TrinaColumn(
+            title: 'column',
+            field: 'column',
+            type: TrinaColumnType.number(format: '#,###.##'),
+          ),
+        ];
 
-      final rows = [
-        TrinaRow(cells: {'column': TrinaCell(value: 12345.01)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 12345.02)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 12345.11)}),
-      ];
+        final rows = [
+          TrinaRow(cells: {'column': TrinaCell(value: 12345.01)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 12345.02)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 12345.11)}),
+        ];
 
-      await tester.pumpWidget(buildGrid(columns: columns, rows: rows));
+        await tester.pumpWidget(buildGrid(columns: columns, rows: rows));
 
-      expect(find.text('12,345.01'), findsOneWidget);
-      expect(find.text('12,345.02'), findsOneWidget);
-      expect(find.text('12,345.11'), findsOneWidget);
-    });
-
-    testWidgets(
-        'Decimal points should be used as the decimal separator when editing a cell.',
-        (tester) async {
-      final columns = [
-        TrinaColumn(
-          title: 'column',
-          field: 'column',
-          type: TrinaColumnType.number(format: '#,###.##'),
-        ),
-      ];
-
-      final rows = [
-        TrinaRow(cells: {'column': TrinaCell(value: 12345.01)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 12345.02)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 12345.11)}),
-      ];
-
-      await tester.pumpWidget(buildGrid(columns: columns, rows: rows));
-
-      await tester.tap(find.text('12,345.01'));
-      await tester.tap(find.text('12,345.01'));
-      await tester.pump();
-
-      expect(stateManager.isEditing, true);
-
-      expect(find.text('12345.01'), findsOneWidget);
-    });
+        expect(find.text('12,345.01'), findsOneWidget);
+        expect(find.text('12,345.02'), findsOneWidget);
+        expect(find.text('12,345.11'), findsOneWidget);
+      },
+    );
 
     testWidgets(
-        'The onChanged callback should not be called when the value is not changed.',
-        (tester) async {
-      final columns = [
-        TrinaColumn(
-          title: 'column',
-          field: 'column',
-          type: TrinaColumnType.number(format: '#,###.##'),
-        ),
-      ];
+      'Decimal points should be used as the decimal separator when editing a cell.',
+      (tester) async {
+        final columns = [
+          TrinaColumn(
+            title: 'column',
+            field: 'column',
+            type: TrinaColumnType.number(format: '#,###.##'),
+          ),
+        ];
 
-      final rows = [
-        TrinaRow(cells: {'column': TrinaCell(value: 12345.01)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 12345.02)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 12345.11)}),
-      ];
+        final rows = [
+          TrinaRow(cells: {'column': TrinaCell(value: 12345.01)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 12345.02)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 12345.11)}),
+        ];
 
-      final mock = MockMethods();
+        await tester.pumpWidget(buildGrid(columns: columns, rows: rows));
 
-      await tester.pumpWidget(buildGrid(
-        columns: columns,
-        rows: rows,
-        onChanged: mock.oneParamReturnVoid,
-      ));
+        await tester.tap(find.text('12,345.01'));
+        await tester.tap(find.text('12,345.01'));
+        await tester.pump();
 
-      final cellWidget = find.text('12,345.01');
+        expect(stateManager.isEditing, true);
 
-      await tester.tap(cellWidget);
-      await tester.tap(cellWidget);
-      await tester.pump();
-
-      expect(stateManager.isEditing, true);
-
-      await tester.enterText(find.text('12345.01'), '12345.01');
-      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-
-      verifyNever(mock.oneParamReturnVoid(any));
-      expect(stateManager.rows.first.cells['column']?.value, 12345.01);
-    });
+        expect(find.text('12345.01'), findsOneWidget);
+      },
+    );
 
     testWidgets(
-        'The onChanged callback should be called when the value is changed.',
-        (tester) async {
-      final columns = [
-        TrinaColumn(
-          title: 'column',
-          field: 'column',
-          type: TrinaColumnType.number(format: '#,###.##'),
-        ),
-      ];
+      'The onChanged callback should not be called when the value is not changed.',
+      (tester) async {
+        final columns = [
+          TrinaColumn(
+            title: 'column',
+            field: 'column',
+            type: TrinaColumnType.number(format: '#,###.##'),
+          ),
+        ];
 
-      final rows = [
-        TrinaRow(cells: {'column': TrinaCell(value: 12345.01)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 12345.02)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 12345.11)}),
-      ];
+        final rows = [
+          TrinaRow(cells: {'column': TrinaCell(value: 12345.01)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 12345.02)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 12345.11)}),
+        ];
 
-      final mock = MockMethods();
+        final mock = MockMethods();
 
-      await tester.pumpWidget(buildGrid(
-        columns: columns,
-        rows: rows,
-        onChanged: mock.oneParamReturnVoid,
-      ));
+        await tester.pumpWidget(
+          buildGrid(
+            columns: columns,
+            rows: rows,
+            onChanged: mock.oneParamReturnVoid,
+          ),
+        );
 
-      final cellWidget = find.text('12,345.01');
+        final cellWidget = find.text('12,345.01');
 
-      await tester.tap(cellWidget);
-      await tester.tap(cellWidget);
-      await tester.pump();
+        await tester.tap(cellWidget);
+        await tester.tap(cellWidget);
+        await tester.pump();
 
-      expect(stateManager.isEditing, true);
+        expect(stateManager.isEditing, true);
 
-      await tester.enterText(find.text('12345.01'), '12345.99');
-      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+        await tester.enterText(find.text('12345.01'), '12345.01');
+        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
 
-      verify(mock.oneParamReturnVoid(any)).called(1);
-      expect(stateManager.rows.first.cells['column']?.value, 12345.99);
-    });
+        verifyNever(mock.oneParamReturnVoid(any));
+        expect(stateManager.rows.first.cells['column']?.value, 12345.01);
+      },
+    );
+
+    testWidgets(
+      'The onChanged callback should be called when the value is changed.',
+      (tester) async {
+        final columns = [
+          TrinaColumn(
+            title: 'column',
+            field: 'column',
+            type: TrinaColumnType.number(format: '#,###.##'),
+          ),
+        ];
+
+        final rows = [
+          TrinaRow(cells: {'column': TrinaCell(value: 12345.01)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 12345.02)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 12345.11)}),
+        ];
+
+        final mock = MockMethods();
+
+        await tester.pumpWidget(
+          buildGrid(
+            columns: columns,
+            rows: rows,
+            onChanged: mock.oneParamReturnVoid,
+          ),
+        );
+
+        final cellWidget = find.text('12,345.01');
+
+        await tester.tap(cellWidget);
+        await tester.tap(cellWidget);
+        await tester.pump();
+
+        expect(stateManager.isEditing, true);
+
+        await tester.enterText(find.text('12345.01'), '12345.99');
+        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+
+        verify(mock.oneParamReturnVoid(any)).called(1);
+        expect(stateManager.rows.first.cells['column']?.value, 12345.99);
+      },
+    );
   });
 
   group('Countries that use commas as decimal separators', () {
@@ -168,135 +176,143 @@ void main() {
     });
 
     testWidgets(
-        'Decimal points should be used as the decimal separator in the default locale.',
-        (tester) async {
-      final columns = [
-        TrinaColumn(
-          title: 'column',
-          field: 'column',
-          type: TrinaColumnType.number(format: '#,###.##'),
-        ),
-      ];
+      'Decimal points should be used as the decimal separator in the default locale.',
+      (tester) async {
+        final columns = [
+          TrinaColumn(
+            title: 'column',
+            field: 'column',
+            type: TrinaColumnType.number(format: '#,###.##'),
+          ),
+        ];
 
-      final rows = [
-        TrinaRow(cells: {'column': TrinaCell(value: 12345.01)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 12345.02)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 12345.11)}),
-      ];
+        final rows = [
+          TrinaRow(cells: {'column': TrinaCell(value: 12345.01)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 12345.02)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 12345.11)}),
+        ];
 
-      await tester.pumpWidget(buildGrid(columns: columns, rows: rows));
+        await tester.pumpWidget(buildGrid(columns: columns, rows: rows));
 
-      expect(find.text('12.345,01'), findsOneWidget);
-      expect(find.text('12.345,02'), findsOneWidget);
-      expect(find.text('12.345,11'), findsOneWidget);
-    });
-
-    testWidgets(
-        'Decimal points should be used as the decimal separator when editing a cell.',
-        (tester) async {
-      final columns = [
-        TrinaColumn(
-          title: 'column',
-          field: 'column',
-          type: TrinaColumnType.number(format: '#,###.##'),
-        ),
-      ];
-
-      final rows = [
-        TrinaRow(cells: {'column': TrinaCell(value: 12345.01)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 12345.02)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 12345.11)}),
-      ];
-
-      await tester.pumpWidget(buildGrid(columns: columns, rows: rows));
-
-      await tester.tap(find.text('12.345,01'));
-      await tester.tap(find.text('12.345,01'));
-      await tester.pump();
-
-      expect(stateManager.isEditing, true);
-
-      expect(find.text('12345,01'), findsOneWidget);
-    });
+        expect(find.text('12.345,01'), findsOneWidget);
+        expect(find.text('12.345,02'), findsOneWidget);
+        expect(find.text('12.345,11'), findsOneWidget);
+      },
+    );
 
     testWidgets(
-        'The onChanged callback should not be called when the value is not changed.',
-        (tester) async {
-      final columns = [
-        TrinaColumn(
-          title: 'column',
-          field: 'column',
-          type: TrinaColumnType.number(format: '#,###.##'),
-        ),
-      ];
+      'Decimal points should be used as the decimal separator when editing a cell.',
+      (tester) async {
+        final columns = [
+          TrinaColumn(
+            title: 'column',
+            field: 'column',
+            type: TrinaColumnType.number(format: '#,###.##'),
+          ),
+        ];
 
-      final rows = [
-        TrinaRow(cells: {'column': TrinaCell(value: 12345.01)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 12345.02)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 12345.11)}),
-      ];
+        final rows = [
+          TrinaRow(cells: {'column': TrinaCell(value: 12345.01)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 12345.02)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 12345.11)}),
+        ];
 
-      final mock = MockMethods();
+        await tester.pumpWidget(buildGrid(columns: columns, rows: rows));
 
-      await tester.pumpWidget(buildGrid(
-        columns: columns,
-        rows: rows,
-        onChanged: mock.oneParamReturnVoid,
-      ));
+        await tester.tap(find.text('12.345,01'));
+        await tester.tap(find.text('12.345,01'));
+        await tester.pump();
 
-      final cellWidget = find.text('12.345,01');
+        expect(stateManager.isEditing, true);
 
-      await tester.tap(cellWidget);
-      await tester.tap(cellWidget);
-      await tester.pump();
-
-      expect(stateManager.isEditing, true);
-
-      await tester.enterText(find.text('12345,01'), '12345,01');
-      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-
-      verifyNever(mock.oneParamReturnVoid(any));
-      expect(stateManager.rows.first.cells['column']?.value, 12345.01);
-    });
+        expect(find.text('12345,01'), findsOneWidget);
+      },
+    );
 
     testWidgets(
-        'The onChanged callback should be called when the value is changed.',
-        (tester) async {
-      final columns = [
-        TrinaColumn(
-          title: 'column',
-          field: 'column',
-          type: TrinaColumnType.number(format: '#,###.##'),
-        ),
-      ];
+      'The onChanged callback should not be called when the value is not changed.',
+      (tester) async {
+        final columns = [
+          TrinaColumn(
+            title: 'column',
+            field: 'column',
+            type: TrinaColumnType.number(format: '#,###.##'),
+          ),
+        ];
 
-      final rows = [
-        TrinaRow(cells: {'column': TrinaCell(value: 12345.01)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 12345.02)}),
-        TrinaRow(cells: {'column': TrinaCell(value: 12345.11)}),
-      ];
+        final rows = [
+          TrinaRow(cells: {'column': TrinaCell(value: 12345.01)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 12345.02)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 12345.11)}),
+        ];
 
-      final mock = MockMethods();
+        final mock = MockMethods();
 
-      await tester.pumpWidget(buildGrid(
-        columns: columns,
-        rows: rows,
-        onChanged: mock.oneParamReturnVoid,
-      ));
+        await tester.pumpWidget(
+          buildGrid(
+            columns: columns,
+            rows: rows,
+            onChanged: mock.oneParamReturnVoid,
+          ),
+        );
 
-      final cellWidget = find.text('12.345,01');
+        final cellWidget = find.text('12.345,01');
 
-      await tester.tap(cellWidget);
-      await tester.tap(cellWidget);
-      await tester.pump();
+        await tester.tap(cellWidget);
+        await tester.tap(cellWidget);
+        await tester.pump();
 
-      expect(stateManager.isEditing, true);
+        expect(stateManager.isEditing, true);
 
-      await tester.enterText(find.text('12345,01'), '12345,99');
-      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+        await tester.enterText(find.text('12345,01'), '12345,01');
+        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
 
-      verify(mock.oneParamReturnVoid(any)).called(1);
-      expect(stateManager.rows.first.cells['column']?.value, 12345.99);
-    });
+        verifyNever(mock.oneParamReturnVoid(any));
+        expect(stateManager.rows.first.cells['column']?.value, 12345.01);
+      },
+    );
+
+    testWidgets(
+      'The onChanged callback should be called when the value is changed.',
+      (tester) async {
+        final columns = [
+          TrinaColumn(
+            title: 'column',
+            field: 'column',
+            type: TrinaColumnType.number(format: '#,###.##'),
+          ),
+        ];
+
+        final rows = [
+          TrinaRow(cells: {'column': TrinaCell(value: 12345.01)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 12345.02)}),
+          TrinaRow(cells: {'column': TrinaCell(value: 12345.11)}),
+        ];
+
+        final mock = MockMethods();
+
+        await tester.pumpWidget(
+          buildGrid(
+            columns: columns,
+            rows: rows,
+            onChanged: mock.oneParamReturnVoid,
+          ),
+        );
+
+        final cellWidget = find.text('12.345,01');
+
+        await tester.tap(cellWidget);
+        await tester.tap(cellWidget);
+        await tester.pump();
+
+        expect(stateManager.isEditing, true);
+
+        await tester.enterText(find.text('12345,01'), '12345,99');
+        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+
+        verify(mock.oneParamReturnVoid(any)).called(1);
+        expect(stateManager.rows.first.cells['column']?.value, 12345.99);
+      },
+    );
   });
 }

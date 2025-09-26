@@ -29,37 +29,31 @@ void main() {
     final columns = ColumnHelper.textColumn('column');
     final rows = RowHelper.count(numberOfRows, columns);
 
-    return TrinaWidgetTestHelper(
-      'build with selecting rows.',
-      (tester) async {
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Material(
-              child: TrinaGrid(
-                mode: TrinaGridMode.multiSelect,
-                columns: columns,
-                rows: rows,
-                onLoaded: (TrinaGridOnLoadedEvent event) {
-                  stateManager = event.stateManager;
-                  if (onLoaded != null) onLoaded(event);
-                },
-                onSelected: onSelected,
-              ),
+    return TrinaWidgetTestHelper('build with selecting rows.', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Material(
+            child: TrinaGrid(
+              mode: TrinaGridMode.multiSelect,
+              columns: columns,
+              rows: rows,
+              onLoaded: (TrinaGridOnLoadedEvent event) {
+                stateManager = event.stateManager;
+                if (onLoaded != null) onLoaded(event);
+              },
+              onSelected: onSelected,
             ),
           ),
-        );
-      },
-    );
+        ),
+      );
+    });
   }
 
-  buildGrid().test(
-    'When the first cell is focused',
-    (tester) async {
-      expect(stateManager.currentCell, isNot(null));
-      expect(stateManager.currentCellPosition?.rowIdx, 0);
-      expect(stateManager.currentCellPosition?.columnIdx, 0);
-    },
-  );
+  buildGrid().test('When the first cell is focused', (tester) async {
+    expect(stateManager.currentCell, isNot(null));
+    expect(stateManager.currentCellPosition?.rowIdx, 0);
+    expect(stateManager.currentCellPosition?.columnIdx, 0);
+  });
 
   buildGrid(numberOfRows: 0).test(
     'When there are no rows, no error should occur and the grid should be focused',
@@ -75,21 +69,19 @@ void main() {
       e.stateManager.refRows[1].cells['column0'],
       1,
     ),
-  ).test(
-    'When selected in onLoaded, the second cell should be focused',
-    (tester) async {
-      expect(stateManager.currentCell, isNot(null));
-      expect(stateManager.currentCellPosition?.rowIdx, 1);
-      expect(stateManager.currentCellPosition?.columnIdx, 0);
-    },
-  );
+  ).test('When selected in onLoaded, the second cell should be focused', (
+    tester,
+  ) async {
+    expect(stateManager.currentCell, isNot(null));
+    expect(stateManager.currentCellPosition?.rowIdx, 1);
+    expect(stateManager.currentCellPosition?.columnIdx, 0);
+  });
 
-  buildGrid().test(
-    'When running in grid mode, the grid should be focused.',
-    (tester) async {
-      expect(stateManager.hasFocus, true);
-    },
-  );
+  buildGrid().test('When running in grid mode, the grid should be focused.', (
+    tester,
+  ) async {
+    expect(stateManager.hasFocus, true);
+  });
 
   buildGrid().test(
     'When running in multiSelect mode, the selectingMode should be row.',
@@ -106,12 +98,17 @@ void main() {
 
       verify(
         mock.oneParamReturnVoid(
-            argThat(TrinaObjectMatcher<TrinaGridOnSelectedEvent>(rule: (event) {
-          final selectedKeys = event.selectedRows!.map((e) => e.key);
+          argThat(
+            TrinaObjectMatcher<TrinaGridOnSelectedEvent>(
+              rule: (event) {
+                final selectedKeys = event.selectedRows!.map((e) => e.key);
 
-          return event.selectedRows?.length == 1 &&
-              selectedKeys.contains(stateManager.refRows[0].key);
-        }))),
+                return event.selectedRows?.length == 1 &&
+                    selectedKeys.contains(stateManager.refRows[0].key);
+              },
+            ),
+          ),
+        ),
       ).called(1);
 
       await tester.tap(find.text('column0 value 2'));
@@ -119,13 +116,18 @@ void main() {
 
       verify(
         mock.oneParamReturnVoid(
-            argThat(TrinaObjectMatcher<TrinaGridOnSelectedEvent>(rule: (event) {
-          final selectedKeys = event.selectedRows!.map((e) => e.key);
+          argThat(
+            TrinaObjectMatcher<TrinaGridOnSelectedEvent>(
+              rule: (event) {
+                final selectedKeys = event.selectedRows!.map((e) => e.key);
 
-          return event.selectedRows?.length == 2 &&
-              selectedKeys.contains(stateManager.refRows[0].key) &&
-              selectedKeys.contains(stateManager.refRows[2].key);
-        }))),
+                return event.selectedRows?.length == 2 &&
+                    selectedKeys.contains(stateManager.refRows[0].key) &&
+                    selectedKeys.contains(stateManager.refRows[2].key);
+              },
+            ),
+          ),
+        ),
       ).called(1);
 
       await tester.tap(find.text('column0 value 4'));
@@ -133,14 +135,19 @@ void main() {
 
       verify(
         mock.oneParamReturnVoid(
-            argThat(TrinaObjectMatcher<TrinaGridOnSelectedEvent>(rule: (event) {
-          final selectedKeys = event.selectedRows!.map((e) => e.key);
+          argThat(
+            TrinaObjectMatcher<TrinaGridOnSelectedEvent>(
+              rule: (event) {
+                final selectedKeys = event.selectedRows!.map((e) => e.key);
 
-          return event.selectedRows?.length == 3 &&
-              selectedKeys.contains(stateManager.refRows[0].key) &&
-              selectedKeys.contains(stateManager.refRows[2].key) &&
-              selectedKeys.contains(stateManager.refRows[4].key);
-        }))),
+                return event.selectedRows?.length == 3 &&
+                    selectedKeys.contains(stateManager.refRows[0].key) &&
+                    selectedKeys.contains(stateManager.refRows[2].key) &&
+                    selectedKeys.contains(stateManager.refRows[4].key);
+              },
+            ),
+          ),
+        ),
       ).called(1);
 
       expect(stateManager.currentSelectingRows.length, 3);
@@ -165,15 +172,20 @@ void main() {
 
       verify(
         mock.oneParamReturnVoid(
-            argThat(TrinaObjectMatcher<TrinaGridOnSelectedEvent>(rule: (event) {
-          final selectedKeys = event.selectedRows!.map((e) => e.key);
+          argThat(
+            TrinaObjectMatcher<TrinaGridOnSelectedEvent>(
+              rule: (event) {
+                final selectedKeys = event.selectedRows!.map((e) => e.key);
 
-          return event.selectedRows?.length == 4 &&
-              selectedKeys.contains(stateManager.refRows[0].key) &&
-              selectedKeys.contains(stateManager.refRows[1].key) &&
-              selectedKeys.contains(stateManager.refRows[2].key) &&
-              selectedKeys.contains(stateManager.refRows[3].key);
-        }))),
+                return event.selectedRows?.length == 4 &&
+                    selectedKeys.contains(stateManager.refRows[0].key) &&
+                    selectedKeys.contains(stateManager.refRows[1].key) &&
+                    selectedKeys.contains(stateManager.refRows[2].key) &&
+                    selectedKeys.contains(stateManager.refRows[3].key);
+              },
+            ),
+          ),
+        ),
       ).called(1);
 
       expect(stateManager.currentSelectingRows.length, 4);
@@ -191,14 +203,19 @@ void main() {
 
       verify(
         mock.oneParamReturnVoid(
-            argThat(TrinaObjectMatcher<TrinaGridOnSelectedEvent>(rule: (event) {
-          final selectedKeys = event.selectedRows!.map((e) => e.key);
+          argThat(
+            TrinaObjectMatcher<TrinaGridOnSelectedEvent>(
+              rule: (event) {
+                final selectedKeys = event.selectedRows!.map((e) => e.key);
 
-          return event.selectedRows?.length == 3 &&
-              selectedKeys.contains(stateManager.refRows[0].key) &&
-              selectedKeys.contains(stateManager.refRows[1].key) &&
-              selectedKeys.contains(stateManager.refRows[2].key);
-        }))),
+                return event.selectedRows?.length == 3 &&
+                    selectedKeys.contains(stateManager.refRows[0].key) &&
+                    selectedKeys.contains(stateManager.refRows[1].key) &&
+                    selectedKeys.contains(stateManager.refRows[2].key);
+              },
+            ),
+          ),
+        ),
       ).called(1);
 
       expect(stateManager.currentSelectingRows.length, 3);
@@ -221,15 +238,20 @@ void main() {
 
       verify(
         mock.oneParamReturnVoid(
-            argThat(TrinaObjectMatcher<TrinaGridOnSelectedEvent>(rule: (event) {
-          final selectedKeys = event.selectedRows!.map((e) => e.key);
+          argThat(
+            TrinaObjectMatcher<TrinaGridOnSelectedEvent>(
+              rule: (event) {
+                final selectedKeys = event.selectedRows!.map((e) => e.key);
 
-          return event.selectedRows?.length == 4 &&
-              selectedKeys.contains(stateManager.refRows[2].key) &&
-              selectedKeys.contains(stateManager.refRows[3].key) &&
-              selectedKeys.contains(stateManager.refRows[4].key) &&
-              selectedKeys.contains(stateManager.refRows[5].key);
-        }))),
+                return event.selectedRows?.length == 4 &&
+                    selectedKeys.contains(stateManager.refRows[2].key) &&
+                    selectedKeys.contains(stateManager.refRows[3].key) &&
+                    selectedKeys.contains(stateManager.refRows[4].key) &&
+                    selectedKeys.contains(stateManager.refRows[5].key);
+              },
+            ),
+          ),
+        ),
       ).called(1);
     },
   );

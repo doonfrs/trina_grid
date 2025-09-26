@@ -33,9 +33,11 @@ class _RowWrapperScreenState extends State<RowWrapperScreen> {
       topTitle: 'Row Wrapper',
       topContents: const [
         Text(
-            'The rowWrapper property lets you wrap each row with your own widget.'),
+          'The rowWrapper property lets you wrap each row with your own widget.',
+        ),
         Text(
-            'This is useful for adding custom styling, interactivity, or extra UI elements.'),
+          'This is useful for adding custom styling, interactivity, or extra UI elements.',
+        ),
       ],
       topButtons: [
         TrinaExampleButton(

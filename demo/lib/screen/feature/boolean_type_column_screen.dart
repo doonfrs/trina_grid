@@ -83,14 +83,16 @@ class _BooleanTypeColumnScreenState extends State<BooleanTypeColumnScreen> {
             'name': TrinaCell(value: 'Employee $i'),
             'age': TrinaCell(value: 25 + (i % 20)),
             'job': TrinaCell(
-                value: i % 3 == 0
-                    ? 'Developer'
-                    : (i % 3 == 1 ? 'Designer' : 'Manager')),
+              value: i % 3 == 0
+                  ? 'Developer'
+                  : (i % 3 == 1 ? 'Designer' : 'Manager'),
+            ),
             'active': TrinaCell(value: i % 2 == 0),
             'active_allow_empty': TrinaCell(value: i % 2 == 0),
             'salary': TrinaCell(value: 50000 + (i * 1000)),
-            'joinDate':
-                TrinaCell(value: DateTime(2020, (i % 12) + 1, (i % 28) + 1)),
+            'joinDate': TrinaCell(
+              value: DateTime(2020, (i % 12) + 1, (i % 28) + 1),
+            ),
           },
         ),
       );
@@ -104,7 +106,8 @@ class _BooleanTypeColumnScreenState extends State<BooleanTypeColumnScreen> {
       topTitle: 'Boolean Type Column',
       topContents: const [
         Text(
-            'Boolean type column is a column that displays a boolean value as a checkbox. You can customize the checkbox appearance and behavior.'),
+          'Boolean type column is a column that displays a boolean value as a checkbox. You can customize the checkbox appearance and behavior.',
+        ),
         SizedBox(height: 10),
       ],
       topButtons: [
@@ -140,18 +143,21 @@ class _BooleanTypeColumnScreenState extends State<BooleanTypeColumnScreen> {
       child: Row(
         children: [
           ElevatedButton(
-              onPressed: () {
-                print(stateManager.rows.first.cells['active']?.value);
-              },
-              child: const Text('Check Field Value')),
+            onPressed: () {
+              print(stateManager.rows.first.cells['active']?.value);
+            },
+            child: const Text('Check Field Value'),
+          ),
           const SizedBox(width: 10),
           ElevatedButton(
-              onPressed: () {
-                stateManager.changeCellValue(
-                    stateManager.rows.first.cells['active']!,
-                    !stateManager.rows.first.cells['active']?.value);
-              },
-              child: const Text('Change Boolean Value'))
+            onPressed: () {
+              stateManager.changeCellValue(
+                stateManager.rows.first.cells['active']!,
+                !stateManager.rows.first.cells['active']?.value,
+              );
+            },
+            child: const Text('Change Boolean Value'),
+          ),
         ],
       ),
     );

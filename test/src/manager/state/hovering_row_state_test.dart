@@ -17,9 +17,7 @@ void main() {
   MockMethods? listener;
 
   setUp(() {
-    columns = [
-      ...ColumnHelper.textColumn('column', count: 1, width: 150),
-    ];
+    columns = [...ColumnHelper.textColumn('column', count: 1, width: 150)];
 
     rows = RowHelper.count(10, columns);
 
@@ -36,59 +34,50 @@ void main() {
   });
 
   group('setHoveredRowIdx', () {
-    test(
-      'If the rowIdx passed as an argument is the same as'
-      'hoveredRowIdx, then notifyListeners should not be called.',
-      () {
-        // given
-        stateManager.setHoveredRowIdx(1);
-        expect(stateManager.hoveredRowIdx, 1);
+    test('If the rowIdx passed as an argument is the same as'
+        'hoveredRowIdx, then notifyListeners should not be called.', () {
+      // given
+      stateManager.setHoveredRowIdx(1);
+      expect(stateManager.hoveredRowIdx, 1);
 
-        // when
-        clearInteractions(listener);
-        stateManager.setHoveredRowIdx(1);
+      // when
+      clearInteractions(listener);
+      stateManager.setHoveredRowIdx(1);
 
-        // then
-        verifyNever(listener!.noParamReturnVoid());
-      },
-    );
+      // then
+      verifyNever(listener!.noParamReturnVoid());
+    });
 
-    test(
-      'If the rowIdx passed as an argument is different from '
-      'hoveredRowIdx, notifyListeners should be called.',
-      () {
-        // given
-        stateManager.setHoveredRowIdx(1);
-        expect(stateManager.hoveredRowIdx, 1);
+    test('If the rowIdx passed as an argument is different from '
+        'hoveredRowIdx, notifyListeners should be called.', () {
+      // given
+      stateManager.setHoveredRowIdx(1);
+      expect(stateManager.hoveredRowIdx, 1);
 
-        // when
-        clearInteractions(listener);
-        stateManager.setHoveredRowIdx(2);
+      // when
+      clearInteractions(listener);
+      stateManager.setHoveredRowIdx(2);
 
-        // then
-        expect(stateManager.hoveredRowIdx, 2);
-        verify(listener!.noParamReturnVoid()).called(1);
-      },
-    );
+      // then
+      expect(stateManager.hoveredRowIdx, 2);
+      verify(listener!.noParamReturnVoid()).called(1);
+    });
 
-    test(
-      'If the rowIdx passed as an argument is different from '
-      'hoveredRowIdx, but notify is false,'
-      'notifyListeners should not be called.',
-      () {
-        // given
-        stateManager.setHoveredRowIdx(1);
-        expect(stateManager.hoveredRowIdx, 1);
+    test('If the rowIdx passed as an argument is different from '
+        'hoveredRowIdx, but notify is false,'
+        'notifyListeners should not be called.', () {
+      // given
+      stateManager.setHoveredRowIdx(1);
+      expect(stateManager.hoveredRowIdx, 1);
 
-        // when
-        clearInteractions(listener);
-        stateManager.setHoveredRowIdx(2, notify: false);
+      // when
+      clearInteractions(listener);
+      stateManager.setHoveredRowIdx(2, notify: false);
 
-        // then
-        expect(stateManager.hoveredRowIdx, 2);
-        verifyNever(listener!.noParamReturnVoid());
-      },
-    );
+      // then
+      expect(stateManager.hoveredRowIdx, 2);
+      verifyNever(listener!.noParamReturnVoid());
+    });
   });
 
   group('isRowIdxHovered', () {
@@ -99,19 +88,13 @@ void main() {
     });
 
     test('should return true if rowIdx is equal to the given rowIdx.', () {
-      expect(
-        stateManager.isRowIdxHovered(givenHoveredRowIdx),
-        isTrue,
-      );
+      expect(stateManager.isRowIdxHovered(givenHoveredRowIdx), isTrue);
     });
 
     test('should return false if hoveredRowIdx is null.', () {
       stateManager.setHoveredRowIdx(null);
 
-      expect(
-        stateManager.isRowIdxHovered(givenHoveredRowIdx),
-        isFalse,
-      );
+      expect(stateManager.isRowIdxHovered(givenHoveredRowIdx), isFalse);
     });
   });
 }
