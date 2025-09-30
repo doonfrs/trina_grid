@@ -195,7 +195,7 @@ mixin RowState implements ITrinaGridState {
   TrinaRow getNewRow() {
     final cells = <String, TrinaCell>{};
 
-    for (var column in refColumns) {
+    for (var column in refColumns.originalList) {
       cells[column.field] = TrinaCell(value: column.type.defaultValue);
     }
 

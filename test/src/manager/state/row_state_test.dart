@@ -1244,6 +1244,61 @@ void main() {
         expect(newRow.cells['time']!.value, '23:59');
       },
     );
+
+    testWidgets(
+      'Should include hidden columns in the new row',
+      (WidgetTester tester) async {
+        // given
+        List<TrinaColumn> columns = [
+          TrinaColumn(
+            title: 'visible',
+            field: 'visible',
+            type: TrinaColumnType.text(defaultValue: 'visible value'),
+          ),
+          TrinaColumn(
+            title: 'hiddenId',
+            field: 'hiddenId',
+            type: TrinaColumnType.number(defaultValue: 999),
+            hide: true,
+          ),
+          TrinaColumn(
+            title: 'anotherVisible',
+            field: 'anotherVisible',
+            type: TrinaColumnType.text(defaultValue: 'another'),
+          ),
+          TrinaColumn(
+            title: 'hiddenCode',
+            field: 'hiddenCode',
+            type: TrinaColumnType.text(defaultValue: 'CODE123'),
+            hide: true,
+          ),
+        ];
+
+        List<TrinaRow> rows = [];
+
+        TrinaGridStateManager stateManager = createStateManager(
+          columns: columns,
+          rows: rows,
+          gridFocusNode: null,
+          scroll: null,
+        );
+
+        // when
+        TrinaRow newRow = stateManager.getNewRow();
+
+        // then
+        // Verify visible columns are included
+        expect(newRow.cells['visible']!.value, 'visible value');
+        expect(newRow.cells['anotherVisible']!.value, 'another');
+
+        // Verify hidden columns are also included
+        expect(newRow.cells['hiddenId']!.value, 999);
+        expect(newRow.cells['hiddenCode']!.value, 'CODE123');
+
+        // Verify all 4 columns are present
+        expect(newRow.cells.length, 4);
+      },
+    );
   });
 
   group('getNewRows', () {
