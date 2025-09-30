@@ -106,6 +106,19 @@ class TrinaGridConfiguration {
 
   final TrinaGridLocaleText localeText;
 
+  /// Display total number of rows in pagination footer.
+  ///
+  /// Default is true.
+  /// This applies to both [TrinaPagination] and [TrinaLazyPagination].
+  final bool paginationShowTotalRows;
+
+  /// Enable "Go to page" functionality in pagination footer.
+  ///
+  /// Default is true.
+  /// Shows a button to open a dialog for jumping to a specific page.
+  /// This applies to both [TrinaPagination] and [TrinaLazyPagination].
+  final bool paginationEnableGotoPage;
+
   const TrinaGridConfiguration({
     this.enableMoveDownAfterSelecting = false,
     this.enableMoveHorizontalInEditing = false,
@@ -121,6 +134,8 @@ class TrinaGridConfiguration {
     this.columnFilter = const TrinaGridColumnFilterConfig(),
     this.columnSize = const TrinaGridColumnSizeConfig(),
     this.localeText = const TrinaGridLocaleText(),
+    this.paginationShowTotalRows = true,
+    this.paginationEnableGotoPage = true,
   });
 
   const TrinaGridConfiguration.dark({
@@ -138,6 +153,8 @@ class TrinaGridConfiguration {
     this.columnFilter = const TrinaGridColumnFilterConfig(),
     this.columnSize = const TrinaGridColumnSizeConfig(),
     this.localeText = const TrinaGridLocaleText(),
+    this.paginationShowTotalRows = true,
+    this.paginationEnableGotoPage = true,
   });
 
   void updateLocale() {

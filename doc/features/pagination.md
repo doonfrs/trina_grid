@@ -18,6 +18,51 @@ Trina Grid supports three main types of pagination:
 | **Lazy (Server-Side)** | Large datasets, server APIs with pagination support | Minimal memory usage, handles millions of records, server-side sorting and filtering | Requires server-side implementation, page changes require network requests |
 | **Infinity Scroll** | Continuous data streams, social media-like feeds | Seamless user experience, progressive loading | More complex to implement with sorting and filtering |
 
+## Pagination Features
+
+All pagination types in Trina Grid include these built-in features:
+
+### Total Rows Display
+
+Shows the total number of pages and records in the footer. Enabled by default.
+
+**Format:** `/ TotalPages [TotalRecords]`
+
+Example: `/ 50 [5000]` means 50 pages with 5000 total records.
+
+### Go to Page
+
+Allows users to jump directly to a specific page via a search icon button. Enabled by default.
+
+**How to use:**
+1. Click the search icon in the pagination footer
+2. Enter the desired page number
+3. Press Enter or click "Go"
+
+### Configuration
+
+Control these features globally via `TrinaGridConfiguration`:
+
+```dart
+TrinaGrid(
+  configuration: TrinaGridConfiguration(
+    paginationShowTotalRows: true,    // Show total rows (default: true)
+    paginationEnableGotoPage: true,   // Enable goto page (default: true)
+  ),
+  // ...
+)
+```
+
+Or override per pagination widget:
+
+```dart
+TrinaPagination(
+  stateManager,
+  showTotalRows: false,      // Override config setting
+  enableGotoPage: false,     // Override config setting
+)
+```
+
 ## Implementation Overview
 
 ### Client-Side Pagination
@@ -26,9 +71,7 @@ Trina Grid supports three main types of pagination:
 TrinaGrid(
   // Grid configuration
   createFooter: (stateManager) {
-    return TrinaPagination(
-      stateManager: stateManager,
-    );
+    return TrinaPagination(stateManager);
   },
 )
 ```

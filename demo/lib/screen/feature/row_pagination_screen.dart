@@ -19,6 +19,9 @@ class _RowPaginationScreenState extends State<RowPaginationScreen> {
 
   final List<TrinaRow> rows = [];
 
+  bool showTotalRows = true;
+  bool enableGotoPage = true;
+
   @override
   void initState() {
     super.initState();
@@ -35,12 +38,36 @@ class _RowPaginationScreenState extends State<RowPaginationScreen> {
     return TrinaExampleScreen(
       title: 'Row pagination',
       topTitle: 'Row pagination',
-      topContents: const [
-        Text(
+      topContents: [
+        const Text(
           'If you pass the built-in TrinaPagination widget as the return value of the createFooter callback when creating a grid, pagination is processed.',
         ),
-        Text(
+        const Text(
           'Also, referring to TrinaPagination, you can create a UI in the desired shape and set it as the response value of the createFooter callback.',
+        ),
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            Checkbox(
+              value: showTotalRows,
+              onChanged: (value) {
+                setState(() {
+                  showTotalRows = value ?? true;
+                });
+              },
+            ),
+            const Text('Show Total Rows'),
+            const SizedBox(width: 24),
+            Checkbox(
+              value: enableGotoPage,
+              onChanged: (value) {
+                setState(() {
+                  enableGotoPage = value ?? true;
+                });
+              },
+            ),
+            const Text('Enable Go to Page'),
+          ],
         ),
       ],
       topButtons: [
@@ -50,6 +77,7 @@ class _RowPaginationScreenState extends State<RowPaginationScreen> {
         ),
       ],
       body: TrinaGrid(
+        key: ValueKey('$showTotalRows-$enableGotoPage'),
         columns: columns,
         rows: rows,
         onLoaded: (TrinaGridOnLoadedEvent event) {
@@ -61,7 +89,11 @@ class _RowPaginationScreenState extends State<RowPaginationScreen> {
         configuration: const TrinaGridConfiguration(),
         createFooter: (stateManager) {
           stateManager.setPageSize(100, notify: false); // default 40
-          return TrinaPagination(stateManager);
+          return TrinaPagination(
+            stateManager,
+            showTotalRows: showTotalRows,
+            enableGotoPage: enableGotoPage,
+          );
         },
       ),
     );

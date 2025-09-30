@@ -27,6 +27,9 @@ class _RowLazyPaginationScreenState extends State<RowLazyPaginationScreen> {
 
   final List<TrinaRow> fakeFetchedRows = [];
 
+  bool showTotalRows = true;
+  bool enableGotoPage = true;
+
   @override
   void initState() {
     super.initState();
@@ -121,6 +124,7 @@ class _RowLazyPaginationScreenState extends State<RowLazyPaginationScreen> {
       TrinaLazyPaginationResponse(
         totalPage: totalPage,
         rows: fetchedRows.toList(),
+        totalRecords: tempList.length,
       ),
     );
   }
@@ -130,9 +134,33 @@ class _RowLazyPaginationScreenState extends State<RowLazyPaginationScreen> {
     return TrinaExampleScreen(
       title: 'Row lazy pagination',
       topTitle: 'Row lazy pagination',
-      topContents: const [
-        Text(
+      topContents: [
+        const Text(
           'Implement pagination in the form of fetching data from the server.',
+        ),
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            Checkbox(
+              value: showTotalRows,
+              onChanged: (value) {
+                setState(() {
+                  showTotalRows = value ?? true;
+                });
+              },
+            ),
+            const Text('Show Total Rows'),
+            const SizedBox(width: 24),
+            Checkbox(
+              value: enableGotoPage,
+              onChanged: (value) {
+                setState(() {
+                  enableGotoPage = value ?? true;
+                });
+              },
+            ),
+            const Text('Enable Go to Page'),
+          ],
         ),
       ],
       topButtons: [
@@ -142,6 +170,7 @@ class _RowLazyPaginationScreenState extends State<RowLazyPaginationScreen> {
         ),
       ],
       body: TrinaGrid(
+        key: ValueKey('$showTotalRows-$enableGotoPage'),
         columns: columns,
         rows: rows,
         onLoaded: (TrinaGridOnLoadedEvent event) {
@@ -178,6 +207,8 @@ class _RowLazyPaginationScreenState extends State<RowLazyPaginationScreen> {
             pageSizeToMove: null,
             fetch: fetch,
             stateManager: stateManager,
+            showTotalRows: showTotalRows,
+            enableGotoPage: enableGotoPage,
           );
         },
       ),

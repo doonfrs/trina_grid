@@ -147,6 +147,8 @@ class TrinaLazyPagination extends StatefulWidget {
     this.dropdownDecoration,
     this.dropdownItemDecoration,
     this.pageSizeDropdownIcon,
+    this.showTotalRows,
+    this.enableGotoPage,
     required this.fetch,
     required this.stateManager,
     this.onLazyFetchCompleted,
@@ -203,6 +205,17 @@ class TrinaLazyPagination extends StatefulWidget {
   /// Icon for the dropdown (only used when showPageSizeSelector is true)
   final Icon? pageSizeDropdownIcon;
 
+  /// Display total number of rows in the footer.
+  ///
+  /// If null, defaults to configuration value [TrinaGridConfiguration.paginationShowTotalRows].
+  final bool? showTotalRows;
+
+  /// Enable "Go to page" functionality.
+  ///
+  /// If null, defaults to configuration value [TrinaGridConfiguration.paginationEnableGotoPage].
+  /// Shows a button to open a dialog for jumping to a specific page.
+  final bool? enableGotoPage;
+
   /// A callback function that returns the data to be added.
   final TrinaLazyPaginationFetch fetch;
 
@@ -236,6 +249,7 @@ class TrinaLazyPaginationState extends State<TrinaLazyPagination> {
   int _totalPage = 0;
   int? _totalRecords;
   bool _isFetching = false;
+  final _gotoPageController = TextEditingController();
 
   TrinaGridStateManager get stateManager => widget.stateManager;
 
@@ -278,6 +292,7 @@ class TrinaLazyPaginationState extends State<TrinaLazyPagination> {
   @override
   void dispose() {
     _events.cancel();
+    _gotoPageController.dispose();
     super.dispose();
   }
 
@@ -410,6 +425,9 @@ class TrinaLazyPaginationState extends State<TrinaLazyPagination> {
       pageSizeDropdownIcon: widget.pageSizeDropdownIcon,
       totalRecords: totalRecords,
       showPageSizeSelector: widget.showPageSizeSelector,
+      showTotalRows: widget.showTotalRows ?? stateManager.configuration.paginationShowTotalRows,
+      enableGotoPage: widget.enableGotoPage ?? stateManager.configuration.paginationEnableGotoPage,
+      gotoPageController: _gotoPageController,
     );
   }
 }
@@ -434,6 +452,9 @@ class _PageSizeDropdownPaginationWidget extends StatefulWidget {
     this.pageSizeDropdownIcon,
     this.showPageSizeSelector = false,
     this.totalRecords,
+    this.showTotalRows = false,
+    this.enableGotoPage = false,
+    required this.gotoPageController,
   });
 
   final Color iconColor;
@@ -453,6 +474,9 @@ class _PageSizeDropdownPaginationWidget extends StatefulWidget {
   final Icon? pageSizeDropdownIcon;
   final bool showPageSizeSelector;
   final int? totalRecords;
+  final bool showTotalRows;
+  final bool enableGotoPage;
+  final TextEditingController gotoPageController;
 
   @override
   State<_PageSizeDropdownPaginationWidget> createState() =>
@@ -563,6 +587,56 @@ class _PageSizeDropdownPaginationWidgetState
     );
   }
 
+  void _showGotoPageDialog() {
+    widget.gotoPageController.clear();
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Go to Page'),
+        content: TextField(
+          controller: widget.gotoPageController,
+          keyboardType: TextInputType.number,
+          autofocus: true,
+          decoration: InputDecoration(
+            labelText: 'Page number (1-${widget.totalPage})',
+            border: const OutlineInputBorder(),
+          ),
+          onSubmitted: (value) {
+            _handleGotoPage();
+            Navigator.of(context).pop();
+          },
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              _handleGotoPage();
+              Navigator.of(context).pop();
+            },
+            child: const Text('Go'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _handleGotoPage() {
+    final pageNumber = int.tryParse(widget.gotoPageController.text);
+    if (pageNumber != null && pageNumber >= 1 && pageNumber <= widget.totalPage) {
+      _movePage(pageNumber);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please enter a valid page number (1-${widget.totalPage})'),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -584,8 +658,28 @@ class _PageSizeDropdownPaginationWidgetState
                     _firstPageIconButton(),
                     _beforePageIconButton(),
                     ..._pageNumbers.map(_makeNumberButton),
+                    if (widget.showTotalRows && widget.totalRecords != null)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Text(
+                          '/ ${widget.totalPage} [${widget.totalRecords}]',
+                          style: TextStyle(
+                            color: widget.activatedColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
                     _nextPageIconButton(),
                     _lastPageIconButton(),
+                    if (widget.enableGotoPage)
+                      IconButton(
+                        onPressed: _showGotoPageDialog,
+                        icon: const Icon(Icons.search),
+                        color: widget.iconColor,
+                        splashRadius: _iconSplashRadius,
+                        tooltip: 'Go to page',
+                      ),
                   ],
                 ),
                 const Spacer(),

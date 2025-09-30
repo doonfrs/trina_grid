@@ -10,8 +10,13 @@ import '../ui/ui.dart';
 /// Server-side pagination can be implemented
 /// using the [TrinaLazyPagination] or [TrinaInfinityScrollRows] widgets.
 class TrinaPagination extends TrinaStatefulWidget {
-  const TrinaPagination(this.stateManager, {this.pageSizeToMove, super.key})
-    : assert(pageSizeToMove == null || pageSizeToMove > 0);
+  const TrinaPagination(
+    this.stateManager, {
+    this.pageSizeToMove,
+    this.showTotalRows,
+    this.enableGotoPage,
+    super.key,
+  }) : assert(pageSizeToMove == null || pageSizeToMove > 0);
 
   final TrinaGridStateManager stateManager;
 
@@ -22,6 +27,17 @@ class TrinaPagination extends TrinaStatefulWidget {
   ///
   /// If this value is set to 1, the next previous page is moved by one page.
   final int? pageSizeToMove;
+
+  /// Display total number of rows in the footer.
+  ///
+  /// If null, defaults to configuration value [TrinaGridConfiguration.paginationShowTotalRows].
+  final bool? showTotalRows;
+
+  /// Enable "Go to page" functionality.
+  ///
+  /// If null, defaults to configuration value [TrinaGridConfiguration.paginationEnableGotoPage].
+  /// Shows a button to open a dialog for jumping to a specific page.
+  final bool? enableGotoPage;
 
   @override
   TrinaPaginationState createState() => TrinaPaginationState();
@@ -65,10 +81,17 @@ class TrinaPaginationState extends _TrinaPaginationStateWithChange {
   late Color _activatedBorderColor;
 
   final _iconSplashRadius = TrinaGridSettings.rowHeight / 2;
+  final _gotoPageController = TextEditingController();
 
   bool get _isFirstPage => page < 2;
 
   bool get _isLastPage => page > totalPage - 1;
+
+  @override
+  void dispose() {
+    _gotoPageController.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -224,6 +247,56 @@ class TrinaPaginationState extends _TrinaPaginationStateWithChange {
     );
   }
 
+  void _showGotoPageDialog() {
+    _gotoPageController.clear();
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Go to Page'),
+        content: TextField(
+          controller: _gotoPageController,
+          keyboardType: TextInputType.number,
+          autofocus: true,
+          decoration: InputDecoration(
+            labelText: 'Page number (1-$totalPage)',
+            border: const OutlineInputBorder(),
+          ),
+          onSubmitted: (value) {
+            _handleGotoPage();
+            Navigator.of(context).pop();
+          },
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              _handleGotoPage();
+              Navigator.of(context).pop();
+            },
+            child: const Text('Go'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _handleGotoPage() {
+    final pageNumber = int.tryParse(_gotoPageController.text);
+    if (pageNumber != null && pageNumber >= 1 && pageNumber <= totalPage) {
+      _movePage(pageNumber);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please enter a valid page number (1-$totalPage)'),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -264,6 +337,19 @@ class TrinaPaginationState extends _TrinaPaginationStateWithChange {
                         : SystemMouseCursors.click,
                   ),
                   ..._pageNumbers.map(_makeNumberButton),
+                  if (widget.showTotalRows ??
+                      stateManager.configuration.paginationShowTotalRows)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text(
+                        '/ $totalPage [${stateManager.refRows.originalList.length}]',
+                        style: TextStyle(
+                          color: _activatedBorderColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
                   IconButton(
                     onPressed: _isLastPage ? null : _nextPage,
                     icon: const Icon(Icons.navigate_next),
@@ -284,6 +370,15 @@ class TrinaPaginationState extends _TrinaPaginationStateWithChange {
                         ? SystemMouseCursors.basic
                         : SystemMouseCursors.click,
                   ),
+                  if (widget.enableGotoPage ??
+                      stateManager.configuration.paginationEnableGotoPage)
+                    IconButton(
+                      onPressed: _showGotoPageDialog,
+                      icon: const Icon(Icons.search),
+                      color: iconColor,
+                      splashRadius: _iconSplashRadius,
+                      tooltip: 'Go to page',
+                    ),
                 ],
               ),
             ),
