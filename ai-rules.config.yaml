@@ -1,0 +1,25 @@
+# AI Instructions Syncer Configuration Template
+# This file controls which files get synced when you save your AI instructions
+
+# Source file that triggers the sync (default: ai-rules.md)
+# This is the file you edit that will be synced to all target files
+sourceFile: ai-rules.md
+
+# Target files to sync to (supports both files and folder paths)
+# Folders will be created automatically if they don't exist
+# Uncomment or add the files you want to sync to
+
+targetFiles:
+  - CLAUDE.md                             # Claude Code
+  - .cursor/rules/rules.mdc               # Cursor rules file
+  - .github/copilot-instructions.md       # GitHub Copilot repository-wide instructions
+  #- .windsurf/rules/rules.md              # Windsurf rules directory (recommended)
+  - CODEX.md                              # Codex rules file
+
+
+# Enable automatic syncing on save
+autoSync: true
+
+# Default value for alwaysApply in Cursor MDC files (true/false)
+# This will be added to .mdc files if they don't already have YAML frontmatter
+cursorMdcAlwaysApply: true
