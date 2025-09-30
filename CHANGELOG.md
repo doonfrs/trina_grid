@@ -1,11 +1,21 @@
 # Changelog
 
-## [2.1.0] - 2025. 09. 01
+## [2.1.0] - 2025. 09. 30
 
+* Feature: Added comprehensive translations for pagination and time picker. @doonfrs
+* Feature: Added pagination enhancements with global configuration (#228). @doonfrs
 * Feature: Added simplified column filter API methods for programmatic filter management. @doonfrs
+* Feature: Enable column filter visibility in TrinaGrid. @doonfrs
+* Fix: Include hidden columns when creating new rows (#226). @doonfrs
+* Fix: Update sdk, apply standard dart formatting to all file (#222). @doonfrs
+* Fix: Pagination theme updates and height accumulation bug (#221). @doonfrs
+* Fix: Export TrinaDropdownMenuVariant to make it publicly accessible (#220). @doonfrs
 * Fix: Restored mouse scrolling/dragging functionality that was broken since v1.6.11. @doonfrs
 * Breaking Change: Enhanced rowWrapper callback to include TrinaRow data parameter and renamed row widget parameter to rowWidget for clarity. @doonfrs
-* refactor: use polymorphism to build cell widgets (#167) @DMouayad
+* Refactor: Use polymorphism to build cell widgets (#167). @DMouayad
+* Test: Added comprehensive unit tests for column filter functionality (#209). @doonfrs
+* Test: Added comprehensive unit tests for rowWrapper functionality. @doonfrs
+* Docs: Added documentation for checkReadOnly dynamic cell read-only functionality (#223). @doonfrs
 
 
 ## [2.0.1] - 2025. 09. 01
