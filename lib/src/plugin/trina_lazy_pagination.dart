@@ -425,9 +425,14 @@ class TrinaLazyPaginationState extends State<TrinaLazyPagination> {
       pageSizeDropdownIcon: widget.pageSizeDropdownIcon,
       totalRecords: totalRecords,
       showPageSizeSelector: widget.showPageSizeSelector,
-      showTotalRows: widget.showTotalRows ?? stateManager.configuration.paginationShowTotalRows,
-      enableGotoPage: widget.enableGotoPage ?? stateManager.configuration.paginationEnableGotoPage,
+      showTotalRows:
+          widget.showTotalRows ??
+          stateManager.configuration.paginationShowTotalRows,
+      enableGotoPage:
+          widget.enableGotoPage ??
+          stateManager.configuration.paginationEnableGotoPage,
       gotoPageController: _gotoPageController,
+      localeText: stateManager.configuration.localeText,
     );
   }
 }
@@ -455,6 +460,7 @@ class _PageSizeDropdownPaginationWidget extends StatefulWidget {
     this.showTotalRows = false,
     this.enableGotoPage = false,
     required this.gotoPageController,
+    required this.localeText,
   });
 
   final Color iconColor;
@@ -477,6 +483,7 @@ class _PageSizeDropdownPaginationWidget extends StatefulWidget {
   final bool showTotalRows;
   final bool enableGotoPage;
   final TextEditingController gotoPageController;
+  final TrinaGridLocaleText localeText;
 
   @override
   State<_PageSizeDropdownPaginationWidget> createState() =>
@@ -589,16 +596,18 @@ class _PageSizeDropdownPaginationWidgetState
 
   void _showGotoPageDialog() {
     widget.gotoPageController.clear();
+    final localeText = widget.localeText;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Go to Page'),
+        title: Text(localeText.paginationGoToPageTitle),
         content: TextField(
           controller: widget.gotoPageController,
           keyboardType: TextInputType.number,
           autofocus: true,
           decoration: InputDecoration(
-            labelText: 'Page number (1-${widget.totalPage})',
+            labelText:
+                '${localeText.paginationGoToPageLabel} (1-${widget.totalPage})',
             border: const OutlineInputBorder(),
           ),
           onSubmitted: (value) {
@@ -609,14 +618,14 @@ class _PageSizeDropdownPaginationWidgetState
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
+            child: Text(localeText.paginationCancelButton),
           ),
           TextButton(
             onPressed: () {
               _handleGotoPage();
               Navigator.of(context).pop();
             },
-            child: const Text('Go'),
+            child: Text(localeText.paginationGoButton),
           ),
         ],
       ),
@@ -625,12 +634,17 @@ class _PageSizeDropdownPaginationWidgetState
 
   void _handleGotoPage() {
     final pageNumber = int.tryParse(widget.gotoPageController.text);
-    if (pageNumber != null && pageNumber >= 1 && pageNumber <= widget.totalPage) {
+    if (pageNumber != null &&
+        pageNumber >= 1 &&
+        pageNumber <= widget.totalPage) {
       _movePage(pageNumber);
     } else {
+      final localeText = widget.localeText;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Please enter a valid page number (1-${widget.totalPage})'),
+          content: Text(
+            '${localeText.paginationInvalidPageNumberMessage} (1-${widget.totalPage})',
+          ),
           duration: const Duration(seconds: 2),
         ),
       );
@@ -678,7 +692,7 @@ class _PageSizeDropdownPaginationWidgetState
                         icon: const Icon(Icons.search),
                         color: widget.iconColor,
                         splashRadius: _iconSplashRadius,
-                        tooltip: 'Go to page',
+                        tooltip: widget.localeText.paginationGoToPageTooltip,
                       ),
                   ],
                 ),

@@ -63,6 +63,7 @@ class TrinaTimeCellState
       minTime: _column.minTime,
       maxTime: _column.maxTime,
       selectedTimeIsValid: selectedTimeIsValid,
+      localeText: widget.stateManager.configuration.localeText,
       onEnterKeyEvent: (time) {
         if (_column.saveAndClosePopupWithEnter) {
           handleSelected(_getTimeString(time));
@@ -102,6 +103,7 @@ class _PopupContent extends StatelessWidget {
     required this.onOkButtonPressed,
     required this.selectedTimeIsValid,
     required this.onCancelButtonPressed,
+    required this.localeText,
   });
 
   /// {@macro TrinaTimePicker.initialTime}
@@ -127,6 +129,7 @@ class _PopupContent extends StatelessWidget {
   final void Function()? onCancelButtonPressed;
 
   final ValueNotifier<bool> selectedTimeIsValid;
+  final TrinaGridLocaleText localeText;
 
   @override
   Widget build(BuildContext context) {
@@ -146,6 +149,10 @@ class _PopupContent extends StatelessWidget {
                   selectedTimeIsValid.value = isValid,
               minTime: minTime,
               maxTime: maxTime,
+              invalidHourText: localeText.timePickerInvalidHourMessage,
+              invalidMinuteText: localeText.timePickerInvalidMinuteMessage,
+              minTimeErrorText: localeText.timePickerMinTimeMessage,
+              maxTimeErrorText: localeText.timePickerMaxTimeMessage,
             ),
           ),
           Positioned(
@@ -158,7 +165,7 @@ class _PopupContent extends StatelessWidget {
                 children: [
                   TextButton(
                     onPressed: onCancelButtonPressed,
-                    child: const Text('Cancel'),
+                    child: Text(localeText.paginationCancelButton),
                   ),
                   const SizedBox(width: 8),
                   ValueListenableBuilder(
@@ -166,7 +173,7 @@ class _PopupContent extends StatelessWidget {
                     builder: (context, isValid, _) {
                       return TextButton(
                         onPressed: isValid ? onOkButtonPressed : null,
-                        child: const Text('OK'),
+                        child: Text(localeText.multiLineFilterOkButton),
                       );
                     },
                   ),

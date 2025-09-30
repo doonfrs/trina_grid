@@ -249,16 +249,17 @@ class TrinaPaginationState extends _TrinaPaginationStateWithChange {
 
   void _showGotoPageDialog() {
     _gotoPageController.clear();
+    final localeText = stateManager.configuration.localeText;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Go to Page'),
+        title: Text(localeText.paginationGoToPageTitle),
         content: TextField(
           controller: _gotoPageController,
           keyboardType: TextInputType.number,
           autofocus: true,
           decoration: InputDecoration(
-            labelText: 'Page number (1-$totalPage)',
+            labelText: '${localeText.paginationGoToPageLabel} (1-$totalPage)',
             border: const OutlineInputBorder(),
           ),
           onSubmitted: (value) {
@@ -269,14 +270,14 @@ class TrinaPaginationState extends _TrinaPaginationStateWithChange {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
+            child: Text(localeText.paginationCancelButton),
           ),
           TextButton(
             onPressed: () {
               _handleGotoPage();
               Navigator.of(context).pop();
             },
-            child: const Text('Go'),
+            child: Text(localeText.paginationGoButton),
           ),
         ],
       ),
@@ -288,9 +289,12 @@ class TrinaPaginationState extends _TrinaPaginationStateWithChange {
     if (pageNumber != null && pageNumber >= 1 && pageNumber <= totalPage) {
       _movePage(pageNumber);
     } else {
+      final localeText = stateManager.configuration.localeText;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Please enter a valid page number (1-$totalPage)'),
+          content: Text(
+            '${localeText.paginationInvalidPageNumberMessage} (1-$totalPage)',
+          ),
           duration: const Duration(seconds: 2),
         ),
       );
@@ -377,7 +381,10 @@ class TrinaPaginationState extends _TrinaPaginationStateWithChange {
                       icon: const Icon(Icons.search),
                       color: iconColor,
                       splashRadius: _iconSplashRadius,
-                      tooltip: 'Go to page',
+                      tooltip: stateManager
+                          .configuration
+                          .localeText
+                          .paginationGoToPageTooltip,
                     ),
                 ],
               ),

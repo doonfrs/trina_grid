@@ -1450,6 +1450,23 @@ class TrinaGridLocaleText {
   final String multiLineFilterEditTitle;
   final String multiLineFilterOkButton;
 
+  // Pagination
+  final String paginationGoToPageTitle;
+  final String paginationGoToPageLabel;
+  final String paginationCancelButton;
+  final String paginationGoButton;
+  final String paginationInvalidPageNumberMessage;
+  final String paginationGoToPageTooltip;
+
+  // Time picker
+  final String timePickerHourLabel;
+  final String timePickerMinuteLabel;
+  final String timePickerInvalidHourMessage;
+  final String timePickerInvalidMinuteMessage;
+  final String timePickerMinTimeMessage;
+  final String timePickerMaxTimeMessage;
+  final String timePickerInvalidValueMessage;
+
   const TrinaGridLocaleText({
     // Column menu
     this.unfreezeColumn = 'Unfreeze',
@@ -1491,6 +1508,22 @@ class TrinaGridLocaleText {
     this.multiLineFilterHint = 'Filter',
     this.multiLineFilterEditTitle = 'Edit Filter',
     this.multiLineFilterOkButton = 'Ok',
+    // Pagination
+    this.paginationGoToPageTitle = 'Go to Page',
+    this.paginationGoToPageLabel = 'Page number',
+    this.paginationCancelButton = 'Cancel',
+    this.paginationGoButton = 'Go',
+    this.paginationInvalidPageNumberMessage =
+        'Please enter a valid page number',
+    this.paginationGoToPageTooltip = 'Go to page',
+    // Time picker
+    this.timePickerHourLabel = 'Hour',
+    this.timePickerMinuteLabel = 'Minute',
+    this.timePickerInvalidHourMessage = 'Hour must be between 0 and 23',
+    this.timePickerInvalidMinuteMessage = 'Minute must be between 0 and 59',
+    this.timePickerMinTimeMessage = 'Min time is',
+    this.timePickerMaxTimeMessage = 'Max time is',
+    this.timePickerInvalidValueMessage = 'Invalid value',
   });
 
   const TrinaGridLocaleText.french({
@@ -1534,6 +1567,23 @@ class TrinaGridLocaleText {
     this.multiLineFilterHint = 'Filtrer',
     this.multiLineFilterEditTitle = 'Modifier le filtre',
     this.multiLineFilterOkButton = 'Ok',
+    // Pagination
+    this.paginationGoToPageTitle = 'Aller à la page',
+    this.paginationGoToPageLabel = 'Numéro de page',
+    this.paginationCancelButton = 'Annuler',
+    this.paginationGoButton = 'Aller',
+    this.paginationInvalidPageNumberMessage =
+        'Veuillez entrer un numéro de page valide',
+    this.paginationGoToPageTooltip = 'Aller à la page',
+    // Time picker
+    this.timePickerHourLabel = 'Heure',
+    this.timePickerMinuteLabel = 'Minute',
+    this.timePickerInvalidHourMessage = 'L\'heure doit être entre 0 et 23',
+    this.timePickerInvalidMinuteMessage =
+        'Les minutes doivent être entre 0 et 59',
+    this.timePickerMinTimeMessage = 'L\'heure minimale est',
+    this.timePickerMaxTimeMessage = 'L\'heure maximale est',
+    this.timePickerInvalidValueMessage = 'Valeur invalide',
   });
 
   const TrinaGridLocaleText.china({
@@ -1577,6 +1627,21 @@ class TrinaGridLocaleText {
     this.multiLineFilterHint = '筛选',
     this.multiLineFilterEditTitle = '编辑筛选',
     this.multiLineFilterOkButton = '确定',
+    // Pagination
+    this.paginationGoToPageTitle = '转到页面',
+    this.paginationGoToPageLabel = '页码',
+    this.paginationCancelButton = '取消',
+    this.paginationGoButton = '转到',
+    this.paginationInvalidPageNumberMessage = '请输入有效的页码',
+    this.paginationGoToPageTooltip = '转到页面',
+    // Time picker
+    this.timePickerHourLabel = '时',
+    this.timePickerMinuteLabel = '分',
+    this.timePickerInvalidHourMessage = '小时必须在0到23之间',
+    this.timePickerInvalidMinuteMessage = '分钟必须在0到59之间',
+    this.timePickerMinTimeMessage = '最小时间为',
+    this.timePickerMaxTimeMessage = '最大时间为',
+    this.timePickerInvalidValueMessage = '无效值',
   });
 
   const TrinaGridLocaleText.korean({
@@ -1620,6 +1685,21 @@ class TrinaGridLocaleText {
     this.multiLineFilterHint = '필터',
     this.multiLineFilterEditTitle = '필터 편집',
     this.multiLineFilterOkButton = '확인',
+    // Pagination
+    this.paginationGoToPageTitle = '페이지로 이동',
+    this.paginationGoToPageLabel = '페이지 번호',
+    this.paginationCancelButton = '취소',
+    this.paginationGoButton = '이동',
+    this.paginationInvalidPageNumberMessage = '유효한 페이지 번호를 입력하세요',
+    this.paginationGoToPageTooltip = '페이지로 이동',
+    // Time picker
+    this.timePickerHourLabel = '시',
+    this.timePickerMinuteLabel = '분',
+    this.timePickerInvalidHourMessage = '시는 0에서 23 사이여야 합니다',
+    this.timePickerInvalidMinuteMessage = '분은 0에서 59 사이여야 합니다',
+    this.timePickerMinTimeMessage = '최소 시간은',
+    this.timePickerMaxTimeMessage = '최대 시간은',
+    this.timePickerInvalidValueMessage = '잘못된 값',
   });
 
   const TrinaGridLocaleText.russian({
@@ -1663,6 +1743,22 @@ class TrinaGridLocaleText {
     this.multiLineFilterHint = 'Фильтр',
     this.multiLineFilterEditTitle = 'Редактировать фильтр',
     this.multiLineFilterOkButton = 'Ок',
+    // Pagination
+    this.paginationGoToPageTitle = 'Перейти к странице',
+    this.paginationGoToPageLabel = 'Номер страницы',
+    this.paginationCancelButton = 'Отмена',
+    this.paginationGoButton = 'Перейти',
+    this.paginationInvalidPageNumberMessage =
+        'Пожалуйста, введите действительный номер страницы',
+    this.paginationGoToPageTooltip = 'Перейти к странице',
+    // Time picker
+    this.timePickerHourLabel = 'Час',
+    this.timePickerMinuteLabel = 'Минута',
+    this.timePickerInvalidHourMessage = 'Час должен быть от 0 до 23',
+    this.timePickerInvalidMinuteMessage = 'Минута должна быть от 0 до 59',
+    this.timePickerMinTimeMessage = 'Минимальное время',
+    this.timePickerMaxTimeMessage = 'Максимальное время',
+    this.timePickerInvalidValueMessage = 'Неверное значение',
   });
 
   const TrinaGridLocaleText.czech({
@@ -1706,6 +1802,22 @@ class TrinaGridLocaleText {
     this.multiLineFilterHint = 'Filtr',
     this.multiLineFilterEditTitle = 'Upravit filtr',
     this.multiLineFilterOkButton = 'Ok',
+    // Pagination
+    this.paginationGoToPageTitle = 'Přejít na stránku',
+    this.paginationGoToPageLabel = 'Číslo stránky',
+    this.paginationCancelButton = 'Zrušit',
+    this.paginationGoButton = 'Přejít',
+    this.paginationInvalidPageNumberMessage =
+        'Zadejte prosím platné číslo stránky',
+    this.paginationGoToPageTooltip = 'Přejít na stránku',
+    // Time picker
+    this.timePickerHourLabel = 'Hodina',
+    this.timePickerMinuteLabel = 'Minuta',
+    this.timePickerInvalidHourMessage = 'Hodina musí být mezi 0 a 23',
+    this.timePickerInvalidMinuteMessage = 'Minuta musí být mezi 0 a 59',
+    this.timePickerMinTimeMessage = 'Minimální čas je',
+    this.timePickerMaxTimeMessage = 'Maximální čas je',
+    this.timePickerInvalidValueMessage = 'Neplatná hodnota',
   });
 
   const TrinaGridLocaleText.brazilianPortuguese({
@@ -1749,6 +1861,22 @@ class TrinaGridLocaleText {
     this.multiLineFilterHint = 'Filtro',
     this.multiLineFilterEditTitle = 'Editar filtro',
     this.multiLineFilterOkButton = 'Ok',
+    // Pagination
+    this.paginationGoToPageTitle = 'Ir para página',
+    this.paginationGoToPageLabel = 'Número da página',
+    this.paginationCancelButton = 'Cancelar',
+    this.paginationGoButton = 'Ir',
+    this.paginationInvalidPageNumberMessage =
+        'Por favor, insira um número de página válido',
+    this.paginationGoToPageTooltip = 'Ir para página',
+    // Time picker
+    this.timePickerHourLabel = 'Hora',
+    this.timePickerMinuteLabel = 'Minuto',
+    this.timePickerInvalidHourMessage = 'A hora deve estar entre 0 e 23',
+    this.timePickerInvalidMinuteMessage = 'O minuto deve estar entre 0 e 59',
+    this.timePickerMinTimeMessage = 'O horário mínimo é',
+    this.timePickerMaxTimeMessage = 'O horário máximo é',
+    this.timePickerInvalidValueMessage = 'Valor inválido',
   });
 
   const TrinaGridLocaleText.spanish({
@@ -1792,6 +1920,22 @@ class TrinaGridLocaleText {
     this.multiLineFilterHint = 'Filtro',
     this.multiLineFilterEditTitle = 'Editar filtro',
     this.multiLineFilterOkButton = 'Ok',
+    // Pagination
+    this.paginationGoToPageTitle = 'Ir a página',
+    this.paginationGoToPageLabel = 'Número de página',
+    this.paginationCancelButton = 'Cancelar',
+    this.paginationGoButton = 'Ir',
+    this.paginationInvalidPageNumberMessage =
+        'Por favor, ingrese un número de página válido',
+    this.paginationGoToPageTooltip = 'Ir a página',
+    // Time picker
+    this.timePickerHourLabel = 'Hora',
+    this.timePickerMinuteLabel = 'Minuto',
+    this.timePickerInvalidHourMessage = 'La hora debe estar entre 0 y 23',
+    this.timePickerInvalidMinuteMessage = 'El minuto debe estar entre 0 y 59',
+    this.timePickerMinTimeMessage = 'El horario mínimo es',
+    this.timePickerMaxTimeMessage = 'El horario máximo es',
+    this.timePickerInvalidValueMessage = 'Valor inválido',
   });
 
   const TrinaGridLocaleText.persian({
@@ -1835,6 +1979,22 @@ class TrinaGridLocaleText {
     this.multiLineFilterHint = 'فیلتر',
     this.multiLineFilterEditTitle = 'ویرایش فیلتر',
     this.multiLineFilterOkButton = 'تأیید',
+    // Pagination
+    this.paginationGoToPageTitle = 'رفتن به صفحه',
+    this.paginationGoToPageLabel = 'شماره صفحه',
+    this.paginationCancelButton = 'لغو',
+    this.paginationGoButton = 'برو',
+    this.paginationInvalidPageNumberMessage =
+        'لطفاً یک شماره صفحه معتبر وارد کنید',
+    this.paginationGoToPageTooltip = 'رفتن به صفحه',
+    // Time picker
+    this.timePickerHourLabel = 'ساعت',
+    this.timePickerMinuteLabel = 'دقیقه',
+    this.timePickerInvalidHourMessage = 'ساعت باید بین 0 تا 23 باشد',
+    this.timePickerInvalidMinuteMessage = 'دقیقه باید بین 0 تا 59 باشد',
+    this.timePickerMinTimeMessage = 'حداقل زمان',
+    this.timePickerMaxTimeMessage = 'حداکثر زمان',
+    this.timePickerInvalidValueMessage = 'مقدار نامعتبر',
   });
 
   const TrinaGridLocaleText.arabic({
@@ -1878,6 +2038,21 @@ class TrinaGridLocaleText {
     this.multiLineFilterHint = 'تصفية',
     this.multiLineFilterEditTitle = 'تعديل التصفية',
     this.multiLineFilterOkButton = 'موافق',
+    // Pagination
+    this.paginationGoToPageTitle = 'الانتقال إلى الصفحة',
+    this.paginationGoToPageLabel = 'رقم الصفحة',
+    this.paginationCancelButton = 'إلغاء',
+    this.paginationGoButton = 'انتقل',
+    this.paginationInvalidPageNumberMessage = 'الرجاء إدخال رقم صفحة صالح',
+    this.paginationGoToPageTooltip = 'الانتقال إلى الصفحة',
+    // Time picker
+    this.timePickerHourLabel = 'ساعة',
+    this.timePickerMinuteLabel = 'دقيقة',
+    this.timePickerInvalidHourMessage = 'يجب أن تكون الساعة بين 0 و 23',
+    this.timePickerInvalidMinuteMessage = 'يجب أن تكون الدقيقة بين 0 و 59',
+    this.timePickerMinTimeMessage = 'الحد الأدنى للوقت هو',
+    this.timePickerMaxTimeMessage = 'الحد الأقصى للوقت هو',
+    this.timePickerInvalidValueMessage = 'قيمة غير صالحة',
   });
 
   const TrinaGridLocaleText.norway({
@@ -1921,6 +2096,22 @@ class TrinaGridLocaleText {
     this.multiLineFilterHint = 'Filter',
     this.multiLineFilterEditTitle = 'Rediger filter',
     this.multiLineFilterOkButton = 'Ok',
+    // Pagination
+    this.paginationGoToPageTitle = 'Gå til side',
+    this.paginationGoToPageLabel = 'Sidenummer',
+    this.paginationCancelButton = 'Avbryt',
+    this.paginationGoButton = 'Gå',
+    this.paginationInvalidPageNumberMessage =
+        'Vennligst oppgi et gyldig sidenummer',
+    this.paginationGoToPageTooltip = 'Gå til side',
+    // Time picker
+    this.timePickerHourLabel = 'Time',
+    this.timePickerMinuteLabel = 'Minutt',
+    this.timePickerInvalidHourMessage = 'Time må være mellom 0 og 23',
+    this.timePickerInvalidMinuteMessage = 'Minutt må være mellom 0 og 59',
+    this.timePickerMinTimeMessage = 'Min tid er',
+    this.timePickerMaxTimeMessage = 'Maks tid er',
+    this.timePickerInvalidValueMessage = 'Ugyldig verdi',
   });
 
   const TrinaGridLocaleText.german({
@@ -1964,6 +2155,24 @@ class TrinaGridLocaleText {
     this.multiLineFilterHint = 'Filter',
     this.multiLineFilterEditTitle = 'Filter bearbeiten',
     this.multiLineFilterOkButton = 'Ok',
+    // Pagination
+    this.paginationGoToPageTitle = 'Gehe zu Seite',
+    this.paginationGoToPageLabel = 'Seitennummer',
+    this.paginationCancelButton = 'Abbrechen',
+    this.paginationGoButton = 'Gehen',
+    this.paginationInvalidPageNumberMessage =
+        'Bitte geben Sie eine gültige Seitennummer ein',
+    this.paginationGoToPageTooltip = 'Gehe zu Seite',
+    // Time picker
+    this.timePickerHourLabel = 'Stunde',
+    this.timePickerMinuteLabel = 'Minute',
+    this.timePickerInvalidHourMessage =
+        'Die Stunde muss zwischen 0 und 23 liegen',
+    this.timePickerInvalidMinuteMessage =
+        'Die Minute muss zwischen 0 und 59 liegen',
+    this.timePickerMinTimeMessage = 'Die Mindestzeit ist',
+    this.timePickerMaxTimeMessage = 'Die Höchstzeit ist',
+    this.timePickerInvalidValueMessage = 'Ungültiger Wert',
   });
 
   const TrinaGridLocaleText.turkish({
@@ -2007,6 +2216,22 @@ class TrinaGridLocaleText {
     this.multiLineFilterHint = 'Filtre',
     this.multiLineFilterEditTitle = 'Filtreyi Düzenle',
     this.multiLineFilterOkButton = 'Tamam',
+    // Pagination
+    this.paginationGoToPageTitle = 'Sayfaya Git',
+    this.paginationGoToPageLabel = 'Sayfa numarası',
+    this.paginationCancelButton = 'İptal',
+    this.paginationGoButton = 'Git',
+    this.paginationInvalidPageNumberMessage =
+        'Lütfen geçerli bir sayfa numarası girin',
+    this.paginationGoToPageTooltip = 'Sayfaya git',
+    // Time picker
+    this.timePickerHourLabel = 'Saat',
+    this.timePickerMinuteLabel = 'Dakika',
+    this.timePickerInvalidHourMessage = 'Saat 0 ile 23 arasında olmalıdır',
+    this.timePickerInvalidMinuteMessage = 'Dakika 0 ile 59 arasında olmalıdır',
+    this.timePickerMinTimeMessage = 'Minimum zaman',
+    this.timePickerMaxTimeMessage = 'Maksimum zaman',
+    this.timePickerInvalidValueMessage = 'Geçersiz değer',
   });
 
   const TrinaGridLocaleText.japanese({
@@ -2050,6 +2275,21 @@ class TrinaGridLocaleText {
     this.multiLineFilterHint = 'フィルター',
     this.multiLineFilterEditTitle = 'フィルターを編集',
     this.multiLineFilterOkButton = 'OK',
+    // Pagination
+    this.paginationGoToPageTitle = 'ページに移動',
+    this.paginationGoToPageLabel = 'ページ番号',
+    this.paginationCancelButton = 'キャンセル',
+    this.paginationGoButton = '移動',
+    this.paginationInvalidPageNumberMessage = '有効なページ番号を入力してください',
+    this.paginationGoToPageTooltip = 'ページに移動',
+    // Time picker
+    this.timePickerHourLabel = '時間',
+    this.timePickerMinuteLabel = '分',
+    this.timePickerInvalidHourMessage = '時間は0から23の間でなければなりません',
+    this.timePickerInvalidMinuteMessage = '分は0から59の間でなければなりません',
+    this.timePickerMinTimeMessage = '最小時刻は',
+    this.timePickerMaxTimeMessage = '最大時刻は',
+    this.timePickerInvalidValueMessage = '無効な値',
   });
 
   @override
