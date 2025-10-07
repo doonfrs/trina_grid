@@ -186,6 +186,44 @@ class _TrinaHorizontalScrollBarState extends State<TrinaHorizontalScrollBar>
         });
       },
       child: GestureDetector(
+        onTapUp: (details) {
+          // Handle clicks on the track to jump to that position
+          final scrollController =
+              widget.stateManager.scroll.bodyRowsHorizontal;
+          if (scrollController == null) return;
+
+          final scrollExtent = widget.horizontalScrollExtentNotifier.value;
+          final viewportExtent = widget.horizontalViewportExtentNotifier.value;
+
+          if (scrollExtent <= 0) return;
+
+          final double thumbWidth =
+              (viewportExtent / (viewportExtent + scrollExtent)) * widget.width;
+
+          // Get the local X position of the tap
+          final tapX = details.localPosition.dx;
+
+          // For RTL, we need to adjust the tap position
+          final adjustedTapX = widget.stateManager.isRTL
+              ? widget.width - tapX
+              : tapX;
+
+          // Calculate the scroll position where the center of the thumb should be at tapX
+          // thumbPosition = (scrollOffset / scrollExtent) * (widget.width - thumbWidth)
+          // Solving for scrollOffset when thumbPosition + thumbWidth/2 = tapX:
+          final targetThumbPosition = adjustedTapX - (thumbWidth / 2);
+          final newScrollOffset =
+              (targetThumbPosition / (widget.width - thumbWidth)) *
+              scrollExtent;
+
+          // Clamp to valid range
+          final clampedOffset = newScrollOffset.clamp(
+            0.0,
+            scrollController.position.maxScrollExtent,
+          );
+
+          scrollController.jumpTo(clampedOffset);
+        },
         onPanDown: (_) {
           setState(() {
             _isDragging = true;
