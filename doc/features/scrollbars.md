@@ -74,6 +74,7 @@ The `TrinaGridScrollbarConfig` class provides the following key options for scro
 | `thumbHoverColor` | `Color?` | `null` | Color of the scrollbar thumb when hovered (defaults to a more opaque version of thumbColor if null). |
 | `trackHoverColor` | `Color?` | `null` | Color of the scrollbar track when hovered (defaults to a more opaque version of trackColor if null). |
 | `isDraggable` | `bool` | `true` | Whether scrollbar thumbs can be dragged with mouse or touch to scroll content. |
+| `smoothScrolling` | `bool` | `true` | Whether to use smooth scrolling animation for mouse wheel input. When enabled, scrolling animates smoothly instead of jumping instantly. |
 
 ## Examples
 
@@ -181,6 +182,42 @@ TrinaGrid(
 )
 ```
 
+### Smooth Scrolling
+
+**Enabled by Default** - TrinaGrid uses smooth scrolling for mouse wheel input by default, providing a polished user experience similar to macOS/iOS:
+
+```dart
+TrinaGrid(
+  columns: columns,
+  rows: rows,
+  configuration: TrinaGridConfiguration(
+    scrollbar: TrinaGridScrollbarConfig(
+      smoothScrolling: true, // Default, can be omitted
+    ),
+  ),
+)
+```
+
+To disable smooth scrolling and use instant jumping (legacy behavior):
+
+```dart
+TrinaGrid(
+  columns: columns,
+  rows: rows,
+  configuration: TrinaGridConfiguration(
+    scrollbar: TrinaGridScrollbarConfig(
+      smoothScrolling: false, // Instant scroll jumps
+    ),
+  ),
+)
+```
+
+**How it works:**
+- Mouse wheel scrolling animates smoothly to the target position
+- Uses easing animation for natural deceleration
+- Cancels automatically when you start dragging the scrollbar
+- Responsive to direction changes while scrolling
+
 ## Best Practices
 
 1. **Desktop Applications**: For desktop applications, consider setting `isAlwaysShown: true` to make scrollbars always visible, improving usability.
@@ -195,6 +232,8 @@ TrinaGrid(
    - `isAlwaysShown: true` makes scrollbars permanently visible (never fades out)
    - `isAlwaysShown: false` makes scrollbars appear during scrolling and fade out after about 3 seconds
    - `thumbVisible: false` completely hides scrollbars regardless of the `isAlwaysShown` setting
+
+6. **Smooth Scrolling**: The smooth scrolling feature is enabled by default and provides a better user experience for mouse wheel users. Consider disabling it only if you have specific performance concerns or prefer instant scrolling behavior.
 
 ## Limitations
 

@@ -1049,6 +1049,7 @@ class TrinaGridScrollbarConfig {
       PointerDeviceKind.unknown,
     },
     this.isDraggable = true,
+    this.smoothScrolling = true,
 
     // Advanced scrollbar appearance settings
     this.thumbVisible = true,
@@ -1079,6 +1080,15 @@ class TrinaGridScrollbarConfig {
 
   /// Whether scrollbar thumbs can be dragged with pointer devices
   final bool isDraggable;
+
+  /// Whether to use smooth scrolling animation for mouse wheel input
+  ///
+  /// When enabled, mouse wheel scrolling will animate smoothly to the target
+  /// position instead of jumping instantly. This provides a more polished
+  /// user experience similar to macOS/iOS scrolling behavior.
+  ///
+  /// Defaults to true.
+  final bool smoothScrolling;
 
   /// Whether the scrollbar thumb is visible
   final bool thumbVisible;
@@ -1142,6 +1152,7 @@ class TrinaGridScrollbarConfig {
             isAlwaysShown == other.isAlwaysShown &&
             dragDevices == other.dragDevices &&
             isDraggable == other.isDraggable &&
+            smoothScrolling == other.smoothScrolling &&
             thumbVisible == other.thumbVisible &&
             showTrack == other.showTrack &&
             showHorizontal == other.showHorizontal &&
@@ -1161,6 +1172,7 @@ class TrinaGridScrollbarConfig {
     isAlwaysShown,
     dragDevices,
     isDraggable,
+    smoothScrolling,
     thumbVisible,
     showTrack,
     showHorizontal,

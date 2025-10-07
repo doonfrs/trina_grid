@@ -4,6 +4,8 @@ import 'package:trina_grid/src/widgets/trina_horizontal_scroll_bar.dart';
 import 'package:trina_grid/src/widgets/trina_vertical_scroll_bar.dart';
 import 'package:trina_grid/trina_grid.dart';
 
+import 'scrolls/trina_single_child_smooth_scroll_view.dart';
+import 'scrolls/trina_smooth_list_view.dart';
 import 'ui.dart';
 
 class TrinaBodyRows extends TrinaStatefulWidget {
@@ -209,63 +211,73 @@ class TrinaBodyRowsState extends TrinaStateWithChange<TrinaBodyRows> {
               children: [
                 // Main grid content
                 Expanded(
-                  child: SingleChildScrollView(
-                    controller: _horizontalScroll,
-                    scrollDirection: Axis.horizontal,
-                    physics: const ClampingScrollPhysics(),
-                    child: CustomSingleChildLayout(
-                      delegate: ListResizeDelegate(stateManager, _columns),
-                      child: Column(
-                        children: [
-                          // Frozen top rows
-                          if (_frozenTopRows.isNotEmpty)
-                            Column(
-                              children: _frozenTopRows
-                                  .asMap()
-                                  .entries
-                                  .map(
-                                    (e) => _buildRow(context, e.value, e.key),
-                                  )
-                                  .toList(),
-                            ),
-                          // Scrollable rows
-                          Expanded(
-                            child: ListView.builder(
-                              cacheExtent: stateManager.rowsCacheExtent,
-                              controller: _verticalScroll,
-                              scrollDirection: Axis.vertical,
-                              physics: const ClampingScrollPhysics(),
-                              itemCount: _scrollableRows.length,
-                              // Remove fixed itemExtent for variable heights
-                              addRepaintBoundaries: false,
-                              itemBuilder: (ctx, i) => _buildRow(
-                                context,
-                                _scrollableRows[i],
-                                i + _frozenTopRows.length,
-                              ),
-                            ),
-                          ),
-                          // Frozen bottom rows
-                          if (_frozenBottomRows.isNotEmpty)
-                            Column(
-                              children: _frozenBottomRows
-                                  .asMap()
-                                  .entries
-                                  .map(
-                                    (e) => _buildRow(
-                                      context,
-                                      e.value,
-                                      e.key +
-                                          _frozenTopRows.length +
-                                          _scrollableRows.length,
+                  child:
+                      (scrollConfig.smoothScrolling
+                      ? TrinaSingleChildSmoothScrollView.new
+                      : SingleChildScrollView.new)(
+                        controller: _horizontalScroll,
+                        scrollDirection: Axis.horizontal,
+                        physics: const ClampingScrollPhysics(),
+                        child: CustomSingleChildLayout(
+                          delegate: ListResizeDelegate(stateManager, _columns),
+                          child: Column(
+                            children: [
+                              // Frozen top rows
+                              if (_frozenTopRows.isNotEmpty)
+                                Column(
+                                  children: _frozenTopRows
+                                      .asMap()
+                                      .entries
+                                      .map(
+                                        (e) =>
+                                            _buildRow(context, e.value, e.key),
+                                      )
+                                      .toList(),
+                                ),
+                              // Scrollable rows
+                              Expanded(
+                                child:
+                                    (scrollConfig.smoothScrolling
+                                    ? TrinaSmoothListView.builder
+                                    : ListView.builder)(
+                                      cacheExtent: stateManager.rowsCacheExtent,
+                                      controller: _verticalScroll,
+                                      scrollDirection: Axis.vertical,
+                                      physics: const ClampingScrollPhysics(),
+                                      itemCount: _scrollableRows.length,
+                                      itemExtent:
+                                          stateManager.rowWrapper != null
+                                          ? null
+                                          : stateManager.rowTotalHeight,
+                                      addRepaintBoundaries: false,
+                                      itemBuilder: (ctx, i) => _buildRow(
+                                        context,
+                                        _scrollableRows[i],
+                                        i + _frozenTopRows.length,
+                                      ),
                                     ),
-                                  )
-                                  .toList(),
-                            ),
-                        ],
+                              ),
+                              // Frozen bottom rows
+                              if (_frozenBottomRows.isNotEmpty)
+                                Column(
+                                  children: _frozenBottomRows
+                                      .asMap()
+                                      .entries
+                                      .map(
+                                        (e) => _buildRow(
+                                          context,
+                                          e.value,
+                                          e.key +
+                                              _frozenTopRows.length +
+                                              _scrollableRows.length,
+                                        ),
+                                      )
+                                      .toList(),
+                                ),
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
                 ),
 
                 // Fake vertical scrollbar

@@ -222,7 +222,12 @@ class _TrinaHorizontalScrollBarState extends State<TrinaHorizontalScrollBar>
             scrollController.position.maxScrollExtent,
           );
 
-          scrollController.jumpTo(clampedOffset);
+          // Use animateTo for smooth scrolling instead of jumpTo
+          scrollController.animateTo(
+            clampedOffset,
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeOutCubic,
+          );
         },
         onPanDown: (_) {
           setState(() {
@@ -356,7 +361,8 @@ class _TrinaHorizontalScrollBarState extends State<TrinaHorizontalScrollBar>
                                                 .stateManager
                                                 .scroll
                                                 .bodyRowsHorizontal;
-                                            if (scrollController != null) {
+                                            if (scrollController != null &&
+                                                scrollController.hasClients) {
                                               // Apply the scroll by adding delta to current position
                                               final currentOffset =
                                                   scrollController.offset;
@@ -369,7 +375,7 @@ class _TrinaHorizontalScrollBarState extends State<TrinaHorizontalScrollBar>
                                                             .maxScrollExtent,
                                                       );
 
-                                              // Jump to the new position
+                                              // Use jumpTo for immediate response during drag
                                               scrollController.jumpTo(
                                                 newOffset,
                                               );

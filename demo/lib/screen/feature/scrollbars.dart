@@ -17,7 +17,7 @@ class ScrollbarsScreen extends StatefulWidget {
 class _ScrollbarsScreenState extends State<ScrollbarsScreen> {
   final List<TrinaColumn> columns = [];
   final List<TrinaRow> rows = [];
-  late final TrinaGridStateManager stateManager;
+  TrinaGridStateManager? stateManager;
 
   // Scrollbar configuration
   bool isAlwaysShown = true;
@@ -26,6 +26,7 @@ class _ScrollbarsScreenState extends State<ScrollbarsScreen> {
   bool showHorizontal = true;
   bool showVertical = true;
   bool isDraggable = true;
+  bool smoothScrolling = true;
   double thickness = 12;
   double minThumbLength = 40.0;
   double radius = 6.0; // Default radius (half of thickness)
@@ -44,6 +45,8 @@ class _ScrollbarsScreenState extends State<ScrollbarsScreen> {
   }
 
   void _updateScrollbarConfig() {
+    if (stateManager == null) return;
+
     final config = TrinaGridConfiguration(
       columnSize: const TrinaGridColumnSizeConfig(
         autoSizeMode: TrinaAutoSizeMode.none,
@@ -62,11 +65,12 @@ class _ScrollbarsScreenState extends State<ScrollbarsScreen> {
         trackHoverColor: trackHoverColor,
         radius: radius,
         isDraggable: isDraggable,
+        smoothScrolling: smoothScrolling,
       ),
     );
 
-    stateManager.setConfiguration(config);
-    stateManager.notifyListeners();
+    stateManager!.setConfiguration(config);
+    stateManager!.notifyListeners();
   }
 
   @override
@@ -90,6 +94,7 @@ class _ScrollbarsScreenState extends State<ScrollbarsScreen> {
           _buildControls(),
           Expanded(
             child: TrinaGrid(
+              key: ValueKey('grid_$smoothScrolling'),
               columns: columns,
               rows: rows,
               onLoaded: (TrinaGridOnLoadedEvent event) {
@@ -113,6 +118,7 @@ class _ScrollbarsScreenState extends State<ScrollbarsScreen> {
                   isDraggable: isDraggable,
                   thumbHoverColor: thumbHoverColor,
                   trackHoverColor: trackHoverColor,
+                  smoothScrolling: smoothScrolling,
                 ),
               ),
             ),
@@ -197,6 +203,28 @@ class _ScrollbarsScreenState extends State<ScrollbarsScreen> {
                         _updateScrollbarConfig();
                       });
                     }),
+                  ],
+                ),
+                const SizedBox(height: 8),
+
+                // Smooth scrolling toggle
+                Row(
+                  children: [
+                    _buildSwitchControl('Smooth Scrolling', smoothScrolling, (
+                      value,
+                    ) {
+                      setState(() {
+                        smoothScrolling = value;
+
+                        _updateScrollbarConfig();
+                      });
+                    }),
+                    const SizedBox(width: 8),
+                    const Tooltip(
+                      message:
+                          'Enable smooth mouse wheel scrolling animation.\nWhen enabled, scrolling animates smoothly instead of jumping instantly.',
+                      child: Icon(Icons.info_outline, size: 18),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 12),
