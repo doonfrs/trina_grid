@@ -222,6 +222,36 @@ class TrinaGridOnColumnsMovedEvent {
   }
 }
 
+/// Event triggered before the active cell changes.
+/// Return true to allow the change, false to cancel it.
+class TrinaGridOnBeforeActiveCellChangeEvent {
+  /// The current (old) cell that is active
+  final TrinaCell? oldCell;
+
+  /// The current (old) row index
+  final int? oldRowIdx;
+
+  /// The new cell that will become active
+  final TrinaCell newCell;
+
+  /// The new row index
+  final int newRowIdx;
+
+  const TrinaGridOnBeforeActiveCellChangeEvent({
+    required this.oldCell,
+    required this.oldRowIdx,
+    required this.newCell,
+    required this.newRowIdx,
+  });
+
+  @override
+  String toString() {
+    String out = '[TrinaGridOnBeforeActiveCellChangeEvent] ';
+    out += 'OldRowIdx: $oldRowIdx, NewRowIdx: $newRowIdx';
+    return out;
+  }
+}
+
 /// When the active cell changes this callback is called
 class TrinaGridOnActiveCellChangedEvent {
   final int idx;

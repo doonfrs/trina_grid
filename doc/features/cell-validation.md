@@ -309,6 +309,7 @@ TrinaColumn(
 
 ## Related Features
 
+- [Cell Navigation Validation](cell-navigation-validation.md) - For preventing navigation away from invalid cells/rows
 - [Column Types](column-types.md) - For details on built-in column types and their validation
 - [Cell Editing](cell-editing.md) - For more details on cell editing behavior
 - [Cell Value Change Handling](cell_value_change_handling.md) - For handling cell value changes

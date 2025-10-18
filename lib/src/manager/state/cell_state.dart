@@ -193,6 +193,23 @@ mixin CellState implements ITrinaGridState {
       return;
     }
 
+    // Call onBeforeActiveCellChange callback before changing state
+    if (onBeforeActiveCellChange != null) {
+      final shouldProceed = onBeforeActiveCellChange!(
+        TrinaGridOnBeforeActiveCellChangeEvent(
+          oldCell: currentCell,
+          oldRowIdx: currentCellPosition?.rowIdx,
+          newCell: cell,
+          newRowIdx: rowIdx,
+        ),
+      );
+
+      // If callback returns false, cancel the cell change
+      if (!shouldProceed) {
+        return;
+      }
+    }
+
     _state._currentCell = cell;
 
     _state._currentCellPosition = TrinaGridCellPosition(

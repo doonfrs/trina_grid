@@ -30,6 +30,8 @@ abstract class IGridState {
 
   TrinaOnRowsMovedEventCallback? get onRowsMoved;
 
+  TrinaOnBeforeActiveCellChangeEventCallback? get onBeforeActiveCellChange;
+
   TrinaOnActiveCellChangedEventCallback? get onActiveCellChanged;
 
   TrinaOnColumnsMovedEventCallback? get onColumnsMoved;

@@ -61,6 +61,9 @@ typedef TrinaCellColorCallback =
 typedef TrinaSelectDateCallBack =
     Future<DateTime?> Function(TrinaCell dateCell, TrinaColumn column);
 
+typedef TrinaOnBeforeActiveCellChangeEventCallback =
+    bool Function(TrinaGridOnBeforeActiveCellChangeEvent event);
+
 typedef TrinaOnActiveCellChangedEventCallback =
     void Function(TrinaGridOnActiveCellChangedEvent event);
 
@@ -105,6 +108,7 @@ class TrinaGrid extends TrinaStatefulWidget {
     this.onRowEnter,
     this.onRowExit,
     this.onRowsMoved,
+    this.onBeforeActiveCellChange,
     this.onActiveCellChanged,
     this.onColumnsMoved,
     this.createHeader,
@@ -261,6 +265,27 @@ class TrinaGrid extends TrinaStatefulWidget {
   /// if [TrinaColumn.enableRowDrag] is enabled.
   /// {@endtemplate}
   final TrinaOnRowsMovedEventCallback? onRowsMoved;
+
+  /// {@template trina_grid_property_onBeforeActiveCellChange}
+  /// Callback for receiving events before the active cell changes.
+  /// Return true to allow the change, false to cancel it.
+  /// This allows implementing validation logic that can prevent navigation.
+  ///
+  /// Example:
+  /// ```dart
+  /// onBeforeActiveCellChange: (event) {
+  ///   // Validate current row before allowing navigation
+  ///   if (event.oldRowIdx != event.newRowIdx) {
+  ///     final isValid = validateRow(event.oldRowIdx);
+  ///     if (!isValid) {
+  ///       return false; // Cancel navigation
+  ///     }
+  ///   }
+  ///   return true; // Allow navigation
+  /// },
+  /// ```
+  /// {@endtemplate}
+  final TrinaOnBeforeActiveCellChangeEventCallback? onBeforeActiveCellChange;
 
   /// {@template trina_grid_property_onActiveCellChanged}
   /// Callback for receiving events
@@ -626,6 +651,7 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
       onRowEnter: widget.onRowEnter,
       onRowExit: widget.onRowExit,
       onRowsMoved: widget.onRowsMoved,
+      onBeforeActiveCellChange: widget.onBeforeActiveCellChange,
       onActiveCellChanged: widget.onActiveCellChanged,
       onColumnsMoved: widget.onColumnsMoved,
       rowColorCallback: widget.rowColorCallback,
