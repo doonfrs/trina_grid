@@ -20,11 +20,7 @@ void main() {
             return Text('DEPT: ${context.cell.value}');
           },
         ),
-        TrinaColumn(
-          title: 'Name',
-          field: 'name',
-          type: TrinaColumnType.text(),
-        ),
+        TrinaColumn(title: 'Name', field: 'name', type: TrinaColumnType.text()),
       ];
 
       // Sample data rows
@@ -50,7 +46,10 @@ void main() {
 
       // Group header cell should have the raw value stored
       final groupHeaderCell = engineeringGroup.cells['department'];
-      expect(groupHeaderCell?.value, 'Engineering'); // Raw value is correctly stored
+      expect(
+        groupHeaderCell?.value,
+        'Engineering',
+      ); // Raw value is correctly stored
 
       // The cell should be properly linked to its column with renderer
       expect(groupHeaderCell?.column, columns[0]);

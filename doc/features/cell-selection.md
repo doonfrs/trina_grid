@@ -304,6 +304,148 @@ class _CellSelectionExampleState extends State<CellSelectionExample> {
 }
 ```
 
+## Excel-like Selection Features
+
+TrinaGrid supports Excel-like selection behaviors for enhanced productivity.
+
+### Click-and-Drag Selection
+
+Enable drag selection with a configurable hold duration:
+
+```dart
+TrinaGrid(
+  columns: columns,
+  rows: rows,
+  configuration: TrinaGridConfiguration(
+    selectingMode: TrinaGridSelectingMode.cell,
+    enableDragSelection: true,  // Enable drag-to-select
+    dragSelectionDelayDuration: const Duration(milliseconds: 100),  // Optional: customize delay
+  ),
+)
+```
+
+With this enabled:
+- Press and hold for a brief moment, then drag to select a range
+- Configurable delay duration (default: 200ms, recommended: 100ms for responsive feel)
+- Works like Excel's selection behavior
+- Auto-scrolls when dragging near edges
+
+**Important: Scroll Conflict**
+
+Drag selection can conflict with drag-to-scroll gestures. To avoid this:
+
+1. **Option 1**: Keep the default delay (200ms) - provides clear distinction between scrolling and selecting
+2. **Option 2**: Use a faster delay (100ms) and disable drag-to-scroll:
+
+```dart
+TrinaGrid(
+  configuration: TrinaGridConfiguration(
+    selectingMode: TrinaGridSelectingMode.cell,
+    enableDragSelection: true,
+    dragSelectionDelayDuration: const Duration(milliseconds: 100),
+    scrollbar: const TrinaGridScrollbarConfig(
+      // Disable mouse drag for scrolling to avoid conflicts
+      dragDevices: {},  // Empty set disables drag-to-scroll
+    ),
+  ),
+)
+```
+
+Recommended delays:
+- **100ms**: Very responsive, but may conflict with fast scrolling
+- **200ms**: Balanced (default) - good distinction from scroll gestures
+- **300ms**: Clear separation, less chance of accidental activation
+
+### Ctrl+Click Multi-Select
+
+Enable selecting individual cells with Ctrl+Click:
+
+```dart
+TrinaGrid(
+  columns: columns,
+  rows: rows,
+  configuration: TrinaGridConfiguration(
+    selectingMode: TrinaGridSelectingMode.cell,
+    enableCtrlClickMultiSelect: true,  // Enable Ctrl+Click
+  ),
+)
+```
+
+With this enabled:
+- Ctrl+Click adds/removes individual cells
+- Build non-contiguous selections
+- Click without Ctrl clears individual selections
+- Shift+Click still works for range selection
+- All individually selected cells are included in `currentSelectingPositionList`
+
+### Combined Excel-like Behavior
+
+For the full Excel experience, enable both features:
+
+```dart
+TrinaGrid(
+  columns: columns,
+  rows: rows,
+  configuration: TrinaGridConfiguration(
+    selectingMode: TrinaGridSelectingMode.cell,
+    enableDragSelection: true,
+    enableCtrlClickMultiSelect: true,
+  ),
+)
+```
+
+### Keyboard Shortcuts
+
+The following keyboard combinations work with selection:
+
+| Shortcut | Behavior |
+|----------|----------|
+| Long Press + Drag | Select range (when enableDragSelection is true) |
+| Ctrl + Click | Toggle individual cell (when enableCtrlClickMultiSelect is true) |
+| Shift + Click | Extend selection to clicked cell |
+| Ctrl + A | Select all cells |
+| Click (no modifier) | Clear individual selections and select single cell |
+
+## Configuration Reference
+
+### Selection Configuration Options
+
+```dart
+TrinaGridConfiguration(
+  // Basic selection mode
+  selectingMode: TrinaGridSelectingMode.cell,
+
+  // Excel-like features (default: false)
+  enableDragSelection: true,
+  enableCtrlClickMultiSelect: true,
+
+  // Drag selection delay (default: 200ms)
+  dragSelectionDelayDuration: const Duration(milliseconds: 100),
+)
+```
+
+**enableDragSelection**:
+- Type: `bool`
+- Default: `false`
+- When `true`: Long press (using `dragSelectionDelayDuration`) and drag to select a range of cells
+- When `false`: Traditional behavior - long press selects starting cell, then drag extends selection
+- Only works when `selectingMode` is `TrinaGridSelectingMode.cell`
+
+**enableCtrlClickMultiSelect**:
+- Type: `bool`
+- Default: `false`
+- When `true`: Ctrl+Click toggles individual cells in/out of selection
+- When `false`: Ctrl+Click has no special behavior in cell mode
+- Only works when `selectingMode` is `TrinaGridSelectingMode.cell`
+
+**dragSelectionDelayDuration**:
+- Type: `Duration`
+- Default: `Duration(milliseconds: 200)`
+- The time to hold before drag selection activates
+- Lower values (100ms) = more responsive but may conflict with scrolling
+- Higher values (300ms) = clearer distinction from scroll gestures
+- Only applies when `enableDragSelection` is `true`
+
 ## Best Practices
 
 - Use the appropriate selection mode for your use case
@@ -312,3 +454,4 @@ class _CellSelectionExampleState extends State<CellSelectionExample> {
 - Handle selection events to update UI or perform actions
 - Use programmatic selection for guided user experiences
 - Combine with other features like copy/paste for enhanced functionality
+- Enable Excel-like features for desktop applications to improve user experience

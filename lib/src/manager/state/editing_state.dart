@@ -130,7 +130,19 @@ mixin EditingState implements ITrinaGridState {
 
     _state._isEditing = flag;
 
-    clearCurrentSelecting(notify: false);
+    // When Ctrl+Click multi-select is enabled, preserve individual selections
+    if (configuration.enableCtrlClickMultiSelect &&
+        selectingMode == TrinaGridSelectingMode.cell) {
+      debugPrint(
+        '[Selection] setEditing - Ctrl+Click mode enabled, clearing only range selections',
+      );
+      clearRangeSelections(notify: false);
+    } else {
+      debugPrint(
+        '[Selection] setEditing - Standard mode, clearing all selections',
+      );
+      clearCurrentSelecting(notify: false);
+    }
 
     notifyListeners(notify, setEditing.hashCode);
   }

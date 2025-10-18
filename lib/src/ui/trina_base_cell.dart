@@ -1,4 +1,5 @@
 import 'ui.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:trina_grid/trina_grid.dart';
 import 'package:trina_grid/src/helper/platform_helper.dart';
@@ -115,34 +116,246 @@ class TrinaBaseCell extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
+    final cellContainer = _CellContainer(
+      cell: cell,
+      rowIdx: rowIdx,
+      row: row,
+      column: column,
+      cellPadding:
+          cell.padding ??
+          column.cellPadding ??
+          stateManager.configuration.style.defaultCellPadding,
+      stateManager: stateManager,
+      child: _Cell(
+        stateManager: stateManager,
+        rowIdx: rowIdx,
+        column: column,
+        row: row,
+        cell: cell,
+      ),
+    );
+
+    // When drag selection is enabled, use a wrapper that handles both
+    // tap and drag gestures using pan gesture recognizer
+    if (stateManager.configuration.enableDragSelection &&
+        stateManager.selectingMode == TrinaGridSelectingMode.cell) {
+      return _DragSelectableCell(
+        cell: cell,
+        column: column,
+        rowIdx: rowIdx,
+        row: row,
+        stateManager: stateManager,
+        onTapUp: _handleOnTapUp,
+        onLongPressStart: _handleOnLongPressStart,
+        onLongPressMoveUpdate: _handleOnLongPressMoveUpdate,
+        onLongPressEnd: _handleOnLongPressEnd,
+        onDoubleTap: _onDoubleTapOrNull(),
+        onSecondaryTapDown: _onSecondaryTapOrNull(),
+        addGestureEvent: _addGestureEvent,
+        child: cellContainer,
+      );
+    }
+
+    // Default behavior: use standard GestureDetector
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
-      // Essential gestures.
       onTapUp: _handleOnTapUp,
       onLongPressStart: _handleOnLongPressStart,
       onLongPressMoveUpdate: _handleOnLongPressMoveUpdate,
       onLongPressEnd: _handleOnLongPressEnd,
-      // Optional gestures.
       onDoubleTap: _onDoubleTapOrNull(),
       onSecondaryTapDown: _onSecondaryTapOrNull(),
-      child: _CellContainer(
-        cell: cell,
-        rowIdx: rowIdx,
-        row: row,
-        column: column,
-        cellPadding:
-            cell.padding ??
-            column.cellPadding ??
-            stateManager.configuration.style.defaultCellPadding,
-        stateManager: stateManager,
-        child: _Cell(
-          stateManager: stateManager,
-          rowIdx: rowIdx,
-          column: column,
-          row: row,
-          cell: cell,
-        ),
-      ),
+      child: cellContainer,
+    );
+  }
+}
+
+/// A wrapper widget that handles drag-to-select functionality using pan gestures.
+/// This widget uses a RawGestureDetector with custom gesture recognizers to compete
+/// with scroll gestures in the gesture arena, enabling drag selection to work
+/// alongside scrolling.
+class _DragSelectableCell extends StatefulWidget {
+  final TrinaCell cell;
+  final TrinaColumn column;
+  final int rowIdx;
+  final TrinaRow row;
+  final TrinaGridStateManager stateManager;
+  final void Function(TapUpDetails) onTapUp;
+  final void Function(LongPressStartDetails)? onLongPressStart;
+  final void Function(LongPressMoveUpdateDetails)? onLongPressMoveUpdate;
+  final void Function(LongPressEndDetails)? onLongPressEnd;
+  final void Function()? onDoubleTap;
+  final void Function(TapDownDetails)? onSecondaryTapDown;
+  final void Function(TrinaGridGestureType, Offset) addGestureEvent;
+  final Widget child;
+
+  const _DragSelectableCell({
+    required this.cell,
+    required this.column,
+    required this.rowIdx,
+    required this.row,
+    required this.stateManager,
+    required this.onTapUp,
+    required this.onLongPressStart,
+    required this.onLongPressMoveUpdate,
+    required this.onLongPressEnd,
+    required this.onDoubleTap,
+    required this.onSecondaryTapDown,
+    required this.addGestureEvent,
+    required this.child,
+  });
+
+  @override
+  State<_DragSelectableCell> createState() => _DragSelectableCellState();
+}
+
+class _DragSelectableCellState extends State<_DragSelectableCell> {
+  Offset? _panStartGlobalPosition;
+  Offset? _panEndGlobalPosition;
+  bool _isDragIntent = false;
+
+  void _handlePanDown(DragDownDetails details) {
+    _panStartGlobalPosition = details.globalPosition;
+    _panEndGlobalPosition = null;
+    _isDragIntent = false;
+
+    if (widget.stateManager.configuration.enableDragSelection) {
+      debugPrint(
+        '[DragSelect] Pan Down - pos: ${details.globalPosition}, ctrl: ${widget.stateManager.keyPressed.ctrl}, shift: ${widget.stateManager.keyPressed.shift}',
+      );
+    }
+  }
+
+  void _handlePanStart(DragStartDetails details) {
+    // Pan has started, check if we should initiate drag selection
+    if (!widget.stateManager.keyPressed.ctrl &&
+        !widget.stateManager.keyPressed.shift) {
+      _isDragIntent = true;
+
+      debugPrint(
+        '[DragSelect] Pan Start - Initiating drag selection at ${details.globalPosition}',
+      );
+
+      // Fire pointer down event to start drag selection
+      widget.addGestureEvent(
+        TrinaGridGestureType.onPointerDown,
+        details.globalPosition,
+      );
+    } else {
+      debugPrint(
+        '[DragSelect] Pan Start - Skipping drag (modifier keys pressed)',
+      );
+    }
+  }
+
+  void _handlePanUpdate(DragUpdateDetails details) {
+    _panEndGlobalPosition = details.globalPosition;
+
+    if (!_isDragIntent) return;
+
+    debugPrint('[DragSelect] Pan Update - pos: ${details.globalPosition}');
+
+    // Fire pointer move event to update drag selection
+    widget.addGestureEvent(
+      TrinaGridGestureType.onPointerMove,
+      details.globalPosition,
+    );
+  }
+
+  void _handlePanEnd(DragEndDetails details) {
+    if (_isDragIntent && widget.stateManager.isDragSelecting) {
+      debugPrint('[DragSelect] Pan End - Ending drag selection');
+
+      // Fire pointer up event to end drag selection
+      widget.addGestureEvent(
+        TrinaGridGestureType.onPointerUp,
+        _panEndGlobalPosition ?? _panStartGlobalPosition ?? Offset.zero,
+      );
+    } else {
+      debugPrint('[DragSelect] Pan End - No drag in progress');
+    }
+
+    _panStartGlobalPosition = null;
+    _panEndGlobalPosition = null;
+    _isDragIntent = false;
+  }
+
+  void _handlePanCancel() {
+    debugPrint('[DragSelect] Pan Cancel');
+
+    if (_isDragIntent && widget.stateManager.isDragSelecting) {
+      widget.stateManager.endDragSelection();
+    }
+    _panStartGlobalPosition = null;
+    _panEndGlobalPosition = null;
+    _isDragIntent = false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Get configurable long press duration from configuration
+    final longPressDuration =
+        widget.stateManager.configuration.dragSelectionDelayDuration;
+
+    final gestures = <Type, GestureRecognizerFactory>{};
+
+    // Add tap recognizer for normal clicks, Ctrl/Shift selection, and secondary tap
+    gestures[TapGestureRecognizer] =
+        GestureRecognizerFactoryWithHandlers<TapGestureRecognizer>(
+          () => TapGestureRecognizer(debugOwner: this),
+          (TapGestureRecognizer instance) {
+            instance
+              ..onTapUp = widget.onTapUp
+              ..onSecondaryTapDown = widget.onSecondaryTapDown;
+          },
+        );
+
+    // Add pan recognizer for drag selection
+    gestures[PanGestureRecognizer] =
+        GestureRecognizerFactoryWithHandlers<PanGestureRecognizer>(
+          () => PanGestureRecognizer(debugOwner: this),
+          (PanGestureRecognizer instance) {
+            instance
+              ..onDown = _handlePanDown
+              ..onStart = _handlePanStart
+              ..onUpdate = _handlePanUpdate
+              ..onEnd = _handlePanEnd
+              ..onCancel = _handlePanCancel;
+          },
+        );
+
+    // Add long press recognizer with configurable duration
+    if (widget.onLongPressStart != null) {
+      gestures[LongPressGestureRecognizer] =
+          GestureRecognizerFactoryWithHandlers<LongPressGestureRecognizer>(
+            () => LongPressGestureRecognizer(
+              debugOwner: this,
+              duration: longPressDuration,
+            ),
+            (LongPressGestureRecognizer instance) {
+              instance
+                ..onLongPressStart = widget.onLongPressStart
+                ..onLongPressMoveUpdate = widget.onLongPressMoveUpdate
+                ..onLongPressEnd = widget.onLongPressEnd;
+            },
+          );
+    }
+
+    // Add double tap recognizer
+    if (widget.onDoubleTap != null) {
+      gestures[DoubleTapGestureRecognizer] =
+          GestureRecognizerFactoryWithHandlers<DoubleTapGestureRecognizer>(
+            () => DoubleTapGestureRecognizer(debugOwner: this),
+            (DoubleTapGestureRecognizer instance) {
+              instance.onDoubleTap = widget.onDoubleTap;
+            },
+          );
+    }
+
+    return RawGestureDetector(
+      behavior: HitTestBehavior.translucent,
+      gestures: gestures,
+      child: widget.child,
     );
   }
 }

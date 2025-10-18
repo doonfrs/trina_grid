@@ -17,6 +17,7 @@ import 'screen/feature/column_renderer_screen.dart';
 import 'screen/feature/cell_color_screen.dart';
 import 'screen/feature/cell_renderer_screen.dart';
 import 'screen/feature/cell_selection_screen.dart';
+import 'screen/feature/excel_like_selection_screen.dart';
 import 'screen/feature/column_filtering_screen.dart';
 import 'screen/feature/column_footer_screen.dart';
 import 'screen/feature/column_freezing_screen.dart';
@@ -89,6 +90,8 @@ class MyApp extends StatelessWidget {
         CellColorScreen.routeName: (context) => const CellColorScreen(),
         CellRendererScreen.routeName: (context) => const CellRendererScreen(),
         CellSelectionScreen.routeName: (context) => const CellSelectionScreen(),
+        ExcelLikeSelectionScreen.routeName: (context) =>
+            const ExcelLikeSelectionScreen(),
         ChangeTrackingScreen.routeName: (context) =>
             const ChangeTrackingScreen(),
         BooleanTypeColumnScreen.routeName: (context) =>

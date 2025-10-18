@@ -119,6 +119,40 @@ class TrinaGridConfiguration {
   /// This applies to both [TrinaPagination] and [TrinaLazyPagination].
   final bool paginationEnableGotoPage;
 
+  /// Enable click-and-drag selection without requiring long press.
+  ///
+  /// When true, clicking and dragging immediately starts range selection.
+  /// Works only when [selectingMode] is [TrinaGridSelectingMode.cell].
+  ///
+  /// Default is false (preserves existing long-press behavior for backward compatibility).
+  final bool enableDragSelection;
+
+  /// Enable Ctrl+Click to toggle individual cells in multi-select.
+  ///
+  /// When true in cell mode, Ctrl+Click adds/removes individual cells.
+  /// Click without modifiers clears individual selections.
+  /// Works only when [selectingMode] is [TrinaGridSelectingMode.cell].
+  ///
+  /// Default is false.
+  final bool enableCtrlClickMultiSelect;
+
+  /// Duration to wait before activating drag selection (hold time).
+  ///
+  /// When [enableDragSelection] is true, users must press and hold for this
+  /// duration before dragging to select cells. This prevents conflict with
+  /// drag-to-scroll behavior.
+  ///
+  /// Recommended values:
+  /// - 100ms for responsive feel (may conflict with fast scrolling)
+  /// - 200ms for balanced experience (default)
+  /// - 300ms for clear distinction from scrolling
+  ///
+  /// Note: If your app uses drag-to-scroll, consider disabling it in
+  /// [scrollbar.dragDevices] to avoid gesture conflicts.
+  ///
+  /// Default is Duration(milliseconds: 200).
+  final Duration dragSelectionDelayDuration;
+
   const TrinaGridConfiguration({
     this.enableMoveDownAfterSelecting = false,
     this.enableMoveHorizontalInEditing = false,
@@ -136,6 +170,9 @@ class TrinaGridConfiguration {
     this.localeText = const TrinaGridLocaleText(),
     this.paginationShowTotalRows = true,
     this.paginationEnableGotoPage = true,
+    this.enableDragSelection = false,
+    this.enableCtrlClickMultiSelect = false,
+    this.dragSelectionDelayDuration = const Duration(milliseconds: 200),
   });
 
   const TrinaGridConfiguration.dark({
@@ -155,6 +192,9 @@ class TrinaGridConfiguration {
     this.localeText = const TrinaGridLocaleText(),
     this.paginationShowTotalRows = true,
     this.paginationEnableGotoPage = true,
+    this.enableDragSelection = false,
+    this.enableCtrlClickMultiSelect = false,
+    this.dragSelectionDelayDuration = const Duration(milliseconds: 200),
   });
 
   void updateLocale() {
@@ -198,6 +238,9 @@ class TrinaGridConfiguration {
     TrinaGridColumnFilterConfig? columnFilter,
     TrinaGridColumnSizeConfig? columnSize,
     TrinaGridLocaleText? localeText,
+    bool? enableDragSelection,
+    bool? enableCtrlClickMultiSelect,
+    Duration? dragSelectionDelayDuration,
   }) {
     return TrinaGridConfiguration(
       enableMoveDownAfterSelecting:
@@ -217,6 +260,11 @@ class TrinaGridConfiguration {
       columnFilter: columnFilter ?? this.columnFilter,
       columnSize: columnSize ?? this.columnSize,
       localeText: localeText ?? this.localeText,
+      enableDragSelection: enableDragSelection ?? this.enableDragSelection,
+      enableCtrlClickMultiSelect:
+          enableCtrlClickMultiSelect ?? this.enableCtrlClickMultiSelect,
+      dragSelectionDelayDuration:
+          dragSelectionDelayDuration ?? this.dragSelectionDelayDuration,
     );
   }
 
@@ -240,7 +288,10 @@ class TrinaGridConfiguration {
             scrollbar == other.scrollbar &&
             columnFilter == other.columnFilter &&
             columnSize == other.columnSize &&
-            localeText == other.localeText;
+            localeText == other.localeText &&
+            enableDragSelection == other.enableDragSelection &&
+            enableCtrlClickMultiSelect == other.enableCtrlClickMultiSelect &&
+            dragSelectionDelayDuration == other.dragSelectionDelayDuration;
   }
 
   @override
@@ -258,6 +309,9 @@ class TrinaGridConfiguration {
     columnFilter,
     columnSize,
     localeText,
+    enableDragSelection,
+    enableCtrlClickMultiSelect,
+    dragSelectionDelayDuration,
   );
 }
 

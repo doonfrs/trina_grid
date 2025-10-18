@@ -27,6 +27,7 @@ import 'feature/column_renderer_screen.dart';
 import 'feature/cell_color_screen.dart';
 import 'feature/cell_renderer_screen.dart';
 import 'feature/cell_selection_screen.dart';
+import 'feature/excel_like_selection_screen.dart';
 import 'feature/column_filtering_screen.dart';
 import 'feature/column_filter_methods_screen.dart';
 import 'feature/column_footer_screen.dart';
@@ -502,6 +503,14 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
             'In cell selection mode, Shift + tap or long tap and then move to select cells.',
         onTapLiveDemo: () {
           Navigator.pushNamed(context, CellSelectionScreen.routeName);
+        },
+      ),
+      TrinaListTile(
+        title: 'Excel-like Selection',
+        description:
+            'Click and drag to select range, Ctrl+Click to select individual cells - just like Excel!',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, ExcelLikeSelectionScreen.routeName);
         },
       ),
       TrinaListTile(
