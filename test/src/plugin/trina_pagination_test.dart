@@ -22,6 +22,8 @@ void main() {
     when(stateManager.footerHeight).thenReturn(45);
 
     when(stateManager.streamNotifier).thenAnswer((_) => subject);
+
+    when(stateManager.refRows).thenReturn(FilteredList<TrinaRow>());
   });
 
   tearDown(() {
@@ -52,9 +54,9 @@ void main() {
     });
 
     buildWidget().test(
-      'Four IconButton should be rendered. (First, Previous, Next, Last buttons)',
+      'Five IconButton should be rendered. (First, Previous, Next, Last, Go to page buttons)',
       (tester) async {
-        expect(find.byType(IconButton), findsNWidgets(4));
+        expect(find.byType(IconButton), findsNWidgets(5));
       },
     );
 

@@ -118,7 +118,7 @@ void main() {
   });
 
   group('when popup is opened', () {
-    final okTextButtonFinder = find.widgetWithText(TextButton, 'OK');
+    final okTextButtonFinder = find.widgetWithText(TextButton, 'Ok');
     final hourFieldFinder = find.byWidgetPredicate(
       (widget) =>
           widget is TextField && widget.decoration?.helperText == 'Hour',
@@ -300,7 +300,7 @@ void main() {
 
         // act
 
-        await tester.tap(find.text('OK'));
+        await tester.tap(find.text('Ok'));
         await tester.pumpAndSettle();
         // assert
         expect(find.byType(TrinaTimePicker), findsNothing);
