@@ -15,6 +15,7 @@ void main() {
   late MockScrollController verticalScrollController;
   late MockTrinaGridEventManager eventManager;
   late TrinaGridKeyPressed keyPressed;
+  late TrinaGridConfiguration configuration;
 
   eventBuilder({
     required TrinaGridGestureType gestureType,
@@ -45,11 +46,14 @@ void main() {
     verticalScrollController = MockScrollController();
     eventManager = MockTrinaGridEventManager();
     keyPressed = MockTrinaGridKeyPressed();
+    configuration = const TrinaGridConfiguration();
 
     when(stateManager.eventManager).thenReturn(eventManager);
     when(stateManager.scroll).thenReturn(scroll);
     when(stateManager.isLTR).thenReturn(true);
     when(stateManager.keyPressed).thenReturn(keyPressed);
+    when(stateManager.configuration).thenReturn(configuration);
+    when(stateManager.isDragSelecting).thenReturn(false);
     when(scroll.horizontal).thenReturn(horizontalScroll);
     when(scroll.bodyRowsHorizontal).thenReturn(horizontalScrollController);
     when(scroll.vertical).thenReturn(verticalScroll);

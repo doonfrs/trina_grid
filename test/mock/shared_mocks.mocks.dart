@@ -30,6 +30,7 @@ import 'package:trina_grid/trina_grid.dart' as _i2;
 // ignore_for_file: unnecessary_parenthesis
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
+// ignore_for_file: invalid_use_of_internal_member
 
 class _FakeFilteredList_0<E> extends _i1.SmartFake
     implements _i2.FilteredList<E> {
@@ -1475,6 +1476,15 @@ class MockTrinaGridStateManager extends _i1.Mock
   );
 
   @override
+  bool get isDragSelecting =>
+      (super.noSuchMethod(
+            Invocation.getter(#isDragSelecting),
+            returnValue: false,
+            returnValueForMissingStub: false,
+          )
+          as bool);
+
+  @override
   _i2.TrinaChangeNotifierFilter<T> resolveNotifierFilter<T>() =>
       (super.noSuchMethod(
             Invocation.method(#resolveNotifierFilter, []),
@@ -2165,6 +2175,53 @@ class MockTrinaGridStateManager extends _i1.Mock
     ),
     returnValueForMissingStub: null,
   );
+
+  @override
+  void setColumnFilter({
+    required String? columnField,
+    required _i2.TrinaFilterType? filterType,
+    required dynamic filterValue,
+    bool? notify = true,
+  }) => super.noSuchMethod(
+    Invocation.method(#setColumnFilter, [], {
+      #columnField: columnField,
+      #filterType: filterType,
+      #filterValue: filterValue,
+      #notify: notify,
+    }),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void removeColumnFilter(String? columnField, {bool? notify = true}) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #removeColumnFilter,
+          [columnField],
+          {#notify: notify},
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void clearAllColumnFilters({bool? notify = true}) => super.noSuchMethod(
+    Invocation.method(#clearAllColumnFilters, [], {#notify: notify}),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  dynamic getColumnFilterValue(String? columnField) => super.noSuchMethod(
+    Invocation.method(#getColumnFilterValue, [columnField]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  _i2.TrinaFilterType? getColumnFilterType(String? columnField) =>
+      (super.noSuchMethod(
+            Invocation.method(#getColumnFilterType, [columnField]),
+            returnValueForMissingStub: null,
+          )
+          as _i2.TrinaFilterType?);
 
   @override
   void setKeepFocus(bool? flag, {bool? notify = true}) => super.noSuchMethod(
@@ -2903,6 +2960,12 @@ class MockTrinaGridStateManager extends _i1.Mock
   );
 
   @override
+  void clearRangeSelections({bool? notify = true}) => super.noSuchMethod(
+    Invocation.method(#clearRangeSelections, [], {#notify: notify}),
+    returnValueForMissingStub: null,
+  );
+
+  @override
   void toggleSelectingRow(int? rowIdx, {bool? notify = true}) =>
       super.noSuchMethod(
         Invocation.method(#toggleSelectingRow, [rowIdx], {#notify: notify}),
@@ -2988,6 +3051,41 @@ class MockTrinaGridStateManager extends _i1.Mock
             returnValueForMissingStub: null,
           )
           as String?);
+
+  @override
+  void toggleSelectingCell(
+    _i2.TrinaGridCellPosition? cellPosition, {
+    bool? notify = true,
+  }) => super.noSuchMethod(
+    Invocation.method(#toggleSelectingCell, [cellPosition], {#notify: notify}),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void clearIndividualSelections({bool? notify = true}) => super.noSuchMethod(
+    Invocation.method(#clearIndividualSelections, [], {#notify: notify}),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void startDragSelection(_i2.TrinaGridCellPosition? startPosition) =>
+      super.noSuchMethod(
+        Invocation.method(#startDragSelection, [startPosition]),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void updateDragSelection(_i2.TrinaGridCellPosition? endPosition) =>
+      super.noSuchMethod(
+        Invocation.method(#updateDragSelection, [endPosition]),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void endDragSelection() => super.noSuchMethod(
+    Invocation.method(#endDragSelection, []),
+    returnValueForMissingStub: null,
+  );
 }
 
 /// A class which mocks [TrinaGridEventManager].
@@ -3120,18 +3218,16 @@ class MockTrinaGridScrollController extends _i1.Mock
           as double);
 
   @override
-  set vertical(_i2.LinkedScrollControllerGroup? _vertical) =>
-      super.noSuchMethod(
-        Invocation.setter(#vertical, _vertical),
-        returnValueForMissingStub: null,
-      );
+  set vertical(_i2.LinkedScrollControllerGroup? value) => super.noSuchMethod(
+    Invocation.setter(#vertical, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  set horizontal(_i2.LinkedScrollControllerGroup? _horizontal) =>
-      super.noSuchMethod(
-        Invocation.setter(#horizontal, _horizontal),
-        returnValueForMissingStub: null,
-      );
+  set horizontal(_i2.LinkedScrollControllerGroup? value) => super.noSuchMethod(
+    Invocation.setter(#horizontal, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void setBodyRowsHorizontal(_i3.ScrollController? scrollController) =>
@@ -3262,15 +3358,6 @@ class MockLinkedScrollControllerGroup extends _i1.Mock
 /// See the documentation for Mockito's code generation for more information.
 class MockScrollController extends _i1.Mock implements _i3.ScrollController {
   @override
-  bool get keepScrollOffset =>
-      (super.noSuchMethod(
-            Invocation.getter(#keepScrollOffset),
-            returnValue: false,
-            returnValueForMissingStub: false,
-          )
-          as bool);
-
-  @override
   double get initialScrollOffset =>
       (super.noSuchMethod(
             Invocation.getter(#initialScrollOffset),
@@ -3278,6 +3365,15 @@ class MockScrollController extends _i1.Mock implements _i3.ScrollController {
             returnValueForMissingStub: 0.0,
           )
           as double);
+
+  @override
+  bool get keepScrollOffset =>
+      (super.noSuchMethod(
+            Invocation.getter(#keepScrollOffset),
+            returnValue: false,
+            returnValueForMissingStub: false,
+          )
+          as bool);
 
   @override
   Iterable<_i3.ScrollPosition> get positions =>
@@ -3471,21 +3567,6 @@ class MockScrollPosition extends _i1.Mock implements _i3.ScrollPosition {
           as bool);
 
   @override
-  _i3.ValueNotifier<bool> get isScrollingNotifier =>
-      (super.noSuchMethod(
-            Invocation.getter(#isScrollingNotifier),
-            returnValue: _FakeValueNotifier_25<bool>(
-              this,
-              Invocation.getter(#isScrollingNotifier),
-            ),
-            returnValueForMissingStub: _FakeValueNotifier_25<bool>(
-              this,
-              Invocation.getter(#isScrollingNotifier),
-            ),
-          )
-          as _i3.ValueNotifier<bool>);
-
-  @override
   double get minScrollExtent =>
       (super.noSuchMethod(
             Invocation.getter(#minScrollExtent),
@@ -3574,6 +3655,21 @@ class MockScrollPosition extends _i1.Mock implements _i3.ScrollPosition {
             returnValueForMissingStub: 0.0,
           )
           as double);
+
+  @override
+  _i3.ValueNotifier<bool> get isScrollingNotifier =>
+      (super.noSuchMethod(
+            Invocation.getter(#isScrollingNotifier),
+            returnValue: _FakeValueNotifier_25<bool>(
+              this,
+              Invocation.getter(#isScrollingNotifier),
+            ),
+            returnValueForMissingStub: _FakeValueNotifier_25<bool>(
+              this,
+              Invocation.getter(#isScrollingNotifier),
+            ),
+          )
+          as _i3.ValueNotifier<bool>);
 
   @override
   bool get allowImplicitScrolling =>
@@ -4263,19 +4359,6 @@ class MockFocusNode extends _i1.Mock implements _i3.FocusNode {
           as _i5.Rect);
 
   @override
-  set onKey(_i3.FocusOnKeyCallback? _onKey) => super.noSuchMethod(
-    Invocation.setter(#onKey, _onKey),
-    returnValueForMissingStub: null,
-  );
-
-  @override
-  set onKeyEvent(_i3.FocusOnKeyEventCallback? _onKeyEvent) =>
-      super.noSuchMethod(
-        Invocation.setter(#onKeyEvent, _onKeyEvent),
-        returnValueForMissingStub: null,
-      );
-
-  @override
   set skipTraversal(bool? value) => super.noSuchMethod(
     Invocation.setter(#skipTraversal, value),
     returnValueForMissingStub: null,
@@ -4296,6 +4379,18 @@ class MockFocusNode extends _i1.Mock implements _i3.FocusNode {
   @override
   set descendantsAreTraversable(bool? value) => super.noSuchMethod(
     Invocation.setter(#descendantsAreTraversable, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set onKey(_i3.FocusOnKeyCallback? value) => super.noSuchMethod(
+    Invocation.setter(#onKey, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set onKeyEvent(_i3.FocusOnKeyEventCallback? value) => super.noSuchMethod(
+    Invocation.setter(#onKeyEvent, value),
     returnValueForMissingStub: null,
   );
 
