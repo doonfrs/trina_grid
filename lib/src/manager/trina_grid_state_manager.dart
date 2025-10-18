@@ -629,8 +629,11 @@ class TrinaGridKeyPressed {
   bool get ctrl {
     final keysPressed = HardwareKeyboard.instance.logicalKeysPressed;
 
+    // Support both Ctrl (Windows/Linux) and Cmd (Mac) for cross-platform compatibility
     return !(!keysPressed.contains(LogicalKeyboardKey.controlLeft) &&
-        !keysPressed.contains(LogicalKeyboardKey.controlRight));
+        !keysPressed.contains(LogicalKeyboardKey.controlRight) &&
+        !keysPressed.contains(LogicalKeyboardKey.metaLeft) &&
+        !keysPressed.contains(LogicalKeyboardKey.metaRight));
   }
 }
 

@@ -356,9 +356,9 @@ Recommended delays:
 - **200ms**: Balanced (default) - good distinction from scroll gestures
 - **300ms**: Clear separation, less chance of accidental activation
 
-### Ctrl+Click Multi-Select
+### Ctrl+Click Multi-Select (Cmd+Click on Mac)
 
-Enable selecting individual cells with Ctrl+Click:
+Enable selecting individual cells with Ctrl+Click (or Cmd+Click on Mac):
 
 ```dart
 TrinaGrid(
@@ -366,15 +366,15 @@ TrinaGrid(
   rows: rows,
   configuration: TrinaGridConfiguration(
     selectingMode: TrinaGridSelectingMode.cell,
-    enableCtrlClickMultiSelect: true,  // Enable Ctrl+Click
+    enableCtrlClickMultiSelect: true,  // Enable Ctrl+Click (Cmd+Click on Mac)
   ),
 )
 ```
 
 With this enabled:
-- Ctrl+Click adds/removes individual cells
+- Ctrl+Click (Cmd+Click on Mac) adds/removes individual cells
 - Build non-contiguous selections
-- Click without Ctrl clears individual selections
+- Click without Ctrl/Cmd clears individual selections
 - Shift+Click still works for range selection
 - All individually selected cells are included in `currentSelectingPositionList`
 
@@ -401,9 +401,9 @@ The following keyboard combinations work with selection:
 | Shortcut | Behavior |
 |----------|----------|
 | Long Press + Drag | Select range (when enableDragSelection is true) |
-| Ctrl + Click | Toggle individual cell (when enableCtrlClickMultiSelect is true) |
+| Ctrl + Click (Cmd + Click on Mac) | Toggle individual cell (when enableCtrlClickMultiSelect is true) |
 | Shift + Click | Extend selection to clicked cell |
-| Ctrl + A | Select all cells |
+| Ctrl + A (Cmd + A on Mac) | Select all cells |
 | Click (no modifier) | Clear individual selections and select single cell |
 
 ## Configuration Reference
@@ -434,9 +434,10 @@ TrinaGridConfiguration(
 **enableCtrlClickMultiSelect**:
 - Type: `bool`
 - Default: `false`
-- When `true`: Ctrl+Click toggles individual cells in/out of selection
+- When `true`: Ctrl+Click (Cmd+Click on Mac) toggles individual cells in/out of selection
 - When `false`: Ctrl+Click has no special behavior in cell mode
 - Only works when `selectingMode` is `TrinaGridSelectingMode.cell`
+- Cross-platform: Automatically uses Ctrl on Windows/Linux and Cmd on Mac
 
 **dragSelectionDelayDuration**:
 - Type: `Duration`
