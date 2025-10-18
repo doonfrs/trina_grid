@@ -323,6 +323,12 @@ mixin SelectingState implements ITrinaGridState {
       return;
     }
 
+    // Exit editing mode when creating a range selection
+    // This ensures copy/paste operations work correctly
+    if (isEditing && cellPosition != null) {
+      setEditing(false, notify: false);
+    }
+
     _state._currentSelectingPosition = isInvalidCellPosition(cellPosition)
         ? null
         : cellPosition;
@@ -521,6 +527,12 @@ mixin SelectingState implements ITrinaGridState {
         '[Selection] toggleSelectingCell - Not in cell mode, returning',
       );
       return;
+    }
+
+    // Exit editing mode when selecting individual cells
+    // This ensures copy/paste operations work correctly
+    if (isEditing) {
+      setEditing(false, notify: false);
     }
 
     if (_state._individuallySelectedCells.contains(cellPosition)) {
