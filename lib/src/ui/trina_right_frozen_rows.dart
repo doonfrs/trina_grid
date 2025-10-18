@@ -63,14 +63,23 @@ class TrinaRightFrozenRowsState
         .toList();
   }
 
-  Widget _buildRow(TrinaRow row, int index) {
-    return TrinaBaseRow(
+  Widget _buildRow(BuildContext context, TrinaRow row, int index) {
+    Widget rowWidget = TrinaBaseRow(
       key: ValueKey('right_frozen_row_${row.key}'),
       rowIdx: index,
       row: row,
       columns: _columns,
       stateManager: stateManager,
+      visibilityLayout: true,
     );
+
+    return stateManager.rowWrapper?.call(
+          context,
+          rowWidget,
+          row,
+          stateManager,
+        ) ??
+        rowWidget;
   }
 
   @override
@@ -83,7 +92,7 @@ class TrinaRightFrozenRowsState
             children: _frozenTopRows
                 .asMap()
                 .entries
-                .map((e) => _buildRow(e.value, e.key))
+                .map((e) => _buildRow(context, e.value, e.key))
                 .toList(),
           ),
         // Scrollable rows
@@ -95,7 +104,7 @@ class TrinaRightFrozenRowsState
             itemCount: _scrollableRows.length,
             // Remove fixed itemExtent for variable heights
             itemBuilder: (ctx, i) =>
-                _buildRow(_scrollableRows[i], i + _frozenTopRows.length),
+                _buildRow(ctx, _scrollableRows[i], i + _frozenTopRows.length),
           ),
         ),
         // Frozen bottom rows
@@ -106,6 +115,7 @@ class TrinaRightFrozenRowsState
                 .entries
                 .map(
                   (e) => _buildRow(
+                    context,
                     e.value,
                     e.key + _frozenTopRows.length + _scrollableRows.length,
                   ),

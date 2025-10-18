@@ -66,6 +66,7 @@ import 'feature/pages_list_screen.dart';
 import 'feature/scrollbars.dart';
 import 'feature/date_time_column_screen.dart';
 import 'feature/row_wrapper_screen.dart';
+import 'feature/row_wrapper_frozen_screen.dart';
 import 'feature/multiitems_delegate_demo_screen.dart';
 import 'feature/custom_footer_screen.dart';
 import 'feature/dynamic_row_height_demo.dart';
@@ -650,6 +651,15 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
             'Wrap each row with your own widget for custom styling or interactivity.',
         onTapLiveDemo: () {
           Navigator.pushNamed(context, RowWrapperScreen.routeName);
+        },
+        trailing: newIcon,
+      ),
+      TrinaListTile(
+        title: 'Row Wrapper with Frozen Columns',
+        description:
+            'Demonstrates rowWrapper working with frozen columns - styling is applied to all rows including frozen ones.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, RowWrapperFrozenScreen.routeName);
         },
         trailing: newIcon,
       ),
