@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:trina_grid/trina_grid.dart';
 
@@ -661,11 +662,26 @@ class TrinaGridActionCopyValues extends TrinaGridShortcutAction {
     required TrinaKeyManagerEvent keyEvent,
     required TrinaGridStateManager stateManager,
   }) {
+    debugPrint('[Copy] TrinaGridActionCopyValues.execute called');
+    debugPrint('[Copy] isEditing: ${stateManager.isEditing}');
+
     if (stateManager.isEditing == true) {
+      debugPrint('[Copy] Skipping copy - currently editing');
       return;
     }
 
-    Clipboard.setData(ClipboardData(text: stateManager.currentSelectingText));
+    final text = stateManager.currentSelectingText;
+    debugPrint('[Copy] currentSelectingText length: ${text.length}');
+    debugPrint('[Copy] currentSelectingText: $text');
+    debugPrint('[Copy] currentCell: ${stateManager.currentCell?.value}');
+    debugPrint(
+      '[Copy] currentSelectingPositionList length: ${stateManager.currentSelectingPositionList.length}',
+    );
+    debugPrint('[Copy] Setting clipboard data');
+
+    Clipboard.setData(ClipboardData(text: text));
+
+    debugPrint('[Copy] Clipboard data set successfully');
   }
 }
 

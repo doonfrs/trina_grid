@@ -29,13 +29,19 @@ class TrinaGridShortcut {
     required TrinaGridStateManager stateManager,
     required HardwareKeyboard state,
   }) {
+    debugPrint('[Shortcut] Checking shortcut for key event: ${keyEvent.event}');
+
     for (final action in actions.entries) {
       if (action.key.accepts(keyEvent.event, state)) {
+        debugPrint(
+          '[Shortcut] Matched shortcut: ${action.key}, executing action: ${action.value.runtimeType}',
+        );
         action.value.execute(keyEvent: keyEvent, stateManager: stateManager);
         return true;
       }
     }
 
+    debugPrint('[Shortcut] No matching shortcut found');
     return false;
   }
 
@@ -139,11 +145,20 @@ class TrinaGridShortcut {
     // Copy the values of cells
     LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyC):
         const TrinaGridActionCopyValues(),
+    // Copy the values of cells (Mac)
+    LogicalKeySet(LogicalKeyboardKey.meta, LogicalKeyboardKey.keyC):
+        const TrinaGridActionCopyValues(),
     // Paste values from clipboard
     LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyV):
         const TrinaGridActionPasteValues(),
+    // Paste values from clipboard (Mac)
+    LogicalKeySet(LogicalKeyboardKey.meta, LogicalKeyboardKey.keyV):
+        const TrinaGridActionPasteValues(),
     // Select all cells or rows
     LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyA):
+        const TrinaGridActionSelectAll(),
+    // Select all cells or rows (Mac)
+    LogicalKeySet(LogicalKeyboardKey.meta, LogicalKeyboardKey.keyA):
         const TrinaGridActionSelectAll(),
   };
 }

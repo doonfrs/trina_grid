@@ -191,12 +191,19 @@ mixin SelectingState implements ITrinaGridState {
     final bool fromSelectingPosition =
         currentCellPosition != null && currentSelectingPosition != null;
 
+    // Check for individually selected cells (Ctrl+Click mode)
+    final bool fromIndividualCells =
+        configuration.enableCtrlClickMultiSelect &&
+        selectingMode.isCell &&
+        _state._individuallySelectedCells.isNotEmpty;
+
     final bool fromCurrentCell = currentCellPosition != null;
 
     if (fromSelectingRows) {
       return _selectingTextFromSelectingRows();
-    } else if (fromSelectingPosition) {
-      return _selectingTextFromSelectingPosition();
+    } else if (fromSelectingPosition || fromIndividualCells) {
+      // When we have range selection and/or individual cells, use the combined text
+      return _selectingTextFromAllSelections();
     } else if (fromCurrentCell) {
       return _selectingTextFromCurrentCell();
     }
@@ -950,6 +957,87 @@ mixin SelectingState implements ITrinaGridState {
 
   String _selectingTextFromCurrentCell() {
     return currentCell!.value.toString();
+  }
+
+  String _selectingTextFromAllSelections() {
+    // This method combines BOTH range selections (from Shift+Click)
+    // AND individual cell selections (from Ctrl+Click)
+    final columnIndexes = columnIndexesByShowFrozen;
+
+    // Use currentSelectingPositionList which already combines both types
+    final positions = currentSelectingPositionList;
+
+    // If we have individual cells but no range selection, also include current cell
+    // (When user clicks a cell, then Ctrl+Clicks others, the first cell should be included)
+    final hasRangeSelection =
+        currentCellPosition != null && currentSelectingPosition != null;
+    final hasIndividualCells = _state._individuallySelectedCells.isNotEmpty;
+
+    List<TrinaGridSelectingCellPosition> allPositions = List.from(positions);
+
+    if (hasIndividualCells &&
+        !hasRangeSelection &&
+        currentCellPosition != null) {
+      // Add current cell to the list if it's not already there
+      final currentField = currentColumn?.field;
+      if (currentField != null) {
+        final currentPos = TrinaGridSelectingCellPosition(
+          rowIdx: currentRowIdx,
+          field: currentField,
+        );
+        // Check if current cell is not already in the list
+        if (!allPositions.any(
+          (p) => p.rowIdx == currentPos.rowIdx && p.field == currentPos.field,
+        )) {
+          allPositions.add(currentPos);
+        }
+      }
+    }
+
+    if (allPositions.isEmpty) {
+      return '';
+    }
+
+    // Group positions by row for structured output
+    Map<int, List<TrinaGridSelectingCellPosition>> rowGroups = {};
+    for (final pos in allPositions) {
+      if (pos.rowIdx != null) {
+        rowGroups.putIfAbsent(pos.rowIdx!, () => []).add(pos);
+      }
+    }
+
+    // Sort rows and build text
+    final sortedRowIdxs = rowGroups.keys.toList()..sort();
+    List<String> rowTexts = [];
+
+    for (final rowIdx in sortedRowIdxs) {
+      final rowPositions = rowGroups[rowIdx]!;
+
+      // Sort positions within row by column
+      rowPositions.sort((a, b) {
+        final aColIdx = columnIndexes.indexOf(
+          refColumns.indexWhere((col) => col.field == a.field),
+        );
+        final bColIdx = columnIndexes.indexOf(
+          refColumns.indexWhere((col) => col.field == b.field),
+        );
+        return aColIdx.compareTo(bColIdx);
+      });
+
+      List<String> cellTexts = [];
+      for (final pos in rowPositions) {
+        final cell = refRows[pos.rowIdx!].cells[pos.field];
+        if (cell != null) {
+          cellTexts.add(cell.value.toString());
+        }
+      }
+
+      if (cellTexts.isNotEmpty) {
+        rowTexts.add(cellTexts.join('\t'));
+      }
+    }
+
+    return rowTexts.join('\n');
   }
 
   void _setFistCellAsCurrent() {
