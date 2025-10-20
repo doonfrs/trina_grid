@@ -840,6 +840,7 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
                       axis: Axis.vertical,
                       color: style.gridBorderColor,
                       shadow: style.enableGridBorderShadow,
+                      reverse: _stateManager.isRTL,
                     ),
                   ),
                   if (showColumnFooter)
@@ -865,7 +866,7 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
                       axis: Axis.vertical,
                       color: style.gridBorderColor,
                       shadow: style.enableGridBorderShadow,
-                      reverse: true,
+                      reverse: !_stateManager.isRTL,
                     ),
                   ),
                   if (showColumnFooter)
