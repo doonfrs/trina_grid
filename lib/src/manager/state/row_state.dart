@@ -554,7 +554,7 @@ mixin RowState implements ITrinaGridState {
       refRows.insertAll(safetyIndex, rows);
 
       TrinaGridStateManager.initializeRows(
-        refColumns,
+        refColumns.originalList,
         rows,
         forceApplySortIdx: false,
       );
