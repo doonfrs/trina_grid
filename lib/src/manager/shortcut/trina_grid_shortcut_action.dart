@@ -711,6 +711,10 @@ class TrinaGridActionPasteValues extends TrinaGridShortcutAction {
       }
       List<List<String>> textList = TrinaClipboardTransformation.stringToList(
         value.text!,
+        cellSeparator:
+            stateManager.configuration.copyPasteCellSeparator ?? '\t',
+        lineSeparator:
+            stateManager.configuration.copyPasteLineSeparator ?? '\n',
       );
 
       stateManager.pasteCellValue(textList);

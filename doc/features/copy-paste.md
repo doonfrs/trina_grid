@@ -58,7 +58,11 @@ Clipboard.getData('text/plain').then((value) {
   if (value == null) {
     return;
   }
-  List<List<String>> textList = TrinaClipboardTransformation.stringToList(value.text!);
+  List<List<String>> textList = TrinaClipboardTransformation.stringToList(
+    value.text!,
+    cellSeparator: stateManager.configuration.copyPasteCellSeparator ?? '\t',
+    lineSeparator: stateManager.configuration.copyPasteLineSeparator ?? '\n',
+  );
   stateManager.pasteCellValue(textList);
 });
 ```
@@ -67,16 +71,18 @@ Clipboard.getData('text/plain').then((value) {
 
 When copying data from TrinaGrid, the data is formatted as follows:
 
-- Cells in the same row are separated by tab characters (`\t`)
-- Rows are separated by newline characters (`\n`)
+- **Cell Separator**: Cells in the same row are separated by tab characters (`\t`) by default
+- **Line Separator**: Rows are separated by platform-specific line endings by default:
+  - Windows: CRLF (`\r\n`)
+  - macOS/Linux: LF (`\n`)
 
-For example, a 2x2 selection would be formatted as:
+For example, a 2x2 selection on Windows would be formatted as:
 ```
-value1\tvalue2
+value1\tvalue2\r\n
 value3\tvalue4
 ```
 
-When pasting data into TrinaGrid, the same format is expected. TrinaGrid will parse the clipboard text and convert it into a two-dimensional array of values before applying it to the grid.
+When pasting data into TrinaGrid, the same format is expected. TrinaGrid will parse the clipboard text and convert it into a two-dimensional array of values before applying it to the grid. The paste operation accepts both LF and CRLF line endings regardless of platform for maximum compatibility.
 
 ## Paste Behavior
 
@@ -112,7 +118,59 @@ When pasting data, TrinaGrid follows these rules:
 
 ## Configuration
 
-The copy and paste functionality is enabled by default and does not require additional configuration. However, you can customize the behavior by:
+The copy and paste functionality is enabled by default and does not require additional configuration. However, you can customize the behavior in several ways:
+
+### Custom Separators
+
+You can configure custom separators for copy and paste operations using `TrinaGridConfiguration`:
+
+```dart
+TrinaGrid(
+  configuration: TrinaGridConfiguration(
+    // Customize cell separator (default: tab character '\t')
+    copyPasteCellSeparator: ',',  // Use comma for CSV-compatible format
+
+    // Customize line separator (default: platform-specific)
+    // null = platform-specific (\r\n on Windows, \n on macOS/Linux)
+    copyPasteLineSeparator: '\n',  // Force LF on all platforms
+  ),
+  // Other properties...
+)
+```
+
+**Separator Options:**
+
+- `copyPasteCellSeparator`: Separator between cells in the same row
+  - Default: `null` (uses tab `\t`)
+  - Common alternatives: `,` for CSV, `;` for some locales
+
+- `copyPasteLineSeparator`: Separator between rows
+  - Default: `null` (uses platform-specific line endings)
+  - Common alternatives: `\n` for cross-platform consistency
+
+**Use Cases:**
+
+```dart
+// CSV format - comma-separated with LF line endings
+TrinaGridConfiguration(
+  copyPasteCellSeparator: ',',
+  copyPasteLineSeparator: '\n',
+)
+
+// Excel-compatible format with platform-specific line endings
+TrinaGridConfiguration(
+  copyPasteCellSeparator: '\t',
+  copyPasteLineSeparator: null,  // Platform-specific
+)
+
+// Custom format - pipe-separated
+TrinaGridConfiguration(
+  copyPasteCellSeparator: '|',
+  copyPasteLineSeparator: '\n',
+)
+```
+
+### Other Customization Options
 
 1. **Custom Cell Handling**: Implement custom `onChanged` handlers for cells to control how pasted values are processed
 2. **Keyboard Shortcuts**: Customize the keyboard shortcuts by overriding the default shortcut handlers
@@ -123,7 +181,7 @@ TrinaGrid(
   onLoaded: (TrinaGridOnLoadedEvent event) {
     // Access the state manager
     final stateManager = event.stateManager;
-    
+
     // Customize keyboard shortcuts if needed
     stateManager.setShortcuts([
       // Your custom shortcuts

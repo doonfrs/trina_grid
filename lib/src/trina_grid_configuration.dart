@@ -153,6 +153,20 @@ class TrinaGridConfiguration {
   /// Default is Duration(milliseconds: 200).
   final Duration dragSelectionDelayDuration;
 
+  /// Separator used between cell values when copying to clipboard.
+  ///
+  /// When null (default), uses tab character '\t' for spreadsheet compatibility.
+  /// Can be customized to use other separators like comma ',' for CSV format.
+  final String? copyPasteCellSeparator;
+
+  /// Separator used between rows when copying to clipboard.
+  ///
+  /// When null (default), uses platform-specific line endings:
+  /// - Windows: '\r\n' (CRLF)
+  /// - macOS/Linux: '\n' (LF)
+  /// Can be customized to use a specific separator.
+  final String? copyPasteLineSeparator;
+
   const TrinaGridConfiguration({
     this.enableMoveDownAfterSelecting = false,
     this.enableMoveHorizontalInEditing = false,
@@ -173,6 +187,8 @@ class TrinaGridConfiguration {
     this.enableDragSelection = false,
     this.enableCtrlClickMultiSelect = false,
     this.dragSelectionDelayDuration = const Duration(milliseconds: 200),
+    this.copyPasteCellSeparator,
+    this.copyPasteLineSeparator,
   });
 
   const TrinaGridConfiguration.dark({
@@ -195,6 +211,8 @@ class TrinaGridConfiguration {
     this.enableDragSelection = false,
     this.enableCtrlClickMultiSelect = false,
     this.dragSelectionDelayDuration = const Duration(milliseconds: 200),
+    this.copyPasteCellSeparator,
+    this.copyPasteLineSeparator,
   });
 
   void updateLocale() {
@@ -241,6 +259,8 @@ class TrinaGridConfiguration {
     bool? enableDragSelection,
     bool? enableCtrlClickMultiSelect,
     Duration? dragSelectionDelayDuration,
+    String? copyPasteCellSeparator,
+    String? copyPasteLineSeparator,
   }) {
     return TrinaGridConfiguration(
       enableMoveDownAfterSelecting:
@@ -265,6 +285,10 @@ class TrinaGridConfiguration {
           enableCtrlClickMultiSelect ?? this.enableCtrlClickMultiSelect,
       dragSelectionDelayDuration:
           dragSelectionDelayDuration ?? this.dragSelectionDelayDuration,
+      copyPasteCellSeparator:
+          copyPasteCellSeparator ?? this.copyPasteCellSeparator,
+      copyPasteLineSeparator:
+          copyPasteLineSeparator ?? this.copyPasteLineSeparator,
     );
   }
 
@@ -291,7 +315,9 @@ class TrinaGridConfiguration {
             localeText == other.localeText &&
             enableDragSelection == other.enableDragSelection &&
             enableCtrlClickMultiSelect == other.enableCtrlClickMultiSelect &&
-            dragSelectionDelayDuration == other.dragSelectionDelayDuration;
+            dragSelectionDelayDuration == other.dragSelectionDelayDuration &&
+            copyPasteCellSeparator == other.copyPasteCellSeparator &&
+            copyPasteLineSeparator == other.copyPasteLineSeparator;
   }
 
   @override
@@ -311,7 +337,11 @@ class TrinaGridConfiguration {
     localeText,
     enableDragSelection,
     enableCtrlClickMultiSelect,
-    dragSelectionDelayDuration,
+    Object.hash(
+      dragSelectionDelayDuration,
+      copyPasteCellSeparator,
+      copyPasteLineSeparator,
+    ),
   );
 }
 
