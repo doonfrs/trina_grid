@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:trina_grid/trina_grid.dart';
+import 'package:trina_grid/src/helper/platform_helper.dart';
 
 abstract class ISelectingState {
   /// Multi-selection state.
@@ -108,6 +109,15 @@ class _State {
 
 mixin SelectingState implements ITrinaGridState {
   final _State _state = _State();
+
+  /// Returns the cell separator to use for copy/paste operations.
+  /// Uses configured value or defaults to tab character.
+  String get _cellSeparator => configuration.copyPasteCellSeparator ?? '\t';
+
+  /// Returns the line separator to use for copy/paste operations.
+  /// Uses configured value or defaults to platform-specific line terminator.
+  String get _lineSeparator =>
+      configuration.copyPasteLineSeparator ?? PlatformHelper.lineTerminator;
 
   @override
   bool get isSelecting => _state._isSelecting;
@@ -921,50 +931,10 @@ mixin SelectingState implements ITrinaGridState {
         columnText.add(row.cells[field]!.value.toString());
       }
 
-      rowText.add(columnText.join('\t'));
+      rowText.add(columnText.join(_cellSeparator));
     }
 
-    return rowText.join('\n');
-  }
-
-  String _selectingTextFromSelectingPosition() {
-    final columnIndexes = columnIndexesByShowFrozen;
-
-    List<String> rowText = [];
-
-    int columnStartIdx = min(
-      currentCellPosition!.columnIdx!,
-      currentSelectingPosition!.columnIdx!,
-    );
-
-    int columnEndIdx = max(
-      currentCellPosition!.columnIdx!,
-      currentSelectingPosition!.columnIdx!,
-    );
-
-    int rowStartIdx = min(
-      currentCellPosition!.rowIdx!,
-      currentSelectingPosition!.rowIdx!,
-    );
-
-    int rowEndIdx = max(
-      currentCellPosition!.rowIdx!,
-      currentSelectingPosition!.rowIdx!,
-    );
-
-    for (int i = rowStartIdx; i <= rowEndIdx; i += 1) {
-      List<String> columnText = [];
-
-      for (int j = columnStartIdx; j <= columnEndIdx; j += 1) {
-        final String field = refColumns[columnIndexes[j]].field;
-
-        columnText.add(refRows[i].cells[field]!.value.toString());
-      }
-
-      rowText.add(columnText.join('\t'));
-    }
-
-    return rowText.join('\n');
+    return rowText.join(_lineSeparator);
   }
 
   String _selectingTextFromCurrentCell() {
@@ -1045,11 +1015,11 @@ mixin SelectingState implements ITrinaGridState {
       }
 
       if (cellTexts.isNotEmpty) {
-        rowTexts.add(cellTexts.join('\t'));
+        rowTexts.add(cellTexts.join(_cellSeparator));
       }
     }
 
-    return rowTexts.join('\n');
+    return rowTexts.join(_lineSeparator);
   }
 
   void _setFistCellAsCurrent() {

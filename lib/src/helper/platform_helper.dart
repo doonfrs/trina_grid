@@ -31,6 +31,12 @@ class PlatformHelper {
 
   static final bool isDesktopApp = _isDesktopApp;
 
+  static final bool isWindows = _isWindows;
+
+  /// Platform-specific line terminator for text operations.
+  /// Returns '\r\n' (CRLF) on Windows, '\n' (LF) on all other platforms.
+  static String get lineTerminator => isWindows ? '\r\n' : '\n';
+
   static T? onWeb<T>(T Function() callback) {
     return _executeOrNull<T>(isWeb, callback);
   }

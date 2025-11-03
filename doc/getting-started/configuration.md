@@ -194,6 +194,52 @@ TrinaGridConfiguration(
 )
 ```
 
+### Copy & Paste Configuration
+
+Configure custom separators for copy and paste operations:
+
+```dart
+TrinaGridConfiguration(
+  // Cell separator (default: null, which uses tab '\t')
+  copyPasteCellSeparator: '\t',  // or ',' for CSV format
+
+  // Line separator (default: null, which uses platform-specific line endings)
+  // null = CRLF ('\r\n') on Windows, LF ('\n') on macOS/Linux
+  copyPasteLineSeparator: '\n',  // Force LF on all platforms
+)
+```
+
+**Configuration Options:**
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `copyPasteCellSeparator` | `String?` | `null` | Separator between cells in the same row. When `null`, uses tab (`\t`) for spreadsheet compatibility. |
+| `copyPasteLineSeparator` | `String?` | `null` | Separator between rows. When `null`, uses platform-specific line endings (CRLF on Windows, LF on macOS/Linux). |
+
+**Common Use Cases:**
+
+```dart
+// CSV format - comma-separated with LF line endings
+TrinaGridConfiguration(
+  copyPasteCellSeparator: ',',
+  copyPasteLineSeparator: '\n',
+)
+
+// Excel-compatible format with platform-specific line endings
+TrinaGridConfiguration(
+  copyPasteCellSeparator: '\t',
+  copyPasteLineSeparator: null,  // Uses platform-specific
+)
+
+// Custom format - pipe-separated
+TrinaGridConfiguration(
+  copyPasteCellSeparator: '|',
+  copyPasteLineSeparator: '\n',
+)
+```
+
+For more details, see the [Copy & Paste](../features/copy-paste.md) feature documentation.
+
 ### Keyboard Navigation
 
 Configure keyboard shortcuts:
@@ -203,7 +249,7 @@ TrinaGridConfiguration(
   shortcut: TrinaGridShortcut(
     actions: {
       // Custom shortcuts
-      LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyA): 
+      LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyA):
           TrinaGridShortcutAction.selectAll,
     },
   ),
@@ -400,11 +446,15 @@ TrinaGrid(
     enableMoveDownAfterSelecting: true,
     enterKeyAction: TrinaGridEnterKeyAction.editingAndMoveDown,
     selectingMode: TrinaGridSelectingMode.cell,
-    
+
+    // Copy & Paste configuration
+    copyPasteCellSeparator: null,  // Uses default tab separator
+    copyPasteLineSeparator: null,  // Uses platform-specific line endings
+
     // Keyboard shortcuts
     shortcut: TrinaGridShortcut(
       actions: {
-        LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyA): 
+        LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyA):
             TrinaGridShortcutAction.selectAll,
       },
     ),
