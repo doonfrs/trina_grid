@@ -123,6 +123,7 @@ class TrinaGrid extends TrinaStatefulWidget {
     this.mode = TrinaGridMode.normal,
     this.onValidationFailed,
     this.onLazyFetchCompleted,
+    this.scrollPhysics,
   });
 
   final double? rowsCacheExtent;
@@ -447,6 +448,8 @@ class TrinaGrid extends TrinaStatefulWidget {
 
   /// Callback triggered when a lazy pagination fetch operation completes
   final TrinaOnLazyFetchCompletedEventCallback? onLazyFetchCompleted;
+
+  final ScrollPhysics? scrollPhysics;
 
   /// [setDefaultLocale] sets locale when [Intl] package is used in [TrinaGrid].
   ///
@@ -781,6 +784,7 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
       onKeyEvent: _handleGridFocusOnKey,
       child: _GridContainer(
         stateManager: _stateManager,
+        scrollPhysics: widget.scrollPhysics,
         child: LayoutBuilder(
           builder: (c, size) {
             _stateManager.setLayout(size);
@@ -1344,8 +1348,13 @@ class _GridContainer extends StatelessWidget {
   final TrinaGridStateManager stateManager;
 
   final Widget child;
+  final ScrollPhysics? scrollPhysics;
 
-  const _GridContainer({required this.stateManager, required this.child});
+  const _GridContainer({
+    required this.stateManager,
+    required this.child,
+    required this.scrollPhysics,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -1359,6 +1368,7 @@ class _GridContainer extends StatelessWidget {
         behavior: TrinaScrollBehavior(
           isMobile: PlatformHelper.isMobile,
           userDragDevices: stateManager.configuration.scrollbar.dragDevices,
+          scrollPhysics: scrollPhysics,
         ),
         child: DecoratedBox(
           decoration: BoxDecoration(
@@ -1424,12 +1434,14 @@ class TrinaScrollBehavior extends MaterialScrollBehavior {
   const TrinaScrollBehavior({
     required this.isMobile,
     Set<PointerDeviceKind>? userDragDevices,
+    this.scrollPhysics,
   }) : _dragDevices =
            userDragDevices ??
            (isMobile ? _mobileDragDevices : _desktopDragDevices),
        super();
 
   final bool isMobile;
+  final ScrollPhysics? scrollPhysics;
 
   @override
   Set<PointerDeviceKind> get dragDevices => _dragDevices;
@@ -1456,6 +1468,11 @@ class TrinaScrollBehavior extends MaterialScrollBehavior {
     ScrollableDetails details,
   ) {
     return child;
+  }
+
+  @override
+  ScrollPhysics getScrollPhysics(BuildContext context) {
+    return scrollPhysics ?? ScrollPhysics();
   }
 }
 
