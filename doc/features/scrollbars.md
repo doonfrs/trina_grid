@@ -218,6 +218,132 @@ TrinaGrid(
 - Cancels automatically when you start dragging the scrollbar
 - Responsive to direction changes while scrolling
 
+## Scroll Physics
+
+The `scrollPhysics` parameter allows you to customize the scrolling behavior of the grid beyond what the scrollbar configuration provides. This controls how the grid responds to user scrolling gestures and scroll commands.
+
+### Basic Usage
+
+```dart
+TrinaGrid(
+  columns: columns,
+  rows: rows,
+  scrollPhysics: const NeverScrollableScrollPhysics(),
+)
+```
+
+### Available Scroll Physics
+
+Flutter provides several built-in `ScrollPhysics` that you can use:
+
+#### NeverScrollableScrollPhysics
+
+Disables all scrolling in the grid. Useful when you want to display a fixed grid without scrolling capability.
+
+```dart
+TrinaGrid(
+  columns: columns,
+  rows: rows,
+  scrollPhysics: const NeverScrollableScrollPhysics(),
+)
+```
+
+#### ClampingScrollPhysics
+
+Provides a clamping scroll effect (Android-style). The scroll position cannot go beyond the content bounds without resistance.
+
+```dart
+TrinaGrid(
+  columns: columns,
+  rows: rows,
+  scrollPhysics: const ClampingScrollPhysics(),
+)
+```
+
+#### BouncingScrollPhysics
+
+Provides a bouncing scroll effect (iOS-style). The scroll can go slightly beyond the content bounds and bounces back.
+
+```dart
+TrinaGrid(
+  columns: columns,
+  rows: rows,
+  scrollPhysics: const BouncingScrollPhysics(),
+)
+```
+
+#### AlwaysScrollableScrollPhysics
+
+Forces the grid to be scrollable even if the content fits within the viewport.
+
+```dart
+TrinaGrid(
+  columns: columns,
+  rows: rows,
+  scrollPhysics: const AlwaysScrollableScrollPhysics(),
+)
+```
+
+### Default Behavior
+
+When `scrollPhysics` is not specified (or set to `null`), TrinaGrid uses the platform-specific default scroll physics from `MaterialScrollBehavior`:
+- Android: Clamping scroll physics
+- iOS/macOS: Bouncing scroll physics
+
+```dart
+TrinaGrid(
+  columns: columns,
+  rows: rows,
+  // Uses platform-specific default
+)
+```
+
+### Combining Scroll Physics
+
+You can combine multiple scroll physics using the `applyTo` method for more complex behaviors:
+
+```dart
+TrinaGrid(
+  columns: columns,
+  rows: rows,
+  scrollPhysics: const BouncingScrollPhysics().applyTo(
+    const AlwaysScrollableScrollPhysics(),
+  ),
+)
+```
+
+### Use Cases
+
+**Disable scrolling for embedded grids:**
+```dart
+// Useful when the grid is inside a scrollable parent
+TrinaGrid(
+  columns: columns,
+  rows: rows,
+  scrollPhysics: const NeverScrollableScrollPhysics(),
+)
+```
+
+**Force consistent platform behavior:**
+```dart
+// Always use iOS-style bouncing on all platforms
+TrinaGrid(
+  columns: columns,
+  rows: rows,
+  scrollPhysics: const BouncingScrollPhysics(),
+)
+```
+
+**Customize overscroll behavior:**
+```dart
+// Prevent overscroll glow effect on Android
+TrinaGrid(
+  columns: columns,
+  rows: rows,
+  scrollPhysics: const ClampingScrollPhysics(),
+)
+```
+
 ## Best Practices
 
 1. **Desktop Applications**: For desktop applications, consider setting `isAlwaysShown: true` to make scrollbars always visible, improving usability.
@@ -234,6 +360,11 @@ TrinaGrid(
    - `thumbVisible: false` completely hides scrollbars regardless of the `isAlwaysShown` setting
 
 6. **Smooth Scrolling**: The smooth scrolling feature is enabled by default and provides a better user experience for mouse wheel users. Consider disabling it only if you have specific performance concerns or prefer instant scrolling behavior.
+
+7. **Scroll Physics**: Choose appropriate scroll physics based on your use case:
+   - Use `NeverScrollableScrollPhysics()` when the grid is inside a scrollable parent to prevent scroll conflicts
+   - Use platform-specific physics (default) for the most native feel on each platform
+   - Consider `AlwaysScrollableScrollPhysics()` if you need scrolling gestures to work even when content fits the viewport
 
 ## Limitations
 

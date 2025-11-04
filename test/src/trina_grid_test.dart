@@ -271,5 +271,82 @@ void main() {
     expect(columns[2].title, 'body0');
   });
 
+  testWidgets(
+    'When scrollPhysics is provided, it should be applied to the grid',
+    (WidgetTester tester) async {
+      // given
+      final columns = ColumnHelper.textColumn('header', count: 3);
+      final rows = RowHelper.count(10, columns);
+      const customPhysics = NeverScrollableScrollPhysics();
+
+      // when
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Material(
+            child: TrinaGrid(
+              columns: columns,
+              rows: rows,
+              scrollPhysics: customPhysics,
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      // then
+      final scrollable = find.descendant(
+        of: find.byType(TrinaGrid),
+        matching: find.byType(Scrollable),
+      );
+
+      expect(scrollable, findsWidgets);
+
+      // Verify ScrollConfiguration is applied
+      final scrollConfig = find.descendant(
+        of: find.byType(TrinaGrid),
+        matching: find.byType(ScrollConfiguration),
+      );
+
+      expect(scrollConfig, findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'When scrollPhysics is null, default scroll physics should be used',
+    (WidgetTester tester) async {
+      // given
+      final columns = ColumnHelper.textColumn('header', count: 3);
+      final rows = RowHelper.count(10, columns);
+
+      // when
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Material(
+            child: TrinaGrid(columns: columns, rows: rows, scrollPhysics: null),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      // then
+      final scrollable = find.descendant(
+        of: find.byType(TrinaGrid),
+        matching: find.byType(Scrollable),
+      );
+
+      expect(scrollable, findsWidgets);
+
+      // Verify ScrollConfiguration is applied with default behavior
+      final scrollConfig = find.descendant(
+        of: find.byType(TrinaGrid),
+        matching: find.byType(ScrollConfiguration),
+      );
+
+      expect(scrollConfig, findsOneWidget);
+    },
+  );
+
   // ... rest of the code remains the same ...
 }

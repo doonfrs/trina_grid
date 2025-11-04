@@ -449,6 +449,17 @@ class TrinaGrid extends TrinaStatefulWidget {
   /// Callback triggered when a lazy pagination fetch operation completes
   final TrinaOnLazyFetchCompletedEventCallback? onLazyFetchCompleted;
 
+  /// Custom scroll physics to control scrolling behavior.
+  ///
+  /// If null, uses platform-specific default scroll physics from [MaterialScrollBehavior].
+  ///
+  /// Example:
+  /// ```dart
+  /// TrinaGrid(
+  ///   scrollPhysics: const NeverScrollableScrollPhysics(),
+  ///   // ... other parameters
+  /// )
+  /// ```
   final ScrollPhysics? scrollPhysics;
 
   /// [setDefaultLocale] sets locale when [Intl] package is used in [TrinaGrid].
@@ -1472,7 +1483,7 @@ class TrinaScrollBehavior extends MaterialScrollBehavior {
 
   @override
   ScrollPhysics getScrollPhysics(BuildContext context) {
-    return scrollPhysics ?? ScrollPhysics();
+    return scrollPhysics ?? super.getScrollPhysics(context);
   }
 }
 
