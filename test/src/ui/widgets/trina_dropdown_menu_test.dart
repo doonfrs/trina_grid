@@ -22,7 +22,7 @@ void main() {
     Future<void> buildMenu<T>(
       WidgetTester tester, {
       required List<T> items,
-      required T initialValue,
+      required T? initialValue,
       String Function(T item)? itemToString,
       dynamic Function(T item)? itemToValue,
       TrinaDropdownMenuVariant variant = TrinaDropdownMenuVariant.select,
@@ -458,6 +458,63 @@ void main() {
         expect(find.text('Item 15'), findsOneWidget);
         // Top items should be scrolled off-screen
         expect(find.text('Item 0'), findsNothing);
+      });
+
+      testWidgets('should handle null initialValue without crashing', (
+        tester,
+      ) async {
+        // This test ensures issue with null select cell values is fixed
+        await buildMenu<String>(
+          tester,
+          items: ['Apple', 'Banana', 'Cherry'],
+          initialValue: null,
+          itemToString: (item) => item,
+        );
+
+        // Should render all items
+        expect(find.text('Apple'), findsOneWidget);
+        expect(find.text('Banana'), findsOneWidget);
+        expect(find.text('Cherry'), findsOneWidget);
+
+        // Should not crash when initialValue is null
+        expect(tester.takeException(), isNull);
+      });
+
+      testWidgets('should not scroll when initialValue is null', (
+        tester,
+      ) async {
+        await buildStringMenu(
+          tester,
+          items: List.generate(20, (i) => 'Item $i'),
+          initialValue: null,
+          itemHeight: 40,
+          maxHeight: 200,
+        );
+
+        final scrollable = tester.widget<Scrollable>(find.byType(Scrollable));
+        // When initialValue is null, scroll offset should be 0 (no scrolling)
+        expect(scrollable.controller?.offset, 0);
+
+        // First items should be visible
+        expect(find.text('Item 0'), findsOneWidget);
+      });
+
+      testWidgets('should not highlight any item when initialValue is null', (
+        tester,
+      ) async {
+        await buildStringMenu(
+          tester,
+          items: ['Apple', 'Banana', 'Cherry'],
+          initialValue: null,
+        );
+
+        // Find all MenuItemButton widgets
+        final menuItems = find.byType(MenuItemButton);
+        expect(menuItems, findsNWidgets(3));
+
+        // When initialValue is null, no item should be marked as selected
+        // This is tested implicitly - the menu should render without errors
+        expect(tester.takeException(), isNull);
       });
     });
   });

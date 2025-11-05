@@ -392,6 +392,10 @@ class _CellContainer extends TrinaStatefulWidget {
 class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
   BoxDecoration _decoration = const BoxDecoration();
 
+  // Cache for checkReadOnly callback result
+  bool? _cachedReadOnly;
+  dynamic _cachedCellValueForReadOnly;
+
   @override
   TrinaGridStateManager get stateManager => widget.stateManager;
 
@@ -400,6 +404,16 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
     super.initState();
 
     updateState(TrinaNotifierEventForceUpdate.instance);
+  }
+
+  bool _getReadOnly() {
+    // Cache the checkReadOnly result to avoid excessive callback executions
+    if (_cachedCellValueForReadOnly != widget.cell.value ||
+        _cachedReadOnly == null) {
+      _cachedCellValueForReadOnly = widget.cell.value;
+      _cachedReadOnly = widget.column.checkReadOnly(widget.row, widget.cell);
+    }
+    return _cachedReadOnly!;
   }
 
   @override
@@ -412,7 +426,7 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
       _decoration,
       _boxDecoration(
         hasFocus: stateManager.hasFocus,
-        readOnly: widget.column.checkReadOnly(widget.row, widget.cell),
+        readOnly: _getReadOnly(),
         isEditing: stateManager.isEditing,
         isCurrentCell: isCurrentCell,
         isSelectedCell: stateManager.isSelectedCell(
