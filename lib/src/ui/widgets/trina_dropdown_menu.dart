@@ -75,8 +75,9 @@ class TrinaDropdownMenu<T> extends StatefulWidget {
 
   /// {@template TrinaDropdownMenu.initialValue}
   /// The initially selected value, which will be highlighted in the list.
+  /// If null, no item will be initially selected.
   /// {@endtemplate}
-  final T initialValue;
+  final T? initialValue;
 
   /// {@template TrinaDropdownMenu.itemBuilder}
   /// A builder function to create a custom widget for each item in the list.
@@ -159,7 +160,7 @@ class TrinaDropdownMenu<T> extends StatefulWidget {
     required List<T> items,
     required void Function(T item) onItemSelected,
     required double width,
-    required T initialValue,
+    required T? initialValue,
     required double itemHeight,
     required double maxHeight,
     required List<TrinaDropdownMenuFilter> filters,
@@ -229,7 +230,7 @@ class TrinaDropdownMenu<T> extends StatefulWidget {
     required String Function(T item) itemToString,
     required void Function(T item) onItemSelected,
     required double width,
-    required T initialValue,
+    required T? initialValue,
     required double itemHeight,
     required double maxHeight,
     Key? key,
@@ -246,7 +247,7 @@ class TrinaDropdownMenu<T> extends StatefulWidget {
     required void Function(T item) onItemSelected,
     required List<TrinaDropdownMenuFilter> filters,
     required double width,
-    required T initialValue,
+    required T? initialValue,
     required double itemHeight,
     required double maxHeight,
     required bool filtersInitiallyExpanded,
@@ -296,8 +297,10 @@ base class TrinaDropdownMenuState<T> extends State<TrinaDropdownMenu<T>> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       if (!scrollController.hasClients) return;
+      final initialValue = widget.initialValue;
+      if (initialValue == null) return;
 
-      final initialValueComparable = getComparableValue(widget.initialValue);
+      final initialValueComparable = getComparableValue(initialValue);
       final initialItemIndex = itemsNotifier.value.indexWhere(
         (element) => getComparableValue(element) == initialValueComparable,
       );
@@ -1120,9 +1123,11 @@ class _ItemListView<T> extends StatelessWidget {
             itemCount: filteredItems.length,
             itemBuilder: (context, index) {
               final item = filteredItems[index];
+              final initialValue = menuWidget.initialValue;
               final isSelected =
+                  initialValue != null &&
                   menuState.getComparableValue(item) ==
-                  menuState.getComparableValue(menuWidget.initialValue);
+                      menuState.getComparableValue(initialValue);
               return _EnterKeyListener(
                 onEnter: () {
                   menuWidget.onItemSelected(item);
