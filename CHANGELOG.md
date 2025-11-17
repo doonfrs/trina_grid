@@ -1,5 +1,26 @@
 # Changelog
 
+## [2.1.1] - 2025. 11. 17
+
+* Feature: Added scroll physics configuration to TrinaGrid (#262). @doonfrs
+* Feature: Added configurable platform-specific separators for copy/paste (#261). @doonfrs
+* Feature: Added Mac Cmd key support for cell selection. @doonfrs
+* Feature: Added Excel-like cell selection features. @doonfrs
+* Feature: Added cancellable onBeforeActiveCellChange event. @doonfrs
+* Feature: Added smooth scrolling and scrollbar click-to-jump enhancements. @doonfrs
+* Feature: Added click-to-jump functionality to scrollbars. @doonfrs
+* Fix: Optimized callback executions with caching (#252) (#265). @doonfrs
+* Fix: Account for scrollbar width in column auto-sizing (#266). @doonfrs
+* Fix: Initialize all columns when inserting rows to prevent assertion error. @doonfrs
+* Fix: Ensure frozen column divider renders correctly in RTL mode. @doonfrs
+* Fix: Exit edit mode before selection to enable copy operations. @doonfrs
+* Fix: Update outdated test mocks and fix flaky date-time test. @doonfrs
+* Fix: Copy/paste with Ctrl+Click multi-select and Mac support. @doonfrs
+* Fix: Enable custom renderers for group header cells in row grouping. @doonfrs
+* Fix: Apply rowWrapper to frozen column rows. @doonfrs
+* Test: Fix outdated test expectations for time cell and pagination. @doonfrs
+* Docs: Add comprehensive scrollPhysics documentation and tests (#263). @doonfrs
+
 ## [2.1.0] - 2025. 09. 30
 
 * Feature: Added comprehensive translations for pagination and time picker. @doonfrs
