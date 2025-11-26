@@ -248,7 +248,7 @@ class TrinaLazyPaginationState extends State<TrinaLazyPagination> {
   late int _pageSize;
   int _totalPage = 0;
   int? _totalRecords;
-  bool _isFetching = false;
+  int _fetchVersion = 0;
   final _gotoPageController = TextEditingController();
 
   TrinaGridStateManager get stateManager => widget.stateManager;
@@ -306,9 +306,9 @@ class TrinaLazyPaginationState extends State<TrinaLazyPagination> {
   }
 
   void setPage(int page) async {
-    if (_isFetching) return;
-
-    _isFetching = true;
+    // Increment version to mark this as the current fetch
+    // This allows new fetches to supersede in-progress ones
+    final thisVersion = ++_fetchVersion;
 
     stateManager.setShowLoading(
       widget.showLoading,
@@ -326,7 +326,9 @@ class TrinaLazyPaginationState extends State<TrinaLazyPagination> {
           ),
         )
         .then((data) {
-          if (!mounted) return;
+          // Only process if this is still the current fetch and widget is mounted
+          if (thisVersion != _fetchVersion || !mounted) return;
+
           stateManager.scroll.bodyRowsVertical!.jumpTo(0);
 
           stateManager.refRows.clearFromOriginal();
@@ -336,7 +338,6 @@ class TrinaLazyPaginationState extends State<TrinaLazyPagination> {
             _page = page;
             _totalPage = data.totalPage;
             _totalRecords = data.totalRecords;
-            _isFetching = false;
           });
 
           stateManager.setShowLoading(false);
@@ -357,6 +358,12 @@ class TrinaLazyPaginationState extends State<TrinaLazyPagination> {
               ),
             );
           }
+        })
+        .catchError((error) {
+          // Only handle error if this is still the current fetch
+          if (thisVersion != _fetchVersion || !mounted) return;
+
+          stateManager.setShowLoading(false);
         });
   }
 
