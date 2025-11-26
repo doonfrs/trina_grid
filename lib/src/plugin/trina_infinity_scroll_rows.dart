@@ -107,6 +107,7 @@ class TrinaInfinityScrollRows extends StatefulWidget {
 class _TrinaInfinityScrollRowsState extends State<TrinaInfinityScrollRows> {
   late final StreamSubscription<TrinaGridEvent> _events;
 
+  int _fetchVersion = 0;
   bool _isFetching = false;
 
   bool _isLast = false;
@@ -170,6 +171,9 @@ class _TrinaInfinityScrollRowsState extends State<TrinaInfinityScrollRows> {
 
     if (_isLast) return;
 
+    // Increment version to mark this as the current fetch
+    // This allows new fetches to supersede in-progress ones
+    final thisVersion = ++_fetchVersion;
     _isFetching = true;
 
     stateManager.setShowLoading(
@@ -185,31 +189,43 @@ class _TrinaInfinityScrollRowsState extends State<TrinaInfinityScrollRows> {
       filterRows: stateManager.filterRows,
     );
 
-    widget.fetch(request).then((response) {
-      if (lastRow == null) {
-        scroll.jumpTo(0);
-        stateManager.removeAllRows(notify: false);
-      }
+    widget
+        .fetch(request)
+        .then((response) {
+          // Only process if this is still the current fetch and widget is mounted
+          if (thisVersion != _fetchVersion || !mounted) return;
 
-      stateManager.appendRows(response.rows);
-
-      stateManager.setShowLoading(false);
-
-      _isFetching = false;
-
-      _isLast = response.isLast;
-
-      if (!_isLast) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (scroll.hasClients && scroll.position.maxScrollExtent == 0) {
-            var lastRow = stateManager.rows.isNotEmpty
-                ? stateManager.rows.last
-                : null;
-            _update(lastRow);
+          if (lastRow == null) {
+            scroll.jumpTo(0);
+            stateManager.removeAllRows(notify: false);
           }
+
+          stateManager.appendRows(response.rows);
+
+          stateManager.setShowLoading(false);
+
+          _isFetching = false;
+
+          _isLast = response.isLast;
+
+          if (!_isLast) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (scroll.hasClients && scroll.position.maxScrollExtent == 0) {
+                var lastRow = stateManager.rows.isNotEmpty
+                    ? stateManager.rows.last
+                    : null;
+                _update(lastRow);
+              }
+            });
+          }
+        })
+        .catchError((error) {
+          // Only handle error if this is still the current fetch
+          if (thisVersion != _fetchVersion || !mounted) return;
+
+          _isFetching = false;
+          stateManager.setShowLoading(false);
         });
-      }
-    });
   }
 
   @override
