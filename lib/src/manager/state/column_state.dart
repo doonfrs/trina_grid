@@ -627,6 +627,10 @@ mixin ColumnState implements ITrinaGridState {
 
     column.hide = hide;
     _updateAfterHideColumn(columns: [column], notify: notify);
+
+    eventManager?.addEvent(
+      TrinaGridColumnHiddenEvent(columns: [column], isHidden: hide),
+    );
   }
 
   @override
@@ -635,14 +639,25 @@ mixin ColumnState implements ITrinaGridState {
       return;
     }
 
+    final changedColumns = <TrinaColumn>[];
     for (final column in columns) {
       if (hide == column.hide) {
         continue;
       }
 
       column.hide = hide;
+      changedColumns.add(column);
     }
+
+    if (changedColumns.isEmpty) {
+      return;
+    }
+
     _updateAfterHideColumn(columns: columns, notify: notify);
+
+    eventManager?.addEvent(
+      TrinaGridColumnHiddenEvent(columns: changedColumns, isHidden: hide),
+    );
   }
 
   @override
