@@ -74,7 +74,60 @@ TrinaGrid(
 
 ## Events
 
-When columns are hidden or shown, TrinaGrid updates its layout and notifies listeners. This allows your application to respond to visibility changes.
+When columns are hidden or shown, TrinaGrid dispatches a `TrinaGridColumnHiddenEvent` through the event manager. This allows your application to respond to visibility changes and persist user preferences.
+
+### Listening for Column Visibility Changes
+
+You can listen to column visibility events using the event manager:
+
+```dart
+TrinaGrid(
+  columns: columns,
+  rows: rows,
+  onLoaded: (event) {
+    stateManager = event.stateManager;
+
+    // Listen to column visibility events
+    stateManager.eventManager!.listener((event) {
+      if (event is TrinaGridColumnHiddenEvent) {
+        print('Columns ${event.isHidden ? "hidden" : "shown"}: ${event.columns.length}');
+
+        // Store visibility state for next usage
+        saveColumnVisibility(event.columns, event.isHidden);
+      }
+    });
+  },
+)
+```
+
+### The TrinaGridColumnHiddenEvent Object
+
+The event contains the following properties:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `columns` | `List<TrinaColumn>` | The columns that were hidden or shown |
+| `isHidden` | `bool` | `true` if columns were hidden, `false` if shown |
+
+### Example: Persisting Column Visibility
+
+```dart
+// Save column visibility to SharedPreferences
+void saveColumnVisibility(List<TrinaColumn> columns, bool isHidden) {
+  final prefs = await SharedPreferences.getInstance();
+  final hiddenColumns = prefs.getStringList('hiddenColumns') ?? [];
+
+  for (final column in columns) {
+    if (isHidden) {
+      hiddenColumns.add(column.field);
+    } else {
+      hiddenColumns.remove(column.field);
+    }
+  }
+
+  prefs.setStringList('hiddenColumns', hiddenColumns);
+}
+```
 
 ## Example
 
