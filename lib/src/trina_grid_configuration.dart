@@ -167,6 +167,17 @@ class TrinaGridConfiguration {
   /// Can be customized to use a specific separator.
   final String? copyPasteLineSeparator;
 
+  /// When true, enables itemExtent optimization even when rowWrapper is used.
+  ///
+  /// By default, using [rowWrapper] disables ListView's itemExtent optimization
+  /// to allow for variable row heights. However, if your rowWrapper only adds
+  /// visual styling without affecting row height, setting this to true will
+  /// restore O(1) scroll performance and allow accurate calculation of scroll
+  /// position.
+  ///
+  /// Default is false for backward compatibility.
+  final bool rowWrapperIsConstantHeight;
+
   const TrinaGridConfiguration({
     this.enableMoveDownAfterSelecting = false,
     this.enableMoveHorizontalInEditing = false,
@@ -189,6 +200,7 @@ class TrinaGridConfiguration {
     this.dragSelectionDelayDuration = const Duration(milliseconds: 200),
     this.copyPasteCellSeparator,
     this.copyPasteLineSeparator,
+    this.rowWrapperIsConstantHeight = false,
   });
 
   const TrinaGridConfiguration.dark({
@@ -213,6 +225,7 @@ class TrinaGridConfiguration {
     this.dragSelectionDelayDuration = const Duration(milliseconds: 200),
     this.copyPasteCellSeparator,
     this.copyPasteLineSeparator,
+    this.rowWrapperIsConstantHeight = false,
   });
 
   void updateLocale() {
@@ -261,6 +274,7 @@ class TrinaGridConfiguration {
     Duration? dragSelectionDelayDuration,
     String? copyPasteCellSeparator,
     String? copyPasteLineSeparator,
+    bool? rowWrapperIsConstantHeight,
   }) {
     return TrinaGridConfiguration(
       enableMoveDownAfterSelecting:
@@ -289,6 +303,8 @@ class TrinaGridConfiguration {
           copyPasteCellSeparator ?? this.copyPasteCellSeparator,
       copyPasteLineSeparator:
           copyPasteLineSeparator ?? this.copyPasteLineSeparator,
+      rowWrapperIsConstantHeight:
+          rowWrapperIsConstantHeight ?? this.rowWrapperIsConstantHeight,
     );
   }
 
@@ -317,7 +333,8 @@ class TrinaGridConfiguration {
             enableCtrlClickMultiSelect == other.enableCtrlClickMultiSelect &&
             dragSelectionDelayDuration == other.dragSelectionDelayDuration &&
             copyPasteCellSeparator == other.copyPasteCellSeparator &&
-            copyPasteLineSeparator == other.copyPasteLineSeparator;
+            copyPasteLineSeparator == other.copyPasteLineSeparator &&
+            rowWrapperIsConstantHeight == other.rowWrapperIsConstantHeight;
   }
 
   @override
@@ -341,6 +358,7 @@ class TrinaGridConfiguration {
       dragSelectionDelayDuration,
       copyPasteCellSeparator,
       copyPasteLineSeparator,
+      rowWrapperIsConstantHeight,
     ),
   );
 }
