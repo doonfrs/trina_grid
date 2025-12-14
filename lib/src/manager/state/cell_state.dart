@@ -26,7 +26,16 @@ abstract class ICellState {
   void clearCurrentCell({bool notify = true});
 
   /// Change the selected cell.
-  void setCurrentCell(TrinaCell? cell, int? rowIdx, {bool notify = true});
+  ///
+  /// [direction] is the movement direction that triggered this cell change.
+  /// Pass this when navigating via keyboard to allow callbacks to distinguish
+  /// between keyboard navigation and mouse clicks.
+  void setCurrentCell(
+    TrinaCell? cell,
+    int? rowIdx, {
+    bool notify = true,
+    TrinaMoveDirection? direction,
+  });
 
   /// Whether it is possible to move in the [direction] from [cellPosition].
   bool canMoveCell(
@@ -180,7 +189,12 @@ mixin CellState implements ITrinaGridState {
   }
 
   @override
-  void setCurrentCell(TrinaCell? cell, int? rowIdx, {bool notify = true}) {
+  void setCurrentCell(
+    TrinaCell? cell,
+    int? rowIdx, {
+    bool notify = true,
+    TrinaMoveDirection? direction,
+  }) {
     debugPrint(
       '[Selection] setCurrentCell called - rowIdx: $rowIdx, notify: $notify, ctrl: ${keyPressed.ctrl}, shift: ${keyPressed.shift}',
     );
@@ -209,6 +223,7 @@ mixin CellState implements ITrinaGridState {
           oldRowIdx: currentCellPosition?.rowIdx,
           newCell: cell,
           newRowIdx: rowIdx,
+          moveDirection: direction,
         ),
       );
 

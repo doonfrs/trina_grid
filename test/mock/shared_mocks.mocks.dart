@@ -1620,8 +1620,13 @@ class MockTrinaGridStateManager extends _i1.Mock
     _i2.TrinaCell? cell,
     int? rowIdx, {
     bool? notify = true,
+    _i2.TrinaMoveDirection? direction,
   }) => super.noSuchMethod(
-    Invocation.method(#setCurrentCell, [cell, rowIdx], {#notify: notify}),
+    Invocation.method(
+      #setCurrentCell,
+      [cell, rowIdx],
+      {#notify: notify, #direction: direction},
+    ),
     returnValueForMissingStub: null,
   );
 
