@@ -246,7 +246,10 @@ class TrinaBodyRowsState extends TrinaStateWithChange<TrinaBodyRows> {
                                       physics: const ClampingScrollPhysics(),
                                       itemCount: _scrollableRows.length,
                                       itemExtent:
-                                          stateManager.rowWrapper != null
+                                          (stateManager.rowWrapper != null &&
+                                              !stateManager
+                                                  .configuration
+                                                  .rowWrapperIsConstantHeight)
                                           ? null
                                           : stateManager.rowTotalHeight,
                                       addRepaintBoundaries: false,
