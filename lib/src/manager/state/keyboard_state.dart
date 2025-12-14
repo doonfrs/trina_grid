@@ -145,6 +145,7 @@ mixin KeyboardState implements ITrinaGridState {
       refRows[toMove.rowIdx!].cells[refColumns[toMove.columnIdx!].field],
       toMove.rowIdx,
       notify: notify,
+      direction: direction,
     );
 
     if (direction.horizontal) {
@@ -183,7 +184,12 @@ mixin KeyboardState implements ITrinaGridState {
 
     final cellToMove = currentRow!.cells[column.field];
 
-    setCurrentCell(cellToMove, currentRowIdx, notify: notify);
+    setCurrentCell(
+      cellToMove,
+      currentRowIdx,
+      notify: notify,
+      direction: direction,
+    );
 
     if (!showFrozenColumn || column.frozen.isFrozen != true) {
       direction.isLeft
@@ -212,7 +218,7 @@ mixin KeyboardState implements ITrinaGridState {
 
     final cellToMove = refRows[rowIdx].cells[field];
 
-    setCurrentCell(cellToMove, rowIdx, notify: notify);
+    setCurrentCell(cellToMove, rowIdx, notify: notify, direction: direction);
 
     direction.isUp
         ? scroll.vertical!.jumpTo(0)
@@ -241,7 +247,7 @@ mixin KeyboardState implements ITrinaGridState {
 
     final cellToMove = refRows[rowIdx].cells[field];
 
-    setCurrentCell(cellToMove, rowIdx, notify: notify);
+    setCurrentCell(cellToMove, rowIdx, notify: notify, direction: direction);
 
     moveScrollByRow(direction, rowIdx - direction.offset);
   }

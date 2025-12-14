@@ -237,17 +237,29 @@ class TrinaGridOnBeforeActiveCellChangeEvent {
   /// The new row index
   final int newRowIdx;
 
+  /// The direction of movement that triggered this cell change.
+  /// This is `null` when the cell change was triggered by a mouse click
+  /// or programmatic call without direction context.
+  /// When navigating via keyboard (arrow keys, tab, etc.), this will be
+  /// [TrinaMoveDirection.left], [TrinaMoveDirection.right],
+  /// [TrinaMoveDirection.up], or [TrinaMoveDirection.down].
+  final TrinaMoveDirection? moveDirection;
+
   const TrinaGridOnBeforeActiveCellChangeEvent({
     required this.oldCell,
     required this.oldRowIdx,
     required this.newCell,
     required this.newRowIdx,
+    this.moveDirection,
   });
 
   @override
   String toString() {
     String out = '[TrinaGridOnBeforeActiveCellChangeEvent] ';
     out += 'OldRowIdx: $oldRowIdx, NewRowIdx: $newRowIdx';
+    if (moveDirection != null) {
+      out += ', MoveDirection: $moveDirection';
+    }
     return out;
   }
 }

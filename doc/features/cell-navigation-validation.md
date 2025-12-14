@@ -44,6 +44,14 @@ class TrinaGridOnBeforeActiveCellChangeEvent {
 
   /// The new row index
   final int newRowIdx;
+
+  /// The direction of movement that triggered this cell change.
+  /// This is `null` when the cell change was triggered by a mouse click
+  /// or programmatic call without direction context.
+  /// When navigating via keyboard (arrow keys, tab, etc.), this will be
+  /// TrinaMoveDirection.left, TrinaMoveDirection.right,
+  /// TrinaMoveDirection.up, or TrinaMoveDirection.down.
+  final TrinaMoveDirection? moveDirection;
 }
 ```
 
@@ -297,6 +305,39 @@ The `onBeforeActiveCellChange` callback works for **all** navigation methods:
 - **Programmatic navigation**: `stateManager.setCurrentCell()`
 
 This ensures consistent validation regardless of how the user navigates.
+
+### Distinguishing Navigation Source
+
+You can use the `moveDirection` property to distinguish between keyboard navigation and mouse clicks:
+
+```dart
+TrinaGrid(
+  columns: columns,
+  rows: rows,
+  onBeforeActiveCellChange: (event) {
+    // Check if this is keyboard navigation or mouse click
+    if (event.moveDirection != null) {
+      // Keyboard navigation (arrow keys, tab, etc.)
+      print('Navigating via keyboard: ${event.moveDirection}');
+
+      // Example: Apply stricter validation for keyboard navigation
+      if (event.oldRowIdx != event.newRowIdx) {
+        return validateRowBeforeLeaving(rows[event.oldRowIdx!]);
+      }
+    } else {
+      // Mouse click or programmatic navigation
+      print('Navigation via mouse click or programmatic call');
+
+      // Example: Allow free navigation via mouse
+      return true;
+    }
+
+    return true;
+  },
+)
+```
+
+This is particularly useful for desktop applications where you might want different behavior for keyboard versus mouse navigation.
 
 ## Best Practices
 
