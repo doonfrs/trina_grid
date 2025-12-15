@@ -537,6 +537,59 @@ void main() {
       expect(icon.icon, Icons.arrow_upward);
       expect(icon.color, Colors.cyan);
     });
+
+    testWidgets('columnAscendingIcon should accept any Widget, not just Icon', (
+      tester,
+    ) async {
+      final column = buildColumn(sort: TrinaColumnSort.ascending);
+
+      await buildGrid(
+        tester,
+        columns: [column],
+        configuration: const TrinaGridConfiguration(
+          style: TrinaGridStyleConfig(
+            columnAscendingIcon: Text(
+              '↑',
+              style: TextStyle(color: Colors.blue),
+            ),
+          ),
+        ),
+      );
+
+      final target = find.descendant(
+        of: find.byType(TrinaColumnTitle),
+        matching: find.text('↑'),
+      );
+
+      expect(target, findsOneWidget);
+    });
+
+    testWidgets(
+      'columnDescendingIcon should accept any Widget, not just Icon',
+      (tester) async {
+        final column = buildColumn(sort: TrinaColumnSort.descending);
+
+        await buildGrid(
+          tester,
+          columns: [column],
+          configuration: const TrinaGridConfiguration(
+            style: TrinaGridStyleConfig(
+              columnDescendingIcon: Text(
+                '↓',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          ),
+        );
+
+        final target = find.descendant(
+          of: find.byType(TrinaColumnTitle),
+          matching: find.text('↓'),
+        );
+
+        expect(target, findsOneWidget);
+      },
+    );
   });
 
   group('with titleRenderer', () {

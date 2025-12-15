@@ -717,12 +717,12 @@ class TrinaGridStyleConfig {
   /// Ascending icon when sorting a column.
   ///
   /// If no value is specified, the default icon is set.
-  final Icon? columnAscendingIcon;
+  final Widget? columnAscendingIcon;
 
   /// Descending icon when sorting a column.
   ///
   /// If no value is specified, the default icon is set.
-  final Icon? columnDescendingIcon;
+  final Widget? columnDescendingIcon;
 
   /// Icon when RowGroup is expanded.
   final IconData rowGroupExpandedIcon;
@@ -807,8 +807,8 @@ class TrinaGridStyleConfig {
     TextStyle? cellTextStyle,
     IconData? columnContextIcon,
     IconData? columnResizeIcon,
-    TrinaOptional<Icon?>? columnAscendingIcon,
-    TrinaOptional<Icon?>? columnDescendingIcon,
+    TrinaOptional<Widget?>? columnAscendingIcon,
+    TrinaOptional<Widget?>? columnDescendingIcon,
     IconData? rowGroupExpandedIcon,
     IconData? rowGroupCollapsedIcon,
     IconData? rowGroupEmptyIcon,

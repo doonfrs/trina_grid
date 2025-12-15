@@ -272,9 +272,9 @@ class TrinaGridColumnIcon extends StatelessWidget {
 
   final IconData icon;
 
-  final Icon? ascendingIcon;
+  final Widget? ascendingIcon;
 
-  final Icon? descendingIcon;
+  final Widget? descendingIcon;
 
   const TrinaGridColumnIcon({
     this.sort,
