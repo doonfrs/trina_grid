@@ -360,6 +360,7 @@ class TrinaLazyPaginationState extends State<TrinaLazyPagination> {
           }
         })
         .catchError((error) {
+          debugPrint('TrinaLazyPagination fetch error: $error');
           // Only handle error if this is still the current fetch
           if (thisVersion != _fetchVersion || !mounted) return;
 
