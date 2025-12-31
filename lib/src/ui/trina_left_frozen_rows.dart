@@ -58,9 +58,8 @@ class TrinaLeftFrozenRowsState
     _frozenBottomRows = stateManager.refRows.originalList
         .where((row) => row.frozen == TrinaRowFrozen.end)
         .toList();
-    _scrollableRows = _rows
-        .where((row) => row.frozen == TrinaRowFrozen.none)
-        .toList();
+    _scrollableRows =
+        _rows.where((row) => row.frozen == TrinaRowFrozen.none).toList();
   }
 
   Widget _buildRow(BuildContext context, TrinaRow row, int index) {
@@ -70,7 +69,6 @@ class TrinaLeftFrozenRowsState
       row: row,
       columns: _columns,
       stateManager: stateManager,
-      visibilityLayout: true,
     );
 
     return stateManager.rowWrapper?.call(
