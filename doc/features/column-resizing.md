@@ -154,6 +154,9 @@ TrinaGrid also provides the ability to automatically fit a column's width to its
 ```dart
 // Auto-fit a column to its content
 stateManager.autoFitColumn(context, column);
+// Auto-fit all columns, with optional ignore list
+stateManager.autoFitColumns(context, columns, [ignoreIndexes]);
+
 ```
 
 This calculates the optimal width based on the column's content and header text.
@@ -209,7 +212,7 @@ class _ColumnResizingExampleState extends State<ColumnResizingExample> {
   @override
   void initState() {
     super.initState();
-    
+
     // Generate sample data
     for (int i = 0; i < 100; i++) {
       rows.add(
