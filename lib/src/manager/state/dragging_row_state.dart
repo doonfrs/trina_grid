@@ -57,7 +57,12 @@ mixin DraggingRowState implements ITrinaGridState {
 
     _state._isDraggingRow = flag;
 
-    _clearDraggingState();
+    // Only clear drag state when ending a drag (flag = false).
+    // Don't clear when starting - dragRows will be set immediately after.
+    // This ensures dragRows is still available when onAccept is called.
+    if (!flag) {
+      _state._dragTargetRowIdx = null;
+    }
 
     notifyListeners(notify, setIsDraggingRow.hashCode);
   }
@@ -108,11 +113,5 @@ mixin DraggingRowState implements ITrinaGridState {
     return rowKey != null &&
         isDraggingRow == true &&
         dragRows.firstWhereOrNull((element) => element.key == rowKey) != null;
-  }
-
-  void _clearDraggingState() {
-    _state._dragRows = [];
-
-    _state._dragTargetRowIdx = null;
   }
 }
