@@ -54,6 +54,26 @@ class _BooleanTypeColumnScreenState extends State<BooleanTypeColumnScreen> {
         title: 'Active',
         field: 'active',
         type: TrinaColumnType.boolean(),
+        renderer: (rendererContext) {
+          // Custom renderer with GestureDetector to test scroll preservation
+          return GestureDetector(
+            onTap: () {
+              final newValue = !(rendererContext.cell.value == true);
+              rendererContext.stateManager.changeCellValue(
+                rendererContext.cell,
+                newValue,
+              );
+            },
+            child: Icon(
+              rendererContext.cell.value == true
+                  ? Icons.check_circle
+                  : Icons.cancel,
+              color: rendererContext.cell.value == true
+                  ? Colors.green
+                  : Colors.red,
+            ),
+          );
+        },
       ),
       TrinaColumn(
         title: 'Active Allow Empty',
@@ -74,8 +94,8 @@ class _BooleanTypeColumnScreenState extends State<BooleanTypeColumnScreen> {
       ),
     ]);
 
-    // Create rows
-    for (int i = 1; i <= 20; i++) {
+    // Create rows (100 rows to test scroll preservation)
+    for (int i = 1; i <= 100; i++) {
       rows.add(
         TrinaRow(
           cells: {
