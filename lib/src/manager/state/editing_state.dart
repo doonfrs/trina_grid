@@ -338,6 +338,7 @@ mixin EditingState implements ITrinaGridState {
 
     currentRow.setState(TrinaRowState.updated);
     cell.value = value;
+    currentRow.incrementVersion();
 
     final changedEvent = TrinaGridOnChangedEvent(
       columnIdx: columnIndex(currentColumn)!,
@@ -464,6 +465,7 @@ mixin EditingState implements ITrinaGridState {
         refRows[rowIdx].setState(TrinaRowState.updated);
 
         currentCell.value = newValue;
+        refRows[rowIdx].incrementVersion();
 
         // Create the event object once to reuse for both callbacks
         final changedEvent = TrinaGridOnChangedEvent(

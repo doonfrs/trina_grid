@@ -49,7 +49,17 @@ class TrinaRow<T> {
 
   TrinaRowState _state;
 
+  /// Version number that increments when any cell value in this row changes.
+  /// Used by cell renderer caching to detect cross-cell dependencies.
+  int _version = 0;
+
   Key get key => _key;
+
+  /// Get the current row version for cache invalidation.
+  int get version => _version;
+
+  /// Increment the row version (called when any cell changes).
+  void incrementVersion() => _version++;
 
   bool get initialized {
     if (cells.isEmpty) {

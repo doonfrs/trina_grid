@@ -36,6 +36,7 @@ mixin PopupCellState<T extends PopupCell> on State<T>
   // Cache for editCellRenderer callback result
   Widget? _cachedEditCellWidget;
   dynamic _cachedCellValueForEditRenderer;
+  int? _cachedRowVersionForEditRenderer;
 
   KeyEventResult handleOpeningPopupWithKeyboard(
     FocusNode node,
@@ -124,9 +125,12 @@ mixin PopupCellState<T extends PopupCell> on State<T>
         widget.column.editCellRenderer ?? widget.stateManager.editCellRenderer;
     if (customRenderer != null) {
       // Cache the editCellRenderer result to avoid excessive callback executions
+      // Also invalidate when row version changes (cross-cell dependency)
       if (_cachedCellValueForEditRenderer != widget.cell.value ||
+          _cachedRowVersionForEditRenderer != widget.row.version ||
           _cachedEditCellWidget == null) {
         _cachedCellValueForEditRenderer = widget.cell.value;
+        _cachedRowVersionForEditRenderer = widget.row.version;
         _cachedEditCellWidget = customRenderer(
           defaultEditWidget,
           widget.cell,

@@ -42,10 +42,12 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
   // Cache for checkReadOnly callback result
   bool? _cachedReadOnly;
   dynamic _cachedCellValueForReadOnly;
+  int? _cachedRowVersionForReadOnly;
 
   // Cache for editCellRenderer callback result
   Widget? _cachedEditCellWidget;
   dynamic _cachedCellValueForEditRenderer;
+  int? _cachedRowVersionForEditRenderer;
 
   @override
   TextInputType get keyboardType => TextInputType.text;
@@ -58,9 +60,12 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
 
   bool get _readOnly {
     // Cache the checkReadOnly result to avoid excessive callback executions
+    // Also invalidate when row version changes (cross-cell dependency)
     if (_cachedCellValueForReadOnly != widget.cell.value ||
+        _cachedRowVersionForReadOnly != widget.row.version ||
         _cachedReadOnly == null) {
       _cachedCellValueForReadOnly = widget.cell.value;
+      _cachedRowVersionForReadOnly = widget.row.version;
       _cachedReadOnly = widget.column.checkReadOnly(widget.row, widget.cell);
     }
     return _cachedReadOnly!;
@@ -297,9 +302,12 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
     // Use column-level editCellRenderer if available, otherwise fall back to grid-level
     if (widget.column.editCellRenderer != null) {
       // Cache the editCellRenderer result to avoid excessive callback executions
+      // Also invalidate when row version changes (cross-cell dependency)
       if (_cachedCellValueForEditRenderer != widget.cell.value ||
+          _cachedRowVersionForEditRenderer != widget.row.version ||
           _cachedEditCellWidget == null) {
         _cachedCellValueForEditRenderer = widget.cell.value;
+        _cachedRowVersionForEditRenderer = widget.row.version;
         _cachedEditCellWidget = widget.column.editCellRenderer!(
           w,
           widget.cell,
@@ -311,9 +319,12 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
       return _cachedEditCellWidget!;
     } else if (widget.stateManager.editCellRenderer != null) {
       // Cache the editCellRenderer result to avoid excessive callback executions
+      // Also invalidate when row version changes (cross-cell dependency)
       if (_cachedCellValueForEditRenderer != widget.cell.value ||
+          _cachedRowVersionForEditRenderer != widget.row.version ||
           _cachedEditCellWidget == null) {
         _cachedCellValueForEditRenderer = widget.cell.value;
+        _cachedRowVersionForEditRenderer = widget.row.version;
         _cachedEditCellWidget = widget.stateManager.editCellRenderer!(
           w,
           widget.cell,

@@ -474,6 +474,7 @@ class _DefaultCellWidgetState extends State<_DefaultCellWidget> {
   bool? _cachedIsCurrentCell;
   bool? _cachedIsSelectedCell;
   Widget? _cachedRendererWidget;
+  int? _cachedRowVersion;
 
   @override
   void didUpdateWidget(_DefaultCellWidget oldWidget) {
@@ -484,6 +485,7 @@ class _DefaultCellWidgetState extends State<_DefaultCellWidget> {
       _cachedCellValue = null;
       _cachedIsCurrentCell = null;
       _cachedIsSelectedCell = null;
+      _cachedRowVersion = null;
     }
   }
 
@@ -532,12 +534,14 @@ class _DefaultCellWidgetState extends State<_DefaultCellWidget> {
     // Check for cell renderer first
     if (widget.cell.hasRenderer) {
       // Cache the renderer result to avoid excessive callback executions
-      // Invalidate cache if cell value or selection state changes
+      // Invalidate cache if cell value, row version, or selection state changes
       if (_cachedCellValue != widget.cell.value ||
+          _cachedRowVersion != widget.row.version ||
           _cachedIsCurrentCell != isCurrentCell ||
           _cachedIsSelectedCell != isSelectedCell ||
           _cachedRendererWidget == null) {
         _cachedCellValue = widget.cell.value;
+        _cachedRowVersion = widget.row.version;
         _cachedIsCurrentCell = isCurrentCell;
         _cachedIsSelectedCell = isSelectedCell;
         _cachedRendererWidget = widget.cell.renderer!(
@@ -556,12 +560,14 @@ class _DefaultCellWidgetState extends State<_DefaultCellWidget> {
     // Fall back to column renderer
     if (widget.column.hasRenderer) {
       // Cache the renderer result to avoid excessive callback executions
-      // Invalidate cache if cell value or selection state changes
+      // Invalidate cache if cell value, row version, or selection state changes
       if (_cachedCellValue != widget.cell.value ||
+          _cachedRowVersion != widget.row.version ||
           _cachedIsCurrentCell != isCurrentCell ||
           _cachedIsSelectedCell != isSelectedCell ||
           _cachedRendererWidget == null) {
         _cachedCellValue = widget.cell.value;
+        _cachedRowVersion = widget.row.version;
         _cachedIsCurrentCell = isCurrentCell;
         _cachedIsSelectedCell = isSelectedCell;
         _cachedRendererWidget = widget.column.renderer!(

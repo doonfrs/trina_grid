@@ -395,6 +395,7 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
   // Cache for checkReadOnly callback result
   bool? _cachedReadOnly;
   dynamic _cachedCellValueForReadOnly;
+  int? _cachedRowVersionForReadOnly;
 
   @override
   TrinaGridStateManager get stateManager => widget.stateManager;
@@ -408,9 +409,12 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
 
   bool _getReadOnly() {
     // Cache the checkReadOnly result to avoid excessive callback executions
+    // Also invalidate when row version changes (cross-cell dependency)
     if (_cachedCellValueForReadOnly != widget.cell.value ||
+        _cachedRowVersionForReadOnly != widget.row.version ||
         _cachedReadOnly == null) {
       _cachedCellValueForReadOnly = widget.cell.value;
+      _cachedRowVersionForReadOnly = widget.row.version;
       _cachedReadOnly = widget.column.checkReadOnly(widget.row, widget.cell);
     }
     return _cachedReadOnly!;
