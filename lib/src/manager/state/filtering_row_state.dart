@@ -118,6 +118,12 @@ mixin FilteringRowState implements ITrinaGridState {
   @override
   void setFilterRows(List<TrinaRow> rows) {
     _state._filterRows = rows.where((element) {
+      final filterType = element.cells[FilterHelper.filterFieldType]?.value;
+      // Allow empty filter values for IsEmpty and IsNotEmpty filter types
+      if (filterType is TrinaFilterTypeIsEmpty ||
+          filterType is TrinaFilterTypeIsNotEmpty) {
+        return true;
+      }
       final value = element.cells[FilterHelper.filterFieldValue]!.value;
       return value != null && value.toString().isNotEmpty;
     }).toList();

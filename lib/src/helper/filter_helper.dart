@@ -32,6 +32,8 @@ class FilterHelper {
     TrinaFilterTypeLessThan(),
     TrinaFilterTypeLessThanOrEqualTo(),
     TrinaFilterTypeRegex(),
+    TrinaFilterTypeIsEmpty(),
+    TrinaFilterTypeIsNotEmpty(),
   ];
 
   /// Create a row to contain filter information.
@@ -318,6 +320,24 @@ class FilterHelper {
     required TrinaColumn column,
   }) {
     return column.type.compare(base, search) < 1;
+  }
+
+  /// Whether [base] is empty (null, empty string, or whitespace-only).
+  static bool compareIsEmpty({
+    required String? base,
+    required String? search,
+    required TrinaColumn column,
+  }) {
+    return base == null || base.trim().isEmpty;
+  }
+
+  /// Whether [base] is not empty (has actual content).
+  static bool compareIsNotEmpty({
+    required String? base,
+    required String? search,
+    required TrinaColumn column,
+  }) {
+    return base != null && base.trim().isNotEmpty;
   }
 
   static bool _compareWithRegExp(
@@ -741,4 +761,28 @@ class TrinaFilterTypeMultiItems implements TrinaFilterType {
         column: column,
         caseSensitive: caseSensitive,
       );
+}
+
+class TrinaFilterTypeIsEmpty implements TrinaFilterType {
+  static String name = 'Is Empty';
+
+  @override
+  String get title => TrinaFilterTypeIsEmpty.name;
+
+  @override
+  TrinaCompareFunction get compare => FilterHelper.compareIsEmpty;
+
+  const TrinaFilterTypeIsEmpty();
+}
+
+class TrinaFilterTypeIsNotEmpty implements TrinaFilterType {
+  static String name = 'Is Not Empty';
+
+  @override
+  String get title => TrinaFilterTypeIsNotEmpty.name;
+
+  @override
+  TrinaCompareFunction get compare => FilterHelper.compareIsNotEmpty;
+
+  const TrinaFilterTypeIsNotEmpty();
 }
