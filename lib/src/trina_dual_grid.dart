@@ -175,6 +175,8 @@ class TrinaDualGridState extends State<TrinaDualGrid> {
         },
         onChanged: props.onChanged,
         onSelected: (TrinaGridOnSelectedEvent onSelectedEvent) {
+          if (widget.onSelected == null) return;
+
           if (onSelectedEvent.row == null || onSelectedEvent.cell == null) {
             widget.onSelected!(
               TrinaDualOnSelectedEvent(gridA: null, gridB: null),
