@@ -42,6 +42,7 @@ Welcome to the official documentation for TrinaGrid, a powerful data grid for Fl
 - [Row Groups](features/row-groups.md)
 - [Frozen Rows](features/frozen-rows.md)
 - [Dynamic Row Heights](features/dynamic-row-heights.md)
+- [Row Custom Data](features/row-custom-data.md)
 
 ### Cell Features
 
