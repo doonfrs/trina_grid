@@ -72,6 +72,46 @@ void main() {
       expect(stateManager.isDraggingRow, isTrue);
       verifyNever(listener!.noParamReturnVoid());
     });
+
+    test(
+      'When setIsDraggingRow(false) is called, dragRows should NOT be cleared '
+      'so they remain available for onAccept handlers (issue #225)',
+      () {
+        // given - simulate starting a drag with multiple rows selected
+        stateManager.setIsDraggingRow(true, notify: false);
+        stateManager.setDragRows([rows[1], rows[2]], notify: false);
+
+        expect(stateManager.isDraggingRow, isTrue);
+        expect(stateManager.dragRows.length, 2);
+
+        // when - drag ends (pointer up)
+        stateManager.setIsDraggingRow(false);
+
+        // then - dragRows should still be available for onAccept to use
+        expect(stateManager.isDraggingRow, isFalse);
+        expect(stateManager.dragRows.length, 2);
+        expect(stateManager.dragRows[0].key, rows[1].key);
+        expect(stateManager.dragRows[1].key, rows[2].key);
+      },
+    );
+
+    test(
+      'When setIsDraggingRow(false) is called, dragTargetRowIdx should be cleared',
+      () {
+        // given
+        stateManager.setIsDraggingRow(true, notify: false);
+        stateManager.setDragTargetRowIdx(3, notify: false);
+
+        expect(stateManager.isDraggingRow, isTrue);
+        expect(stateManager.dragTargetRowIdx, 3);
+
+        // when
+        stateManager.setIsDraggingRow(false);
+
+        // then - dragTargetRowIdx should be cleared
+        expect(stateManager.dragTargetRowIdx, isNull);
+      },
+    );
   });
 
   group('setDragRows', () {

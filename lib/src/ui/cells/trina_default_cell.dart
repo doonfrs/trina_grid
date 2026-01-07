@@ -278,10 +278,9 @@ class _RowDragIconWidget extends StatelessWidget {
   }
 
   void _handleOnPointerMove(PointerMoveEvent event) {
-    // Do not drag while rows are selected.
-    if (stateManager.isSelecting) {
-      stateManager.setIsDraggingRow(false);
-
+    // Do not start drag while actively selecting rows.
+    // Allow drag to continue if it was already initiated via the drag handle.
+    if (stateManager.isSelecting && !stateManager.isDraggingRow) {
       return;
     }
 
