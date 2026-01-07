@@ -58,8 +58,9 @@ class TrinaRightFrozenRowsState
     _frozenBottomRows = stateManager.refRows.originalList
         .where((row) => row.frozen == TrinaRowFrozen.end)
         .toList();
-    _scrollableRows =
-        _rows.where((row) => row.frozen == TrinaRowFrozen.none).toList();
+    _scrollableRows = _rows
+        .where((row) => row.frozen == TrinaRowFrozen.none)
+        .toList();
   }
 
   Widget _buildRow(BuildContext context, TrinaRow row, int index) {
@@ -100,7 +101,11 @@ class TrinaRightFrozenRowsState
             scrollDirection: Axis.vertical,
             physics: const ClampingScrollPhysics(),
             itemCount: _scrollableRows.length,
-            // Remove fixed itemExtent for variable heights
+            itemExtent:
+                (stateManager.rowWrapper != null &&
+                    !stateManager.configuration.rowWrapperIsConstantHeight)
+                ? null
+                : stateManager.rowTotalHeight,
             itemBuilder: (ctx, i) =>
                 _buildRow(ctx, _scrollableRows[i], i + _frozenTopRows.length),
           ),
