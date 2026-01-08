@@ -1658,10 +1658,8 @@ class MockTrinaGridStateManager extends _i1.Mock
       );
 
   @override
-  void autoFitColumns(
-          _i3.BuildContext? context, List<_i2.TrinaColumn>? columns) =>
-      super.noSuchMethod(
-        Invocation.method(#autoFitColumns, [context, columns]),
+  void autoFitColumns(_i3.BuildContext? context) => super.noSuchMethod(
+        Invocation.method(#autoFitColumns, [context]),
         returnValueForMissingStub: null,
       );
   @override

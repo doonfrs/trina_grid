@@ -110,8 +110,7 @@ abstract class IColumnState {
   void resizeColumn(TrinaColumn column, double offset);
 
   void autoFitColumn(BuildContext context, TrinaColumn column);
-  void autoFitColumns(BuildContext context, List<TrinaColumn> columns,
-      List<int>? ignoreIndexes);
+  void autoFitColumns(BuildContext context, {List<int>? ignoreIndexes});
 
   /// Hide or show the [column] with [hide] value.
   void hideColumn(TrinaColumn column, bool hide, {bool notify = true});
@@ -620,18 +619,11 @@ mixin ColumnState implements ITrinaGridState {
   }
 
   @override
-  void autoFitColumns(
-    BuildContext context,
-    List<TrinaColumn> columns, [
-    List<int>? ignoreIndexes,
-  ]) {
-    for (final column in columns) {
-      // Skip if specific indexes provided and column not in list
-      if (ignoreIndexes != null &&
-          ignoreIndexes.contains(refColumns.originalList.indexOf(column))) {
-        continue;
-      }
-      autoFitColumn(context, column);
+  @override
+  void autoFitColumns(BuildContext context, {List<int>? ignoreIndexes}) {
+    for (int i = 0; i < refColumns.length; i++) {
+      if (ignoreIndexes?.contains(i) ?? false) continue;
+      autoFitColumn(context, refColumns[i]);
     }
   }
 
