@@ -283,6 +283,9 @@ class TrinaColumn {
   /// If null, it falls back to the grid's enterKeyAction configuration.
   final TrinaGridEnterKeyAction? filterEnterKeyAction;
 
+  // Optional metadata to attach additional data to columns
+  Map<String, String>? metadata;
+
   TrinaColumn({
     required this.title,
     required this.field,
@@ -326,6 +329,7 @@ class TrinaColumn {
     this.validator,
     this.editCellRenderer,
     this.filterEnterKeyAction,
+    this.metadata,
   }) : _key = UniqueKey(),
        _checkReadOnly = checkReadOnly;
 

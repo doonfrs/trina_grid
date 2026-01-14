@@ -13,6 +13,7 @@ class TrinaRow<T> {
     Key? key,
     TrinaRowFrozen? frozen,
     this.height,
+    this.metadata,
   }) : type = type ?? TrinaRowTypeNormal.instance,
        _checked = checked,
        _state = TrinaRowState.none,
@@ -34,6 +35,9 @@ class TrinaRow<T> {
   /// Custom height for this specific row
   /// If null, uses the global rowHeight from configuration
   final double? height;
+
+  // Optional metadata to attach additional data to rows
+  Map<String, String>? metadata;
 
   Map<String, TrinaCell> cells;
 
