@@ -99,6 +99,7 @@ class TrinaGridStateChangeNotifier extends TrinaChangeNotifier
     TrinaChangeNotifierFilterResolver? notifierFilterResolver,
     TrinaGridConfiguration configuration = const TrinaGridConfiguration(),
     TrinaGridMode? mode,
+    metadata,
   }) : refColumns = FilteredList(initialList: columns),
        refRows = FilteredList(initialList: rows),
        refColumnGroups = FilteredList<TrinaColumnGroup>(
@@ -217,6 +218,9 @@ class TrinaGridStateChangeNotifier extends TrinaChangeNotifier
 
   /// Get the current state of change tracking
   bool get enableChangeTracking => _enableChangeTracking;
+
+  // Optional metadata to attach additional data to the state manager
+  Map<String, dynamic>? metadata = {};
 
   /// Enable or disable change tracking
   void setChangeTracking(bool enable, {bool notify = true}) {

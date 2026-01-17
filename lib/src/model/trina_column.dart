@@ -284,7 +284,7 @@ class TrinaColumn {
   final TrinaGridEnterKeyAction? filterEnterKeyAction;
 
   // Optional metadata to attach additional data to columns
-  Map<String, String>? metadata;
+  Map<String, dynamic>? metadata = {};
 
   TrinaColumn({
     required this.title,

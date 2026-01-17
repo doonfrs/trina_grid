@@ -37,7 +37,7 @@ class TrinaRow<T> {
   final double? height;
 
   // Optional metadata to attach additional data to rows
-  Map<String, String>? metadata;
+  Map<String, dynamic>? metadata = {};
 
   Map<String, TrinaCell> cells;
 

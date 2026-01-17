@@ -76,7 +76,7 @@ class TrinaCell {
   final EdgeInsets? padding;
 
   // Optional metadata to attach additional data to cells
-  Map<String, String>? metadata;
+  Map<String, dynamic>? metadata = {};
 
   /// Returns true if this cell has a custom renderer.
   bool get hasRenderer => renderer != null;
