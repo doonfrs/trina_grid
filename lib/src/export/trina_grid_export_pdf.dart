@@ -15,6 +15,7 @@ class TrinaGridExportPdf implements TrinaGridExport {
     List<String>? columns,
     bool includeHeaders = true,
     bool ignoreFixedRows = false,
+    bool Function(TrinaRow row)? rowIgnoreCondition,
     String? title,
     String? creator,
     pw.PageTheme? pageTheme,
@@ -40,6 +41,7 @@ class TrinaGridExportPdf implements TrinaGridExport {
           columns,
           ignoreFixedRows,
           pdfSettings,
+          rowIgnoreCondition,
         ),
       ),
     );
@@ -52,13 +54,23 @@ class TrinaGridExportPdf implements TrinaGridExport {
     List<String>? columns,
     bool ignoreFixedRows,
     TrinaGridExportPdfSettings? pdfSettings,
+    bool Function(TrinaRow row)? rowIgnoreCondition,
   ) {
     final columnsToExport = _getColumnsToExport(
       stateManager: stateManager,
       columnNames: columns,
     );
     final rows = stateManager.refRows;
-    return [_table(columnsToExport, rows, ignoreFixedRows, pdfSettings)];
+
+    return [
+      _table(
+        columnsToExport,
+        rows,
+        ignoreFixedRows,
+        pdfSettings,
+        rowIgnoreCondition,
+      ),
+    ];
   }
 
   /// Helper method to get the columns to export based on provided column names
@@ -96,6 +108,7 @@ class TrinaGridExportPdf implements TrinaGridExport {
     List<TrinaRow> rows,
     bool ignoreFixedRows,
     TrinaGridExportPdfSettings? pdfSettings,
+    bool Function(TrinaRow row)? rowIgnoreCondition,
   ) {
     return pw.TableHelper.fromTextArray(
       border: pdfSettings?.border,
@@ -139,7 +152,11 @@ class TrinaGridExportPdf implements TrinaGridExport {
       textStyleBuilder: pdfSettings?.textStyleBuilder,
       headers: columns.map((column) => column.title).toList(),
       data: rows
-          .where((row) => !ignoreFixedRows || row.frozen == TrinaRowFrozen.none)
+          .where(
+            (row) =>
+                (!ignoreFixedRows || row.frozen == TrinaRowFrozen.none) &&
+                (rowIgnoreCondition == null || !rowIgnoreCondition(row)),
+          )
           .map(
             (row) => columns.map((column) {
               final cell = row.cells[column.field];
