@@ -3,15 +3,15 @@ import 'package:trina_grid/trina_grid.dart';
 
 typedef TrinaColumnValueFormatter = String Function(dynamic value);
 
-typedef TrinaColumnRenderer =
-    Widget Function(TrinaColumnRendererContext rendererContext);
+typedef TrinaColumnRenderer = Widget Function(
+    TrinaColumnRendererContext rendererContext);
 
-typedef TrinaColumnFooterRenderer =
-    Widget Function(TrinaColumnFooterRendererContext context);
+typedef TrinaColumnFooterRenderer = Widget Function(
+    TrinaColumnFooterRendererContext context);
 
 /// Renderer for customizing the column title widget
-typedef TrinaColumnTitleRenderer =
-    Widget Function(TrinaColumnTitleRendererContext rendererContext);
+typedef TrinaColumnTitleRenderer = Widget Function(
+    TrinaColumnTitleRendererContext rendererContext);
 
 /// It dynamically determines whether the cells of the column are in the edit state.
 ///
@@ -178,6 +178,8 @@ class TrinaColumn {
   ///
   /// If [enableContextMenu] is enabled, the contextMenu icon appears.
   /// In this case, dragging the context menu icon adjusts the column width.
+  /// If [enableContextMenu] is disabled and [columnResizeWidget] is provided,
+  /// the custom widget will be used instead of [columnResizeIcon].
   bool enableDropToResize;
 
   /// Displays filter-related menus in the column context menu.
@@ -206,7 +208,7 @@ class TrinaColumn {
   /// Optional validator function that returns an error message string if validation fails,
   /// or null if validation passes. This is called before the cell value is updated.
   final String? Function(dynamic value, TrinaValidationContext context)?
-  validator;
+      validator;
 
   /// Custom renderer for the edit cell widget.
   /// This allows customizing the edit cell UI for this specific column.
@@ -217,8 +219,7 @@ class TrinaColumn {
     TextEditingController controller,
     FocusNode focusNode,
     Function(dynamic value)? handleSelected,
-  )?
-  editCellRenderer;
+  )? editCellRenderer;
 
   /// Custom renderer for the column title.
   /// This allows complete customization of the column title UI.
@@ -326,8 +327,8 @@ class TrinaColumn {
     this.validator,
     this.editCellRenderer,
     this.filterEnterKeyAction,
-  }) : _key = UniqueKey(),
-       _checkReadOnly = checkReadOnly;
+  })  : _key = UniqueKey(),
+        _checkReadOnly = checkReadOnly;
 
   final Key _key;
 
@@ -426,12 +427,12 @@ class TrinaColumn {
   String formattedValueForDisplayInEditing(dynamic value) {
     if (type is TrinaColumnTypeWithNumberFormat) {
       return value.toString().replaceFirst(
-        '.',
-        (type as TrinaColumnTypeWithNumberFormat)
-            .numberFormat
-            .symbols
-            .DECIMAL_SEP,
-      );
+            '.',
+            (type as TrinaColumnTypeWithNumberFormat)
+                .numberFormat
+                .symbols
+                .DECIMAL_SEP,
+          );
     } else if (type is TrinaColumnTypeBoolean) {
       switch (value) {
         case true:
@@ -464,29 +465,29 @@ class TrinaFilterColumnWidgetDelegate {
     this.onFilterSuffixTap,
     this.clearIcon = const Icon(Icons.clear),
     this.onClear,
-  }) : filterWidgetBuilder = null,
-       caseSensitive = null,
-       isMultiItems = false;
+  })  : filterWidgetBuilder = null,
+        caseSensitive = null,
+        isMultiItems = false;
 
   const TrinaFilterColumnWidgetDelegate.builder({this.filterWidgetBuilder})
-    : filterSuffixIcon = null,
-      onFilterSuffixTap = null,
-      filterHintText = null,
-      filterHintTextColor = null,
-      clearIcon = const Icon(Icons.clear),
-      onClear = null,
-      caseSensitive = null,
-      isMultiItems = false;
+      : filterSuffixIcon = null,
+        onFilterSuffixTap = null,
+        filterHintText = null,
+        filterHintTextColor = null,
+        clearIcon = const Icon(Icons.clear),
+        onClear = null,
+        caseSensitive = null,
+        isMultiItems = false;
 
   const TrinaFilterColumnWidgetDelegate.multiItems({this.caseSensitive = true})
-    : filterSuffixIcon = null,
-      onFilterSuffixTap = null,
-      filterHintText = null,
-      filterHintTextColor = null,
-      filterWidgetBuilder = null,
-      clearIcon = const Icon(Icons.clear),
-      onClear = null,
-      isMultiItems = true;
+      : filterSuffixIcon = null,
+        onFilterSuffixTap = null,
+        filterHintText = null,
+        filterHintTextColor = null,
+        filterWidgetBuilder = null,
+        clearIcon = const Icon(Icons.clear),
+        onClear = null,
+        isMultiItems = true;
 
   ///Set hint text for filter field
   final String? filterHintText;
@@ -510,8 +511,7 @@ class TrinaFilterColumnWidgetDelegate {
     bool enabled,
     void Function(dynamic changed) handleOnChanged,
     TrinaGridStateManager stateManager,
-  )?
-  onFilterSuffixTap;
+  )? onFilterSuffixTap;
 
   final Widget Function(
     FocusNode focusNode,
@@ -519,8 +519,7 @@ class TrinaFilterColumnWidgetDelegate {
     bool enabled,
     void Function(dynamic changed) handleOnChanged,
     TrinaGridStateManager stateManager,
-  )?
-  filterWidgetBuilder;
+  )? filterWidgetBuilder;
 
   final bool? isMultiItems;
 
