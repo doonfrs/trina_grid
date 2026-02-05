@@ -26,7 +26,20 @@ mixin VisibilityLayoutState implements ITrinaGridState {
 
     updateScrollViewport();
 
+    // Reset horizontal scroll if current position is beyond valid range
+    _clampHorizontalScrollIfNeeded();
+
     if (notify) scroll.horizontal?.notifyListeners();
+  }
+
+  void _clampHorizontalScrollIfNeeded() {
+    final horizontalScroll = scroll.bodyRowsHorizontal;
+    if (horizontalScroll == null || !horizontalScroll.hasClients) return;
+
+    final maxScroll = scroll.maxScrollHorizontal;
+    if (horizontalScroll.offset > maxScroll) {
+      horizontalScroll.jumpTo(maxScroll > 0 ? maxScroll : 0);
+    }
   }
 
   void _updateColumnSize() {

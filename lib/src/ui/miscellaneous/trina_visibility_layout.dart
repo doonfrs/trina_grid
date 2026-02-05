@@ -1,6 +1,5 @@
 import 'dart:collection';
 
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:trina_grid/trina_grid.dart';
@@ -163,23 +162,11 @@ class TrinaVisibilityLayoutRenderObjectElement extends RenderObjectElement
     _previousVisibleLastX2 = startOffset + width;
   }
 
-  Element? findChildByLayoutId(Object layoutId) {
-    return _children.firstWhereOrNull((element) {
-      if (element.widget is TrinaVisibilityLayoutId) {
-        return (element.widget as TrinaVisibilityLayoutId).id == layoutId;
-      }
-      return false;
-    });
-  }
-
   @override
   void performRebuild() {
     super.performRebuild();
 
     final visibleWidgets = <Widget>[];
-    final slots = <IndexedSlot>[];
-
-    Element? previousChild;
     double startOffset = 0;
     _firstVisible = true;
 
@@ -189,23 +176,29 @@ class TrinaVisibilityLayoutRenderObjectElement extends RenderObjectElement
       final width = layoutChild.width;
 
       if (visible(startOffset: startOffset, layoutChild: layoutChild)) {
-        final foundElement = findChildByLayoutId(child.id);
-
-        if (foundElement != null) {
-          visibleWidgets.add(foundElement.widget);
-          slots.add(IndexedSlot<Element?>(i, previousChild));
-          previousChild = foundElement;
-        } else {
-          final element = child.createElement();
-          visibleWidgets.add(element.widget);
-          slots.add(IndexedSlot<Element?>(i, previousChild));
-          previousChild = element;
-        }
-
+        visibleWidgets.add(child);
         updateLastVisible(startOffset: startOffset, width: width);
       }
 
       startOffset += width;
+    }
+
+    // If no widgets are visible (e.g., scroll position is beyond new content),
+    // show widgets from position 0 as fallback
+    if (visibleWidgets.isEmpty && _widgetChildren.isNotEmpty) {
+      startOffset = 0;
+      _firstVisible = true;
+      for (int i = 0; i < _widgetChildren.length; i += 1) {
+        final child = _widgetChildren.elementAt(i);
+        final layoutChild = child.layoutChild;
+        final width = layoutChild.width;
+
+        if (startOffset <= _contentSize) {
+          visibleWidgets.add(child);
+          updateLastVisible(startOffset: startOffset, width: width);
+        }
+        startOffset += width;
+      }
     }
 
     for (final child in _children) {
@@ -228,7 +221,6 @@ class TrinaVisibilityLayoutRenderObjectElement extends RenderObjectElement
       _children,
       visibleWidgets,
       forgottenChildren: _forgottenChildren,
-      slots: slots,
     );
 
     _forgottenChildren.clear();
@@ -302,6 +294,24 @@ class TrinaVisibilityLayoutRenderObjectElement extends RenderObjectElement
       }
 
       startOffset += width;
+    }
+
+    // If no widgets are visible (e.g., scroll position is beyond new content),
+    // show widgets from position 0 as fallback
+    if (visibleWidgets.isEmpty && _widgetChildren.isNotEmpty) {
+      startOffset = 0;
+      _firstVisible = true;
+      for (int i = 0; i < _widgetChildren.length; i += 1) {
+        final child = _widgetChildren.elementAt(i);
+        final layoutChild = child.layoutChild;
+        final width = layoutChild.width;
+
+        if (startOffset <= _contentSize) {
+          visibleWidgets.add(child);
+          updateLastVisible(startOffset: startOffset, width: width);
+        }
+        startOffset += width;
+      }
     }
 
     _children = updateChildren(
