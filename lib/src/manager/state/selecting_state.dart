@@ -223,10 +223,6 @@ mixin SelectingState implements ITrinaGridState {
 
   @override
   void setSelecting(bool flag, {bool notify = true}) {
-    debugPrint(
-      '[Selection] setSelecting called - flag: $flag, notify: $notify, current isSelecting: $isSelecting',
-    );
-
     if (selectingMode.isNone) {
       return;
     }
@@ -246,14 +242,8 @@ mixin SelectingState implements ITrinaGridState {
       // When Ctrl+Click multi-select is enabled, preserve individual selections
       if (configuration.enableCtrlClickMultiSelect &&
           selectingMode == TrinaGridSelectingMode.cell) {
-        debugPrint(
-          '[Selection] setSelecting - Ctrl+Click mode enabled, clearing only range selections',
-        );
         clearRangeSelections(notify: false);
       } else {
-        debugPrint(
-          '[Selection] setSelecting - Standard mode, clearing all selections',
-        );
         clearCurrentSelecting(notify: false);
       }
     }
@@ -457,11 +447,6 @@ mixin SelectingState implements ITrinaGridState {
 
   @override
   void clearCurrentSelecting({bool notify = true}) {
-    debugPrint('[Selection] clearCurrentSelecting called - notify: $notify');
-    debugPrint(
-      '[Selection] Clearing ${_state._individuallySelectedCells.length} individual cells',
-    );
-
     _clearCurrentSelectingPosition(notify: false);
 
     _clearCurrentSelectingRows(notify: false);
@@ -476,11 +461,6 @@ mixin SelectingState implements ITrinaGridState {
 
   @override
   void clearRangeSelections({bool notify = true}) {
-    debugPrint('[Selection] clearRangeSelections called - notify: $notify');
-    debugPrint(
-      '[Selection] Preserving ${_state._individuallySelectedCells.length} individual cells',
-    );
-
     _clearCurrentSelectingPosition(notify: false);
 
     _clearCurrentSelectingRows(notify: false);
@@ -519,23 +499,10 @@ mixin SelectingState implements ITrinaGridState {
     TrinaGridCellPosition cellPosition, {
     bool notify = true,
   }) {
-    debugPrint(
-      '[Selection] toggleSelectingCell called - cellPosition: (${cellPosition.columnIdx}, ${cellPosition.rowIdx}), notify: $notify',
-    );
-    debugPrint(
-      '[Selection] Individual cells count before: ${_state._individuallySelectedCells.length}',
-    );
-
     if (!configuration.enableCtrlClickMultiSelect) {
-      debugPrint(
-        '[Selection] toggleSelectingCell - Feature not enabled, returning',
-      );
       return;
     }
     if (selectingMode != TrinaGridSelectingMode.cell) {
-      debugPrint(
-        '[Selection] toggleSelectingCell - Not in cell mode, returning',
-      );
       return;
     }
 
@@ -546,18 +513,11 @@ mixin SelectingState implements ITrinaGridState {
     }
 
     if (_state._individuallySelectedCells.contains(cellPosition)) {
-      debugPrint(
-        '[Selection] toggleSelectingCell - Removing cell from selection',
-      );
       _state._individuallySelectedCells.remove(cellPosition);
     } else {
-      debugPrint('[Selection] toggleSelectingCell - Adding cell to selection');
       _state._individuallySelectedCells.add(cellPosition);
     }
 
-    debugPrint(
-      '[Selection] Individual cells count after: ${_state._individuallySelectedCells.length}',
-    );
     notifyListeners(notify, toggleSelectingCell.hashCode);
   }
 
@@ -572,23 +532,14 @@ mixin SelectingState implements ITrinaGridState {
 
   /// Start drag selection.
   void startDragSelection(TrinaGridCellPosition startPosition) {
-    debugPrint(
-      '[Selection] startDragSelection called - col: ${startPosition.columnIdx}, row: ${startPosition.rowIdx}',
-    );
-
     if (!configuration.enableDragSelection) {
-      debugPrint('[Selection] startDragSelection - Drag selection not enabled');
       return;
     }
     if (selectingMode != TrinaGridSelectingMode.cell) {
-      debugPrint(
-        '[Selection] startDragSelection - Not in cell selecting mode: $selectingMode',
-      );
       return;
     }
 
     _state._isDragSelecting = true;
-    debugPrint('[Selection] startDragSelection - Set _isDragSelecting to true');
 
     // Set the start position as current cell
     if (startPosition.columnIdx != null && startPosition.rowIdx != null) {
@@ -607,30 +558,16 @@ mixin SelectingState implements ITrinaGridState {
 
   /// Update drag selection endpoint.
   void updateDragSelection(TrinaGridCellPosition endPosition) {
-    debugPrint(
-      '[Selection] updateDragSelection called - isDragSelecting: ${_state._isDragSelecting}, col: ${endPosition.columnIdx}, row: ${endPosition.rowIdx}',
-    );
-
     if (!_state._isDragSelecting) {
-      debugPrint(
-        '[Selection] updateDragSelection - Not drag selecting, returning',
-      );
       return;
     }
 
-    debugPrint(
-      '[Selection] updateDragSelection - Calling setCurrentSelectingPosition',
-    );
     setCurrentSelectingPosition(cellPosition: endPosition, notify: true);
   }
 
   /// End drag selection.
   void endDragSelection() {
     if (!_state._isDragSelecting) return;
-
-    debugPrint(
-      '[Selection] endDragSelection - Adding ${currentSelectingPositionList.length} cells to individual selections',
-    );
 
     // Add all cells in the current selection range to individual selections
     if (configuration.enableCtrlClickMultiSelect) {
@@ -648,9 +585,6 @@ mixin SelectingState implements ITrinaGridState {
             rowIdx: position.rowIdx,
           );
           _state._individuallySelectedCells.add(cellPos);
-          debugPrint(
-            '[Selection] Added cell to individual selections: field=${position.field}, col=$columnIdx, row=${position.rowIdx}',
-          );
         }
       }
     }
@@ -659,10 +593,6 @@ mixin SelectingState implements ITrinaGridState {
     clearRangeSelections(notify: false);
 
     _state._isDragSelecting = false;
-
-    debugPrint(
-      '[Selection] endDragSelection - Total individual cells: ${_state._individuallySelectedCells.length}',
-    );
 
     // Notify listeners to update the UI
     notifyListeners(true, endDragSelection.hashCode);

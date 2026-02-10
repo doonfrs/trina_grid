@@ -195,23 +195,15 @@ mixin CellState implements ITrinaGridState {
     bool notify = true,
     TrinaMoveDirection? direction,
   }) {
-    debugPrint(
-      '[Selection] setCurrentCell called - rowIdx: $rowIdx, notify: $notify, ctrl: ${keyPressed.ctrl}, shift: ${keyPressed.shift}',
-    );
-
     if (cell == null ||
         rowIdx == null ||
         refRows.isEmpty ||
         rowIdx < 0 ||
         rowIdx > refRows.length - 1) {
-      debugPrint(
-        '[Selection] setCurrentCell - Invalid cell or rowIdx, returning',
-      );
       return;
     }
 
     if (currentCell != null && currentCell!.key == cell.key) {
-      debugPrint('[Selection] setCurrentCell - Same cell, returning');
       return;
     }
 
@@ -229,9 +221,6 @@ mixin CellState implements ITrinaGridState {
 
       // If callback returns false, cancel the cell change
       if (!shouldProceed) {
-        debugPrint(
-          '[Selection] setCurrentCell - Callback returned false, canceling',
-        );
         return;
       }
     }
@@ -247,15 +236,9 @@ mixin CellState implements ITrinaGridState {
     // when setting current cell. Only clear range selections.
     if (configuration.enableCtrlClickMultiSelect &&
         selectingMode == TrinaGridSelectingMode.cell) {
-      debugPrint(
-        '[Selection] setCurrentCell - Ctrl+Click mode enabled, clearing only range selections',
-      );
       // Clear only range selection, preserve individual selections
       clearRangeSelections(notify: false);
     } else {
-      debugPrint(
-        '[Selection] setCurrentCell - Standard mode, clearing all selections',
-      );
       // Clear all selections (range + individual + rows)
       clearCurrentSelecting(notify: false);
     }

@@ -51,44 +51,26 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
   }
 
   void _onTapUp(TrinaGridStateManager stateManager) {
-    debugPrint(
-      '[Selection] _onTapUp called - rowIdx: $rowIdx, ctrl: ${stateManager.keyPressed.ctrl}, shift: ${stateManager.keyPressed.shift}',
-    );
-
     if (_setKeepFocusAndCurrentCell(stateManager)) {
-      debugPrint(
-        '[Selection] _onTapUp - setKeepFocusAndCurrentCell returned true, returning',
-      );
       return;
     } else if (stateManager.isSelectingInteraction()) {
-      debugPrint(
-        '[Selection] _onTapUp - isSelectingInteraction, calling _selecting',
-      );
       _selecting(stateManager);
       return;
     } else if (stateManager.mode.isSelectMode) {
-      debugPrint('[Selection] _onTapUp - isSelectMode, calling _selectMode');
       _selectMode(stateManager);
       return;
     }
-
-    debugPrint('[Selection] _onTapUp - Normal tap processing');
 
     // Clear individual selections when clicking without modifiers
     if (stateManager.configuration.enableCtrlClickMultiSelect &&
         !stateManager.keyPressed.ctrl &&
         !stateManager.keyPressed.shift) {
-      debugPrint('[Selection] _onTapUp - Clearing individual selections');
       stateManager.clearIndividualSelections(notify: false);
     }
 
     if (stateManager.isCurrentCell(cell) && stateManager.isEditing != true) {
-      debugPrint('[Selection] _onTapUp - Same cell, starting editing');
       stateManager.setEditing(true);
     } else {
-      debugPrint(
-        '[Selection] _onTapUp - Different cell, calling setCurrentCell',
-      );
       stateManager.setCurrentCell(cell, rowIdx);
 
       // In normal mode, also fire onSelected callback when row selection is configured
@@ -106,7 +88,6 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
     // If drag selection is enabled in cell mode, use the drag selection system
     if (stateManager.configuration.enableDragSelection &&
         stateManager.selectingMode == TrinaGridSelectingMode.cell) {
-      debugPrint('[Selection] _onLongPressStart - Starting drag selection');
       final int? columnIdx = stateManager.columnIndex(column);
       if (columnIdx != null) {
         final cellPosition = TrinaGridCellPosition(
@@ -156,7 +137,6 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
 
     // If drag selection is active, end it
     if (stateManager.isDragSelecting) {
-      debugPrint('[Selection] _onLongPressEnd - Ending drag selection');
       stateManager.endDragSelection();
     } else {
       // Use traditional selection system
@@ -264,17 +244,12 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
   }
 
   void _selecting(TrinaGridStateManager stateManager) {
-    debugPrint(
-      '[Selection] _selecting called - rowIdx: $rowIdx, ctrl: ${stateManager.keyPressed.ctrl}, shift: ${stateManager.keyPressed.shift}',
-    );
-
     // Allow onSelected callback to fire in both multiSelect mode and normal mode with row selection
     bool callOnSelected =
         stateManager.mode.isMultiSelectMode ||
         (stateManager.mode.isNormal && stateManager.selectingMode.isRow);
 
     if (stateManager.keyPressed.shift) {
-      debugPrint('[Selection] _selecting - Shift pressed, extending selection');
       final int? columnIdx = stateManager.columnIndex(column);
 
       stateManager.setCurrentSelectingPosition(
@@ -287,9 +262,6 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
       // Ctrl in cell mode with enableCtrlClickMultiSelect = individual cell toggle
       if (stateManager.selectingMode == TrinaGridSelectingMode.cell &&
           stateManager.configuration.enableCtrlClickMultiSelect) {
-        debugPrint(
-          '[Selection] _selecting - Ctrl pressed, toggling individual cell',
-        );
         final int? columnIdx = stateManager.columnIndex(column);
         if (columnIdx != null) {
           final cellPosition = TrinaGridCellPosition(
@@ -300,12 +272,10 @@ class TrinaGridCellGestureEvent extends TrinaGridEvent {
         }
         callOnSelected = false;
       } else {
-        debugPrint('[Selection] _selecting - Ctrl pressed, toggling row');
         // Ctrl in row mode or without enableCtrlClickMultiSelect = row toggle (existing behavior)
         stateManager.toggleSelectingRow(rowIdx);
       }
     } else {
-      debugPrint('[Selection] _selecting - No modifier keys');
       callOnSelected = false;
     }
 
