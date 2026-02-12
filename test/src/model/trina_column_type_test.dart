@@ -53,12 +53,9 @@ void main() {
       },
     );
 
-    test(
-      'When accessing the text property, a TypeError should be thrown.',
-      () {
-        expect(() => customType.text, throwsA(isA<TypeError>()));
-      },
-    );
+    test('When accessing the text property, a TypeError should be thrown.', () {
+      expect(() => customType.text, throwsA(isA<TypeError>()));
+    });
 
     test(
       'When accessing the number property, a TypeError should be thrown.',
@@ -135,9 +132,7 @@ void main() {
     });
 
     test('defaultValue should match the provided value', () {
-      final withDefault = TrinaColumnTypeCustom(
-        defaultValue: {'name': 'test'},
-      );
+      final withDefault = TrinaColumnTypeCustom(defaultValue: {'name': 'test'});
       expect(withDefault.defaultValue, {'name': 'test'});
     });
 
