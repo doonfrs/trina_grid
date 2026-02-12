@@ -31,7 +31,12 @@ class TrinaGridExamplePage extends StatefulWidget {
 
 class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
   final List<TrinaColumn> columns = <TrinaColumn>[
-    TrinaColumn(title: 'Id', field: 'id', type: TrinaColumnType.text()),
+    TrinaColumn(
+      enableContextMenu: false,
+      title: 'Id',
+      field: 'id',
+      type: TrinaColumnType.text(),
+    ),
     TrinaColumn(title: 'Name', field: 'name', type: TrinaColumnType.text()),
     TrinaColumn(title: 'Age', field: 'age', type: TrinaColumnType.number()),
     TrinaColumn(
@@ -161,7 +166,17 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
           onChanged: (TrinaGridOnChangedEvent event) {
             print(event);
           },
-          configuration: const TrinaGridConfiguration(),
+          configuration: TrinaGridConfiguration(
+            style: TrinaGridStyleConfig(
+              columnResizeWidget: Container(
+                height: 20,
+                color: Colors.red,
+                width: 10,
+              ),
+
+              columnResizeIcon: Icons.drag_handle,
+            ),
+          ),
           selectDateCallback: (TrinaCell cell, TrinaColumn column) async {
             return showDatePicker(
               context: context,
