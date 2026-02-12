@@ -290,25 +290,37 @@ TrinaCell(value: 0.42)  // Displays as "42.00%"
 
 ### Custom Column
 
-For implementing custom column behavior.
+For storing complex objects (maps, custom classes, etc.) that don't fit the built-in column types.
+
+```dart
+TrinaColumn(
+  title: 'Address',
+  field: 'address',
+  type: TrinaColumnType.custom(
+    defaultValue: {'street': '', 'city': ''},
+    toDisplayString: (value) => '${value['street']}, ${value['city']}',
+    compare: (a, b) => a['city'].compareTo(b['city']),
+    isValid: (value) => value is Map && value.containsKey('city'),
+  ),
+)
+```
+
+By default, all values are considered valid, sorting uses `toString()` comparison,
+and display text uses `toString()`. All callbacks are optional.
+
+For custom rendering, combine with `TrinaColumn.renderer`:
 
 ```dart
 TrinaColumn(
   title: 'Rating',
   field: 'rating',
   type: TrinaColumnType.custom(
-    renderer: (rendererContext) {
-      // Custom rendering logic
-      return StarRating(rating: rendererContext.cell.value);
-    },
-    editor: (editorContext) {
-      // Custom editing logic
-      return StarRatingEditor(
-        initialValue: editorContext.cell.value,
-        onChanged: (value) => editorContext.onChanged(value),
-      );
-    },
+    toDisplayString: (value) => '${value} stars',
+    compare: (a, b) => (a as num).compareTo(b as num),
   ),
+  renderer: (rendererContext) {
+    return StarRating(rating: rendererContext.cell.value);
+  },
 )
 ```
 
@@ -316,11 +328,10 @@ TrinaColumn(
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `renderer` | `Widget Function(TrinaCellRendererContext)` | Custom cell renderer function |
-| `editor` | `Widget Function(TrinaCellEditorContext)` | Custom cell editor function |
-| `valueParser` | `dynamic Function(dynamic)` | Function to parse cell value |
-| `valueFormatter` | `String Function(dynamic)` | Function to format cell value |
-| `comparator` | `int Function(dynamic, dynamic)` | Custom comparator for sorting |
+| `defaultValue` | `dynamic` | Default value for new cells (defaults to `null`) |
+| `isValid` | `bool Function(dynamic)` | Validates cell values (defaults to always `true`) |
+| `compare` | `int Function(dynamic, dynamic)` | Comparator for sorting (defaults to `toString()` comparison) |
+| `toDisplayString` | `String Function(dynamic)` | Converts value to display text (defaults to `toString()`) |
 
 ## Column Type Configuration
 

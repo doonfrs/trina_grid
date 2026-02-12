@@ -412,6 +412,11 @@ class TrinaColumn {
           return '';
       }
     }
+
+    if (type is TrinaColumnTypeCustom) {
+      return (type as TrinaColumnTypeCustom).toDisplayString(value);
+    }
+
     return value.toString();
   }
 
@@ -441,6 +446,8 @@ class TrinaColumn {
         default:
           return '';
       }
+    } else if (type is TrinaColumnTypeCustom) {
+      return (type as TrinaColumnTypeCustom).toDisplayString(value);
     }
 
     if (formatter != null) {

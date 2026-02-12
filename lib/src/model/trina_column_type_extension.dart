@@ -19,6 +19,8 @@ extension TrinaColumnTypeExtension on TrinaColumnType {
 
   bool get isPercentage => this is TrinaColumnTypePercentage;
 
+  bool get isCustom => this is TrinaColumnTypeCustom;
+
   TrinaColumnTypeText get text {
     if (this is! TrinaColumnTypeText) {
       throw TypeError();
@@ -80,6 +82,13 @@ extension TrinaColumnTypeExtension on TrinaColumnType {
       throw TypeError();
     }
     return this as TrinaColumnTypePercentage;
+  }
+
+  TrinaColumnTypeCustom get custom {
+    if (this is! TrinaColumnTypeCustom) {
+      throw TypeError();
+    }
+    return this as TrinaColumnTypeCustom;
   }
 
   bool get hasFormat => this is TrinaColumnTypeHasFormat;

@@ -414,6 +414,32 @@ abstract interface class TrinaColumnType {
     );
   }
 
+  /// Creates a column for custom or complex data types.
+  ///
+  /// Use this when your cell values are maps, custom objects, or any type
+  /// not covered by the built-in column types.
+  ///
+  /// - [defaultValue]: The default value for new cells. Defaults to `null`.
+  /// - [isValid]: An optional callback to validate cell values. If not
+  ///   provided, all values are considered valid.
+  /// - [compare]: An optional callback to compare two values for sorting.
+  ///   If not provided, values are compared using `toString()`.
+  /// - [toDisplayString]: An optional callback to convert a value to its
+  ///   display text. If not provided, `value.toString()` is used.
+  factory TrinaColumnType.custom({
+    dynamic defaultValue,
+    bool Function(dynamic value)? isValid,
+    int Function(dynamic a, dynamic b)? compare,
+    String Function(dynamic value)? toDisplayString,
+  }) {
+    return TrinaColumnTypeCustom(
+      defaultValue: defaultValue,
+      isValid: isValid,
+      compare: compare,
+      toDisplayString: toDisplayString,
+    );
+  }
+
   /// Determines if [value] is valid for this column type.
   bool isValid(dynamic value);
 

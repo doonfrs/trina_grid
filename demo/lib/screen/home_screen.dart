@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:demo/screen/empty_screen.dart';
 import 'package:demo/screen/feature/boolean_type_column_screen.dart';
+import 'package:demo/screen/feature/custom_type_column_screen.dart';
 import 'package:demo/screen/feature/change_tracking_screen.dart';
 import 'package:demo/screen/feature/check_view_port_visible_columns_screen.dart';
 import 'package:demo/screen/feature/column_title_renderer_screen.dart';
@@ -233,6 +234,15 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
             'A column to enter a boolean value. You can select from a list of options.',
         onTapLiveDemo: () {
           Navigator.pushNamed(context, BooleanTypeColumnScreen.routeName);
+        },
+        trailing: newIcon,
+      ),
+      TrinaListTile(
+        title: 'Custom type column',
+        description:
+            'A column for storing complex objects (maps, custom classes, etc.) with custom validation, sorting, and display.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, CustomTypeColumnScreen.routeName);
         },
         trailing: newIcon,
       ),
