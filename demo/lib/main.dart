@@ -7,6 +7,7 @@ import 'package:demo/screen/feature/date_time_column_screen.dart';
 import 'package:demo/screen/feature/percentage_type_column_screen.dart';
 import 'package:demo/screen/feature/rtl_scrollbar_screen.dart';
 import 'package:demo/screen/feature/custom_pagination_screen.dart';
+import 'package:demo/screen/feature/custom_type_column_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'constants/trina_grid_example_colors.dart';
@@ -122,6 +123,8 @@ class MyApp extends StatelessWidget {
             const CurrencyTypeColumnScreen(),
         CustomPaginationScreen.routeName: (context) =>
             const CustomPaginationScreen(),
+        CustomTypeColumnScreen.routeName: (context) =>
+            const CustomTypeColumnScreen(),
         DarkModeScreen.routeName: (context) => const DarkModeScreen(),
         DateTypeColumnScreen.routeName: (context) =>
             const DateTypeColumnScreen(),

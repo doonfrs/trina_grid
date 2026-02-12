@@ -66,6 +66,7 @@ export 'src/model/column_types/trina_column_type_date_time.dart';
 export 'src/model/column_types/trina_column_type_number.dart';
 export 'src/model/column_types/trina_column_type_percentage.dart';
 export 'src/model/column_types/trina_column_type_text.dart';
+export 'src/model/column_types/trina_column_type_custom.dart';
 export 'src/model/trina_column_type_has_format.dart';
 export 'src/model/trina_dropdown_menu_filter.dart';
 export 'src/ui/widgets/trina_dropdown_menu.dart' show TrinaDropdownMenuVariant;
