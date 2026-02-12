@@ -94,11 +94,7 @@ class _CustomTypeColumnScreenState extends State<CustomTypeColumnScreen> {
         title: 'Address (custom object)',
         field: 'address',
         type: TrinaColumnType.custom(
-          defaultValue: const _Address(
-            street: '',
-            city: '',
-            country: '',
-          ),
+          defaultValue: const _Address(street: '', city: '', country: ''),
           toDisplayString: (value) {
             if (value is _Address) {
               return '${value.street}, ${value.city}';
@@ -191,7 +187,9 @@ class _CustomTypeColumnScreenState extends State<CustomTypeColumnScreen> {
           defaultValue: const <String, dynamic>{},
           toDisplayString: (value) {
             if (value is Map) {
-              return value.entries.map((e) => '${e.key}: ${e.value}').join(', ');
+              return value.entries
+                  .map((e) => '${e.key}: ${e.value}')
+                  .join(', ');
             }
             return value.toString();
           },
@@ -282,8 +280,7 @@ class _CustomTypeColumnScreenState extends State<CustomTypeColumnScreen> {
         children: [
           ElevatedButton(
             onPressed: () {
-              final address =
-                  stateManager.rows.first.cells['address']?.value;
+              final address = stateManager.rows.first.cells['address']?.value;
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(

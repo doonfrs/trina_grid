@@ -20,9 +20,9 @@ class TrinaColumnTypeCustom
     bool Function(dynamic value)? isValid,
     int Function(dynamic a, dynamic b)? compare,
     String Function(dynamic value)? toDisplayString,
-  })  : _isValidCallback = isValid,
-        _compareCallback = compare,
-        _toDisplayStringCallback = toDisplayString;
+  }) : _isValidCallback = isValid,
+       _compareCallback = compare,
+       _toDisplayStringCallback = toDisplayString;
 
   String toDisplayString(dynamic value) {
     if (_toDisplayStringCallback != null) {
@@ -41,16 +41,12 @@ class TrinaColumnTypeCustom
 
   @override
   int compare(dynamic a, dynamic b) {
-    return TrinaGeneralHelper.compareWithNull(
-      a,
-      b,
-      () {
-        if (_compareCallback != null) {
-          return _compareCallback(a, b);
-        }
-        return a.toString().compareTo(b.toString());
-      },
-    );
+    return TrinaGeneralHelper.compareWithNull(a, b, () {
+      if (_compareCallback != null) {
+        return _compareCallback(a, b);
+      }
+      return a.toString().compareTo(b.toString());
+    });
   }
 
   @override
