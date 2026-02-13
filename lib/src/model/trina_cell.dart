@@ -39,6 +39,7 @@ class TrinaCell {
     this.onChanged,
     this.onKeyPressed,
     this.padding,
+    this.metadata,
   }) : _key = key ?? UniqueKey(),
        _value = value,
        _originalValue = value,
@@ -73,6 +74,9 @@ class TrinaCell {
   /// Custom padding for this specific cell.
   /// If provided, this will override the column padding and default padding.
   final EdgeInsets? padding;
+
+  // Optional metadata to attach additional data to cells
+  Map<String, dynamic>? metadata = {};
 
   /// Returns true if this cell has a custom renderer.
   bool get hasRenderer => renderer != null;
