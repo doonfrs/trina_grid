@@ -2,8 +2,8 @@ import 'dart:collection';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-
 import 'package:trina_grid/trina_grid.dart';
+
 import '../../ui/cells/trina_default_cell.dart';
 
 abstract class IColumnState {
@@ -110,6 +110,7 @@ abstract class IColumnState {
   void resizeColumn(TrinaColumn column, double offset);
 
   void autoFitColumn(BuildContext context, TrinaColumn column);
+  void autoFitColumns(BuildContext context, {List<int>? ignoreIndexes});
 
   /// Hide or show the [column] with [hide] value.
   void hideColumn(TrinaColumn column, bool hide, {bool notify = true});
@@ -162,8 +163,8 @@ mixin ColumnState implements ITrinaGridState {
       refColumns[i].frozen.isNone
           ? bodyIndexes.add(i)
           : refColumns[i].frozen.isStart
-          ? leftIndexes.add(i)
-          : rightIndexes.add(i);
+              ? leftIndexes.add(i)
+              : rightIndexes.add(i);
     }
 
     return leftIndexes + bodyIndexes + rightIndexes;
@@ -584,8 +585,7 @@ mixin ColumnState implements ITrinaGridState {
 
     // todo : Handle (renderer) width
 
-    final calculatedTileWidth =
-        titleTextWidth -
+    final calculatedTileWidth = titleTextWidth -
         column.width +
         [
           (column.titlePadding ?? style.defaultColumnTitlePadding).horizontal,
@@ -595,8 +595,7 @@ mixin ColumnState implements ITrinaGridState {
           8,
         ].reduce((acc, a) => acc + a);
 
-    final calculatedCellWidth =
-        maxValueTextWidth -
+    final calculatedCellWidth = maxValueTextWidth -
         column.width +
         [
           (column.cellPadding ?? style.defaultCellPadding).horizontal,
@@ -617,6 +616,15 @@ mixin ColumnState implements ITrinaGridState {
       textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
     )..layout();
     return painter.width;
+  }
+
+  @override
+  @override
+  void autoFitColumns(BuildContext context, {List<int>? ignoreIndexes}) {
+    for (int i = 0; i < refColumns.length; i++) {
+      if (ignoreIndexes?.contains(i) ?? false) continue;
+      autoFitColumn(context, refColumns[i]);
+    }
   }
 
   @override
@@ -669,9 +677,9 @@ mixin ColumnState implements ITrinaGridState {
     if (sortOnlyEvent) return;
 
     compare(a, b) => column.type.compare(
-      a.cells[column.field]!.valueForSorting,
-      b.cells[column.field]!.valueForSorting,
-    );
+          a.cells[column.field]!.valueForSorting,
+          b.cells[column.field]!.valueForSorting,
+        );
 
     if (enabledRowGroups) {
       sortRowGroup(column: column, compare: compare);
@@ -691,9 +699,9 @@ mixin ColumnState implements ITrinaGridState {
     if (sortOnlyEvent) return;
 
     compare(b, a) => column.type.compare(
-      a.cells[column.field]!.valueForSorting,
-      b.cells[column.field]!.valueForSorting,
-    );
+          a.cells[column.field]!.valueForSorting,
+          b.cells[column.field]!.valueForSorting,
+        );
 
     if (enabledRowGroups) {
       sortRowGroup(column: column, compare: compare);
