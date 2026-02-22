@@ -430,6 +430,7 @@ class TrinaGridStyleConfig {
     this.cellTextStyle = defaultLightCellTextStyle,
     this.columnContextIcon = Icons.dehaze,
     this.columnResizeIcon = Icons.code_sharp,
+    this.columnResizeWidget,
     this.columnAscendingIcon,
     this.columnDescendingIcon,
     this.rowGroupExpandedIcon = Icons.keyboard_arrow_down,
@@ -513,6 +514,7 @@ class TrinaGridStyleConfig {
     this.cellTextStyle = defaultDarkCellTextStyle,
     this.columnContextIcon = Icons.dehaze,
     this.columnResizeIcon = Icons.code_sharp,
+    this.columnResizeWidget,
     this.columnAscendingIcon,
     this.columnDescendingIcon,
     this.rowGroupExpandedIcon = Icons.keyboard_arrow_down,
@@ -714,6 +716,11 @@ class TrinaGridStyleConfig {
   /// only the width of the column can be adjusted.
   final IconData columnResizeIcon;
 
+  /// Custom widget to use for the column resize handle when
+  /// [TrinaColumn.enableContextMenu] is false.
+  /// If provided, this widget replaces the default [columnResizeIcon].
+  final Widget? columnResizeWidget;
+
   /// Ascending icon when sorting a column.
   ///
   /// If no value is specified, the default icon is set.
@@ -807,6 +814,7 @@ class TrinaGridStyleConfig {
     TextStyle? cellTextStyle,
     IconData? columnContextIcon,
     IconData? columnResizeIcon,
+    Widget? columnResizeWidget,
     TrinaOptional<Widget?>? columnAscendingIcon,
     TrinaOptional<Widget?>? columnDescendingIcon,
     IconData? rowGroupExpandedIcon,
@@ -825,6 +833,7 @@ class TrinaGridStyleConfig {
     // Preserve the dark style flag by using the appropriate constructor
     if (isDarkStyle) {
       return TrinaGridStyleConfig.dark(
+        columnResizeWidget: columnResizeWidget ?? this.columnResizeWidget,
         cellVerticalBorderWidth:
             cellVerticalBorderWidth ?? this.cellVerticalBorderWidth,
         cellHorizontalBorderWidth:
@@ -911,6 +920,7 @@ class TrinaGridStyleConfig {
       );
     } else {
       return TrinaGridStyleConfig(
+        columnResizeWidget: columnResizeWidget ?? this.columnResizeWidget,
         cellVerticalBorderWidth:
             cellVerticalBorderWidth ?? this.cellVerticalBorderWidth,
         cellHorizontalBorderWidth:
@@ -1047,6 +1057,7 @@ class TrinaGridStyleConfig {
             cellTextStyle == other.cellTextStyle &&
             columnContextIcon == other.columnContextIcon &&
             columnResizeIcon == other.columnResizeIcon &&
+            columnResizeWidget == other.columnResizeWidget &&
             columnAscendingIcon == other.columnAscendingIcon &&
             columnDescendingIcon == other.columnDescendingIcon &&
             rowGroupExpandedIcon == other.rowGroupExpandedIcon &&
@@ -1109,6 +1120,7 @@ class TrinaGridStyleConfig {
     cellTextStyle,
     columnContextIcon,
     columnResizeIcon,
+    columnResizeWidget,
     columnAscendingIcon,
     columnDescendingIcon,
     rowGroupExpandedIcon,

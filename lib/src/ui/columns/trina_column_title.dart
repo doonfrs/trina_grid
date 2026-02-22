@@ -200,6 +200,9 @@ class TrinaColumnTitleState extends TrinaStateWithChange<TrinaColumnTitle> {
           icon: TrinaGridColumnIcon(
             sort: _sort,
             color: style.iconColor,
+            customResizeWidget: widget.column.enableContextMenu
+                ? null
+                : style.columnResizeWidget,
             icon: widget.column.enableContextMenu
                 ? style.columnContextIcon
                 : style.columnResizeIcon,
@@ -272,6 +275,8 @@ class TrinaGridColumnIcon extends StatelessWidget {
 
   final IconData icon;
 
+  final Widget? customResizeWidget;
+
   final Widget? ascendingIcon;
 
   final Widget? descendingIcon;
@@ -280,6 +285,7 @@ class TrinaGridColumnIcon extends StatelessWidget {
     this.sort,
     this.color = Colors.black26,
     this.icon = Icons.dehaze,
+    this.customResizeWidget,
     this.ascendingIcon,
     this.descendingIcon,
     super.key,
@@ -300,7 +306,7 @@ class TrinaGridColumnIcon extends StatelessWidget {
             ? const Icon(Icons.sort, color: Colors.red)
             : descendingIcon!;
       default:
-        return Icon(icon, color: color);
+        return customResizeWidget ?? Icon(icon, color: color);
     }
   }
 }
