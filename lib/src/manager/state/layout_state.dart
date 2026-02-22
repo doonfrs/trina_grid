@@ -228,7 +228,8 @@ mixin LayoutState implements ITrinaGridState {
       maxHeight! - headerHeight - footerHeight;
 
   @override
-  double get rowContainerHeight => maxHeight! - rowsTopOffset - footerHeight;
+  double get rowContainerHeight =>
+      maxHeight! - rowsTopOffset - footerHeight - columnFooterHeight;
 
   @override
   Offset? get gridGlobalOffset {

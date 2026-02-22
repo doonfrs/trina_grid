@@ -115,6 +115,7 @@ mixin ScrollState implements ITrinaGridState {
         columnGroupHeight -
         columnHeight -
         columnFilterHeight -
+        columnFooterHeight -
         configuration.style.cellHorizontalBorderWidth;
 
     final bool inScrollStart = scroll.verticalOffset <= offsetToMove;
