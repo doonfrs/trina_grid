@@ -323,6 +323,13 @@ class TrinaColumnFilterState extends TrinaStateWithChange<TrinaColumnFilter> {
         controller: _controller,
         enabled: _enabled,
         style: style.cellTextStyle,
+        keyboardType:
+            filterDelegate?.keyboardType ??
+            (widget.column.type is TrinaColumnTypeNumber ||
+                    widget.column.type is TrinaColumnTypeCurrency ||
+                    widget.column.type is TrinaColumnTypePercentage
+                ? TextInputType.number
+                : null),
         onTap: _handleOnTap,
         onChanged: _handleOnChanged,
         onEditingComplete: _handleOnEditingComplete,

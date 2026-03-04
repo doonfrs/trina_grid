@@ -475,6 +475,7 @@ class TrinaFilterColumnWidgetDelegate {
     this.onFilterSuffixTap,
     this.clearIcon = const Icon(Icons.clear),
     this.onClear,
+    this.keyboardType,
   }) : filterWidgetBuilder = null,
        caseSensitive = null,
        isMultiItems = false;
@@ -486,6 +487,7 @@ class TrinaFilterColumnWidgetDelegate {
       filterHintTextColor = null,
       clearIcon = const Icon(Icons.clear),
       onClear = null,
+      keyboardType = null,
       caseSensitive = null,
       isMultiItems = false;
 
@@ -497,6 +499,7 @@ class TrinaFilterColumnWidgetDelegate {
       filterWidgetBuilder = null,
       clearIcon = const Icon(Icons.clear),
       onClear = null,
+      keyboardType = null,
       isMultiItems = true;
 
   ///Set hint text for filter field
@@ -536,6 +539,11 @@ class TrinaFilterColumnWidgetDelegate {
   final bool? isMultiItems;
 
   final bool? caseSensitive;
+
+  /// Set keyboard type for filter text field.
+  /// When null, automatically uses [TextInputType.number] for number,
+  /// currency, and percentage column types.
+  final TextInputType? keyboardType;
 }
 
 class TrinaColumnRendererContext {
