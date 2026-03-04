@@ -168,244 +168,258 @@ class _TrinaVerticalScrollBarState extends State<TrinaVerticalScrollBar>
   Widget build(BuildContext context) {
     final scrollConfig = widget.stateManager.configuration.scrollbar;
 
-    return MouseRegion(
-      onEnter: (_) {
-        setState(() {
-          _hovering = true;
-          if (!scrollConfig.isAlwaysShown) {
-            _fadeController.forward();
-          }
-        });
+    return AnimatedBuilder(
+      animation: _fadeController,
+      builder: (context, child) {
+        return IgnorePointer(
+          ignoring: _fadeController.value == 0 && !_isDragging,
+          child: child,
+        );
       },
-      onExit: (_) {
-        setState(() {
-          _hovering = false;
-          _isThumbHovered = false;
-          if (!scrollConfig.isAlwaysShown && !_isDragging) {
-            _fadeController.reverse();
-          }
-        });
-      },
-      child: GestureDetector(
-        onTapUp: (details) {
-          // Handle clicks on the track to jump to that position
-          final scrollController = widget.stateManager.scroll.bodyRowsVertical;
-          if (scrollController == null) return;
-
-          final scrollExtent = widget.verticalScrollExtentNotifier.value;
-          final viewportExtent = widget.verticalViewportExtentNotifier.value;
-
-          if (scrollExtent <= 0) return;
-
-          final double thumbHeight =
-              (viewportExtent / (viewportExtent + scrollExtent)) *
-              widget.height;
-
-          // Get the local Y position of the tap
-          final tapY = details.localPosition.dy;
-
-          // Calculate the scroll position where the center of the thumb should be at tapY
-          // thumbPosition = (scrollOffset / scrollExtent) * (widget.height - thumbHeight)
-          // Solving for scrollOffset when thumbPosition + thumbHeight/2 = tapY:
-          final targetThumbPosition = tapY - (thumbHeight / 2);
-          final newScrollOffset =
-              (targetThumbPosition / (widget.height - thumbHeight)) *
-              scrollExtent;
-
-          // Clamp to valid range
-          final clampedOffset = newScrollOffset.clamp(
-            0.0,
-            scrollController.position.maxScrollExtent,
-          );
-
-          // Use animateTo for smooth scrolling instead of jumpTo
-          scrollController.animateTo(
-            clampedOffset,
-            duration: const Duration(milliseconds: 200),
-            curve: Curves.easeOutCubic,
-          );
-        },
-        onPanDown: (_) {
+      child: MouseRegion(
+        onEnter: (_) {
           setState(() {
-            _isDragging = true;
+            _hovering = true;
+            if (!scrollConfig.isAlwaysShown) {
+              _fadeController.forward();
+            }
           });
         },
-        onPanEnd: (_) {
+        onExit: (_) {
           setState(() {
-            _isDragging = false;
-            if (!scrollConfig.isAlwaysShown && !_hovering) {
+            _hovering = false;
+            _isThumbHovered = false;
+            if (!scrollConfig.isAlwaysShown && !_isDragging) {
               _fadeController.reverse();
             }
           });
         },
-        onPanCancel: () {
-          setState(() {
-            _isDragging = false;
-            if (!scrollConfig.isAlwaysShown && !_hovering) {
-              _fadeController.reverse();
-            }
-          });
-        },
-        child: FadeTransition(
-          opacity: _fadeAnimation,
-          child: ValueListenableBuilder<double>(
-            valueListenable: widget.verticalScrollExtentNotifier,
-            builder: (context, scrollExtent, _) {
-              if (scrollExtent <= 0) {
-                return SizedBox(width: scrollConfig.thickness);
+        child: GestureDetector(
+          onTapUp: (details) {
+            // Handle clicks on the track to jump to that position
+            final scrollController =
+                widget.stateManager.scroll.bodyRowsVertical;
+            if (scrollController == null) return;
+
+            final scrollExtent = widget.verticalScrollExtentNotifier.value;
+            final viewportExtent = widget.verticalViewportExtentNotifier.value;
+
+            if (scrollExtent <= 0) return;
+
+            final double thumbHeight =
+                (viewportExtent / (viewportExtent + scrollExtent)) *
+                widget.height;
+
+            // Get the local Y position of the tap
+            final tapY = details.localPosition.dy;
+
+            // Calculate the scroll position where the center of the thumb should be at tapY
+            // thumbPosition = (scrollOffset / scrollExtent) * (widget.height - thumbHeight)
+            // Solving for scrollOffset when thumbPosition + thumbHeight/2 = tapY:
+            final targetThumbPosition = tapY - (thumbHeight / 2);
+            final newScrollOffset =
+                (targetThumbPosition / (widget.height - thumbHeight)) *
+                scrollExtent;
+
+            // Clamp to valid range
+            final clampedOffset = newScrollOffset.clamp(
+              0.0,
+              scrollController.position.maxScrollExtent,
+            );
+
+            // Use animateTo for smooth scrolling instead of jumpTo
+            scrollController.animateTo(
+              clampedOffset,
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeOutCubic,
+            );
+          },
+          onPanDown: (_) {
+            setState(() {
+              _isDragging = true;
+            });
+          },
+          onPanEnd: (_) {
+            setState(() {
+              _isDragging = false;
+              if (!scrollConfig.isAlwaysShown && !_hovering) {
+                _fadeController.reverse();
               }
+            });
+          },
+          onPanCancel: () {
+            setState(() {
+              _isDragging = false;
+              if (!scrollConfig.isAlwaysShown && !_hovering) {
+                _fadeController.reverse();
+              }
+            });
+          },
+          child: FadeTransition(
+            opacity: _fadeAnimation,
+            child: ValueListenableBuilder<double>(
+              valueListenable: widget.verticalScrollExtentNotifier,
+              builder: (context, scrollExtent, _) {
+                if (scrollExtent <= 0) {
+                  return SizedBox(width: scrollConfig.thickness);
+                }
 
-              return ValueListenableBuilder<double>(
-                valueListenable: widget.verticalViewportExtentNotifier,
-                builder: (context, viewportExtent, _) {
-                  final double thumbHeight =
-                      (viewportExtent / (viewportExtent + scrollExtent)) *
-                      widget.height;
+                return ValueListenableBuilder<double>(
+                  valueListenable: widget.verticalViewportExtentNotifier,
+                  builder: (context, viewportExtent, _) {
+                    final double thumbHeight =
+                        (viewportExtent / (viewportExtent + scrollExtent)) *
+                        widget.height;
 
-                  return ValueListenableBuilder<double>(
-                    valueListenable: widget.verticalScrollOffsetNotifier,
-                    builder: (context, scrollOffset, _) {
-                      final double thumbPosition =
-                          (scrollOffset / scrollExtent) *
-                          (widget.height - thumbHeight);
+                    return ValueListenableBuilder<double>(
+                      valueListenable: widget.verticalScrollOffsetNotifier,
+                      builder: (context, scrollOffset, _) {
+                        final double thumbPosition =
+                            (scrollOffset / scrollExtent) *
+                            (widget.height - thumbHeight);
 
-                      return SizedBox(
-                        width: scrollConfig.thickness + 4, // Add padding
-                        height: widget.height,
-                        child: Stack(
-                          children: [
-                            // Track
-                            if (scrollConfig.showTrack)
-                              Container(
-                                width: scrollConfig.thickness,
-                                margin: const EdgeInsets.symmetric(
-                                  horizontal: 2,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: _hovering
-                                      ? scrollConfig.effectiveTrackHoverColor
-                                      : scrollConfig.effectiveTrackColor,
-                                  borderRadius: BorderRadius.circular(
-                                    scrollConfig.effectiveRadius,
+                        return SizedBox(
+                          width: scrollConfig.thickness + 4, // Add padding
+                          height: widget.height,
+                          child: Stack(
+                            children: [
+                              // Track
+                              if (scrollConfig.showTrack)
+                                Container(
+                                  width: scrollConfig.thickness,
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 2,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: _hovering
+                                        ? scrollConfig.effectiveTrackHoverColor
+                                        : scrollConfig.effectiveTrackColor,
+                                    borderRadius: BorderRadius.circular(
+                                      scrollConfig.effectiveRadius,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            // Thumb
-                            if (scrollConfig.thumbVisible)
-                              Positioned(
-                                top: thumbPosition.isNaN ? 0 : thumbPosition,
-                                height: thumbHeight.isNaN
-                                    ? widget.height
-                                    : thumbHeight.clamp(
-                                        scrollConfig.minThumbLength >
-                                                widget.height
-                                            ? widget.height
-                                            : scrollConfig.minThumbLength,
-                                        widget.height,
-                                      ),
-                                width: scrollConfig.thickness,
-                                left: widget.stateManager.isRTL ? 2 : null,
-                                right: widget.stateManager.isRTL ? null : 2,
-                                child: MouseRegion(
-                                  cursor: SystemMouseCursors.grab,
-                                  onEnter: (_) {
-                                    if (!_isThumbHovered) {
-                                      setState(() {
-                                        _isThumbHovered = true;
-                                      });
-                                    }
-                                  },
-                                  onExit: (_) {
-                                    if (_isThumbHovered) {
-                                      setState(() {
-                                        _isThumbHovered = false;
-                                      });
-                                    }
-                                  },
-                                  child: GestureDetector(
-                                    onVerticalDragStart:
-                                        scrollConfig.isDraggable
-                                        ? (details) {
-                                            setState(() {
-                                              _isDragging = true;
-                                            });
-                                          }
-                                        : null,
-                                    onVerticalDragUpdate:
-                                        scrollConfig.isDraggable
-                                        ? (details) {
-                                            // Direct thumb manipulation approach
-                                            final double dragDelta =
-                                                details.delta.dy;
-
-                                            // Calculate how much to scroll based on thumb movement
-                                            // The available space for the thumb to move is (widget.height - thumbHeight)
-                                            // The total scrollable content is scrollExtent
-                                            final double scrollableRatio =
-                                                scrollExtent /
-                                                (widget.height - thumbHeight);
-                                            final double scrollDelta =
-                                                dragDelta * scrollableRatio;
-
-                                            // Get the scroll controller
-                                            final scrollController = widget
-                                                .stateManager
-                                                .scroll
-                                                .bodyRowsVertical;
-                                            if (scrollController != null &&
-                                                scrollController.hasClients) {
-                                              // Apply the scroll by adding delta to current position
-                                              final currentOffset =
-                                                  scrollController.offset;
-                                              final newOffset =
-                                                  (currentOffset + scrollDelta)
-                                                      .clamp(
-                                                        0.0,
-                                                        scrollController
-                                                            .position
-                                                            .maxScrollExtent,
-                                                      );
-
-                                              // Use jumpTo for immediate response during drag
-                                              scrollController.jumpTo(
-                                                newOffset,
-                                              );
+                              // Thumb
+                              if (scrollConfig.thumbVisible)
+                                Positioned(
+                                  top: thumbPosition.isNaN ? 0 : thumbPosition,
+                                  height: thumbHeight.isNaN
+                                      ? widget.height
+                                      : thumbHeight.clamp(
+                                          scrollConfig.minThumbLength >
+                                                  widget.height
+                                              ? widget.height
+                                              : scrollConfig.minThumbLength,
+                                          widget.height,
+                                        ),
+                                  width: scrollConfig.thickness,
+                                  left: widget.stateManager.isRTL ? 2 : null,
+                                  right: widget.stateManager.isRTL ? null : 2,
+                                  child: MouseRegion(
+                                    cursor: SystemMouseCursors.grab,
+                                    onEnter: (_) {
+                                      if (!_isThumbHovered) {
+                                        setState(() {
+                                          _isThumbHovered = true;
+                                        });
+                                      }
+                                    },
+                                    onExit: (_) {
+                                      if (_isThumbHovered) {
+                                        setState(() {
+                                          _isThumbHovered = false;
+                                        });
+                                      }
+                                    },
+                                    child: GestureDetector(
+                                      onVerticalDragStart:
+                                          scrollConfig.isDraggable
+                                          ? (details) {
+                                              setState(() {
+                                                _isDragging = true;
+                                              });
                                             }
-                                          }
-                                        : null,
-                                    onVerticalDragEnd: scrollConfig.isDraggable
-                                        ? (_) {
-                                            setState(() {
-                                              _isDragging = false;
-                                              if (!scrollConfig.isAlwaysShown &&
-                                                  !_hovering) {
-                                                _fadeController.reverse();
+                                          : null,
+                                      onVerticalDragUpdate:
+                                          scrollConfig.isDraggable
+                                          ? (details) {
+                                              // Direct thumb manipulation approach
+                                              final double dragDelta =
+                                                  details.delta.dy;
+
+                                              // Calculate how much to scroll based on thumb movement
+                                              // The available space for the thumb to move is (widget.height - thumbHeight)
+                                              // The total scrollable content is scrollExtent
+                                              final double scrollableRatio =
+                                                  scrollExtent /
+                                                  (widget.height - thumbHeight);
+                                              final double scrollDelta =
+                                                  dragDelta * scrollableRatio;
+
+                                              // Get the scroll controller
+                                              final scrollController = widget
+                                                  .stateManager
+                                                  .scroll
+                                                  .bodyRowsVertical;
+                                              if (scrollController != null &&
+                                                  scrollController.hasClients) {
+                                                // Apply the scroll by adding delta to current position
+                                                final currentOffset =
+                                                    scrollController.offset;
+                                                final newOffset =
+                                                    (currentOffset +
+                                                            scrollDelta)
+                                                        .clamp(
+                                                          0.0,
+                                                          scrollController
+                                                              .position
+                                                              .maxScrollExtent,
+                                                        );
+
+                                                // Use jumpTo for immediate response during drag
+                                                scrollController.jumpTo(
+                                                  newOffset,
+                                                );
                                               }
-                                            });
-                                          }
-                                        : null,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: _isThumbHovered || _isDragging
-                                            ? scrollConfig
-                                                  .effectiveThumbHoverColor
-                                            : scrollConfig.effectiveThumbColor,
-                                        borderRadius: BorderRadius.circular(
-                                          scrollConfig.effectiveRadius,
+                                            }
+                                          : null,
+                                      onVerticalDragEnd:
+                                          scrollConfig.isDraggable
+                                          ? (_) {
+                                              setState(() {
+                                                _isDragging = false;
+                                                if (!scrollConfig
+                                                        .isAlwaysShown &&
+                                                    !_hovering) {
+                                                  _fadeController.reverse();
+                                                }
+                                              });
+                                            }
+                                          : null,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: _isThumbHovered || _isDragging
+                                              ? scrollConfig
+                                                    .effectiveThumbHoverColor
+                                              : scrollConfig
+                                                    .effectiveThumbColor,
+                                          borderRadius: BorderRadius.circular(
+                                            scrollConfig.effectiveRadius,
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                          ],
-                        ),
-                      );
-                    },
-                  );
-                },
-              );
-            },
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  },
+                );
+              },
+            ),
           ),
         ),
       ),

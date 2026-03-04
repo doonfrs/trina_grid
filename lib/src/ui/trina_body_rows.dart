@@ -205,100 +205,101 @@ class TrinaBodyRowsState extends TrinaStateWithChange<TrinaBodyRows> {
       child: Column(
         children: [
           // Main content with vertical scrollbar
+          // Use Stack so the scrollbar overlays the scroll content,
+          // keeping the scroll viewport width identical to the column header.
           Expanded(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+            child: Stack(
+              fit: StackFit.expand,
               children: [
-                // Main grid content
-                Expanded(
-                  child:
-                      (scrollConfig.smoothScrolling
-                      ? TrinaSingleChildSmoothScrollView.new
-                      : SingleChildScrollView.new)(
-                        controller: _horizontalScroll,
-                        scrollDirection: Axis.horizontal,
-                        physics: const ClampingScrollPhysics(),
-                        child: CustomSingleChildLayout(
-                          delegate: ListResizeDelegate(stateManager, _columns),
-                          child: Column(
-                            children: [
-                              // Frozen top rows
-                              if (_frozenTopRows.isNotEmpty)
-                                Column(
-                                  children: _frozenTopRows
-                                      .asMap()
-                                      .entries
-                                      .map(
-                                        (e) =>
-                                            _buildRow(context, e.value, e.key),
-                                      )
-                                      .toList(),
-                                ),
-                              // Scrollable rows
-                              Expanded(
-                                child:
-                                    (scrollConfig.smoothScrolling
-                                    ? TrinaSmoothListView.builder
-                                    : ListView.builder)(
-                                      cacheExtent: stateManager.rowsCacheExtent,
-                                      controller: _verticalScroll,
-                                      scrollDirection: Axis.vertical,
-                                      physics: const ClampingScrollPhysics(),
-                                      itemCount: _scrollableRows.length,
-                                      itemExtent:
-                                          (stateManager.rowWrapper != null &&
-                                              !stateManager
-                                                  .configuration
-                                                  .rowWrapperIsConstantHeight)
-                                          ? null
-                                          : stateManager.rowTotalHeight,
-                                      addRepaintBoundaries: false,
-                                      itemBuilder: (ctx, i) => _buildRow(
-                                        context,
-                                        _scrollableRows[i],
-                                        i + _frozenTopRows.length,
-                                      ),
-                                    ),
-                              ),
-                              // Frozen bottom rows
-                              if (_frozenBottomRows.isNotEmpty)
-                                Column(
-                                  children: _frozenBottomRows
-                                      .asMap()
-                                      .entries
-                                      .map(
-                                        (e) => _buildRow(
-                                          context,
-                                          e.value,
-                                          e.key +
-                                              _frozenTopRows.length +
-                                              _scrollableRows.length,
-                                        ),
-                                      )
-                                      .toList(),
-                                ),
-                            ],
+                // Main grid content - takes full width
+                (scrollConfig.smoothScrolling
+                    ? TrinaSingleChildSmoothScrollView.new
+                    : SingleChildScrollView.new)(
+                  controller: _horizontalScroll,
+                  scrollDirection: Axis.horizontal,
+                  physics: const ClampingScrollPhysics(),
+                  child: CustomSingleChildLayout(
+                    delegate: ListResizeDelegate(stateManager, _columns),
+                    child: Column(
+                      children: [
+                        // Frozen top rows
+                        if (_frozenTopRows.isNotEmpty)
+                          Column(
+                            children: _frozenTopRows
+                                .asMap()
+                                .entries
+                                .map((e) => _buildRow(context, e.value, e.key))
+                                .toList(),
                           ),
+                        // Scrollable rows
+                        Expanded(
+                          child:
+                              (scrollConfig.smoothScrolling
+                              ? TrinaSmoothListView.builder
+                              : ListView.builder)(
+                                cacheExtent: stateManager.rowsCacheExtent,
+                                controller: _verticalScroll,
+                                scrollDirection: Axis.vertical,
+                                physics: const ClampingScrollPhysics(),
+                                itemCount: _scrollableRows.length,
+                                itemExtent:
+                                    (stateManager.rowWrapper != null &&
+                                        !stateManager
+                                            .configuration
+                                            .rowWrapperIsConstantHeight)
+                                    ? null
+                                    : stateManager.rowTotalHeight,
+                                addRepaintBoundaries: false,
+                                itemBuilder: (ctx, i) => _buildRow(
+                                  context,
+                                  _scrollableRows[i],
+                                  i + _frozenTopRows.length,
+                                ),
+                              ),
                         ),
-                      ),
+                        // Frozen bottom rows
+                        if (_frozenBottomRows.isNotEmpty)
+                          Column(
+                            children: _frozenBottomRows
+                                .asMap()
+                                .entries
+                                .map(
+                                  (e) => _buildRow(
+                                    context,
+                                    e.value,
+                                    e.key +
+                                        _frozenTopRows.length +
+                                        _scrollableRows.length,
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                      ],
+                    ),
+                  ),
                 ),
 
-                // Fake vertical scrollbar
+                // Vertical scrollbar overlaid on the right
                 if (scrollConfig.showVertical)
-                  LayoutBuilder(
-                    builder: (context, constraints) {
-                      return TrinaVerticalScrollBar(
-                        stateManager: stateManager,
-                        verticalScrollExtentNotifier:
-                            _verticalScrollExtentNotifier,
-                        verticalViewportExtentNotifier:
-                            _verticalViewportExtentNotifier,
-                        verticalScrollOffsetNotifier:
-                            _verticalScrollOffsetNotifier,
-                        context: context,
-                        height: constraints.maxHeight,
-                      );
-                    },
+                  Positioned(
+                    right: 0,
+                    top: 0,
+                    bottom: 0,
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        return TrinaVerticalScrollBar(
+                          stateManager: stateManager,
+                          verticalScrollExtentNotifier:
+                              _verticalScrollExtentNotifier,
+                          verticalViewportExtentNotifier:
+                              _verticalViewportExtentNotifier,
+                          verticalScrollOffsetNotifier:
+                              _verticalScrollOffsetNotifier,
+                          context: context,
+                          height: constraints.maxHeight,
+                        );
+                      },
+                    ),
                   ),
               ],
             ),
