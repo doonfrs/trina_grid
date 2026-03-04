@@ -111,6 +111,11 @@ abstract class IColumnState {
 
   void autoFitColumn(BuildContext context, TrinaColumn column);
 
+  /// Auto-fit all columns to their content.
+  ///
+  /// [ignoreIndexes] can be used to skip specific column indexes.
+  void autoFitColumns(BuildContext context, {List<int>? ignoreIndexes});
+
   /// Hide or show the [column] with [hide] value.
   void hideColumn(TrinaColumn column, bool hide, {bool notify = true});
 
@@ -608,6 +613,14 @@ mixin ColumnState implements ITrinaGridState {
         ].reduce((acc, a) => acc + a);
 
     resizeColumn(column, math.max(calculatedTileWidth, calculatedCellWidth));
+  }
+
+  @override
+  void autoFitColumns(BuildContext context, {List<int>? ignoreIndexes}) {
+    for (int i = 0; i < refColumns.length; i++) {
+      if (ignoreIndexes?.contains(i) ?? false) continue;
+      autoFitColumn(context, refColumns[i]);
+    }
   }
 
   double _visualTextWidth(String text, TextStyle style) {

@@ -156,6 +156,7 @@ class _TrinaGridExamplePageState extends State<TrinaGridExamplePage> {
           columnGroups: columnGroups,
           onLoaded: (TrinaGridOnLoadedEvent event) {
             stateManager = event.stateManager;
+            stateManager.autoFitColumns(context, ignoreIndexes: [2]);
             stateManager.setShowColumnFilter(true);
           },
           onChanged: (TrinaGridOnChangedEvent event) {

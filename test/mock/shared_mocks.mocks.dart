@@ -377,6 +377,12 @@ class MockTrinaGridStateManager extends _i1.Mock
           as bool);
 
   @override
+  set metadata(Map<String, dynamic>? value) => super.noSuchMethod(
+    Invocation.setter(#metadata, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
   _i4.PublishSubject<_i2.TrinaNotifierEvent> get streamNotifier =>
       (super.noSuchMethod(
             Invocation.getter(#streamNotifier),
@@ -1906,6 +1912,17 @@ class MockTrinaGridStateManager extends _i1.Mock
   void autoFitColumn(_i3.BuildContext? context, _i2.TrinaColumn? column) =>
       super.noSuchMethod(
         Invocation.method(#autoFitColumn, [context, column]),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void autoFitColumns(_i3.BuildContext? context, {List<int>? ignoreIndexes}) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #autoFitColumns,
+          [context],
+          {#ignoreIndexes: ignoreIndexes},
+        ),
         returnValueForMissingStub: null,
       );
 
