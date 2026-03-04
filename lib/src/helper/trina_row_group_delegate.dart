@@ -301,7 +301,7 @@ class TrinaRowGroupByColumnDelegate extends TrinaRowGroupDelegate {
     Iterator<MapEntry<String, List<TrinaRow>>>? currentIter;
     currentIter = groupBy<TrinaRow, String>(
       rows,
-      (r) => r.cells[groupFields[depth]]!.value.toString(),
+      (r) => r.cells[groupFields[depth]]?.value?.toString() ?? '',
     ).entries.iterator;
 
     while (currentIter != null || stack.isNotEmpty) {
@@ -331,7 +331,7 @@ class TrinaRowGroupByColumnDelegate extends TrinaRowGroupDelegate {
         if (depth + 1 < maxDepth) {
           currentIter = groupBy<TrinaRow, String>(
             currentIter.current.value,
-            (r) => r.cells[groupFields[depth + 1]]!.value.toString(),
+            (r) => r.cells[groupFields[depth + 1]]?.value?.toString() ?? '',
           ).entries.iterator;
         }
 
@@ -438,16 +438,18 @@ class TrinaRowGroupByColumnDelegate extends TrinaRowGroupDelegate {
     );
 
     for (var e in sampleRow.cells.entries) {
+      final sampleCell = e.value;
+      if (!sampleCell.initialized) continue;
       cells[e.key] =
           TrinaCell(
               value:
                   visibleColumns.firstWhereOrNull((c) => c.field == e.key) !=
                       null
-                  ? e.value.value
+                  ? sampleCell.value
                   : null,
               key: ValueKey('${groupKey}_${e.key}_cell'),
             )
-            ..setColumn(e.value.column)
+            ..setColumn(sampleCell.column)
             ..setRow(row);
     }
 

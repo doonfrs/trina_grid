@@ -514,7 +514,8 @@ class _DefaultCellWidgetState extends State<_DefaultCellWidget> {
 
       if (widget.row.depth < delegate.columns.length) {
         cellValue =
-            widget.row.cells[delegate.columns[widget.row.depth].field]!.value;
+            widget.row.cells[delegate.columns[widget.row.depth].field]?.value ??
+            cellValue;
       }
     }
 

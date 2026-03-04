@@ -770,7 +770,10 @@ mixin RowGroupState implements ITrinaGridState {
 
     for (final row in rows) {
       for (final column in groupedColumn) {
-        row.cells[column.field]!.value = target.cells[column.field]!.value;
+        final rowCell = row.cells[column.field];
+        final targetCell = target.cells[column.field];
+        if (rowCell == null || targetCell == null) continue;
+        rowCell.value = targetCell.value;
       }
     }
   }
