@@ -705,7 +705,9 @@ class _ApplyCellForSetColumnRow implements _Apply {
     }
 
     for (var element in refColumns) {
-      row.cells[element.field]!
+      final cell = row.cells[element.field];
+      if (cell == null) continue;
+      cell
         ..setColumn(element)
         ..setRow(row);
     }
