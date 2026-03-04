@@ -57,8 +57,9 @@ class TrinaBaseRow extends StatelessWidget {
   }
 
   TrinaVisibilityLayoutId _makeCell(TrinaColumn column) {
-    final cell = row.cells[column.field] ??
-        TrinaCell(value: column.type.defaultValue);
+    final cell = row.cells[column.field] ??= TrinaCell(
+      value: column.type.defaultValue,
+    );
     return TrinaVisibilityLayoutId(
       id: column.field,
       child: TrinaBaseCell(
