@@ -31,20 +31,13 @@ class TrinaColumnTypeNumber
     required this.applyFormatOnInit,
     required this.allowFirstDot,
     required this.locale,
-  }) : numberFormat = intl.NumberFormat(format, locale),
-       decimalPoint = _getDecimalPoint(format);
+  }) : numberFormat = intl.NumberFormat(format, locale);
 
   @override
   final intl.NumberFormat numberFormat;
 
   @override
-  final int decimalPoint;
-
-  static int _getDecimalPoint(String format) {
-    final int dotIndex = format.indexOf('.');
-
-    return dotIndex < 0 ? 0 : format.substring(dotIndex).length - 1;
-  }
+  int get decimalPoint => numberFormat.maximumFractionDigits;
 
   @override
   Widget buildCell(
