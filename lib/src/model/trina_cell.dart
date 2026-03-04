@@ -75,7 +75,7 @@ class TrinaCell {
   /// If provided, this will override the column padding and default padding.
   final EdgeInsets? padding;
 
-  // Optional metadata to attach additional data to cells
+  /// Optional metadata to attach additional data to cells
   Map<String, dynamic>? metadata = {};
 
   /// Returns true if this cell has a custom renderer.

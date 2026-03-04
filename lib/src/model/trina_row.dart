@@ -36,7 +36,7 @@ class TrinaRow<T> {
   /// If null, uses the global rowHeight from configuration
   final double? height;
 
-  // Optional metadata to attach additional data to rows
+  /// Optional metadata to attach additional data to rows
   Map<String, dynamic>? metadata = {};
 
   Map<String, TrinaCell> cells;

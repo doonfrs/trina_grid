@@ -283,7 +283,7 @@ class TrinaColumn {
   /// If null, it falls back to the grid's enterKeyAction configuration.
   final TrinaGridEnterKeyAction? filterEnterKeyAction;
 
-  // Optional metadata to attach additional data to columns
+  /// Optional metadata to attach additional data to columns
   Map<String, dynamic>? metadata = {};
 
   TrinaColumn({
