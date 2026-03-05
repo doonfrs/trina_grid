@@ -1,5 +1,36 @@
 # Changelog
 
+## [2.2.0] - 2026. 03. 05
+
+* Feature: Added metadata support for rows, cells, and columns (#300). @JoshTechLee
+* Feature: Added TrinaColumnType.custom() for complex object storage (#313). @doonfrs
+* Feature: Added updateRowCells helper for batch cell updates (#328). @doonfrs
+* Feature: Added customizable column resize widget support (#317). @doonfrs
+* Feature: Added Is Empty and Is Not Empty filter types (#297). @doonfrs
+* Feature: Added lazy pagination functionality (#285). @doonfrs
+* Feature: Accept any Widget as sort icons, not just Icon (#282). @doonfrs
+* Feature: Added moveDirection to onBeforeActiveCellChange event (#281). @doonfrs
+* Feature: Added TrinaGridColumnHiddenEvent for column visibility changes (#273). @doonfrs
+* Feature: Added rowWrapperIsConstantHeight configuration option (#276). @davidlrichmond
+* Feature: Added keyboardType support to filter TextFields (#325). @jan-siroky
+* Fix: Allow scrollPhysics parameter to take effect in body rows (#329). @doonfrs
+* Fix: Row border misalignment with column border (#327). @doonfrs
+* Fix: Null-safe cell access in row grouping with hidden columns (#326). @doonfrs
+* Fix: Use number format to calculate decimal points (#321). @sschmaljohann
+* Fix: Cache fallback cell in row.cells to avoid rebuild churn (#323). @doonfrs
+* Fix: Null check crash in WASM when row cell missing for column (#322). @jan-siroky
+* Fix: Account for column footer height in scroll calculations (#316). @doonfrs
+* Fix: Remove [Selection] debug prints flooding console (#311). @doonfrs
+* Fix: Resolve null check error in visibility layout and clamp scroll on layout change (#307). @doonfrs
+* Fix: Row moving now works with multiple selected rows (#296). @doonfrs
+* Fix: Renderer cache not invalidating when other cells in row change (#295). @doonfrs
+* Fix: Prevent crash when TrinaDualGrid onSelected is null (#294). @doonfrs
+* Fix: Frozen columns vertical misalignment while scrolling (#293). @doonfrs
+* Fix: visibilityLayout breaks left+right frozen columns (#287). @Hakimbhb
+* Fix: Migrate Android demo build to AGP 8.9.1, Kotlin 2.1.10, and declarative plugins (#286). @Hakimbhb
+* Fix: Resolve all dart analyze warnings. @doonfrs
+* Docs: Add row custom data documentation (#292). @doonfrs
+
 ## [2.1.1] - 2025. 11. 17
 
 * Feature: Added scroll physics configuration to TrinaGrid (#262). @doonfrs
