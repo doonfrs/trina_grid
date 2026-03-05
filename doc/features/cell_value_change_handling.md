@@ -288,6 +288,55 @@ TrinaCell(
 )
 ```
 
+## Batch Cell Updates with updateRowCells
+
+When you need to update multiple cells in a single row (e.g., syncing with backend data), use `updateRowCells` instead of calling `changeCellValue` multiple times. It applies all changes and only triggers a single UI notification at the end.
+
+### Syntax
+
+```dart
+stateManager.updateRowCells(
+  row,
+  {
+    'name': 'Updated Name',
+    'age': 25,
+    'status': 'active',
+  },
+);
+```
+
+### Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `row` | `TrinaRow` | required | The row whose cells should be updated |
+| `values` | `Map<String, dynamic>` | required | Map of column field names to new values |
+| `callOnChangedEvent` | `bool` | `true` | Whether to trigger onChanged callbacks |
+| `force` | `bool` | `false` | Bypass read-only and editability checks |
+| `notify` | `bool` | `true` | Whether to notify listeners (trigger UI rebuild) |
+| `validate` | `bool` | `true` | Whether to validate values before setting |
+
+### Example: Syncing a Row with Backend Data
+
+```dart
+// Fetch updated data from API
+final updatedData = await api.getRecord(recordId);
+
+// Find the row to update
+final row = stateManager.rows.firstWhere(
+  (r) => r.cells['id']?.value == recordId,
+);
+
+// Update all cells in one call
+stateManager.updateRowCells(row, {
+  'name': updatedData['name'],
+  'email': updatedData['email'],
+  'status': updatedData['status'],
+});
+```
+
+Fields that don't exist in the row's cells are silently skipped. Cells that fail validation or are read-only are also skipped without affecting the other updates.
+
 ## Best Practices
 
 1. **Use cell-level callbacks for cell-specific logic** and grid-level callbacks for application-wide concerns.

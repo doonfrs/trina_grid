@@ -55,6 +55,23 @@ abstract class IEditingState {
     bool notify = true,
     bool validate = true,
   });
+
+  /// Update multiple cell values in a row from a map of field names to values.
+  ///
+  /// More efficient than calling [changeCellValue] multiple times because
+  /// it only calls [notifyListeners] once at the end.
+  ///
+  /// [row] is the row whose cells should be updated.
+  /// [values] is a map where keys are column field names and values are
+  /// the new cell values.
+  void updateRowCells(
+    TrinaRow row,
+    Map<String, dynamic> values, {
+    bool callOnChangedEvent = true,
+    bool force = false,
+    bool notify = true,
+    bool validate = true,
+  });
 }
 
 class _State {
@@ -353,6 +370,109 @@ mixin EditingState implements ITrinaGridState {
     }
 
     notifyListeners(notify, changeCellValue.hashCode);
+  }
+
+  @override
+  void updateRowCells(
+    TrinaRow row,
+    Map<String, dynamic> values, {
+    bool callOnChangedEvent = true,
+    bool force = false,
+    bool notify = true,
+    bool validate = true,
+  }) {
+    if (values.isEmpty) return;
+
+    final rowIdx = refRows.indexOf(row);
+    if (rowIdx < 0) return;
+
+    for (final entry in values.entries) {
+      final field = entry.key;
+      final cell = row.cells[field];
+
+      if (cell == null) continue;
+
+      final currentColumn = cell.column;
+      final dynamic oldValue = cell.value;
+      dynamic newValue = entry.value;
+
+      newValue = filteredCellValue(
+        column: currentColumn,
+        newValue: newValue,
+        oldValue: oldValue,
+      );
+
+      if (validate) {
+        newValue = castValueByColumnType(newValue, currentColumn);
+      }
+
+      if (force == false &&
+          canNotChangeCellValue(
+            cell: cell,
+            newValue: newValue,
+            oldValue: oldValue,
+          )) {
+        continue;
+      }
+
+      if (validate) {
+        final validationError = validateValue(
+          newValue,
+          currentColumn,
+          row,
+          rowIdx,
+          oldValue,
+        );
+
+        if (validationError != null) {
+          if (onValidationFailed != null) {
+            onValidationFailed!(
+              TrinaGridValidationEvent(
+                column: currentColumn,
+                row: row,
+                rowIdx: rowIdx,
+                value: newValue,
+                oldValue: oldValue,
+                errorMessage: validationError,
+              ),
+            );
+          }
+          continue;
+        }
+      }
+
+      if ((this as TrinaGridStateManager).enableChangeTracking &&
+          !cell.isDirty) {
+        cell.trackChange();
+      }
+
+      row.setState(TrinaRowState.updated);
+      cell.value = newValue;
+      row.incrementVersion();
+
+      if (callOnChangedEvent) {
+        final changedEvent = TrinaGridOnChangedEvent(
+          columnIdx:
+              columnIndex(currentColumn) ?? refColumns.indexOf(currentColumn),
+          column: currentColumn,
+          rowIdx: rowIdx,
+          row: row,
+          cell: cell,
+          value: newValue,
+          oldValue: oldValue,
+        );
+
+        if (cell.onChanged != null) {
+          cell.onChanged!(changedEvent);
+        }
+
+        if (onChanged != null) {
+          onChanged!(changedEvent);
+        }
+      }
+    }
+
+    notifyListeners(notify, updateRowCells.hashCode);
   }
 
   void _pasteCellValueIntoSelectingRows({List<List<String>>? textList}) {
