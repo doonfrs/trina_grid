@@ -24,8 +24,8 @@ echo "Preventing build folder from being deleted..."
 mv $BUILD_DIR /tmp/build_web
 
 echo "Cleaning old deployment files..."
-rm -rf ../trina_grid/*
-rm -rf .dart_tool
+git rm -rf . --quiet 2>/dev/null || true
+git clean -fd --quiet 2>/dev/null || true
 
 echo "🔁 Moving demo build files to the repository root..."
 mv /tmp/build_web/* .
