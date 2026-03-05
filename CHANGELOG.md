@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.2.1] - 2026. 03. 05
+
+* Fix: Remove unused import in trina_smooth_list_view.dart. @doonfrs
+
 ## [2.2.0] - 2026. 03. 05
 
 * Feature: Added metadata support for rows, cells, and columns (#300). @JoshTechLee
