@@ -217,7 +217,6 @@ class TrinaBodyRowsState extends TrinaStateWithChange<TrinaBodyRows> {
                     : SingleChildScrollView.new)(
                   controller: _horizontalScroll,
                   scrollDirection: Axis.horizontal,
-                  physics: const ClampingScrollPhysics(),
                   child: CustomSingleChildLayout(
                     delegate: ListResizeDelegate(stateManager, _columns),
                     child: Column(
@@ -240,7 +239,6 @@ class TrinaBodyRowsState extends TrinaStateWithChange<TrinaBodyRows> {
                                 cacheExtent: stateManager.rowsCacheExtent,
                                 controller: _verticalScroll,
                                 scrollDirection: Axis.vertical,
-                                physics: const ClampingScrollPhysics(),
                                 itemCount: _scrollableRows.length,
                                 itemExtent:
                                     (stateManager.rowWrapper != null &&
