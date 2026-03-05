@@ -19,14 +19,4 @@ void main() {
       expect(updatedConfig.enableCtrlClickMultiSelect, true);
     });
   });
-
-  // TODO: Add integration tests for Ctrl+Click multi-select behavior
-  // These will require proper widget testing infrastructure:
-  // - Test Ctrl+Click toggles individual cell selection
-  // - Test Ctrl+Click on selected cell deselects it
-  // - Test multiple Ctrl+Clicks build selection set
-  // - Test click without Ctrl clears individual selections
-  // - Test Shift+Click still works alongside individual selections
-  // - Test individual selections are included in currentSelectingPositionList
-  // - Test only works in cell selecting mode
 }

@@ -187,41 +187,25 @@ class _GridExportScreenState extends State<GridExportScreen> {
                       if (formatName == formatCsv) ...[
                         const SizedBox(height: 8),
                         const Text('CSV Separator:'),
-                        Row(
-                          children: [
-                            Radio<String>(
-                              value: ',',
-                              groupValue: csvSeparator,
-                              onChanged: (value) {
-                                setDialogState(() {
-                                  csvSeparator = value!;
-                                });
-                              },
-                            ),
-                            const Text('Comma (,)'),
-                            const SizedBox(width: 10),
-                            Radio<String>(
-                              value: ';',
-                              groupValue: csvSeparator,
-                              onChanged: (value) {
-                                setDialogState(() {
-                                  csvSeparator = value!;
-                                });
-                              },
-                            ),
-                            const Text('Semicolon (;)'),
-                            const SizedBox(width: 10),
-                            Radio<String>(
-                              value: '\t',
-                              groupValue: csvSeparator,
-                              onChanged: (value) {
-                                setDialogState(() {
-                                  csvSeparator = value!;
-                                });
-                              },
-                            ),
-                            const Text('Tab'),
-                          ],
+                        RadioGroup<String>(
+                          groupValue: csvSeparator,
+                          onChanged: (value) {
+                            setDialogState(() {
+                              csvSeparator = value!;
+                            });
+                          },
+                          child: Row(
+                            children: [
+                              Radio<String>(value: ','),
+                              const Text('Comma (,)'),
+                              const SizedBox(width: 10),
+                              Radio<String>(value: ';'),
+                              const Text('Semicolon (;)'),
+                              const SizedBox(width: 10),
+                              Radio<String>(value: '\t'),
+                              const Text('Tab'),
+                            ],
+                          ),
                         ),
                       ],
 

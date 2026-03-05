@@ -213,8 +213,8 @@ class _TrinaDefaultCellState extends TrinaStateWithChange<TrinaDefaultCell> {
               stateManager: stateManager,
             ),
           ),
-        if (spacingWidget != null) spacingWidget,
-        if (expandIcon != null) expandIcon,
+        ?spacingWidget,
+        ?expandIcon,
         Expanded(child: cellWidget),
         if (TrinaDefaultCell.showGroupCount(
           stateManager.rowGroupDelegate,
