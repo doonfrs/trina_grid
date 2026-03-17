@@ -11,3 +11,4 @@
 /build
 pubspec.lock
 /.fvm
+llms-full.txt

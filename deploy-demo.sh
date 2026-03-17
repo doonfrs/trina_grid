@@ -32,6 +32,9 @@ mv /tmp/build_web/* .
 
 rm -rf /tmp/build_web
 
+# Copy llm.txt files for AI agent discoverability
+git checkout main -- llm.txt llms-full.txt 2>/dev/null || true
+
 git add .
 git commit -m "🚀 Deploy updated Flutter Web Demo"
 git push origin $BRANCH

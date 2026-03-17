@@ -552,6 +552,8 @@ TrinaGrid comes with comprehensive documentation covering all features and use c
 
 Visit our [Documentation Index](https://github.com/doonfrs/trina_grid/blob/main/doc/index.md) for a complete overview.
 
+- **[LLM Documentation](llm.txt)** - Machine-readable project summary for AI agents ([full version](llms-full.txt))
+
 ---
 
 ## 🧑‍💻 Examples

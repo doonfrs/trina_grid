@@ -18,6 +18,8 @@ void main(List<String> args) {
 
     // Run the migration tool
     runMigration(migrationArgs);
+  } else if (args.contains('--generate-llms')) {
+    generateLlmsFull();
   } else {
     // Show general help if no specific command is provided
     printUsage();
@@ -330,6 +332,148 @@ int _countOccurrences(String text, String pattern) {
   return count;
 }
 
+void generateLlmsFull() {
+  // Find the repository root by looking for pubspec.yaml
+  var dir = Directory.current;
+  while (!File(path.join(dir.path, 'pubspec.yaml')).existsSync()) {
+    final parent = dir.parent;
+    if (parent.path == dir.path) {
+      print('Error: Could not find repository root (no pubspec.yaml found).');
+      exit(1);
+    }
+    dir = parent;
+  }
+  final repoRoot = dir.path;
+
+  final llmTxtFile = File(path.join(repoRoot, 'llm.txt'));
+  final docDir = Directory(path.join(repoRoot, 'doc'));
+  final indexFile = File(path.join(repoRoot, 'doc', 'index.md'));
+  final outputFile = File(path.join(repoRoot, 'llms-full.txt'));
+
+  if (!llmTxtFile.existsSync()) {
+    print('Error: llm.txt not found at ${llmTxtFile.path}');
+    exit(1);
+  }
+  if (!docDir.existsSync()) {
+    print('Error: doc/ directory not found at ${docDir.path}');
+    exit(1);
+  }
+
+  const baseUrl = 'https://github.com/doonfrs/trina_grid/blob/main';
+
+  // 1. Extract ordering from doc/index.md by parsing markdown links
+  final orderedPaths = <String>[];
+  if (indexFile.existsSync()) {
+    final indexContent = indexFile.readAsStringSync();
+    // Match markdown links like [text](path.md) or [text](path.md#anchor)
+    final linkPattern = RegExp(r'\]\(([^)#]+\.md)');
+    for (final match in linkPattern.allMatches(indexContent)) {
+      orderedPaths.add(match.group(1)!);
+    }
+  }
+
+  // 2. Discover all .md files in doc/ recursively
+  final allDocFiles = docDir
+      .listSync(recursive: true)
+      .whereType<File>()
+      .where((f) => f.path.endsWith('.md'))
+      .toList();
+
+  // Build a map of relative path -> File for quick lookup
+  final fileMap = <String, File>{};
+  for (final file in allDocFiles) {
+    final relativePath =
+        path.relative(file.path, from: docDir.path).replaceAll('\\', '/');
+    fileMap[relativePath] = file;
+  }
+
+  // 3. Build final ordered list: index.md order first, then remaining files
+  //    Skip index.md itself and contributing/ docs (not useful for agents)
+  final processedPaths = <String>{};
+  final finalOrder = <String>[];
+
+  for (final relPath in orderedPaths) {
+    if (fileMap.containsKey(relPath) && !processedPaths.contains(relPath)) {
+      if (relPath == 'index.md') continue;
+      if (relPath.startsWith('contributing/')) continue;
+      if (relPath == 'changelog.md') continue;
+      finalOrder.add(relPath);
+      processedPaths.add(relPath);
+    }
+  }
+
+  // Append any .md files not referenced in index.md
+  final remainingPaths = fileMap.keys
+      .where((p) =>
+          !processedPaths.contains(p) &&
+          p != 'index.md' &&
+          !p.startsWith('contributing/'))
+      .toList()
+    ..sort();
+  finalOrder.addAll(remainingPaths);
+
+  // 4. Extract header from llm.txt (everything before the first ## section)
+  final llmContent = llmTxtFile.readAsStringSync();
+  final firstH2 = llmContent.indexOf('\n## ');
+  final header = firstH2 != -1 ? llmContent.substring(0, firstH2) : llmContent;
+
+  // 5. Generate llms-full.txt
+  final buffer = StringBuffer();
+
+  // Write header with modified H1
+  final headerWithoutH1 =
+      header.replaceFirst(RegExp(r'^# .+'), '').trimLeft();
+  buffer.writeln('# TrinaGrid - Complete Documentation');
+  buffer.writeln();
+  buffer.write(headerWithoutH1);
+  buffer.writeln();
+  buffer.writeln('---');
+  buffer.writeln();
+
+  int filesProcessed = 0;
+  for (final relPath in finalOrder) {
+    final file = fileMap[relPath]!;
+    var content = file.readAsStringSync();
+
+    // Convert the first H1 to H2
+    content = content.replaceFirst(RegExp(r'^# ', multiLine: true), '## ');
+
+    // Convert relative links to absolute GitHub URLs
+    // ../features/foo.md -> absolute URL
+    final docRelDir = path.dirname(relPath).replaceAll('\\', '/');
+    content = content.replaceAllMapped(
+      RegExp(r'\]\((\.\./[^)#]+\.md)(#[^)]+)?\)'),
+      (match) {
+        final linkPath = match.group(1)!;
+        final anchor = match.group(2) ?? '';
+        // Resolve the relative path
+        final resolved =
+            path.normalize('doc/$docRelDir/$linkPath').replaceAll('\\', '/');
+        return ']($baseUrl/$resolved$anchor)';
+      },
+    );
+    // ./foo.md -> absolute URL
+    content = content.replaceAllMapped(
+      RegExp(r'\]\(\./([^)#]+\.md)(#[^)]+)?\)'),
+      (match) {
+        final linkPath = match.group(1)!;
+        final anchor = match.group(2) ?? '';
+        return ']($baseUrl/doc/$docRelDir/$linkPath$anchor)';
+      },
+    );
+
+    buffer.writeln(content);
+    buffer.writeln();
+    buffer.writeln('---');
+    buffer.writeln();
+    filesProcessed++;
+  }
+
+  outputFile.writeAsStringSync(buffer.toString());
+  final lineCount = buffer.toString().split('\n').length;
+  print('Generated llms-full.txt ($filesProcessed doc files, $lineCount lines)');
+}
+
 void printUsage() {
   print('TrinaGrid CLI Tool');
   print('----------------');
@@ -339,9 +483,13 @@ void printUsage() {
   print(
     '  --migrate-from-pluto-grid  Migrate your codebase from PlutoGrid to TrinaGrid',
   );
+  print(
+    '  --generate-llms            Generate llms-full.txt from doc/ files',
+  );
   print('');
-  print('Example:');
+  print('Examples:');
   print('  flutter pub run trina_grid --migrate-from-pluto-grid');
+  print('  flutter pub run trina_grid --generate-llms');
   print('');
   print('For more information on a specific command, run:');
   print('  flutter pub run trina_grid --migrate-from-pluto-grid --help');
