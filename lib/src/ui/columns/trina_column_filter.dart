@@ -328,7 +328,7 @@ class TrinaColumnFilterState extends TrinaStateWithChange<TrinaColumnFilter> {
             (widget.column.type is TrinaColumnTypeNumber ||
                     widget.column.type is TrinaColumnTypeCurrency ||
                     widget.column.type is TrinaColumnTypePercentage
-                ? TextInputType.number
+                ? const TextInputType.numberWithOptions(decimal: true)
                 : null),
         onTap: _handleOnTap,
         onChanged: _handleOnChanged,
