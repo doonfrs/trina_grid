@@ -44,11 +44,6 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
   dynamic _cachedCellValueForReadOnly;
   int? _cachedRowVersionForReadOnly;
 
-  // Cache for editCellRenderer callback result
-  Widget? _cachedEditCellWidget;
-  dynamic _cachedCellValueForEditRenderer;
-  int? _cachedRowVersionForEditRenderer;
-
   @override
   TextInputType get keyboardType => TextInputType.text;
 
@@ -301,39 +296,21 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
 
     // Use column-level editCellRenderer if available, otherwise fall back to grid-level
     if (widget.column.editCellRenderer != null) {
-      // Cache the editCellRenderer result to avoid excessive callback executions
-      // Also invalidate when row version changes (cross-cell dependency)
-      if (_cachedCellValueForEditRenderer != widget.cell.value ||
-          _cachedRowVersionForEditRenderer != widget.row.version ||
-          _cachedEditCellWidget == null) {
-        _cachedCellValueForEditRenderer = widget.cell.value;
-        _cachedRowVersionForEditRenderer = widget.row.version;
-        _cachedEditCellWidget = widget.column.editCellRenderer!(
-          w,
-          widget.cell,
-          _textController,
-          cellFocus,
-          null,
-        );
-      }
-      return _cachedEditCellWidget!;
+      return widget.column.editCellRenderer!(
+        w,
+        widget.cell,
+        _textController,
+        cellFocus,
+        null,
+      );
     } else if (widget.stateManager.editCellRenderer != null) {
-      // Cache the editCellRenderer result to avoid excessive callback executions
-      // Also invalidate when row version changes (cross-cell dependency)
-      if (_cachedCellValueForEditRenderer != widget.cell.value ||
-          _cachedRowVersionForEditRenderer != widget.row.version ||
-          _cachedEditCellWidget == null) {
-        _cachedCellValueForEditRenderer = widget.cell.value;
-        _cachedRowVersionForEditRenderer = widget.row.version;
-        _cachedEditCellWidget = widget.stateManager.editCellRenderer!(
-          w,
-          widget.cell,
-          _textController,
-          cellFocus,
-          null,
-        );
-      }
-      return _cachedEditCellWidget!;
+      return widget.stateManager.editCellRenderer!(
+        w,
+        widget.cell,
+        _textController,
+        cellFocus,
+        null,
+      );
     }
 
     return w;

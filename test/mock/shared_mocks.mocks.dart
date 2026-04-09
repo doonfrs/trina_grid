@@ -377,6 +377,12 @@ class MockTrinaGridStateManager extends _i1.Mock
           as bool);
 
   @override
+  set metadata(Map<String, dynamic>? value) => super.noSuchMethod(
+    Invocation.setter(#metadata, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
   _i4.PublishSubject<_i2.TrinaNotifierEvent> get streamNotifier =>
       (super.noSuchMethod(
             Invocation.getter(#streamNotifier),
@@ -2106,6 +2112,28 @@ class MockTrinaGridStateManager extends _i1.Mock
     Invocation.method(
       #changeCellValue,
       [cell, value],
+      {
+        #callOnChangedEvent: callOnChangedEvent,
+        #force: force,
+        #notify: notify,
+        #validate: validate,
+      },
+    ),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void updateRowCells(
+    _i2.TrinaRow<dynamic>? row,
+    Map<String, dynamic>? values, {
+    bool? callOnChangedEvent = true,
+    bool? force = false,
+    bool? notify = true,
+    bool? validate = true,
+  }) => super.noSuchMethod(
+    Invocation.method(
+      #updateRowCells,
+      [row, values],
       {
         #callOnChangedEvent: callOnChangedEvent,
         #force: force,

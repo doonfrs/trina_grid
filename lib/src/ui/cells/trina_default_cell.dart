@@ -468,26 +468,6 @@ class _DefaultCellWidget extends StatefulWidget {
 }
 
 class _DefaultCellWidgetState extends State<_DefaultCellWidget> {
-  // Cache for renderer callback results
-  dynamic _cachedCellValue;
-  bool? _cachedIsCurrentCell;
-  bool? _cachedIsSelectedCell;
-  Widget? _cachedRendererWidget;
-  int? _cachedRowVersion;
-
-  @override
-  void didUpdateWidget(_DefaultCellWidget oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    // Invalidate cache when widget is updated
-    if (oldWidget.cell != widget.cell || oldWidget.row != widget.row) {
-      _cachedRendererWidget = null;
-      _cachedCellValue = null;
-      _cachedIsCurrentCell = null;
-      _cachedIsSelectedCell = null;
-      _cachedRowVersion = null;
-    }
-  }
-
   bool get _showText {
     if (!widget.stateManager.enabledRowGroups) {
       return true;
@@ -524,63 +504,30 @@ class _DefaultCellWidgetState extends State<_DefaultCellWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final isCurrentCell = widget.stateManager.isCurrentCell(widget.cell);
-    final isSelectedCell = widget.stateManager.isSelectedCell(
-      widget.cell,
-      widget.column,
-      widget.rowIdx,
-    );
-
     // Check for cell renderer first
     if (widget.cell.hasRenderer) {
-      // Cache the renderer result to avoid excessive callback executions
-      // Invalidate cache if cell value, row version, or selection state changes
-      if (_cachedCellValue != widget.cell.value ||
-          _cachedRowVersion != widget.row.version ||
-          _cachedIsCurrentCell != isCurrentCell ||
-          _cachedIsSelectedCell != isSelectedCell ||
-          _cachedRendererWidget == null) {
-        _cachedCellValue = widget.cell.value;
-        _cachedRowVersion = widget.row.version;
-        _cachedIsCurrentCell = isCurrentCell;
-        _cachedIsSelectedCell = isSelectedCell;
-        _cachedRendererWidget = widget.cell.renderer!(
-          TrinaCellRendererContext(
-            column: widget.column,
-            rowIdx: widget.rowIdx,
-            row: widget.row,
-            cell: widget.cell,
-            stateManager: widget.stateManager,
-          ),
-        );
-      }
-      return _cachedRendererWidget!;
+      return widget.cell.renderer!(
+        TrinaCellRendererContext(
+          column: widget.column,
+          rowIdx: widget.rowIdx,
+          row: widget.row,
+          cell: widget.cell,
+          stateManager: widget.stateManager,
+        ),
+      );
     }
 
     // Fall back to column renderer
     if (widget.column.hasRenderer) {
-      // Cache the renderer result to avoid excessive callback executions
-      // Invalidate cache if cell value, row version, or selection state changes
-      if (_cachedCellValue != widget.cell.value ||
-          _cachedRowVersion != widget.row.version ||
-          _cachedIsCurrentCell != isCurrentCell ||
-          _cachedIsSelectedCell != isSelectedCell ||
-          _cachedRendererWidget == null) {
-        _cachedCellValue = widget.cell.value;
-        _cachedRowVersion = widget.row.version;
-        _cachedIsCurrentCell = isCurrentCell;
-        _cachedIsSelectedCell = isSelectedCell;
-        _cachedRendererWidget = widget.column.renderer!(
-          TrinaColumnRendererContext(
-            column: widget.column,
-            rowIdx: widget.rowIdx,
-            row: widget.row,
-            cell: widget.cell,
-            stateManager: widget.stateManager,
-          ),
-        );
-      }
-      return _cachedRendererWidget!;
+      return widget.column.renderer!(
+        TrinaColumnRendererContext(
+          column: widget.column,
+          rowIdx: widget.rowIdx,
+          row: widget.row,
+          cell: widget.cell,
+          stateManager: widget.stateManager,
+        ),
+      );
     }
 
     return Text(
