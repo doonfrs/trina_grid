@@ -577,24 +577,31 @@ class _ColumnTextWidgetState extends TrinaStateWithChange<_ColumnTextWidget> {
 
   List<InlineSpan> get _children => [
     if (widget.column.titleSpan != null) widget.column.titleSpan!,
-    if (_isFilteredList && stateManager.configuration.style.filterIcon != null)
+    if (_isFilteredList &&
+        (stateManager.configuration.style.filterIconWidget != null ||
+            stateManager.configuration.style.filterIcon != null))
       WidgetSpan(
         alignment: PlaceholderAlignment.middle,
-        child: IconButton(
-          icon: Icon(
-            stateManager.configuration.style.filterIcon!.icon,
-            color:
-                stateManager.configuration.style.filterHeaderIconColor ??
-                stateManager.configuration.style.iconColor,
-            size: stateManager.configuration.style.iconSize,
-          ),
-          onPressed: _handleOnPressedFilter,
-          constraints: BoxConstraints(
-            maxHeight:
-                widget.height +
-                (widget.stateManager.style.cellHorizontalBorderWidth * 2),
-          ),
-        ),
+        child: stateManager.configuration.style.filterIconWidget != null
+            ? GestureDetector(
+                onTap: _handleOnPressedFilter,
+                child: stateManager.configuration.style.filterIconWidget,
+              )
+            : IconButton(
+                icon: Icon(
+                  stateManager.configuration.style.filterIcon!.icon,
+                  color:
+                      stateManager.configuration.style.filterHeaderIconColor ??
+                      stateManager.configuration.style.iconColor,
+                  size: stateManager.configuration.style.iconSize,
+                ),
+                onPressed: _handleOnPressedFilter,
+                constraints: BoxConstraints(
+                  maxHeight:
+                      widget.height +
+                      (widget.stateManager.style.cellHorizontalBorderWidth * 2),
+                ),
+              ),
       ),
   ];
 

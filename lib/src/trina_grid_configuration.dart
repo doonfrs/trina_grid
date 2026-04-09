@@ -383,6 +383,7 @@ class TrinaGridStyleConfig {
     this.enableRowColorAnimation = false,
     this.enableRowHoverColor = false,
     this.filterIcon = const Icon(Icons.filter_alt_outlined),
+    this.filterIconWidget,
     this.gridBackgroundColor = Colors.white,
     this.rowColor = Colors.white,
     this.oddRowColor,
@@ -467,6 +468,7 @@ class TrinaGridStyleConfig {
     this.enableRowColorAnimation = false,
     this.enableRowHoverColor = false,
     this.filterIcon = const Icon(Icons.filter_alt_outlined),
+    this.filterIconWidget,
     this.gridBackgroundColor = const Color(0xFF111111),
     this.rowColor = const Color(0xFF111111),
     this.oddRowColor,
@@ -572,6 +574,12 @@ class TrinaGridStyleConfig {
   /// Filter icon shown in column titles when columns are filtered.
   /// Set to null to hide filter icons. Customize by providing a different icon.
   final Icon? filterIcon;
+
+  /// Custom widget to replace the entire default filter IconButton in column
+  /// headers. When set, this widget is used as the child of the WidgetSpan
+  /// instead of the default IconButton, wrapped in a GestureDetector for tap
+  /// handling. Use this to fully control icon size, padding, and constraints.
+  final Widget? filterIconWidget;
 
   final Color gridBackgroundColor;
 
@@ -778,6 +786,7 @@ class TrinaGridStyleConfig {
     bool? enableCellBorderHorizontal,
     bool? enableRowColorAnimation,
     Icon? filterIcon,
+    Widget? filterIconWidget,
     Color? gridBackgroundColor,
     Color? rowColor,
     TrinaOptional<Color?>? oddRowColor,
@@ -851,6 +860,7 @@ class TrinaGridStyleConfig {
         enableRowColorAnimation:
             enableRowColorAnimation ?? this.enableRowColorAnimation,
         filterIcon: filterIcon ?? this.filterIcon,
+        filterIconWidget: filterIconWidget ?? this.filterIconWidget,
         gridBackgroundColor: gridBackgroundColor ?? this.gridBackgroundColor,
         rowColor: rowColor ?? this.rowColor,
         oddRowColor: oddRowColor == null ? this.oddRowColor : oddRowColor.value,
@@ -938,6 +948,7 @@ class TrinaGridStyleConfig {
         enableRowColorAnimation:
             enableRowColorAnimation ?? this.enableRowColorAnimation,
         filterIcon: filterIcon ?? this.filterIcon,
+        filterIconWidget: filterIconWidget ?? this.filterIconWidget,
         gridBackgroundColor: gridBackgroundColor ?? this.gridBackgroundColor,
         rowColor: rowColor ?? this.rowColor,
         oddRowColor: oddRowColor == null ? this.oddRowColor : oddRowColor.value,
@@ -1021,6 +1032,7 @@ class TrinaGridStyleConfig {
             enableCellBorderHorizontal == other.enableCellBorderHorizontal &&
             enableRowColorAnimation == other.enableRowColorAnimation &&
             filterIcon == other.filterIcon &&
+            filterIconWidget == other.filterIconWidget &&
             gridBackgroundColor == other.gridBackgroundColor &&
             rowColor == other.rowColor &&
             oddRowColor == other.oddRowColor &&
@@ -1084,6 +1096,7 @@ class TrinaGridStyleConfig {
     enableCellBorderHorizontal,
     enableRowColorAnimation,
     filterIcon,
+    filterIconWidget,
     gridBackgroundColor,
     rowColor,
     oddRowColor,
