@@ -25,11 +25,12 @@ mixin TrinaColumnTypeWithNumberFormat {
   }
 
   int compare(dynamic a, dynamic b) {
-    return TrinaGeneralHelper.compareWithNull(
-      a,
-      b,
-      () => toNumber(a.toString()).compareTo(toNumber(b.toString())),
-    );
+    return TrinaGeneralHelper.compareWithNull(a, b, () {
+      if (a is num && b is num) {
+        return a.compareTo(b);
+      }
+      return toNumber(a.toString()).compareTo(toNumber(b.toString()));
+    });
   }
 
   dynamic makeCompareValue(dynamic v) {
