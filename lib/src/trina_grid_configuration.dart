@@ -786,7 +786,7 @@ class TrinaGridStyleConfig {
     bool? enableCellBorderHorizontal,
     bool? enableRowColorAnimation,
     Icon? filterIcon,
-    Widget? filterIconWidget,
+    TrinaOptional<Widget?>? filterIconWidget,
     Color? gridBackgroundColor,
     Color? rowColor,
     TrinaOptional<Color?>? oddRowColor,
@@ -860,7 +860,9 @@ class TrinaGridStyleConfig {
         enableRowColorAnimation:
             enableRowColorAnimation ?? this.enableRowColorAnimation,
         filterIcon: filterIcon ?? this.filterIcon,
-        filterIconWidget: filterIconWidget ?? this.filterIconWidget,
+        filterIconWidget: filterIconWidget == null
+            ? this.filterIconWidget
+            : filterIconWidget.value,
         gridBackgroundColor: gridBackgroundColor ?? this.gridBackgroundColor,
         rowColor: rowColor ?? this.rowColor,
         oddRowColor: oddRowColor == null ? this.oddRowColor : oddRowColor.value,
@@ -948,7 +950,9 @@ class TrinaGridStyleConfig {
         enableRowColorAnimation:
             enableRowColorAnimation ?? this.enableRowColorAnimation,
         filterIcon: filterIcon ?? this.filterIcon,
-        filterIconWidget: filterIconWidget ?? this.filterIconWidget,
+        filterIconWidget: filterIconWidget == null
+            ? this.filterIconWidget
+            : filterIconWidget.value,
         gridBackgroundColor: gridBackgroundColor ?? this.gridBackgroundColor,
         rowColor: rowColor ?? this.rowColor,
         oddRowColor: oddRowColor == null ? this.oddRowColor : oddRowColor.value,
