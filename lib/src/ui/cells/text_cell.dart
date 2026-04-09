@@ -134,7 +134,7 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
       return false;
     }
 
-    if (widget.column.readOnly == true) {
+    if (widget.column.checkReadOnly(widget.row, widget.cell)) {
       return true;
     }
 

@@ -117,7 +117,12 @@ mixin KeyboardState implements ITrinaGridState {
       else if (currentColumn?.type.isCurrency == true) {
       }
       // Read only type column can be moved left or right even in edit state
-      else if (currentColumn?.readOnly == true) {
+      else if (currentCell != null &&
+          currentColumn?.checkReadOnly(
+                currentCell!.row,
+                currentCell!.row.cells[currentColumn!.field]!,
+              ) ==
+              true) {
       }
       // Unable to move left and right in other modified states
       else {

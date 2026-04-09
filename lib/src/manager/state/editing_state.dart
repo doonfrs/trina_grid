@@ -116,6 +116,13 @@ mixin EditingState implements ITrinaGridState {
       return false;
     }
 
+    if (cell.column.checkReadOnly(
+      cell.row,
+      cell.row.cells[cell.column.field]!,
+    )) {
+      return false;
+    }
+
     if (enabledRowGroups) {
       return rowGroupDelegate?.isEditableCell(cell) == true;
     }

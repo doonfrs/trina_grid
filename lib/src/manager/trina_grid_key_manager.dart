@@ -60,6 +60,10 @@ class TrinaGridKeyManager {
 
     stateManager.setEditing(true);
 
+    if (!stateManager.isEditing) {
+      return;
+    }
+
     // In the case of a character, the character is immediately entered into the TextField.
     // This is because the editing state is changed to true
     // and the widget is rebuilt in the next frame.
