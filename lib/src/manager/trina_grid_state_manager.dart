@@ -709,8 +709,11 @@ class _ApplyCellForSetColumnRow implements _Apply {
     }
 
     for (var element in refColumns) {
-      final cell = row.cells[element.field];
-      if (cell == null) continue;
+      var cell = row.cells[element.field];
+      if (cell == null) {
+        cell = TrinaCell(value: element.type.defaultValue);
+        row.cells[element.field] = cell;
+      }
       cell
         ..setColumn(element)
         ..setRow(row);

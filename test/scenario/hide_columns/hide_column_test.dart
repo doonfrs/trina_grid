@@ -266,4 +266,85 @@ void main() {
       },
     );
   });
+
+  group(
+    'Regression: appending a row while a column is hidden, then unhiding it',
+    () {
+      // https://github.com/doonfrs/trina_grid/issues/354
+      late List<TrinaColumn> columns;
+      late List<TrinaRow> rows;
+      late TrinaGridStateManager stateManager;
+
+      final hideThenAppendThenShow = TrinaWidgetTestHelper(
+        'hide column 1, append row with cells only for visible columns, '
+        'then unhide column 1',
+        (tester) async {
+          columns = [...ColumnHelper.textColumn('header', count: 3)];
+          rows = RowHelper.count(2, columns);
+
+          await tester.pumpWidget(
+            MaterialApp(
+              home: Material(
+                child: TrinaGrid(
+                  columns: columns,
+                  rows: rows,
+                  onLoaded: (TrinaGridOnLoadedEvent event) {
+                    stateManager = event.stateManager;
+                  },
+                ),
+              ),
+            ),
+          );
+
+          await tester.pumpAndSettle();
+
+          stateManager.hideColumn(columns[1], true);
+          await tester.pumpAndSettle();
+
+          stateManager.appendRows([
+            TrinaRow(
+              cells: {
+                columns[0].field: TrinaCell(value: 'a'),
+                columns[2].field: TrinaCell(value: 'c'),
+              },
+            ),
+          ]);
+          await tester.pumpAndSettle();
+
+          stateManager.hideColumn(columns[1], false);
+          await tester.pumpAndSettle();
+        },
+      );
+
+      hideThenAppendThenShow.test(
+        'the appended row has an initialized cell for the previously hidden column',
+        (tester) async {
+          final appendedRow = stateManager.refRows.last;
+          final hiddenFieldCell = appendedRow.cells[columns[1].field];
+
+          expect(hiddenFieldCell, isNotNull);
+          expect(hiddenFieldCell!.initialized, isTrue);
+          // Accessing column / row must not trip the initialization assertion.
+          expect(hiddenFieldCell.column.field, columns[1].field);
+          expect(hiddenFieldCell.row, same(appendedRow));
+        },
+      );
+
+      hideThenAppendThenShow.test(
+        'setCurrentCell on the previously hidden cell of the appended row '
+        'does not throw',
+        (tester) async {
+          final appendedRowIdx = stateManager.refRows.length - 1;
+          final appendedRow = stateManager.refRows[appendedRowIdx];
+          final hiddenFieldCell = appendedRow.cells[columns[1].field]!;
+
+          stateManager.setCurrentCell(hiddenFieldCell, appendedRowIdx);
+
+          await tester.pumpAndSettle();
+
+          expect(stateManager.currentCell, same(hiddenFieldCell));
+        },
+      );
+    },
+  );
 }
