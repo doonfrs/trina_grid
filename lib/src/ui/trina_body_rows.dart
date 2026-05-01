@@ -211,68 +211,81 @@ class TrinaBodyRowsState extends TrinaStateWithChange<TrinaBodyRows> {
             child: Stack(
               fit: StackFit.expand,
               children: [
-                // Main grid content - takes full width
+                // Main grid content - takes full width.
+                // Extra trailing padding equal to the vertical scrollbar's
+                // footprint extends the horizontal scroll extent so the last
+                // column can be scrolled out from under the overlaid vertical
+                // scrollbar instead of being permanently covered by it.
                 (scrollConfig.smoothScrolling
                     ? TrinaSingleChildSmoothScrollView.new
                     : SingleChildScrollView.new)(
                   controller: _horizontalScroll,
                   scrollDirection: Axis.horizontal,
-                  child: CustomSingleChildLayout(
-                    delegate: ListResizeDelegate(stateManager, _columns),
-                    child: Column(
-                      children: [
-                        // Frozen top rows
-                        if (_frozenTopRows.isNotEmpty)
-                          Column(
-                            children: _frozenTopRows
-                                .asMap()
-                                .entries
-                                .map((e) => _buildRow(context, e.value, e.key))
-                                .toList(),
-                          ),
-                        // Scrollable rows
-                        Expanded(
-                          child:
-                              (scrollConfig.smoothScrolling
-                              ? TrinaSmoothListView.builder
-                              : ListView.builder)(
-                                cacheExtent: stateManager.rowsCacheExtent,
-                                controller: _verticalScroll,
-                                scrollDirection: Axis.vertical,
-                                itemCount: _scrollableRows.length,
-                                itemExtent:
-                                    (stateManager.rowWrapper != null &&
-                                        !stateManager
-                                            .configuration
-                                            .rowWrapperIsConstantHeight)
-                                    ? null
-                                    : stateManager.rowTotalHeight,
-                                addRepaintBoundaries: false,
-                                itemBuilder: (ctx, i) => _buildRow(
-                                  context,
-                                  _scrollableRows[i],
-                                  i + _frozenTopRows.length,
-                                ),
-                              ),
-                        ),
-                        // Frozen bottom rows
-                        if (_frozenBottomRows.isNotEmpty)
-                          Column(
-                            children: _frozenBottomRows
-                                .asMap()
-                                .entries
-                                .map(
-                                  (e) => _buildRow(
+                  child: Padding(
+                    padding: scrollConfig.showVertical
+                        ? EdgeInsetsDirectional.only(
+                            end: scrollConfig.thickness + 4,
+                          )
+                        : EdgeInsets.zero,
+                    child: CustomSingleChildLayout(
+                      delegate: ListResizeDelegate(stateManager, _columns),
+                      child: Column(
+                        children: [
+                          // Frozen top rows
+                          if (_frozenTopRows.isNotEmpty)
+                            Column(
+                              children: _frozenTopRows
+                                  .asMap()
+                                  .entries
+                                  .map(
+                                    (e) => _buildRow(context, e.value, e.key),
+                                  )
+                                  .toList(),
+                            ),
+                          // Scrollable rows
+                          Expanded(
+                            child:
+                                (scrollConfig.smoothScrolling
+                                ? TrinaSmoothListView.builder
+                                : ListView.builder)(
+                                  cacheExtent: stateManager.rowsCacheExtent,
+                                  controller: _verticalScroll,
+                                  scrollDirection: Axis.vertical,
+                                  itemCount: _scrollableRows.length,
+                                  itemExtent:
+                                      (stateManager.rowWrapper != null &&
+                                          !stateManager
+                                              .configuration
+                                              .rowWrapperIsConstantHeight)
+                                      ? null
+                                      : stateManager.rowTotalHeight,
+                                  addRepaintBoundaries: false,
+                                  itemBuilder: (ctx, i) => _buildRow(
                                     context,
-                                    e.value,
-                                    e.key +
-                                        _frozenTopRows.length +
-                                        _scrollableRows.length,
+                                    _scrollableRows[i],
+                                    i + _frozenTopRows.length,
                                   ),
-                                )
-                                .toList(),
+                                ),
                           ),
-                      ],
+                          // Frozen bottom rows
+                          if (_frozenBottomRows.isNotEmpty)
+                            Column(
+                              children: _frozenBottomRows
+                                  .asMap()
+                                  .entries
+                                  .map(
+                                    (e) => _buildRow(
+                                      context,
+                                      e.value,
+                                      e.key +
+                                          _frozenTopRows.length +
+                                          _scrollableRows.length,
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
