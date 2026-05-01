@@ -369,3 +369,43 @@ class _CellColorExampleState extends State<CellColorExample> {
 ```
 
 This example demonstrates comprehensive cell coloring based on different column types and values, providing a rich visual experience for users.
+
+## Cell Text Style
+
+In addition to the cell background color, you can customize the **text style** for an individual cell via `cellTextStyleCallback`. The callback returns a `TextStyle?` that is merged on top of `TrinaGridStyleConfig.cellTextStyle` and any value returned by `rowTextStyleCallback`. Return `null` to leave the cell's text style unchanged.
+
+```dart
+TrinaGrid(
+  columns: columns,
+  rows: rows,
+  cellTextStyleCallback: (cellColorContext) {
+    final value = cellColorContext.cell.value;
+    if (value is num && value < 0) {
+      return const TextStyle(color: Colors.red);
+    }
+    return null;
+  },
+)
+```
+
+### Merge Order
+
+When both row- and cell-level text style callbacks are set, the styles are merged in this order:
+
+1. `TrinaGridStyleConfig.cellTextStyle` (base)
+2. `rowTextStyleCallback` result (if non-null)
+3. `cellTextStyleCallback` result (if non-null) — wins per-field
+
+Each callback only needs to set the fields it wants to override (typically `color`); all other fields remain inherited from the base.
+
+### Where the Style Is Applied
+
+- The default cell display widget.
+- The in-place editor for text-based typed cells (`text`, `number`, `currency`, `percentage`).
+- The closed (display) state of date / time / datetime popup cells.
+
+### Limitations
+
+- Cells using a custom renderer (`TrinaColumn.renderer` or `TrinaCell.renderer`) are not affected — those renderers fully own their look. If you need conditional styling for a custom renderer, do it inside the renderer.
+- For `TrinaSelectCell` / `TrinaBooleanCell`, the callback applies to the closed display state but not to the open menu trigger, which uses Material's `MenuStyle`.
+- For date / time popup cells, the resolved style is captured once when editing begins; mid-edit row mutations do not re-evaluate the callbacks for the editing field.

@@ -532,9 +532,12 @@ class _DefaultCellWidgetState extends State<_DefaultCellWidget> {
 
     return Text(
       _text,
-      style: widget.stateManager.configuration.style.cellTextStyle.copyWith(
-        decoration: TextDecoration.none,
-        fontWeight: FontWeight.normal,
+      style: resolveCellTextStyle(
+        stateManager: widget.stateManager,
+        row: widget.row,
+        cell: widget.cell,
+        column: widget.column,
+        rowIdx: widget.rowIdx,
       ),
       overflow: TextOverflow.ellipsis,
       textAlign: widget.column.textAlign.value,

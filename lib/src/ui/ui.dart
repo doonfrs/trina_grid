@@ -1,3 +1,4 @@
+export 'cells/cell_text_style_resolver.dart';
 export 'cells/decimal_input_formatter.dart';
 export 'cells/trina_currency_cell.dart';
 export 'cells/trina_date_cell.dart';

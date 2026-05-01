@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:trina_grid/src/helper/platform_helper.dart';
+import 'package:trina_grid/src/ui/cells/cell_text_style_resolver.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 abstract class TextCell extends StatefulWidget {
@@ -281,7 +282,12 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
         onEditingComplete: _handleOnComplete,
         onSubmitted: (_) => _handleOnComplete(),
         onTap: _handleOnTap,
-        style: widget.stateManager.configuration.style.cellTextStyle,
+        style: resolveCellTextStyle(
+          stateManager: widget.stateManager,
+          row: widget.row,
+          cell: widget.cell,
+          column: widget.column,
+        ),
         decoration: const InputDecoration(
           border: InputBorder.none,
           contentPadding: EdgeInsets.zero,

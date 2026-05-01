@@ -1,3 +1,4 @@
+import 'package:trina_grid/src/ui/cells/cell_text_style_resolver.dart';
 import 'package:trina_grid/src/ui/cells/popup_cell.dart';
 import 'package:flutter/material.dart';
 import 'package:trina_grid/src/widgets/trina_popup.dart';
@@ -26,7 +27,12 @@ abstract class TrinaPopupCellStateWithCustomPopup<T extends PopupCell>
       popupContent: popupContent,
       textFocus: textFocus,
       popupMenuIcon: popupMenuIcon,
-      cellTextStyle: widget.stateManager.configuration.style.cellTextStyle,
+      cellTextStyle: resolveCellTextStyle(
+        stateManager: widget.stateManager,
+        row: widget.row,
+        cell: widget.cell,
+        column: widget.column,
+      ),
       onOpenPopup: () => openPopup(context),
       onBeforePopup: () => popupVisibilityNotifier.value = true,
       onAfterPopup: (selectedValue) {

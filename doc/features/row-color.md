@@ -295,8 +295,34 @@ class _RowColorExampleState extends State<RowColorExample> {
 }
 ```
 
+## Row Text Style
+
+In addition to the row background color, you can customize the **text style** for every cell in a row via `rowTextStyleCallback`. The callback returns a `TextStyle?` that is merged on top of `TrinaGridStyleConfig.cellTextStyle`. Return `null` to leave the row's text style unchanged.
+
+```dart
+TrinaGrid(
+  columns: columns,
+  rows: rows,
+  rowTextStyleCallback: (rowColorContext) {
+    final status = rowColorContext.row.cells['status']?.value;
+    if (status == 'urgent') {
+      return const TextStyle(color: Colors.red, fontWeight: FontWeight.bold);
+    }
+    return null;
+  },
+)
+```
+
+Notes:
+
+- Only specify the fields you want to override (typically `color`). All other fields are inherited from `cellTextStyle`.
+- If both `rowTextStyleCallback` and `cellTextStyleCallback` are set, the cell-level result is merged on top and wins per-field.
+- The style applies to the default cell display **and** to the in-place editor for text-based typed cells (text, number, currency, percentage, date, time).
+- Cells using `TrinaColumn.renderer` or `TrinaCell.renderer` are not affected — those renderers fully own their look.
+
 ## Related Features
 
+- [Cell Color & Text Style](cell-color.md)
 - [Row Selection](row-selection.md)
 - [Row Moving](row-moving.md)
 - [Row Checking](row-checking.md)

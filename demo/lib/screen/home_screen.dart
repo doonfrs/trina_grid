@@ -26,6 +26,7 @@ import 'feature/add_and_remove_column_row_screen.dart';
 import 'feature/add_rows_asynchronously.dart';
 import 'feature/column_renderer_screen.dart';
 import 'feature/cell_color_screen.dart';
+import 'feature/cell_text_style_screen.dart';
 import 'feature/cell_renderer_screen.dart';
 import 'feature/cell_selection_screen.dart';
 import 'feature/excel_like_selection_screen.dart';
@@ -421,6 +422,14 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
             'Dynamically change the background color of individual cells.',
         onTapLiveDemo: () {
           Navigator.pushNamed(context, CellColorScreen.routeName);
+        },
+      ),
+      TrinaListTile(
+        title: 'Cell text style',
+        description:
+            'Dynamically change cell text style (color, weight, decoration) per row or per cell.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, CellTextStyleScreen.routeName);
         },
       ),
       TrinaListTile(

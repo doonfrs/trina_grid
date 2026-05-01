@@ -58,6 +58,12 @@ typedef TrinaRowColorCallback =
 typedef TrinaCellColorCallback =
     Color? Function(TrinaCellColorContext cellColorContext);
 
+typedef TrinaRowTextStyleCallback =
+    TextStyle? Function(TrinaRowColorContext rowColorContext);
+
+typedef TrinaCellTextStyleCallback =
+    TextStyle? Function(TrinaCellColorContext cellColorContext);
+
 typedef TrinaSelectDateCallBack =
     Future<DateTime?> Function(TrinaCell dateCell, TrinaColumn column);
 
@@ -116,6 +122,8 @@ class TrinaGrid extends TrinaStatefulWidget {
     this.noRowsWidget,
     this.rowColorCallback,
     this.cellColorCallback,
+    this.rowTextStyleCallback,
+    this.cellTextStyleCallback,
     this.selectDateCallback,
     this.columnMenuDelegate,
     this.configuration = const TrinaGridConfiguration(),
@@ -408,6 +416,57 @@ class TrinaGrid extends TrinaStatefulWidget {
   /// {@endtemplate}
   final TrinaCellColorCallback? cellColorCallback;
 
+  /// {@template trina_grid_property_rowTextStyleCallback}
+  /// [rowTextStyleCallback] can change the cell text style for every cell in a
+  /// row dynamically according to the state.
+  ///
+  /// Return a [TextStyle] (typically with only the fields you want to override,
+  /// such as `color`) and it will be merged on top of
+  /// [TrinaGridStyleConfig.cellTextStyle]. Return `null` to leave the text style
+  /// unchanged for that row.
+  ///
+  /// If both [rowTextStyleCallback] and [cellTextStyleCallback] are set,
+  /// [cellTextStyleCallback] is merged on top and wins per-field.
+  ///
+  /// The style is applied to the default cell display and to the in-place
+  /// editor for text-based typed cells (text, number, currency, percentage,
+  /// date, time). Cells that use [TrinaColumn.renderer] or [TrinaCell.renderer]
+  /// are not affected — those renderers fully own their look.
+  ///
+  /// ```dart
+  /// rowTextStyleCallback = (TrinaRowColorContext context) {
+  ///   return context.row.cells['status']?.value == 'urgent'
+  ///       ? const TextStyle(color: Colors.red, fontWeight: FontWeight.bold)
+  ///       : null;
+  /// };
+  /// ```
+  /// {@endtemplate}
+  final TrinaRowTextStyleCallback? rowTextStyleCallback;
+
+  /// {@template trina_grid_property_cellTextStyleCallback}
+  /// [cellTextStyleCallback] can change the cell text style for an individual
+  /// cell dynamically according to the state.
+  ///
+  /// Return a [TextStyle] (typically with only the fields you want to override)
+  /// and it will be merged on top of [TrinaGridStyleConfig.cellTextStyle] and
+  /// any value returned by [rowTextStyleCallback]. Return `null` to leave the
+  /// text style unchanged for that cell.
+  ///
+  /// The style is applied to the default cell display and to the in-place
+  /// editor for text-based typed cells. Cells using a custom renderer
+  /// (`TrinaColumn.renderer` / `TrinaCell.renderer`) are not affected.
+  ///
+  /// ```dart
+  /// cellTextStyleCallback = (TrinaCellColorContext context) {
+  ///   final value = context.cell.value;
+  ///   return value is num && value < 0
+  ///       ? const TextStyle(color: Colors.red)
+  ///       : null;
+  /// };
+  /// ```
+  /// {@endtemplate}
+  final TrinaCellTextStyleCallback? cellTextStyleCallback;
+
   final TrinaSelectDateCallBack? selectDateCallback;
 
   /// {@template trina_grid_property_columnMenuDelegate}
@@ -670,6 +729,8 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
       onColumnsMoved: widget.onColumnsMoved,
       rowColorCallback: widget.rowColorCallback,
       cellColorCallback: widget.cellColorCallback,
+      rowTextStyleCallback: widget.rowTextStyleCallback,
+      cellTextStyleCallback: widget.cellTextStyleCallback,
       selectDateCallback: widget.selectDateCallback,
       createHeader: widget.createHeader,
       createFooter: widget.createFooter,

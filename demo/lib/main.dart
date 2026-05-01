@@ -16,6 +16,7 @@ import 'screen/feature/add_and_remove_column_row_screen.dart';
 import 'screen/feature/add_rows_asynchronously.dart';
 import 'screen/feature/column_renderer_screen.dart';
 import 'screen/feature/cell_color_screen.dart';
+import 'screen/feature/cell_text_style_screen.dart';
 import 'screen/feature/cell_renderer_screen.dart';
 import 'screen/feature/cell_selection_screen.dart';
 import 'screen/feature/excel_like_selection_screen.dart';
@@ -89,6 +90,7 @@ class MyApp extends StatelessWidget {
         ColumnTitleRendererScreen.routeName: (context) =>
             const ColumnTitleRendererScreen(),
         CellColorScreen.routeName: (context) => const CellColorScreen(),
+        CellTextStyleScreen.routeName: (context) => const CellTextStyleScreen(),
         CellRendererScreen.routeName: (context) => const CellRendererScreen(),
         CellSelectionScreen.routeName: (context) => const CellSelectionScreen(),
         ExcelLikeSelectionScreen.routeName: (context) =>
