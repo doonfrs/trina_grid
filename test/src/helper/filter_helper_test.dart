@@ -891,6 +891,31 @@ void main() {
         }
       });
 
+      // Regression for https://github.com/doonfrs/trina_grid/issues/356:
+      // dropdown items must render localized titles, not raw field names.
+      test('The first column of filterColumns should render dropdown items '
+          'with localized titles via menuItemBuilder.', () {
+        var filterColumn = filterColumns[0];
+        var columnType = filterColumn.type as TrinaColumnTypeSelect<String>;
+
+        expect(columnType.menuItemBuilder, isNotNull);
+
+        var allColumnsWidget = columnType.menuItemBuilder!(
+          FilterHelper.filterFieldAllColumns,
+        );
+        expect(allColumnsWidget, isA<Text>());
+        expect(
+          (allColumnsWidget as Text).data,
+          configuration.localeText.filterAllColumns,
+        );
+
+        for (var i = 0; i < columns.length; i += 1) {
+          var itemWidget = columnType.menuItemBuilder!(columns[i].field);
+          expect(itemWidget, isA<Text>());
+          expect((itemWidget as Text).data, columns[i].title);
+        }
+      });
+
       test('The second column of filterColumns should be select type.', () {
         var filterColumn = filterColumns[1];
 
