@@ -290,10 +290,11 @@ class TrinaBodyRowsState extends TrinaStateWithChange<TrinaBodyRows> {
                   ),
                 ),
 
-                // Vertical scrollbar overlaid on the right
+                // Vertical scrollbar overlaid on the trailing edge
+                // (right in LTR, left in RTL).
                 if (scrollConfig.showVertical)
-                  Positioned(
-                    right: 0,
+                  PositionedDirectional(
+                    end: 0,
                     top: 0,
                     bottom: 0,
                     child: LayoutBuilder(

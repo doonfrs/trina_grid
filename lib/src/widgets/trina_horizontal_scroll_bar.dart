@@ -343,9 +343,17 @@ class _TrinaHorizontalScrollBarState extends State<TrinaHorizontalScrollBar>
                                     onHorizontalDragUpdate:
                                         scrollConfig.isDraggable
                                         ? (details) {
-                                            // Direct thumb manipulation approach
+                                            // Direct thumb manipulation approach.
+                                            // In RTL, the visual thumb position is
+                                            // mirrored (width - thumb - position),
+                                            // so a physical drag-right must
+                                            // *decrease* the underlying scroll
+                                            // offset to keep the thumb tracking
+                                            // the finger.
                                             final double dragDelta =
-                                                details.delta.dx;
+                                                widget.stateManager.isRTL
+                                                ? -details.delta.dx
+                                                : details.delta.dx;
 
                                             // Calculate how much to scroll based on thumb movement
                                             // The available space for the thumb to move is (widget.width - thumbWidth)
