@@ -382,8 +382,9 @@ void generateLlmsFull() {
   // Build a map of relative path -> File for quick lookup
   final fileMap = <String, File>{};
   for (final file in allDocFiles) {
-    final relativePath =
-        path.relative(file.path, from: docDir.path).replaceAll('\\', '/');
+    final relativePath = path
+        .relative(file.path, from: docDir.path)
+        .replaceAll('\\', '/');
     fileMap[relativePath] = file;
   }
 
@@ -403,13 +404,16 @@ void generateLlmsFull() {
   }
 
   // Append any .md files not referenced in index.md
-  final remainingPaths = fileMap.keys
-      .where((p) =>
-          !processedPaths.contains(p) &&
-          p != 'index.md' &&
-          !p.startsWith('contributing/'))
-      .toList()
-    ..sort();
+  final remainingPaths =
+      fileMap.keys
+          .where(
+            (p) =>
+                !processedPaths.contains(p) &&
+                p != 'index.md' &&
+                !p.startsWith('contributing/'),
+          )
+          .toList()
+        ..sort();
   finalOrder.addAll(remainingPaths);
 
   // 4. Extract header from llm.txt (everything before the first ## section)
@@ -421,8 +425,7 @@ void generateLlmsFull() {
   final buffer = StringBuffer();
 
   // Write header with modified H1
-  final headerWithoutH1 =
-      header.replaceFirst(RegExp(r'^# .+'), '').trimLeft();
+  final headerWithoutH1 = header.replaceFirst(RegExp(r'^# .+'), '').trimLeft();
   buffer.writeln('# TrinaGrid - Complete Documentation');
   buffer.writeln();
   buffer.write(headerWithoutH1);
@@ -447,8 +450,9 @@ void generateLlmsFull() {
         final linkPath = match.group(1)!;
         final anchor = match.group(2) ?? '';
         // Resolve the relative path
-        final resolved =
-            path.normalize('doc/$docRelDir/$linkPath').replaceAll('\\', '/');
+        final resolved = path
+            .normalize('doc/$docRelDir/$linkPath')
+            .replaceAll('\\', '/');
         return ']($baseUrl/$resolved$anchor)';
       },
     );
@@ -471,7 +475,9 @@ void generateLlmsFull() {
 
   outputFile.writeAsStringSync(buffer.toString());
   final lineCount = buffer.toString().split('\n').length;
-  print('Generated llms-full.txt ($filesProcessed doc files, $lineCount lines)');
+  print(
+    'Generated llms-full.txt ($filesProcessed doc files, $lineCount lines)',
+  );
 }
 
 void printUsage() {
@@ -483,9 +489,7 @@ void printUsage() {
   print(
     '  --migrate-from-pluto-grid  Migrate your codebase from PlutoGrid to TrinaGrid',
   );
-  print(
-    '  --generate-llms            Generate llms-full.txt from doc/ files',
-  );
+  print('  --generate-llms            Generate llms-full.txt from doc/ files');
   print('');
   print('Examples:');
   print('  flutter pub run trina_grid --migrate-from-pluto-grid');

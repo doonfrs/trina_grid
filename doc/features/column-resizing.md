@@ -43,6 +43,8 @@ All columns are sized equally, regardless of their content.
 
 Columns are sized proportionally based on their current widths.
 
+By default, all columns participate in the scaling. However, you can use the `scaleOnlyFlexibleColumns` option to exclude columns that have an explicitly set width from the scaling. This is useful when you want some columns (like an ID column) to maintain a fixed width while others grow to fill available space.
+
 ## How to Configure Column Resizing
 
 ### Basic Configuration
@@ -82,6 +84,48 @@ final List<TrinaColumn> columns = [
   ),
 ];
 ```
+
+### Scaling Only Flexible Columns
+
+When using `TrinaAutoSizeMode.scale`, you can choose to only scale columns that don't have an explicitly set width. This is controlled by the `scaleOnlyFlexibleColumns` option in `TrinaGridColumnSizeConfig`.
+
+By default, `scaleOnlyFlexibleColumns` is `false`, which maintains backward compatibility — all columns participate in scaling. When set to `true`, only columns without an explicit `width:` parameter will be scaled proportionally, while columns with explicit widths maintain their declared sizes.
+
+```dart
+final List<TrinaColumn> columns = [
+  TrinaColumn(
+    title: 'ID',
+    field: 'id',
+    type: TrinaColumnType.number(),
+    width: 80,  // Explicit width — will NOT scale when scaleOnlyFlexibleColumns: true
+  ),
+  TrinaColumn(
+    title: 'Name',
+    field: 'name',
+    type: TrinaColumnType.text(),
+    // No explicit width — WILL scale when scaleOnlyFlexibleColumns: true
+  ),
+  TrinaColumn(
+    title: 'Email',
+    field: 'email',
+    type: TrinaColumnType.text(),
+    // No explicit width — WILL scale when scaleOnlyFlexibleColumns: true
+  ),
+];
+
+TrinaGrid(
+  columns: columns,
+  rows: rows,
+  configuration: const TrinaGridConfiguration(
+    columnSize: TrinaGridColumnSizeConfig(
+      autoSizeMode: TrinaAutoSizeMode.scale,
+      scaleOnlyFlexibleColumns: true,  // Only scale columns without explicit widths
+    ),
+  ),
+)
+```
+
+In this example, the ID column stays at 80px, while the Name and Email columns divide the remaining space proportionally.
 
 ### Using the State Manager
 

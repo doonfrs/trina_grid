@@ -1453,6 +1453,7 @@ class TrinaGridColumnSizeConfig {
     this.restoreAutoSizeAfterMoveColumn = true,
     this.restoreAutoSizeAfterInsertColumn = true,
     this.restoreAutoSizeAfterRemoveColumn = true,
+    this.scaleOnlyFlexibleColumns = false,
   });
 
   /// Automatically change the column width.
@@ -1486,6 +1487,12 @@ class TrinaGridColumnSizeConfig {
   /// and the state after change is maintained.
   final bool restoreAutoSizeAfterRemoveColumn;
 
+  /// When using [TrinaAutoSizeMode.scale], only columns without an explicitly set width
+  /// participate in the scaling. Columns with an explicit width are kept at their declared widths.
+  /// This is determined by whether the column was constructed with a `width:` parameter.
+  /// Default is false, which maintains backward compatibility (all columns scale).
+  final bool scaleOnlyFlexibleColumns;
+
   TrinaGridColumnSizeConfig copyWith({
     TrinaAutoSizeMode? autoSizeMode,
     TrinaResizeMode? resizeMode,
@@ -1494,6 +1501,7 @@ class TrinaGridColumnSizeConfig {
     bool? restoreAutoSizeAfterMoveColumn,
     bool? restoreAutoSizeAfterInsertColumn,
     bool? restoreAutoSizeAfterRemoveColumn,
+    bool? scaleOnlyFlexibleColumns,
   }) {
     return TrinaGridColumnSizeConfig(
       autoSizeMode: autoSizeMode ?? this.autoSizeMode,
@@ -1511,6 +1519,8 @@ class TrinaGridColumnSizeConfig {
       restoreAutoSizeAfterRemoveColumn:
           restoreAutoSizeAfterRemoveColumn ??
           this.restoreAutoSizeAfterRemoveColumn,
+      scaleOnlyFlexibleColumns:
+          scaleOnlyFlexibleColumns ?? this.scaleOnlyFlexibleColumns,
     );
   }
 
@@ -1530,7 +1540,8 @@ class TrinaGridColumnSizeConfig {
             restoreAutoSizeAfterInsertColumn ==
                 other.restoreAutoSizeAfterInsertColumn &&
             restoreAutoSizeAfterRemoveColumn ==
-                other.restoreAutoSizeAfterRemoveColumn;
+                other.restoreAutoSizeAfterRemoveColumn &&
+            scaleOnlyFlexibleColumns == other.scaleOnlyFlexibleColumns;
   }
 
   @override
@@ -1542,6 +1553,7 @@ class TrinaGridColumnSizeConfig {
     restoreAutoSizeAfterMoveColumn,
     restoreAutoSizeAfterInsertColumn,
     restoreAutoSizeAfterRemoveColumn,
+    scaleOnlyFlexibleColumns,
   );
 }
 

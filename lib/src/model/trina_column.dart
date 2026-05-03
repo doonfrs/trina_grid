@@ -41,6 +41,8 @@ class TrinaColumn {
 
   double minWidth;
 
+  bool hasExplicitWidth;
+
   /// Customisable title padding.
   /// It takes precedence over defaultColumnTitlePadding in TrinaGridConfiguration.
   EdgeInsets? titlePadding;
@@ -292,7 +294,7 @@ class TrinaColumn {
     required this.type,
     this.readOnly = false,
     TrinaColumnCheckReadOnly? checkReadOnly,
-    this.width = TrinaGridSettings.columnWidth,
+    double? width,
     this.minWidth = TrinaGridSettings.minColumnWidth,
     this.titlePadding,
     this.filterPadding,
@@ -330,7 +332,9 @@ class TrinaColumn {
     this.editCellRenderer,
     this.filterEnterKeyAction,
     this.metadata,
-  }) : _key = UniqueKey(),
+  }) : width = width ?? TrinaGridSettings.columnWidth,
+       hasExplicitWidth = width != null,
+       _key = UniqueKey(),
        _checkReadOnly = checkReadOnly;
 
   final Key _key;

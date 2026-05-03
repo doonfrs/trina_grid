@@ -94,7 +94,11 @@ mixin ColumnSizingState implements ITrinaGridState {
     return TrinaAutoSizeHelper.items<TrinaColumn>(
       maxSize: maxWidth,
       items: columns,
-      isSuppressed: (e) => e.suppressedAutoSize,
+      isSuppressed: (e) =>
+          e.suppressedAutoSize ||
+          (columnSizeConfig.scaleOnlyFlexibleColumns &&
+              columnsAutoSizeMode.isScale &&
+              e.hasExplicitWidth),
       getItemSize: (e) => e.width,
       getItemMinSize: (e) => e.minWidth,
       setItemSize: (e, size) => e.width = size,
