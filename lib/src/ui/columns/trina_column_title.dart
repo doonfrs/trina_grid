@@ -238,9 +238,12 @@ class TrinaColumnTitleState extends TrinaStateWithChange<TrinaColumnTitle> {
   /// Builds the context menu widget, wrapping it with gesture detectors.
   ///
   /// If [hasTitleRenderer] is true, the widget is also wrapped in a
-  /// [GestureDetector] to absorb tap events. This prevents the tap from
-  /// propagating to the parent `_SortableWidget`, which would otherwise
-  /// trigger a column sort when the context menu icon is clicked.
+  /// [GestureDetector] that absorbs tap and horizontal-drag gestures. The tap
+  /// absorption prevents the parent `_SortableWidget` from triggering a sort
+  /// when the icon is clicked. The horizontal-drag absorption claims the pan
+  /// gesture in the arena so the parent `_DraggableWidget` cannot start a
+  /// column-reorder drag from the icon — matching the default header layout,
+  /// where the icon sits outside the draggable subtree (see #318).
   Widget _buildContextMenuWidget(
     Widget contextMenuIcon, {
     bool hasTitleRenderer = false,
@@ -260,6 +263,9 @@ class TrinaColumnTitleState extends TrinaStateWithChange<TrinaColumnTitle> {
       return GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () {}, // Absorb the tap to prevent sorting.
+        onHorizontalDragStart: (_) {},
+        onHorizontalDragUpdate: (_) {},
+        onHorizontalDragEnd: (_) {},
         child: listener,
       );
     }

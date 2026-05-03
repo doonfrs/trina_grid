@@ -648,6 +648,50 @@ void main() {
 
       expect(columnTitleDraggableFinder, findsOneWidget);
     });
+    testWidgets(
+      'WHEN titleRenderer embeds contextMenuIcon AND a horizontal drag '
+      'starts on that icon, THEN no column-reorder Draggable feedback '
+      'should appear (#318)',
+      (tester) async {
+        final column = buildColumn(
+          enableColumnDrag: true,
+          title: originalTitleText,
+          titleRenderer: (ctx) => Row(
+            children: [
+              Expanded(child: Text(ctx.column.title)),
+              if (ctx.showContextIcon) ctx.contextMenuIcon,
+            ],
+          ),
+        );
+        await buildGrid(tester, columns: [column]);
+
+        final iconFinder = find.descendant(
+          of: find.byType(TrinaColumnTitle),
+          matching: find.byType(IconButton),
+        );
+        expect(iconFinder, findsOneWidget);
+
+        // Manually drive the gesture so we can inspect the widget tree
+        // mid-drag. Releasing the pointer would tear down any Draggable
+        // feedback before we could observe it.
+        final gesture = await tester.startGesture(
+          tester.getCenter(iconFinder),
+        );
+        // kTouchSlop is 18 px; move well past it so any pan recognizer
+        // (including the parent Draggable) would have claimed by now.
+        for (var i = 0; i < 20; i++) {
+          await gesture.moveBy(const Offset(8, 0));
+          await tester.pump();
+        }
+
+        // If column-reorder erroneously kicked in, the Draggable would
+        // mount its feedback (TrinaShadowContainer) into the overlay.
+        expect(find.byType(TrinaShadowContainer), findsNothing);
+
+        await gesture.up();
+        await tester.pumpAndSettle();
+      },
+    );
     testWidgets('When enableSorting is false and titleRender is provided, '
         'GestureDetector widget should not exist', (tester) async {
       final column = buildColumn(
