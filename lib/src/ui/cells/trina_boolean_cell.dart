@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:trina_grid/src/ui/widgets/trina_dropdown_menu.dart';
 import 'package:trina_grid/trina_grid.dart';
@@ -43,10 +45,17 @@ class TrinaBooleanCellState
 
   @override
   TrinaDropdownMenu<bool?> buildMenu() {
+    // Size the popup to its content so a 2/3-item boolean dropdown doesn't
+    // open at the full 300px maxHeight with empty space below the items.
+    final contentHeight = menuItems.length * _column.menuItemHeight;
+    final effectiveMaxHeight = math
+        .min(_column.menuMaxHeight, contentHeight)
+        .clamp(0.0, _column.menuMaxHeight);
+
     return TrinaDropdownMenu(
       items: menuItems,
       itemHeight: _column.menuItemHeight,
-      maxHeight: _column.menuMaxHeight,
+      maxHeight: effectiveMaxHeight,
       width: _column.menuWidth ?? widget.column.width,
       initialValue: widget.cell.value,
       itemBuilder: _column.menuItemBuilder,

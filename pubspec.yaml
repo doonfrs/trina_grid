@@ -33,6 +33,7 @@ dependencies:
   collection: ^1.19.1
   path: ^1.9.1
   pdf: ^3.11.3
+  shadcn_ui: ^0.43.0
 
 dev_dependencies:
   flutter_test:
