@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:trina_grid/src/ui/miscellaneous/trina_popup_cell_state_with_menu.dart';
 import 'package:trina_grid/src/ui/widgets/trina_dropdown_menu.dart';
@@ -42,6 +44,20 @@ class TrinaSelectCellState<T>
 
   @override
   TrinaDropdownMenu<T> buildMenu() {
+    // Size the popup to its content so empty/short lists don't leave a tall
+    // blank area below items. The MenuAnchor container itself reserves
+    // [_menuVerticalChrome] (padding + border) on top of the content height,
+    // handled in [TrinaPopupCellStateWithMenu.defaultEditWidget].
+    final hasSearch =
+        _column.menuVariant == TrinaDropdownMenuVariant.selectWithSearch;
+    // Search field (~52) + horizontal separator (1).
+    final chrome = hasSearch ? 53.0 : 0.0;
+    final contentHeight = chrome + menuItems.length * _column.menuItemHeight;
+    final effectiveMaxHeight = math
+        .min(_column.menuMaxHeight, contentHeight)
+        // Always leave room for the search field even when there are no items.
+        .clamp(chrome, _column.menuMaxHeight);
+
     return TrinaDropdownMenu.variant(
       _column.menuVariant,
       items: menuItems,
@@ -58,9 +74,10 @@ class TrinaSelectCellState<T>
       width: _column.menuWidth ?? widget.column.width,
       initialValue: widget.cell.value,
       itemHeight: _column.menuItemHeight,
-      maxHeight: _column.menuMaxHeight,
+      maxHeight: effectiveMaxHeight,
       itemBuilder: _column.menuItemBuilder,
       itemToValue: _column.itemToValue,
+      searchHint: widget.stateManager.configuration.localeText.selectSearchHint,
     );
   }
 }

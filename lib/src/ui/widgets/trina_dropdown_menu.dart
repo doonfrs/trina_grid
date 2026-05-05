@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:trina_grid/src/model/trina_dropdown_menu_filter.dart';
 
 typedef ItemBuilder<T> = Widget Function(T item);
@@ -170,6 +171,7 @@ class TrinaDropdownMenu<T> extends StatefulWidget {
     WidgetBuilder? emptyFilterResultBuilder,
     ItemBuilder<T>? itemBuilder,
     dynamic Function(T item)? itemToValue,
+    String searchHint = 'Search...',
     Key? key,
   }) {
     switch (variant) {
@@ -202,6 +204,7 @@ class TrinaDropdownMenu<T> extends StatefulWidget {
           itemToValue: itemToValue,
           emptySearchResultBuilder: emptySearchResultBuilder,
           itemBuilder: itemBuilder,
+          searchHint: searchHint,
         );
       case TrinaDropdownMenuVariant.selectWithFilters:
         return TrinaDropdownMenu<T>.withFilters(
@@ -237,6 +240,7 @@ class TrinaDropdownMenu<T> extends StatefulWidget {
     WidgetBuilder? emptySearchResultBuilder,
     ItemBuilder<T>? itemBuilder,
     dynamic Function(T item)? itemToValue,
+    String searchHint,
   }) = _TrinaSelectMenuWithSearch<T>;
 
   /// Creates a select menu with an advanced filtering UI.
@@ -346,6 +350,7 @@ base class TrinaDropdownMenuState<T> extends State<TrinaDropdownMenu<T>> {
 final class _TrinaSelectMenuWithSearch<T> extends TrinaDropdownMenu<T> {
   _TrinaSelectMenuWithSearch({
     this.emptySearchResultBuilder,
+    this.searchHint = 'Search...',
     super.key,
     super.itemBuilder,
     super.itemToValue,
@@ -381,12 +386,7 @@ final class _TrinaSelectMenuWithSearch<T> extends TrinaDropdownMenu<T> {
                  mainAxisSize: MainAxisSize.min,
                  children: [
                    _SearchField<T>(),
-                   Divider(
-                     height: 5,
-                     color: Theme.of(
-                       context,
-                     ).colorScheme.onSurface.withAlpha(50),
-                   ),
+                   const ShadSeparator.horizontal(margin: EdgeInsets.zero),
                    Flexible(child: _ItemListView<T>()),
                  ],
                ),
@@ -399,6 +399,9 @@ final class _TrinaSelectMenuWithSearch<T> extends TrinaDropdownMenu<T> {
   /// Used to provide a custom widget to display when the search yields no results.
   /// {@endtemplate}
   final WidgetBuilder? emptySearchResultBuilder;
+
+  /// Placeholder shown inside the search field. Defaults to `'Search...'`.
+  final String searchHint;
 
   @override
   TrinaDropdownMenuState<T> createState() {
@@ -469,29 +472,29 @@ class _SearchField<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final shadColors = ShadTheme.of(context).colorScheme;
     final state =
         (TrinaDropdownMenu.of<T>(context)
             as _TrinaSelectMenuWithSearchState<T>);
+    final menu = state.widget as _TrinaSelectMenuWithSearch<T>;
     return _EnterKeyListener(
       onEnter: () {
         if (state._debounce?.isActive ?? false) state._debounce!.cancel();
         state._searchItems();
       },
-      child: TextField(
+      child: ShadInput(
         controller: state.controller,
         focusNode: state.focusNode,
-        canRequestFocus: true,
-        maxLines: 1,
-        style: TextStyle(color: colorScheme.onSurface),
-        decoration: InputDecoration(
-          hintText: 'Search...',
-          prefixIcon: const Icon(Icons.search, size: 20),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8.0),
-            borderSide: BorderSide.none,
+        placeholder: Text(menu.searchHint),
+        decoration: ShadDecoration.none,
+        padding: const EdgeInsets.all(12),
+        leading: Padding(
+          padding: const EdgeInsets.only(right: 8),
+          child: Icon(
+            LucideIcons.search,
+            size: 16,
+            color: shadColors.popoverForeground,
           ),
-          contentPadding: const EdgeInsets.all(10),
         ),
       ),
     );
@@ -1115,6 +1118,8 @@ class _ItemListView<T> extends StatelessWidget {
 
         return Scrollbar(
           controller: menuState.scrollController,
+          thickness: 4,
+          radius: const Radius.circular(4),
           child: ListView.builder(
             padding: EdgeInsets.zero,
             controller: menuState.scrollController,
