@@ -132,6 +132,7 @@ class TrinaGrid extends TrinaStatefulWidget {
     this.onValidationFailed,
     this.onLazyFetchCompleted,
     this.scrollPhysics,
+    this.fitContent = false,
   });
 
   final double? rowsCacheExtent;
@@ -521,6 +522,26 @@ class TrinaGrid extends TrinaStatefulWidget {
   /// ```
   final ScrollPhysics? scrollPhysics;
 
+  /// When `true`, the grid sizes its overall height to fit its content
+  /// (header + columns + rows + footer + borders) instead of expanding to
+  /// fill the parent. Use this when placing the grid inside a `Column`,
+  /// `Card`, dialog, or any unbounded-height parent without wrapping it
+  /// in `Expanded`.
+  ///
+  /// Defaults to `false` (the grid fills the parent's bounded height).
+  ///
+  /// Notes:
+  /// - For exact sizing with a custom [createHeader] or [createFooter], set
+  ///   `stateManager.headerHeight` / `stateManager.footerHeight` from inside
+  ///   your callback. If unset, a default of `TrinaGridSettings.rowTotalHeight`
+  ///   is assumed.
+  /// - The height is recomputed when row heights change
+  ///   (`TrinaGridStateManager.setRowHeight`) and when filtering or pagination
+  ///   alters the visible row set.
+  /// - When the parent constrains the grid below the computed height (e.g. a
+  ///   small dialog), vertical scrolling is preserved.
+  final bool fitContent;
+
   /// [setDefaultLocale] sets locale when [Intl] package is used in [TrinaGrid].
   ///
   /// {@template intl_default_locale}
@@ -849,186 +870,253 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
     return trinaEvent.isCharacter && hasAllowedModifier;
   }
 
+  /// Computes the inner height the [CustomMultiChildLayout] needs to lay out
+  /// its children when [TrinaGrid.fitContent] is enabled. This is the size
+  /// the inner [LayoutBuilder] receives, not the outer widget's height —
+  /// the surrounding [_GridContainer] adds `2 * style.gridPadding` of padding
+  /// to produce the final rendered size.
+  ///
+  /// Returns a non-finite or non-positive value when the inputs are nonsense;
+  /// callers fall back to the default constraint-based layout.
+  double _computeContentHeight() {
+    final style = widget.configuration.style;
+    final double border = style.gridBorderWidth;
+    final double cellHorizontalBorder = style.cellHorizontalBorderWidth;
+    final double defaultRowHeight = style.rowHeight;
+
+    double height = 0;
+
+    if (widget.createHeader != null) {
+      final double headerHeight = _stateManager.headerHeight > 0
+          ? _stateManager.headerHeight
+          : TrinaGridSettings.rowTotalHeight;
+      height += headerHeight + border; // header + header divider
+    }
+
+    if (_stateManager.showColumnGroups) {
+      height +=
+          _stateManager.columnGroupDepth(_stateManager.refColumnGroups) *
+          style.columnHeight;
+    }
+    if (_stateManager.showColumnTitle) {
+      height += style.columnHeight;
+    }
+    if (_stateManager.showColumnFilter) {
+      height += style.columnFilterHeight;
+    }
+
+    height += border; // column-row divider (always added in performLayout)
+
+    for (final row in _stateManager.refRows) {
+      height += (row.height ?? defaultRowHeight) + cellHorizontalBorder;
+    }
+
+    if (_stateManager.showColumnFooter) {
+      final double columnFooterHeight = _stateManager.columnFooterHeight > 0
+          ? _stateManager.columnFooterHeight
+          : TrinaGridSettings.rowTotalHeight;
+      height += columnFooterHeight + border;
+    }
+
+    if (widget.createFooter != null) {
+      final double footerHeight = _stateManager.footerHeight > 0
+          ? _stateManager.footerHeight
+          : TrinaGridSettings.rowTotalHeight;
+      height += footerHeight + border;
+    }
+
+    return height;
+  }
+
   @override
   Widget build(BuildContext context) {
+    Widget body = LayoutBuilder(
+      builder: (c, size) {
+        _stateManager.setLayout(size);
+
+        final style = _stateManager.style;
+
+        final bool showLeftFrozen =
+            _stateManager.showFrozenColumn &&
+            _stateManager.hasLeftFrozenColumns;
+
+        final bool showRightFrozen =
+            _stateManager.showFrozenColumn &&
+            _stateManager.hasRightFrozenColumns;
+
+        final bool showColumnRowDivider =
+            _stateManager.showColumnTitle || _stateManager.showColumnFilter;
+
+        final bool showColumnFooter = _stateManager.showColumnFooter;
+
+        return CustomMultiChildLayout(
+          key: _stateManager.gridKey,
+          delegate: TrinaGridLayoutDelegate(
+            _stateManager,
+            Directionality.of(context),
+          ),
+          children: [
+            /// Body columns and rows.
+            LayoutId(
+              id: _StackName.bodyRows,
+              child: TrinaBodyRows(_stateManager),
+            ),
+            LayoutId(
+              id: _StackName.bodyColumns,
+              child: TrinaBodyColumns(_stateManager),
+            ),
+
+            /// Body columns footer.
+            if (showColumnFooter)
+              LayoutId(
+                id: _StackName.bodyColumnFooters,
+                child: TrinaBodyColumnsFooter(stateManager),
+              ),
+
+            /// Left columns and rows.
+            if (showLeftFrozen) ...[
+              LayoutId(
+                id: _StackName.leftFrozenColumns,
+                child: TrinaLeftFrozenColumns(_stateManager),
+              ),
+              LayoutId(
+                id: _StackName.leftFrozenRows,
+                child: TrinaLeftFrozenRows(_stateManager),
+              ),
+              LayoutId(
+                id: _StackName.leftFrozenDivider,
+                child: TrinaShadowLine(
+                  axis: Axis.vertical,
+                  color: style.gridBorderColor,
+                  shadow: style.enableGridBorderShadow,
+                  reverse: _stateManager.isRTL,
+                ),
+              ),
+              if (showColumnFooter)
+                LayoutId(
+                  id: _StackName.leftFrozenColumnFooters,
+                  child: TrinaLeftFrozenColumnsFooter(stateManager),
+                ),
+            ],
+
+            /// Right columns and rows.
+            if (showRightFrozen) ...[
+              LayoutId(
+                id: _StackName.rightFrozenColumns,
+                child: TrinaRightFrozenColumns(_stateManager),
+              ),
+              LayoutId(
+                id: _StackName.rightFrozenRows,
+                child: TrinaRightFrozenRows(_stateManager),
+              ),
+              LayoutId(
+                id: _StackName.rightFrozenDivider,
+                child: TrinaShadowLine(
+                  axis: Axis.vertical,
+                  color: style.gridBorderColor,
+                  shadow: style.enableGridBorderShadow,
+                  reverse: !_stateManager.isRTL,
+                ),
+              ),
+              if (showColumnFooter)
+                LayoutId(
+                  id: _StackName.rightFrozenColumnFooters,
+                  child: TrinaRightFrozenColumnsFooter(stateManager),
+                ),
+            ],
+
+            /// Column and row divider.
+            if (showColumnRowDivider)
+              LayoutId(
+                id: _StackName.columnRowDivider,
+                child: TrinaShadowLine(
+                  axis: Axis.horizontal,
+                  color: style.gridBorderColor,
+                  shadow: style.enableGridBorderShadow,
+                ),
+              ),
+
+            /// Header and divider.
+            if (_stateManager.showHeader) ...[
+              LayoutId(
+                id: _StackName.headerDivider,
+                child: TrinaShadowLine(
+                  axis: Axis.horizontal,
+                  color: style.gridBorderColor,
+                  shadow: style.enableGridBorderShadow,
+                ),
+              ),
+              LayoutId(id: _StackName.header, child: _header!),
+            ],
+
+            /// Column footer divider.
+            if (showColumnFooter)
+              LayoutId(
+                id: _StackName.columnFooterDivider,
+                child: TrinaShadowLine(
+                  axis: Axis.horizontal,
+                  color: style.gridBorderColor,
+                  shadow: style.enableGridBorderShadow,
+                ),
+              ),
+
+            /// Footer and divider.
+            if (_stateManager.showFooter) ...[
+              LayoutId(
+                id: _StackName.footerDivider,
+                child: TrinaShadowLine(
+                  axis: Axis.horizontal,
+                  color: style.gridBorderColor,
+                  shadow: style.enableGridBorderShadow,
+                  reverse: true,
+                ),
+              ),
+              LayoutId(id: _StackName.footer, child: _footer!),
+            ],
+
+            /// Loading screen.
+            if (_stateManager.showLoading)
+              LayoutId(
+                id: _StackName.loading,
+                child:
+                    _stateManager.customLoadingWidget ??
+                    TrinaLoading(
+                      level: _stateManager.loadingLevel,
+                      backgroundColor: style.gridBackgroundColor,
+                      indicatorColor: style.activatedBorderColor,
+                      text: _stateManager.localeText.loadingText,
+                      textStyle: style.cellTextStyle,
+                    ),
+              ),
+
+            /// NoRows
+            if (widget.noRowsWidget != null)
+              LayoutId(
+                id: _StackName.noRows,
+                child: TrinaNoRowsWidget(
+                  stateManager: _stateManager,
+                  child: widget.noRowsWidget!,
+                ),
+              ),
+          ],
+        );
+      },
+    );
+
+    if (widget.fitContent) {
+      final double computed = _computeContentHeight();
+      if (computed.isFinite && computed > 0) {
+        body = SizedBox(height: computed, child: body);
+      }
+    }
+
     return FocusScope(
       onFocusChange: _stateManager.setKeepFocus,
       onKeyEvent: _handleGridFocusOnKey,
       child: _GridContainer(
         stateManager: _stateManager,
         scrollPhysics: widget.scrollPhysics,
-        child: LayoutBuilder(
-          builder: (c, size) {
-            _stateManager.setLayout(size);
-
-            final style = _stateManager.style;
-
-            final bool showLeftFrozen =
-                _stateManager.showFrozenColumn &&
-                _stateManager.hasLeftFrozenColumns;
-
-            final bool showRightFrozen =
-                _stateManager.showFrozenColumn &&
-                _stateManager.hasRightFrozenColumns;
-
-            final bool showColumnRowDivider =
-                _stateManager.showColumnTitle || _stateManager.showColumnFilter;
-
-            final bool showColumnFooter = _stateManager.showColumnFooter;
-
-            return CustomMultiChildLayout(
-              key: _stateManager.gridKey,
-              delegate: TrinaGridLayoutDelegate(
-                _stateManager,
-                Directionality.of(context),
-              ),
-              children: [
-                /// Body columns and rows.
-                LayoutId(
-                  id: _StackName.bodyRows,
-                  child: TrinaBodyRows(_stateManager),
-                ),
-                LayoutId(
-                  id: _StackName.bodyColumns,
-                  child: TrinaBodyColumns(_stateManager),
-                ),
-
-                /// Body columns footer.
-                if (showColumnFooter)
-                  LayoutId(
-                    id: _StackName.bodyColumnFooters,
-                    child: TrinaBodyColumnsFooter(stateManager),
-                  ),
-
-                /// Left columns and rows.
-                if (showLeftFrozen) ...[
-                  LayoutId(
-                    id: _StackName.leftFrozenColumns,
-                    child: TrinaLeftFrozenColumns(_stateManager),
-                  ),
-                  LayoutId(
-                    id: _StackName.leftFrozenRows,
-                    child: TrinaLeftFrozenRows(_stateManager),
-                  ),
-                  LayoutId(
-                    id: _StackName.leftFrozenDivider,
-                    child: TrinaShadowLine(
-                      axis: Axis.vertical,
-                      color: style.gridBorderColor,
-                      shadow: style.enableGridBorderShadow,
-                      reverse: _stateManager.isRTL,
-                    ),
-                  ),
-                  if (showColumnFooter)
-                    LayoutId(
-                      id: _StackName.leftFrozenColumnFooters,
-                      child: TrinaLeftFrozenColumnsFooter(stateManager),
-                    ),
-                ],
-
-                /// Right columns and rows.
-                if (showRightFrozen) ...[
-                  LayoutId(
-                    id: _StackName.rightFrozenColumns,
-                    child: TrinaRightFrozenColumns(_stateManager),
-                  ),
-                  LayoutId(
-                    id: _StackName.rightFrozenRows,
-                    child: TrinaRightFrozenRows(_stateManager),
-                  ),
-                  LayoutId(
-                    id: _StackName.rightFrozenDivider,
-                    child: TrinaShadowLine(
-                      axis: Axis.vertical,
-                      color: style.gridBorderColor,
-                      shadow: style.enableGridBorderShadow,
-                      reverse: !_stateManager.isRTL,
-                    ),
-                  ),
-                  if (showColumnFooter)
-                    LayoutId(
-                      id: _StackName.rightFrozenColumnFooters,
-                      child: TrinaRightFrozenColumnsFooter(stateManager),
-                    ),
-                ],
-
-                /// Column and row divider.
-                if (showColumnRowDivider)
-                  LayoutId(
-                    id: _StackName.columnRowDivider,
-                    child: TrinaShadowLine(
-                      axis: Axis.horizontal,
-                      color: style.gridBorderColor,
-                      shadow: style.enableGridBorderShadow,
-                    ),
-                  ),
-
-                /// Header and divider.
-                if (_stateManager.showHeader) ...[
-                  LayoutId(
-                    id: _StackName.headerDivider,
-                    child: TrinaShadowLine(
-                      axis: Axis.horizontal,
-                      color: style.gridBorderColor,
-                      shadow: style.enableGridBorderShadow,
-                    ),
-                  ),
-                  LayoutId(id: _StackName.header, child: _header!),
-                ],
-
-                /// Column footer divider.
-                if (showColumnFooter)
-                  LayoutId(
-                    id: _StackName.columnFooterDivider,
-                    child: TrinaShadowLine(
-                      axis: Axis.horizontal,
-                      color: style.gridBorderColor,
-                      shadow: style.enableGridBorderShadow,
-                    ),
-                  ),
-
-                /// Footer and divider.
-                if (_stateManager.showFooter) ...[
-                  LayoutId(
-                    id: _StackName.footerDivider,
-                    child: TrinaShadowLine(
-                      axis: Axis.horizontal,
-                      color: style.gridBorderColor,
-                      shadow: style.enableGridBorderShadow,
-                      reverse: true,
-                    ),
-                  ),
-                  LayoutId(id: _StackName.footer, child: _footer!),
-                ],
-
-                /// Loading screen.
-                if (_stateManager.showLoading)
-                  LayoutId(
-                    id: _StackName.loading,
-                    child:
-                        _stateManager.customLoadingWidget ??
-                        TrinaLoading(
-                          level: _stateManager.loadingLevel,
-                          backgroundColor: style.gridBackgroundColor,
-                          indicatorColor: style.activatedBorderColor,
-                          text: _stateManager.localeText.loadingText,
-                          textStyle: style.cellTextStyle,
-                        ),
-                  ),
-
-                /// NoRows
-                if (widget.noRowsWidget != null)
-                  LayoutId(
-                    id: _StackName.noRows,
-                    child: TrinaNoRowsWidget(
-                      stateManager: _stateManager,
-                      child: widget.noRowsWidget!,
-                    ),
-                  ),
-              ],
-            );
-          },
-        ),
+        child: body,
       ),
     );
   }
