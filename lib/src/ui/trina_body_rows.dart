@@ -252,13 +252,22 @@ class TrinaBodyRowsState extends TrinaStateWithChange<TrinaBodyRows> {
                                   controller: _verticalScroll,
                                   scrollDirection: Axis.vertical,
                                   itemCount: _scrollableRows.length,
-                                  itemExtent:
+                                  itemExtentBuilder:
                                       (stateManager.rowWrapper != null &&
                                           !stateManager
                                               .configuration
                                               .rowWrapperIsConstantHeight)
                                       ? null
-                                      : stateManager.rowTotalHeight,
+                                      : (index, _) =>
+                                            (_scrollableRows[index].height ??
+                                                stateManager
+                                                    .configuration
+                                                    .style
+                                                    .rowHeight) +
+                                            stateManager
+                                                .configuration
+                                                .style
+                                                .cellHorizontalBorderWidth,
                                   addRepaintBoundaries: false,
                                   itemBuilder: (ctx, i) => _buildRow(
                                     context,

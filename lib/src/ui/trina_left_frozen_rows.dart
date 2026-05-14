@@ -101,11 +101,17 @@ class TrinaLeftFrozenRowsState
             scrollDirection: Axis.vertical,
             physics: const ClampingScrollPhysics(),
             itemCount: _scrollableRows.length,
-            itemExtent:
+            itemExtentBuilder:
                 (stateManager.rowWrapper != null &&
                     !stateManager.configuration.rowWrapperIsConstantHeight)
                 ? null
-                : stateManager.rowTotalHeight,
+                : (index, _) =>
+                      (_scrollableRows[index].height ??
+                          stateManager.configuration.style.rowHeight) +
+                      stateManager
+                          .configuration
+                          .style
+                          .cellHorizontalBorderWidth,
             itemBuilder: (ctx, i) =>
                 _buildRow(ctx, _scrollableRows[i], i + _frozenTopRows.length),
           ),
