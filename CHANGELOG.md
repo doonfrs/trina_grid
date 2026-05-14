@@ -1,5 +1,25 @@
 # Changelog
 
+## [2.2.2] - 2026. 05. 15
+
+* Feature: Added TrinaGrid.fitContent to auto-size grid to its rows (#218). @doonfrs
+* Feature: Implemented TrinaDropdownMenu component and cell state with MenuAnchor support (#364). @doonfrs
+* Feature: Added per-row & per-cell text style callbacks (#344). @doonfrs
+* Feature: Added filterIconWidget property to TrinaGridStyleConfig (#348). @jan-siroky
+* Fix: Restore dynamic row height by switching ListView itemExtent to itemExtentBuilder (#365). @doonfrs
+* Fix: Prevent contextMenuIcon from initiating column drag in custom titleRenderer (#318). @doonfrs
+* Fix: Place vertical scrollbar on trailing edge and unmirror horizontal drag in RTL (#359). @doonfrs
+* Fix: Auto-create missing cells when initializing rows so newly appended rows survive hidden-column toggling (#354). @doonfrs
+* Fix: Extend horizontal scroll past vertical scrollbar overlay (#355). @doonfrs
+* Fix: Filter popup column dropdown shows localized titles (#356). @doonfrs
+* Fix: checkReadOnly callback not preventing keyboard-initiated editing (#306). @doonfrs
+* Fix: Currency column sorting broken with non-dot-decimal locales (#337). @doonfrs
+* Fix: Remove renderer caching to fix stale renders with external state (#338). @doonfrs
+* Fix: Use decimal keyboard for numeric column filters (#345). @jan-siroky
+* Fix: Use TrinaOptional for filterIconWidget in copyWith to allow null reset (#349). @doonfrs
+* Docs: Added CLAUDE.md with project guidance for Claude Code agents (#340). @doonfrs
+* Docs: Added llm.txt and llms-full.txt for AI agent discoverability (#339). @doonfrs
+
 ## [2.2.1] - 2026. 03. 05
 
 * Fix: Remove unused import in trina_smooth_list_view.dart. @doonfrs
