@@ -1,0 +1,101 @@
+# TrinaGrid
+
+> TrinaGrid is a powerful, keyboard-navigable data grid widget for Flutter. It supports text, number, date, time, datetime, boolean, select, currency, percentage, and custom column types with built-in editing, filtering, sorting, pagination, and export (CSV, JSON, PDF). It works on web, desktop (Windows, macOS, Linux), and mobile (Android, iOS). Published on pub.dev as `trina_grid`. Fork/continuation of the discontinued PlutoGrid package; an automatic migration tool is included. MIT License.
+
+- Import: `import 'package:trina_grid/trina_grid.dart';`
+- Main widget: `TrinaGrid(columns: [...], rows: [...], onLoaded: (event) { stateManager = event.stateManager; })`
+- Core models: `TrinaColumn(title, field, type)`, `TrinaRow(cells: {'field': TrinaCell(value: ...)})`, `TrinaCell(value)`
+- Column types: `TrinaColumnType.text()`, `.number()`, `.date()`, `.time()`, `.dateTime()`, `.boolean()`, `.select(items)`, `.currency()`, `.percentage()`, `.custom()`
+- State management: `TrinaGridStateManager` — obtained from `onLoaded` callback via `event.stateManager`
+- Configuration: `TrinaGridConfiguration` — styles, scrollbars, column sizing, selection mode, keyboard shortcuts
+- Pagination: `TrinaPagination` (client-side), `TrinaLazyPagination` (server-side), `TrinaInfinityScrollRows`
+- Export: `TrinaGridExportCsv`, `TrinaGridExportJson`, `TrinaGridExportPdf`
+- Dual grid: `TrinaDualGrid` (two grids side by side), `TrinaGridPopup` (popup selection grid)
+- Column groups: `TrinaColumnGroup` — group columns under a shared header
+- Custom renderers: `TrinaColumn.renderer` for cells, `TrinaColumn.titleRenderer` for headers, `TrinaColumn.footerRenderer` for footers
+
+## Docs
+
+- [Full Documentation for LLMs](https://raw.githubusercontent.com/doonfrs/trina_grid/main/llms-full.txt): All documentation inlined in a single file for LLM consumption
+- [Documentation Index](https://github.com/doonfrs/trina_grid/blob/main/doc/index.md): Complete documentation table of contents
+- [Installation](https://github.com/doonfrs/trina_grid/blob/main/doc/getting-started/installation.md): Adding trina_grid to your project
+- [Basic Usage](https://github.com/doonfrs/trina_grid/blob/main/doc/getting-started/basic-usage.md): Creating columns, rows, cells and the grid widget
+- [Configuration](https://github.com/doonfrs/trina_grid/blob/main/doc/getting-started/configuration.md): TrinaGridConfiguration options
+
+## Column Features
+
+- [Column Types](https://github.com/doonfrs/trina_grid/blob/main/doc/features/column-types.md): All column type options with properties and examples
+- [Column Freezing](https://github.com/doonfrs/trina_grid/blob/main/doc/features/column-freezing.md): Pin columns to left or right
+- [Column Resizing](https://github.com/doonfrs/trina_grid/blob/main/doc/features/column-resizing.md): Resize column widths
+- [Column Moving](https://github.com/doonfrs/trina_grid/blob/main/doc/features/column-moving.md): Reorder columns by drag
+- [Column Hiding](https://github.com/doonfrs/trina_grid/blob/main/doc/features/column-hiding.md): Show/hide columns programmatically
+- [Column Sorting](https://github.com/doonfrs/trina_grid/blob/main/doc/features/column-sorting.md): Click-to-sort with custom sort icons
+- [Column Filtering](https://github.com/doonfrs/trina_grid/blob/main/doc/features/column-filtering.md): Built-in filter widgets including multi-item filters
+- [Column Groups](https://github.com/doonfrs/trina_grid/blob/main/doc/features/column-groups.md): Group related columns under a shared header
+- [Column Renderers](https://github.com/doonfrs/trina_grid/blob/main/doc/features/column-renderer.md): Custom widgets for column cells
+- [Column Title Renderer](https://github.com/doonfrs/trina_grid/blob/main/doc/features/column-title-renderer.md): Custom header widgets
+- [Column Footer](https://github.com/doonfrs/trina_grid/blob/main/doc/features/column-footer.md): Aggregate values at column bottom
+- [Column Visibility](https://github.com/doonfrs/trina_grid/blob/main/doc/features/column-visibility.md): Viewport visibility tracking
+
+## Row Features
+
+- [Row Selection](https://github.com/doonfrs/trina_grid/blob/main/doc/features/row-selection.md): Single and multi-row selection modes
+- [Row Moving](https://github.com/doonfrs/trina_grid/blob/main/doc/features/row-moving.md): Drag to reorder rows
+- [Row Coloring](https://github.com/doonfrs/trina_grid/blob/main/doc/features/row-color.md): Conditional row background colors
+- [Row Wrapper](https://github.com/doonfrs/trina_grid/blob/main/doc/features/row-wrapper.md): Wrap rows with custom widgets
+- [Row Checking](https://github.com/doonfrs/trina_grid/blob/main/doc/features/row-checking.md): Checkbox selection for rows
+- [Row Groups](https://github.com/doonfrs/trina_grid/blob/main/doc/features/row-groups.md): Group rows with expandable sections
+- [Frozen Rows](https://github.com/doonfrs/trina_grid/blob/main/doc/features/frozen-rows.md): Pin rows to top or bottom
+- [Dynamic Row Heights](https://github.com/doonfrs/trina_grid/blob/main/doc/features/dynamic-row-heights.md): Variable height rows
+- [Row Custom Data](https://github.com/doonfrs/trina_grid/blob/main/doc/features/row-custom-data.md): Attach metadata to rows
+
+## Cell Features
+
+- [Cell Selection](https://github.com/doonfrs/trina_grid/blob/main/doc/features/cell-selection.md): Cell focus and selection
+- [Cell Editing](https://github.com/doonfrs/trina_grid/blob/main/doc/features/cell-editing.md): In-place cell editing with type-specific editors
+- [Cell Navigation Validation](https://github.com/doonfrs/trina_grid/blob/main/doc/features/cell-navigation-validation.md): Control cell navigation
+- [Cell Renderers](https://github.com/doonfrs/trina_grid/blob/main/doc/features/cell-renderer.md): Custom widgets for cell display
+- [Cell Validation](https://github.com/doonfrs/trina_grid/blob/main/doc/features/cell-validation.md): Validate cell input with error callbacks
+- [Cell Value Change Handling](https://github.com/doonfrs/trina_grid/blob/main/doc/features/cell_value_change_handling.md): React to cell value changes
+- [Cell Color](https://github.com/doonfrs/trina_grid/blob/main/doc/features/cell-color.md): Conditional cell background colors
+
+## Data Management
+
+- [Pagination Overview](https://github.com/doonfrs/trina_grid/blob/main/doc/features/pagination.md): Client-side and server-side pagination
+- [Client-Side Pagination](https://github.com/doonfrs/trina_grid/blob/main/doc/features/pagination-client.md): TrinaPagination widget
+- [Lazy Pagination](https://github.com/doonfrs/trina_grid/blob/main/doc/features/lazy-pagination.md): Server-side pagination with TrinaLazyPagination
+- [Lazy Pagination Events](https://github.com/doonfrs/trina_grid/blob/main/doc/features/lazy-pagination-events.md): Events for lazy pagination
+- [Infinite Scrolling](https://github.com/doonfrs/trina_grid/blob/main/doc/features/infinite-scrolling.md): Load more rows on scroll
+- [Lazy Loading](https://github.com/doonfrs/trina_grid/blob/main/doc/features/lazy-loading.md): Load data on demand
+- [Copy & Paste](https://github.com/doonfrs/trina_grid/blob/main/doc/features/copy-paste.md): Clipboard support
+- [Export](https://github.com/doonfrs/trina_grid/blob/main/doc/features/export.md): CSV, JSON, and PDF export
+
+## UI Customization
+
+- [Loading Options](https://github.com/doonfrs/trina_grid/blob/main/doc/features/loading-options.md): Loading indicator configuration
+- [Scrollbars](https://github.com/doonfrs/trina_grid/blob/main/doc/features/scrollbars.md): Draggable, customizable scrollbars
+
+## Other Features
+
+- [Context Menus](https://github.com/doonfrs/trina_grid/blob/main/doc/features/context-menus.md): Right-click menus for columns and cells
+- [Dual Grid Mode](https://github.com/doonfrs/trina_grid/blob/main/doc/features/dual-grid-mode.md): Two linked grids side by side
+- [Change Tracking](https://github.com/doonfrs/trina_grid/blob/main/doc/features/change-tracking.md): Track dirty cells, commit or revert changes
+
+## Examples
+
+- [Custom Renderers](https://github.com/doonfrs/trina_grid/blob/main/doc/examples/custom-renderers.md): Column and cell renderer examples
+- [Dynamic Row Heights](https://github.com/doonfrs/trina_grid/blob/main/doc/examples/dynamic-row-heights.md): Variable height rows example
+- [Live Demo](https://doonfrs.github.io/trina_grid/): Interactive Flutter web demo
+
+## Migration
+
+- [Migration from PlutoGrid](https://github.com/doonfrs/trina_grid/blob/main/doc/migration/pluto-to-trina.md): Automatic migration tool and manual steps
+- [Migration Tool Reference](https://github.com/doonfrs/trina_grid/blob/main/doc/migration/migration-tool.md): CLI tool usage
+- [Dynamic Row Heights Migration](https://github.com/doonfrs/trina_grid/blob/main/doc/migration/dynamic-row-heights-migration.md): Migrating dynamic row heights
+
+## Source
+
+- [README](https://github.com/doonfrs/trina_grid/blob/main/README.md): Full README with feature overview and code examples
+- [CHANGELOG](https://github.com/doonfrs/trina_grid/blob/main/CHANGELOG.md): Version history and release notes
+- [pub.dev](https://pub.dev/packages/trina_grid): Package page on pub.dev
+- [GitHub Repository](https://github.com/doonfrs/trina_grid): Source code, issues, contributions
