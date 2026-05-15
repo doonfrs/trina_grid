@@ -385,6 +385,7 @@ class TrinaGridStyleConfig {
     this.filterIcon = const Icon(Icons.filter_alt_outlined),
     this.filterIconWidget,
     this.gridBackgroundColor = Colors.white,
+    this.unfocusedSelectionColor,
     this.rowColor = Colors.white,
     this.oddRowColor,
     this.evenRowColor,
@@ -470,6 +471,7 @@ class TrinaGridStyleConfig {
     this.filterIcon = const Icon(Icons.filter_alt_outlined),
     this.filterIconWidget,
     this.gridBackgroundColor = const Color(0xFF111111),
+    this.unfocusedSelectionColor,
     this.rowColor = const Color(0xFF111111),
     this.oddRowColor,
     this.evenRowColor,
@@ -582,6 +584,9 @@ class TrinaGridStyleConfig {
   final Widget? filterIconWidget;
 
   final Color gridBackgroundColor;
+
+  final Color? unfocusedSelectionColor;
+
 
   /// Default row background color
   ///
@@ -788,6 +793,7 @@ class TrinaGridStyleConfig {
     Icon? filterIcon,
     TrinaOptional<Widget?>? filterIconWidget,
     Color? gridBackgroundColor,
+    Color? unfocusedSelectionColor,
     Color? rowColor,
     TrinaOptional<Color?>? oddRowColor,
     TrinaOptional<Color?>? evenRowColor,
@@ -864,6 +870,7 @@ class TrinaGridStyleConfig {
             ? this.filterIconWidget
             : filterIconWidget.value,
         gridBackgroundColor: gridBackgroundColor ?? this.gridBackgroundColor,
+        unfocusedSelectionColor: unfocusedSelectionColor??this.unfocusedSelectionColor,
         rowColor: rowColor ?? this.rowColor,
         oddRowColor: oddRowColor == null ? this.oddRowColor : oddRowColor.value,
         evenRowColor: evenRowColor == null
@@ -954,6 +961,7 @@ class TrinaGridStyleConfig {
             ? this.filterIconWidget
             : filterIconWidget.value,
         gridBackgroundColor: gridBackgroundColor ?? this.gridBackgroundColor,
+        unfocusedSelectionColor: unfocusedSelectionColor??this.unfocusedSelectionColor,
         rowColor: rowColor ?? this.rowColor,
         oddRowColor: oddRowColor == null ? this.oddRowColor : oddRowColor.value,
         evenRowColor: evenRowColor == null
@@ -1102,6 +1110,7 @@ class TrinaGridStyleConfig {
     filterIcon,
     filterIconWidget,
     gridBackgroundColor,
+    unfocusedSelectionColor,
     rowColor,
     oddRowColor,
     evenRowColor,
