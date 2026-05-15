@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:trina_grid/src/model/trina_dropdown_menu_filter.dart';
 import 'package:trina_grid/src/ui/widgets/trina_dropdown_menu.dart';
 
@@ -120,9 +121,9 @@ void main() {
           variant: TrinaDropdownMenuVariant.selectWithSearch,
         );
 
-        // Enter search text
-        await tester.enterText(find.byType(TextField), 'berry');
-        await tester.pumpAndSettle();
+        // Enter search text — wait long enough for the 250ms search debounce.
+        await tester.enterText(find.byType(ShadInput), 'berry');
+        await tester.pumpAndSettle(const Duration(milliseconds: 300));
 
         // Verify filtered list
         expect(find.text('Apple'), findsNothing);
@@ -145,7 +146,7 @@ void main() {
                 const Text('No search results!'),
           );
 
-          await tester.enterText(find.byType(TextField), 'nonexistent');
+          await tester.enterText(find.byType(ShadInput), 'nonexistent');
           await tester.pumpAndSettle(const Duration(milliseconds: 300));
 
           expect(find.text('No search results!'), findsOneWidget);

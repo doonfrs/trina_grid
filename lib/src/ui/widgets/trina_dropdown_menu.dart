@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:trina_grid/src/model/trina_dropdown_menu_filter.dart';
+import 'package:trina_grid/src/ui/widgets/ensure_shad_theme.dart';
 
 typedef ItemBuilder<T> = Widget Function(T item);
 
@@ -332,15 +333,17 @@ base class TrinaDropdownMenuState<T> extends State<TrinaDropdownMenu<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return _InheritedTrinaDropdownMenu<T>(
-      state: this,
-      child: Builder(
-        builder: (context) {
-          return ConstrainedBox(
-            constraints: BoxConstraints(minWidth: widget.width),
-            child: widget.builder(context),
-          );
-        },
+    return EnsureShadTheme(
+      child: _InheritedTrinaDropdownMenu<T>(
+        state: this,
+        child: Builder(
+          builder: (context) {
+            return ConstrainedBox(
+              constraints: BoxConstraints(minWidth: widget.width),
+              child: widget.builder(context),
+            );
+          },
+        ),
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:trina_grid/src/ui/cells/trina_select_cell.dart';
 import 'package:trina_grid/src/ui/widgets/trina_dropdown_menu.dart';
 import 'package:trina_grid/trina_grid.dart';
@@ -62,17 +63,19 @@ void main() {
   }
 
   group('Search Functionality', () {
-    final searchFieldFinder = find.byWidgetPredicate(
-      (widget) =>
-          widget is TextField && widget.decoration?.hintText == 'Search...',
-    );
+    final searchFieldFinder = find.byType(ShadInput);
+
+    // The search field has a 250ms debounce; pumpAndSettle without a
+    // duration can return before that timer fires, so callers must wait
+    // long enough for the debounce to execute.
+    const searchDebounceWait = Duration(milliseconds: 300);
 
     testWidgets('should filter items based on search text', (tester) async {
       await buildCellAndEdit(tester, enableSearch: true);
       await openPopup(tester);
 
       await tester.enterText(searchFieldFinder, 'a');
-      await tester.pumpAndSettle();
+      await tester.pumpAndSettle(searchDebounceWait);
 
       expect(find.widgetWithText(MenuItemButton, 'a'), findsOneWidget);
       expect(find.widgetWithText(MenuItemButton, 'b'), findsNothing);
@@ -84,7 +87,7 @@ void main() {
       await openPopup(tester);
 
       await tester.enterText(searchFieldFinder, 'A'); // Uppercase 'A'
-      await tester.pumpAndSettle();
+      await tester.pumpAndSettle(searchDebounceWait);
 
       expect(find.widgetWithText(MenuItemButton, 'a'), findsOneWidget);
       expect(find.widgetWithText(MenuItemButton, 'b'), findsNothing);
@@ -97,7 +100,7 @@ void main() {
       await openPopup(tester);
 
       await tester.enterText(searchFieldFinder, 'xyz');
-      await tester.pumpAndSettle();
+      await tester.pumpAndSettle(searchDebounceWait);
 
       expect(find.text('No matches'), findsOneWidget);
       expect(find.widgetWithText(MenuItemButton, 'a'), findsNothing);
@@ -108,16 +111,13 @@ void main() {
       await openPopup(tester);
 
       await tester.enterText(searchFieldFinder, 'a');
-      await tester.pumpAndSettle();
+      await tester.pumpAndSettle(searchDebounceWait);
       expect(find.widgetWithText(MenuItemButton, 'a'), findsOneWidget);
       expect(find.widgetWithText(MenuItemButton, 'b'), findsNothing);
       expect(find.widgetWithText(MenuItemButton, 'c'), findsNothing);
 
       await tester.enterText(searchFieldFinder, ''); // Clear search
-
-      // Double pumpAndSettle: first for search debounce, second for items to be shown
-      await tester.pumpAndSettle();
-      await tester.pumpAndSettle();
+      await tester.pumpAndSettle(searchDebounceWait);
 
       expect(find.widgetWithText(MenuItemButton, 'a'), findsOneWidget);
       expect(find.widgetWithText(MenuItemButton, 'b'), findsOneWidget);
