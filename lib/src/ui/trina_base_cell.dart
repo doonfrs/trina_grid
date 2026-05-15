@@ -446,6 +446,7 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
         activatedBorderColor: style.activatedBorderColor,
         activatedColor: style.activatedColor,
         inactivatedBorderColor: style.inactivatedBorderColor,
+        gridBackgroundColor: style.gridBackgroundColor,
         unfocusedSelectionColor: style.unfocusedSelectionColor,
         cellColorInEditState: style.cellColorInEditState,
         cellColorInReadOnlyState: style.cellColorInReadOnlyState,
@@ -462,13 +463,14 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
     required bool hasFocus,
     required bool isEditing,
     required Color activatedColor,
+    required Color gridBackgroundColor,
     Color? unfocusedSelectionColor,
     required Color cellColorInEditState,
     required Color cellColorInReadOnlyState,
     required TrinaGridSelectingMode selectingMode,
   }) {
     if (!hasFocus) {
-      return unfocusedSelectionColor;
+      return unfocusedSelectionColor ?? gridBackgroundColor;
     }
 
     if (!isEditing) {
@@ -506,6 +508,7 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
     required Color activatedBorderColor,
     required Color activatedColor,
     required Color inactivatedBorderColor,
+    required Color gridBackgroundColor,
     Color? unfocusedSelectionColor,
     required Color cellColorInEditState,
     required Color cellColorInReadOnlyState,
@@ -526,6 +529,7 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
                 hasFocus: hasFocus,
                 isEditing: isEditing,
                 readOnly: readOnly,
+                gridBackgroundColor: gridBackgroundColor,
                 unfocusedSelectionColor: unfocusedSelectionColor,
                 activatedColor: activatedColor,
                 cellColorInReadOnlyState: cellColorInReadOnlyState,
@@ -539,7 +543,11 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
       );
     } else if (isSelectedCell) {
       return BoxDecoration(
-        color: isDirty ? dirtyColor : activatedColor,
+        color: isDirty
+            ? dirtyColor
+            : (hasFocus
+                  ? activatedColor
+                  : (unfocusedSelectionColor ?? activatedColor)),
         border: Border.all(
           color: hasFocus ? activatedBorderColor : inactivatedBorderColor,
           width: 1,

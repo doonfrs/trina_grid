@@ -370,6 +370,37 @@ class _CellColorExampleState extends State<CellColorExample> {
 
 This example demonstrates comprehensive cell coloring based on different column types and values, providing a rich visual experience for users.
 
+## Unfocused Selection Color
+
+When a `TrinaGrid` loses focus (for example, the user clicks into another grid or input on the page), the current cell and any multi-cell selection can switch to a desaturated color so it is visually obvious which grid is currently receiving keyboard input. This is configured via `TrinaGridStyleConfig.unfocusedSelectionColor`:
+
+```dart
+TrinaGrid(
+  configuration: TrinaGridConfiguration(
+    style: TrinaGridStyleConfig(
+      activatedColor: Colors.blue.shade100,        // focused state
+      unfocusedSelectionColor: Colors.grey.shade300, // unfocused state
+    ),
+  ),
+)
+```
+
+### Behavior
+
+- **Current cell, grid focused**: uses `activatedColor` (for row selecting mode) or no overlay (for cell selecting mode); unchanged from previous behavior.
+- **Current cell, grid unfocused**: uses `unfocusedSelectionColor` if set; otherwise falls back to `gridBackgroundColor` (matching pre-2.3.0 behavior, so existing apps see no visual change after upgrading).
+- **Multi-cell selection, grid focused**: uses `activatedColor`.
+- **Multi-cell selection, grid unfocused**: uses `unfocusedSelectionColor` if set; otherwise keeps `activatedColor`.
+
+### Defaults
+
+- Light theme (`TrinaGridStyleConfig()`): `null` (opt in by setting it explicitly).
+- Dark theme (`TrinaGridStyleConfig.dark()`): `Color(0xFF4A4A4A)`, a mid-grey that reads as "inactive" against the dark grid background.
+
+### Typical use case: multi-grid dashboards
+
+Apps that show several grids on one screen (master/detail panels, side-by-side comparison views) benefit most. Without this property, the "current cell" in every grid looks equally active; with it, only the focused grid stands out.
+
 ## Cell Text Style
 
 In addition to the cell background color, you can customize the **text style** for an individual cell via `cellTextStyleCallback`. The callback returns a `TextStyle?` that is merged on top of `TrinaGridStyleConfig.cellTextStyle` and any value returned by `rowTextStyleCallback`. Return `null` to leave the cell's text style unchanged.

@@ -1,5 +1,10 @@
 # Changelog
 
+## [2.3.0] - 2026. 05. 15
+
+* Feature: Added `unfocusedSelectionColor` to `TrinaGridStyleConfig` for visually distinguishing focused vs. unfocused grids in multi-grid layouts (#372). @vasco-feltrin
+* Enhancement: `unfocusedSelectionColor` now also applies to multi-cell selections (not just the current cell), and falls back to `gridBackgroundColor` when unset so existing apps see no behavior change. Dark theme ships with a sensible default. @doonfrs
+
 ## [2.2.2] - 2026. 05. 15
 
 * Feature: Added TrinaGrid.fitContent to auto-size grid to its rows (#218). @doonfrs

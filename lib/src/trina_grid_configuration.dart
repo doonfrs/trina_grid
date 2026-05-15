@@ -471,7 +471,7 @@ class TrinaGridStyleConfig {
     this.filterIcon = const Icon(Icons.filter_alt_outlined),
     this.filterIconWidget,
     this.gridBackgroundColor = const Color(0xFF111111),
-    this.unfocusedSelectionColor,
+    this.unfocusedSelectionColor = const Color(0xFF4A4A4A),
     this.rowColor = const Color(0xFF111111),
     this.oddRowColor,
     this.evenRowColor,
@@ -585,8 +585,14 @@ class TrinaGridStyleConfig {
 
   final Color gridBackgroundColor;
 
+  /// Background color for the current cell (and selected cells) when the grid
+  /// loses focus.
+  ///
+  /// Useful in multi-grid layouts to visually distinguish which grid currently
+  /// holds keyboard focus. When `null`, the current cell falls back to
+  /// [gridBackgroundColor] on focus loss (matching pre-2.3.0 behavior) and
+  /// multi-cell selections keep their [activatedColor].
   final Color? unfocusedSelectionColor;
-
 
   /// Default row background color
   ///
@@ -870,7 +876,8 @@ class TrinaGridStyleConfig {
             ? this.filterIconWidget
             : filterIconWidget.value,
         gridBackgroundColor: gridBackgroundColor ?? this.gridBackgroundColor,
-        unfocusedSelectionColor: unfocusedSelectionColor??this.unfocusedSelectionColor,
+        unfocusedSelectionColor:
+            unfocusedSelectionColor ?? this.unfocusedSelectionColor,
         rowColor: rowColor ?? this.rowColor,
         oddRowColor: oddRowColor == null ? this.oddRowColor : oddRowColor.value,
         evenRowColor: evenRowColor == null
@@ -961,7 +968,8 @@ class TrinaGridStyleConfig {
             ? this.filterIconWidget
             : filterIconWidget.value,
         gridBackgroundColor: gridBackgroundColor ?? this.gridBackgroundColor,
-        unfocusedSelectionColor: unfocusedSelectionColor??this.unfocusedSelectionColor,
+        unfocusedSelectionColor:
+            unfocusedSelectionColor ?? this.unfocusedSelectionColor,
         rowColor: rowColor ?? this.rowColor,
         oddRowColor: oddRowColor == null ? this.oddRowColor : oddRowColor.value,
         evenRowColor: evenRowColor == null
