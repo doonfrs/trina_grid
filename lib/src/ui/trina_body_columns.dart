@@ -98,23 +98,35 @@ class TrinaBodyColumnsState extends TrinaStateWithChange<TrinaBodyColumns> {
 
   @override
   Widget build(BuildContext context) {
+    final scrollConfig = stateManager.configuration.scrollbar;
+
     return SingleChildScrollView(
       controller: _scroll,
       scrollDirection: Axis.horizontal,
       physics: const ClampingScrollPhysics(),
-      child: TrinaVisibilityLayout(
-        delegate: MainColumnLayoutDelegate(
-          stateManager: stateManager,
-          columns: _columns,
-          columnGroups: _columnGroups,
-          frozen: TrinaColumnFrozen.none,
-          textDirection: stateManager.textDirection,
+      child: Padding(
+        // Mirror the trailing padding applied to the body rows so that the
+        // header and body share the same maxScrollExtent. Without this, fast
+        // horizontal scrolling pushes the body into its padded overscroll
+        // region while the linked header clamps short, visibly misaligning
+        // header titles from their data cells.
+        padding: scrollConfig.showVertical
+            ? EdgeInsetsDirectional.only(end: scrollConfig.thickness + 4)
+            : EdgeInsets.zero,
+        child: TrinaVisibilityLayout(
+          delegate: MainColumnLayoutDelegate(
+            stateManager: stateManager,
+            columns: _columns,
+            columnGroups: _columnGroups,
+            frozen: TrinaColumnFrozen.none,
+            textDirection: stateManager.textDirection,
+          ),
+          scrollController: _scroll,
+          initialViewportDimension: MediaQuery.of(context).size.width,
+          children: _showColumnGroups == true
+              ? _columnGroups.map(_makeColumnGroup).toList(growable: false)
+              : _columns.map(_makeColumn).toList(growable: false),
         ),
-        scrollController: _scroll,
-        initialViewportDimension: MediaQuery.of(context).size.width,
-        children: _showColumnGroups == true
-            ? _columnGroups.map(_makeColumnGroup).toList(growable: false)
-            : _columns.map(_makeColumn).toList(growable: false),
       ),
     );
   }
