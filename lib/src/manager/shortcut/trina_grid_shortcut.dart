@@ -2,6 +2,20 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:trina_grid/trina_grid.dart';
 
+/// Create a custom wrapper that filters out NumLock.
+/// This will enable the arrow keys and shortcuts to work correctly on
+/// Linux too.
+class FilteredHardwareKeyboard extends HardwareKeyboard {
+  final Set<LogicalKeyboardKey> filteredKeys;
+
+  FilteredHardwareKeyboard(this.filteredKeys);
+
+  // Override the HardwareKeyboard logicalKeysPressed to get only the
+  // filtered keys without NumLock.
+  @override
+  Set<LogicalKeyboardKey> get logicalKeysPressed => filteredKeys;
+}
+
 /// Class for setting shortcut actions.
 ///
 /// Defaults to [TrinaGridShortcut.defaultActions] if not passing [actions].
@@ -31,8 +45,18 @@ class TrinaGridShortcut {
   }) {
     debugPrint('[Shortcut] Checking shortcut for key event: ${keyEvent.event}');
 
+    // Remove NumLock before checking shortcuts. This will enable the arrow
+    // keys and shortcuts to work correctly on Linux too.
+    final Set<LogicalKeyboardKey> filteredKeys = state.logicalKeysPressed
+        .where((key) => key != LogicalKeyboardKey.numLock)
+        .toSet();
+    // Create a wrapper around the HardwareKeyboard instance with filtered keys.
+    final FilteredHardwareKeyboard fakeState = FilteredHardwareKeyboard(
+      filteredKeys,
+    );
+
     for (final action in actions.entries) {
-      if (action.key.accepts(keyEvent.event, state)) {
+      if (action.key.accepts(keyEvent.event, fakeState)) {
         debugPrint(
           '[Shortcut] Matched shortcut: ${action.key}, executing action: ${action.value.runtimeType}',
         );
