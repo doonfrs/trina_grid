@@ -48,22 +48,22 @@ class TrinaGridShortcut {
   static final Map<ShortcutActivator, TrinaGridShortcutAction>
   defaultActions = {
     // Move cell focus
-    LogicalKeySet(LogicalKeyboardKey.arrowLeft):
+    SingleActivator(LogicalKeyboardKey.arrowLeft):
         const TrinaGridActionMoveCellFocus(TrinaMoveDirection.left),
-    LogicalKeySet(LogicalKeyboardKey.arrowRight):
+    SingleActivator(LogicalKeyboardKey.arrowRight):
         const TrinaGridActionMoveCellFocus(TrinaMoveDirection.right),
-    LogicalKeySet(LogicalKeyboardKey.arrowUp):
+    SingleActivator(LogicalKeyboardKey.arrowUp):
         const TrinaGridActionMoveCellFocus(TrinaMoveDirection.up),
-    LogicalKeySet(LogicalKeyboardKey.arrowDown):
+    SingleActivator(LogicalKeyboardKey.arrowDown):
         const TrinaGridActionMoveCellFocus(TrinaMoveDirection.down),
     // Move selected cell focus
-    LogicalKeySet(LogicalKeyboardKey.shift, LogicalKeyboardKey.arrowLeft):
+    SingleActivator(LogicalKeyboardKey.arrowLeft, shift: true):
         const TrinaGridActionMoveSelectedCellFocus(TrinaMoveDirection.left),
-    LogicalKeySet(LogicalKeyboardKey.shift, LogicalKeyboardKey.arrowRight):
+    SingleActivator(LogicalKeyboardKey.arrowRight, shift: true):
         const TrinaGridActionMoveSelectedCellFocus(TrinaMoveDirection.right),
-    LogicalKeySet(LogicalKeyboardKey.shift, LogicalKeyboardKey.arrowUp):
+    SingleActivator(LogicalKeyboardKey.arrowUp, shift: true):
         const TrinaGridActionMoveSelectedCellFocus(TrinaMoveDirection.up),
-    LogicalKeySet(LogicalKeyboardKey.shift, LogicalKeyboardKey.arrowDown):
+    SingleActivator(LogicalKeyboardKey.arrowDown, shift: true):
         const TrinaGridActionMoveSelectedCellFocus(TrinaMoveDirection.down),
     // Move cell focus by page vertically
     LogicalKeySet(LogicalKeyboardKey.pageUp):
