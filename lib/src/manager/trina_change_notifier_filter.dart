@@ -169,6 +169,13 @@ class TrinaNotifierFilterResolverDefault
       case const (TrinaRightFrozenColumns):
       case const (TrinaRightFrozenColumnsFooter):
         return defaultColumnsFilter(stateManager);
+      case const (TrinaBaseColumn):
+        return {
+          ...defaultColumnsFilter(stateManager),
+          stateManager.setShowColumnFilter.hashCode,
+        };
+      case const (TrinaColumnFilter):
+        return defaultColumnFilterFilter(stateManager);
       case const (TrinaBodyRows):
       case const (TrinaLeftFrozenRows):
       case const (TrinaRightFrozenRows):
@@ -215,6 +222,22 @@ class TrinaNotifierFilterResolverDefault
       stateManager.setShowColumnGroups.hashCode,
       stateManager.removeColumnsInColumnGroup.hashCode,
       stateManager.notifyChangedShowFrozenColumn.hashCode,
+    };
+  }
+
+  static Set<int> defaultColumnFilterFilter(
+    TrinaGridStateManager stateManager,
+  ) {
+    return {
+      // Structural column changes (insert/remove/move/hide/frozen/groups) so
+      // the filter field stays in sync with the column it belongs to.
+      ...defaultColumnsFilter(stateManager),
+
+      // Filter values changed -> refresh _filterRows / _text / _enabled.
+      stateManager.setFilter.hashCode,
+
+      // Filter row shown/hidden.
+      stateManager.setShowColumnFilter.hashCode,
     };
   }
 
