@@ -580,5 +580,33 @@ void main() {
 
       expect(locale.loadingText, 'にゃ〜');
     });
+
+    test('When the locale is called, the value should be correct.', () {
+      const locale = TrinaGridLocaleText.hungarian();
+
+      expect(locale.loadingText, 'Betöltés');
+    });
+
+    test(
+      'When only a pagination field differs, the comparison should be false.',
+      () {
+        const localeA = TrinaGridLocaleText(paginationGoButton: 'Go');
+        const localeB = TrinaGridLocaleText(paginationGoButton: 'Ugrik');
+
+        expect(localeA == localeB, false);
+        expect(localeA.hashCode == localeB.hashCode, false);
+      },
+    );
+
+    test(
+      'When only a time picker field differs, the comparison should be false.',
+      () {
+        const localeA = TrinaGridLocaleText(timePickerHourLabel: 'Hour');
+        const localeB = TrinaGridLocaleText(timePickerHourLabel: 'Óra');
+
+        expect(localeA == localeB, false);
+        expect(localeA.hashCode == localeB.hashCode, false);
+      },
+    );
   });
 }
