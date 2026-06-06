@@ -2469,6 +2469,67 @@ class TrinaGridLocaleText {
     this.timePickerInvalidValueMessage = '無効な値',
   });
 
+
+  const TrinaGridLocaleText.hungarian({
+    // Column menu
+    this.unfreezeColumn = 'Oszlop rögzítés felold',
+    this.freezeColumnToStart = 'Rögzítés balra',
+    this.freezeColumnToEnd = 'Rögzítés jobbra',
+    this.autoFitColumn = 'Auto szélesség',
+    this.hideColumn = 'Oszlop elrejtése',
+    this.setColumns = 'Oszlopok megadása',
+    this.setFilter = 'Szűrő beállítása',
+    this.resetFilter = 'Szűrő visszaállítása',
+    // SetColumns popup
+    this.setColumnsTitle = 'Oszlop név',
+    // Filter popup
+    this.filterColumn = 'Oszlop',
+    this.filterType = 'Típus',
+    this.filterValue = 'Érték',
+    this.filterAllColumns = 'Minden oszlop',
+    this.filterContains = 'Tartalmazza',
+    this.filterEquals = 'Egyenlő',
+    this.filterStartsWith = 'Ezzel kezdődik',
+    this.filterEndsWith = 'Ezzel végződik',
+    this.filterGreaterThan = 'Nagyobb mint',
+    this.filterGreaterThanOrEqualTo = 'Nagyobb vagy egyenlő',
+    this.filterLessThan = 'Kisebb mint',
+    this.filterLessThanOrEqualTo = 'Kisebb vagy egyenlő',
+    // Date popup
+    this.sunday = 'Va',
+    this.monday = 'Hé',
+    this.tuesday = 'Ke',
+    this.wednesday = 'Sze',
+    this.thursday = 'Cs',
+    this.friday = 'Pé',
+    this.saturday = 'Szo',
+    // Time column popup
+    this.hour = 'Óra',
+    this.minute = 'Perc',
+    // Common
+    this.loadingText = 'Betöltés',
+    this.selectSearchHint = 'Keresés...',
+    this.multiLineFilterHint = 'Szűrés',
+    this.multiLineFilterEditTitle = 'Szűrés szerkesztése',
+    this.multiLineFilterOkButton = 'Ok',
+    // Pagination
+    this.paginationGoToPageTitle = 'Ugrás lapra',
+    this.paginationGoToPageLabel = 'Lap száma',
+    this.paginationCancelButton = 'Mégse',
+    this.paginationGoButton = 'Ugrik',
+    this.paginationInvalidPageNumberMessage =
+        'Kérem adjon meg egy érvényes lapszámot',
+    this.paginationGoToPageTooltip = 'Ugrás lapra',
+    // Time picker
+    this.timePickerHourLabel = 'Óra',
+    this.timePickerMinuteLabel = 'Perc',
+    this.timePickerInvalidHourMessage = 'Az óra csak 0 és 23 között lehet',
+    this.timePickerInvalidMinuteMessage = 'A perc csak 0 és 59 között lehet',
+    this.timePickerMinTimeMessage = 'A minimum idő',
+    this.timePickerMaxTimeMessage = 'A maximum idő',
+    this.timePickerInvalidValueMessage = 'Érvénytelen érték',
+  });
+
   @override
   bool operator ==(covariant Object other) {
     return identical(this, other) ||
