@@ -87,6 +87,23 @@ void main() {
     await tester.pump();
   }
 
+  group('Default shortcuts (NumLock-safe)', () {
+    test('every default shortcut uses SingleActivator', () {
+      // SingleActivator defaults to `numLock: LockState.ignored`, so a lock
+      // key (NumLock, CapsLock, ScrollLock) can never block a shortcut from
+      // matching. LogicalKeySet does not ignore lock keys, which broke arrow
+      // and navigation keys on Linux when NumLock was on (issue #381). Guard
+      // against any default shortcut regressing back to LogicalKeySet.
+      for (final activator in TrinaGridShortcut.defaultActions.keys) {
+        expect(
+          activator,
+          isA<SingleActivator>(),
+          reason: '$activator must be a SingleActivator to stay NumLock-safe',
+        );
+      }
+    });
+  });
+
   testWidgets('Alt + character combos should not start editing', (
     WidgetTester tester,
   ) async {

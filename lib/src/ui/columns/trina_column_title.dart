@@ -214,13 +214,18 @@ class TrinaColumnTitleState extends TrinaStateWithChange<TrinaColumnTitle> {
           hoverColor: Colors.transparent,
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
-          onPressed: () {
-            if (mounted &&
-                widget.column.enableSorting &&
-                !widget.column.enableContextMenu) {
-              stateManager.toggleSortColumn(widget.column);
-            }
-          },
+          // Only act as a sort toggle when the icon is the sort/resize icon
+          // (no context menu). When the context menu is enabled the tap is
+          // handled by the Listener in `_buildContextMenuWidget`, so keep the
+          // button disabled here instead of leaving an enabled no-op.
+          onPressed:
+              widget.column.enableSorting && !widget.column.enableContextMenu
+              ? () {
+                  if (mounted) {
+                    stateManager.toggleSortColumn(widget.column);
+                  }
+                }
+              : null,
         ),
       ),
     );
