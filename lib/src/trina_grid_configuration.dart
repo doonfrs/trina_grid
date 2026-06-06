@@ -2469,7 +2469,6 @@ class TrinaGridLocaleText {
     this.timePickerInvalidValueMessage = '無効な値',
   });
 
-
   const TrinaGridLocaleText.hungarian({
     // Column menu
     this.unfreezeColumn = 'Oszlop rögzítés felold',
@@ -2569,7 +2568,24 @@ class TrinaGridLocaleText {
             selectSearchHint == other.selectSearchHint &&
             multiLineFilterHint == other.multiLineFilterHint &&
             multiLineFilterEditTitle == other.multiLineFilterEditTitle &&
-            multiLineFilterOkButton == other.multiLineFilterOkButton;
+            multiLineFilterOkButton == other.multiLineFilterOkButton &&
+            paginationGoToPageTitle == other.paginationGoToPageTitle &&
+            paginationGoToPageLabel == other.paginationGoToPageLabel &&
+            paginationCancelButton == other.paginationCancelButton &&
+            paginationGoButton == other.paginationGoButton &&
+            paginationInvalidPageNumberMessage ==
+                other.paginationInvalidPageNumberMessage &&
+            paginationGoToPageTooltip == other.paginationGoToPageTooltip &&
+            timePickerHourLabel == other.timePickerHourLabel &&
+            timePickerMinuteLabel == other.timePickerMinuteLabel &&
+            timePickerInvalidHourMessage ==
+                other.timePickerInvalidHourMessage &&
+            timePickerInvalidMinuteMessage ==
+                other.timePickerInvalidMinuteMessage &&
+            timePickerMinTimeMessage == other.timePickerMinTimeMessage &&
+            timePickerMaxTimeMessage == other.timePickerMaxTimeMessage &&
+            timePickerInvalidValueMessage ==
+                other.timePickerInvalidValueMessage;
   }
 
   @override
@@ -2609,6 +2625,19 @@ class TrinaGridLocaleText {
     multiLineFilterHint,
     multiLineFilterEditTitle,
     multiLineFilterOkButton,
+    paginationGoToPageTitle,
+    paginationGoToPageLabel,
+    paginationCancelButton,
+    paginationGoButton,
+    paginationInvalidPageNumberMessage,
+    paginationGoToPageTooltip,
+    timePickerHourLabel,
+    timePickerMinuteLabel,
+    timePickerInvalidHourMessage,
+    timePickerInvalidMinuteMessage,
+    timePickerMinTimeMessage,
+    timePickerMaxTimeMessage,
+    timePickerInvalidValueMessage,
   ]);
 }
 
