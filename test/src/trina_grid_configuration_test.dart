@@ -180,6 +180,64 @@ void main() {
     );
   });
 
+  group('scrollbar', () {
+    test(
+      'The default track-click animation should preserve the legacy behavior.',
+      () {
+        const config = TrinaGridScrollbarConfig();
+
+        expect(config.trackClickDuration, const Duration(milliseconds: 200));
+        expect(config.trackClickCurve, Curves.easeOutCubic);
+      },
+    );
+
+    test(
+      'When the trackClickDuration is different, the comparison should be false.',
+      () {
+        const configA = TrinaGridScrollbarConfig();
+
+        const configB = TrinaGridScrollbarConfig(
+          trackClickDuration: Duration(milliseconds: 120),
+        );
+
+        expect(configA == configB, false);
+        expect(configA.hashCode == configB.hashCode, false);
+      },
+    );
+
+    test(
+      'When the trackClickCurve is different, the comparison should be false.',
+      () {
+        const configA = TrinaGridScrollbarConfig();
+
+        const configB = TrinaGridScrollbarConfig(
+          trackClickCurve: Curves.linear,
+        );
+
+        expect(configA == configB, false);
+        expect(configA.hashCode == configB.hashCode, false);
+      },
+    );
+
+    test(
+      'When the track-click values are the same, the comparison should be true.',
+      () {
+        const configA = TrinaGridScrollbarConfig(
+          trackClickDuration: Duration(milliseconds: 350),
+          trackClickCurve: Curves.easeInOut,
+        );
+
+        const configB = TrinaGridScrollbarConfig(
+          trackClickDuration: Duration(milliseconds: 350),
+          trackClickCurve: Curves.easeInOut,
+        );
+
+        expect(configA == configB, true);
+        expect(configA.hashCode == configB.hashCode, true);
+      },
+    );
+  });
+
   group('style', () {
     test(
       'When the values of style A and B are the same, the comparison should be true.',

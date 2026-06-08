@@ -236,8 +236,8 @@ class _TrinaHorizontalScrollBarState extends State<TrinaHorizontalScrollBar>
           // Use animateTo for smooth scrolling instead of jumpTo
           scrollController.animateTo(
             clampedOffset,
-            duration: const Duration(milliseconds: 200),
-            curve: Curves.easeOutCubic,
+            duration: scrollConfig.trackClickDuration,
+            curve: scrollConfig.trackClickCurve,
           );
         },
         onPanDown: (_) {

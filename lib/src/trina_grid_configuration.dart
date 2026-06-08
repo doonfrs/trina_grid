@@ -1198,6 +1198,8 @@ class TrinaGridScrollbarConfig {
     },
     this.isDraggable = true,
     this.smoothScrolling = true,
+    this.trackClickDuration = const Duration(milliseconds: 200),
+    this.trackClickCurve = Curves.easeOutCubic,
 
     // Advanced scrollbar appearance settings
     this.thumbVisible = true,
@@ -1237,6 +1239,21 @@ class TrinaGridScrollbarConfig {
   ///
   /// Defaults to true.
   final bool smoothScrolling;
+
+  /// Duration of the scroll animation when clicking on the scrollbar track
+  /// to jump to a position.
+  ///
+  /// Thumb dragging is not affected (it jumps instantly). Set to
+  /// [Duration.zero] to jump immediately without animation.
+  ///
+  /// Defaults to const Duration(milliseconds: 200).
+  final Duration trackClickDuration;
+
+  /// Curve of the scroll animation when clicking on the scrollbar track
+  /// to jump to a position.
+  ///
+  /// Defaults to Curves.easeOutCubic.
+  final Curve trackClickCurve;
 
   /// Whether the scrollbar thumb is visible
   final bool thumbVisible;
@@ -1301,6 +1318,8 @@ class TrinaGridScrollbarConfig {
             dragDevices == other.dragDevices &&
             isDraggable == other.isDraggable &&
             smoothScrolling == other.smoothScrolling &&
+            trackClickDuration == other.trackClickDuration &&
+            trackClickCurve == other.trackClickCurve &&
             thumbVisible == other.thumbVisible &&
             showTrack == other.showTrack &&
             showHorizontal == other.showHorizontal &&
@@ -1321,6 +1340,8 @@ class TrinaGridScrollbarConfig {
     dragDevices,
     isDraggable,
     smoothScrolling,
+    trackClickDuration,
+    trackClickCurve,
     thumbVisible,
     showTrack,
     showHorizontal,

@@ -75,6 +75,8 @@ The `TrinaGridScrollbarConfig` class provides the following key options for scro
 | `trackHoverColor` | `Color?` | `null` | Color of the scrollbar track when hovered (defaults to a more opaque version of trackColor if null). |
 | `isDraggable` | `bool` | `true` | Whether scrollbar thumbs can be dragged with mouse or touch to scroll content. |
 | `smoothScrolling` | `bool` | `true` | Whether to use smooth scrolling animation for mouse wheel input. When enabled, scrolling animates smoothly instead of jumping instantly. |
+| `trackClickDuration` | `Duration` | `Duration(milliseconds: 200)` | Duration of the scroll animation when clicking the scrollbar track to jump to a position. Set to `Duration.zero` to jump instantly. |
+| `trackClickCurve` | `Curve` | `Curves.easeOutCubic` | Easing curve for the track-click jump animation. |
 
 ## Examples
 
@@ -160,6 +162,37 @@ TrinaGrid(
   configuration: TrinaGridConfiguration(
     scrollbar: TrinaGridScrollbarConfig(
       isDraggable: false, // Disable scrollbar thumb dragging
+    ),
+  ),
+)
+```
+
+### Customizing the Track-Click Animation
+
+When you click on the scrollbar track (not the thumb), the grid animates to that position. You can change how long that animation takes and which easing curve it uses:
+
+```dart
+TrinaGrid(
+  columns: columns,
+  rows: rows,
+  configuration: TrinaGridConfiguration(
+    scrollbar: TrinaGridScrollbarConfig(
+      trackClickDuration: Duration(milliseconds: 120), // Faster jump
+      trackClickCurve: Curves.linear,                  // Constant speed
+    ),
+  ),
+)
+```
+
+To disable the animation entirely and jump instantly, set the duration to `Duration.zero`:
+
+```dart
+TrinaGrid(
+  columns: columns,
+  rows: rows,
+  configuration: TrinaGridConfiguration(
+    scrollbar: TrinaGridScrollbarConfig(
+      trackClickDuration: Duration.zero, // Instant jump on track click
     ),
   ),
 )
