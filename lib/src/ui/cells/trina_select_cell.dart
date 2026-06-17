@@ -72,7 +72,12 @@ class TrinaSelectCellState<T>
         menuController.close();
       },
       width: _column.menuWidth ?? widget.column.width,
-      initialValue: widget.cell.value,
+      // Guard against a cell value whose runtime type does not match the
+      // column's item type [T] (e.g. a select<int?> column fed a String).
+      // Without this, the implicit `value as T?` downcast throws and brings
+      // down the entire grid build. A mismatched value simply means "no item
+      // is pre-selected".
+      initialValue: widget.cell.value is T ? widget.cell.value as T : null,
       itemHeight: _column.menuItemHeight,
       maxHeight: effectiveMaxHeight,
       itemBuilder: _column.menuItemBuilder,
