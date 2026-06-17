@@ -452,12 +452,15 @@ class TrinaGridStyleConfig {
     this.filterHeaderColor,
     this.filterPopupHeaderColor,
     this.filterHeaderIconColor,
-  }) : columnCheckedColor = (columnCheckedColor ?? activatedColor),
-       cellCheckedColor = (cellCheckedColor ?? activatedColor),
+    // Checkbox colors default to their own constants rather than the cell
+    // selection colors, so customizing (or hiding) selection does not affect
+    // checkbox visibility. These constants match the historical light defaults.
+  }) : columnCheckedColor = (columnCheckedColor ?? const Color(0xFFDCF5FF)),
+       cellCheckedColor = (cellCheckedColor ?? const Color(0xFFDCF5FF)),
        columnUnselectedColor = (columnUnselectedColor ?? iconColor),
-       columnActiveColor = (columnActiveColor ?? activatedBorderColor),
+       columnActiveColor = (columnActiveColor ?? Colors.lightBlue),
        cellUnselectedColor = (cellUnselectedColor ?? iconColor),
-       cellActiveColor = (cellActiveColor ?? activatedBorderColor),
+       cellActiveColor = (cellActiveColor ?? Colors.lightBlue),
        isDarkStyle = false;
 
   const TrinaGridStyleConfig.dark({
@@ -538,12 +541,15 @@ class TrinaGridStyleConfig {
     this.filterHeaderColor,
     this.filterPopupHeaderColor,
     this.filterHeaderIconColor,
-  }) : columnCheckedColor = (columnCheckedColor ?? activatedColor),
-       cellCheckedColor = (cellCheckedColor ?? activatedColor),
+    // Checkbox colors default to their own constants rather than the cell
+    // selection colors, so customizing (or hiding) selection does not affect
+    // checkbox visibility. These constants match the historical dark defaults.
+  }) : columnCheckedColor = (columnCheckedColor ?? const Color(0xFF313131)),
+       cellCheckedColor = (cellCheckedColor ?? const Color(0xFF313131)),
        columnUnselectedColor = (columnUnselectedColor ?? iconColor),
-       columnActiveColor = (columnActiveColor ?? activatedBorderColor),
+       columnActiveColor = (columnActiveColor ?? const Color(0xFFFFFFFF)),
        cellUnselectedColor = (cellUnselectedColor ?? iconColor),
-       cellActiveColor = (cellActiveColor ?? activatedBorderColor),
+       cellActiveColor = (cellActiveColor ?? const Color(0xFFFFFFFF)),
        isDarkStyle = true;
 
   /// Enable borderShadow in [TrinaGrid].
