@@ -1180,16 +1180,15 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
       );
     }
 
-    // Docked mode: take space and push the grid. When hidden, leave the grid
-    // untouched so grids that never use the sidebar keep their original tree.
-    if (!_stateManager.isSidebarVisible) {
-      return grid;
-    }
-
+    // Docked mode: keep the grid pinned in the same Expanded slot so toggling
+    // only adds or removes the trailing panel. Swapping the grid between a bare
+    // widget and a Row would reparent its gridKey subtree during the body
+    // LayoutBuilder's layout pass and crash (overlay re-attach mid-layout).
     return Row(
       children: [
         Expanded(child: grid),
-        SizedBox(width: _stateManager.sidebarWidth, child: panel(false)),
+        if (_stateManager.isSidebarVisible)
+          SizedBox(width: _stateManager.sidebarWidth, child: panel(false)),
       ],
     );
   }
