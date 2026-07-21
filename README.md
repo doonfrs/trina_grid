@@ -83,6 +83,7 @@
     - [Custom Styling](#custom-styling)
     - [Loading Options](#loading-options)
     - [Enhanced Scrollbars](#enhanced-scrollbars)
+    - [Record Sidebar](#record-sidebar)
     - [RTL Support](#rtl-support)
     - [Dark Mode](#dark-mode)
     - [Value Formatter](#value-formatter)
@@ -448,6 +449,9 @@ Customize loading states and indicators
 
 #### Enhanced Scrollbars
 Draggable scrollbars with hover effects, custom colors, and improved desktop experience
+
+#### Record Sidebar
+Show all fields of the selected row in a searchable, editable panel, docked (pushes the grid) or floating (slides over it)
 
 #### RTL Support
 Right-to-left language support
