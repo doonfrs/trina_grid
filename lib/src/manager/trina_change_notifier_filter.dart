@@ -149,6 +149,11 @@ abstract class TrinaChangeNotifierFilterResolver {
       /// hovering_state
       stateManager.setHoveredRowIdx.hashCode: 'setHoveredRowIdx',
       stateManager.isRowIdxHovered.hashCode: 'isRowIdxHovered',
+
+      /// sidebar_state
+      stateManager.setSidebarVisible.hashCode: 'setSidebarVisible',
+      stateManager.setSidebarMode.hashCode: 'setSidebarMode',
+      stateManager.setSidebarWidth.hashCode: 'setSidebarWidth',
     };
   }
 }
@@ -209,6 +214,9 @@ class TrinaNotifierFilterResolverDefault
       stateManager.moveColumn.hashCode,
       stateManager.hideColumn.hashCode,
       stateManager.notifyChangedShowFrozenColumn.hashCode,
+      stateManager.setSidebarVisible.hashCode,
+      stateManager.setSidebarMode.hashCode,
+      stateManager.setSidebarWidth.hashCode,
     };
   }
 

@@ -27,3 +27,4 @@ export 'trina_left_frozen_rows.dart';
 export 'trina_right_frozen_columns.dart';
 export 'trina_right_frozen_columns_footer.dart';
 export 'trina_right_frozen_rows.dart';
+export 'trina_sidebar.dart';

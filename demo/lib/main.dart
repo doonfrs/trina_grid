@@ -49,6 +49,7 @@ import 'screen/feature/row_infinity_scroll_screen.dart';
 import 'screen/feature/row_lazy_pagination_screen.dart';
 import 'screen/feature/row_moving_screen.dart';
 import 'screen/feature/row_pagination_screen.dart';
+import 'screen/feature/record_sidebar_screen.dart';
 import 'screen/feature/row_selection_screen.dart';
 import 'screen/feature/row_with_checkbox_screen.dart';
 import 'screen/feature/rtl_screen.dart';
@@ -150,6 +151,7 @@ class MyApp extends StatelessWidget {
             const RowLazyPaginationScreen(),
         RowMovingScreen.routeName: (context) => const RowMovingScreen(),
         RowPaginationScreen.routeName: (context) => const RowPaginationScreen(),
+        RecordSidebarScreen.routeName: (context) => const RecordSidebarScreen(),
         RowSelectionScreen.routeName: (context) => const RowSelectionScreen(),
         RowWithCheckboxScreen.routeName: (context) =>
             const RowWithCheckboxScreen(),

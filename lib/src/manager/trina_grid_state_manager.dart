@@ -22,6 +22,7 @@ import 'state/row_group_state.dart';
 import 'state/row_state.dart';
 import 'state/scroll_state.dart';
 import 'state/selecting_state.dart';
+import 'state/sidebar_state.dart';
 import 'state/visibility_layout_state.dart';
 import 'state/hovering_state.dart';
 
@@ -44,6 +45,7 @@ abstract class ITrinaGridState
         IRowState,
         IScrollState,
         ISelectingState,
+        ISidebarState,
         IVisibilityLayoutState,
         IHoveringState {}
 
@@ -65,6 +67,7 @@ class TrinaGridStateChangeNotifier extends TrinaChangeNotifier
         RowState,
         ScrollState,
         SelectingState,
+        SidebarState,
         VisibilityLayoutState,
         HoveringState {
   TrinaGridStateChangeNotifier({

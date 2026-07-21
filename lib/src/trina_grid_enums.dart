@@ -142,3 +142,19 @@ enum TrinaTimePickerAutoFocusMode {
   /// Returns true if any field should be focused.
   bool get isEnabled => this != TrinaTimePickerAutoFocusMode.none;
 }
+
+/// Controls how the record sidebar is displayed relative to the grid.
+enum TrinaGridSidebarMode {
+  /// The sidebar takes horizontal space and pushes the grid area to the left.
+  docked,
+
+  /// The sidebar slides in from the right over the grid as an overlay with a
+  /// close button.
+  floating;
+
+  /// Returns true if the sidebar is docked (takes space next to the grid).
+  bool get isDocked => this == TrinaGridSidebarMode.docked;
+
+  /// Returns true if the sidebar floats over the grid.
+  bool get isFloating => this == TrinaGridSidebarMode.floating;
+}

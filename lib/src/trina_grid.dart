@@ -584,6 +584,12 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
 
   bool _showLoading = false;
 
+  bool _isSidebarVisible = false;
+
+  TrinaGridSidebarMode _sidebarMode = TrinaGridSidebarMode.docked;
+
+  double _sidebarWidth = 320;
+
   bool _hasLeftFrozenColumns = false;
 
   bool _hasRightFrozenColumns = false;
@@ -696,6 +702,18 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
     );
 
     _showLoading = update<bool>(_showLoading, stateManager.showLoading);
+
+    _isSidebarVisible = update<bool>(
+      _isSidebarVisible,
+      stateManager.isSidebarVisible,
+    );
+
+    _sidebarMode = update<TrinaGridSidebarMode>(
+      _sidebarMode,
+      stateManager.sidebarMode,
+    );
+
+    _sidebarWidth = update<double>(_sidebarWidth, stateManager.sidebarWidth);
 
     _hasLeftFrozenColumns = update<bool>(
       _hasLeftFrozenColumns,
@@ -1110,14 +1128,69 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
       }
     }
 
+    final Widget grid = _GridContainer(
+      stateManager: _stateManager,
+      scrollPhysics: widget.scrollPhysics,
+      child: body,
+    );
+
     return FocusScope(
       onFocusChange: _stateManager.setKeepFocus,
       onKeyEvent: _handleGridFocusOnKey,
-      child: _GridContainer(
-        stateManager: _stateManager,
-        scrollPhysics: widget.scrollPhysics,
-        child: body,
-      ),
+      child: _wrapWithSidebar(grid),
+    );
+  }
+
+  /// Wraps the grid with the record sidebar according to the current sidebar
+  /// state. Docked mode pushes the grid; floating mode slides a panel over it.
+  Widget _wrapWithSidebar(Widget grid) {
+    final sidebar = _stateManager.configuration.sidebar;
+    if (!sidebar.enabled) {
+      return grid;
+    }
+
+    Widget panel(bool floating) {
+      final content =
+          sidebar.contentBuilder?.call(context, _stateManager) ??
+          TrinaSidebar(stateManager: _stateManager, showCloseButton: floating);
+
+      return TrinaSidebarContainer(stateManager: _stateManager, child: content);
+    }
+
+    if (_stateManager.sidebarMode.isFloating) {
+      final visible = _stateManager.isSidebarVisible;
+      final width = _stateManager.sidebarWidth;
+
+      // Animate the panel position so the Stack fully clips it when hidden
+      // (a paint-time transform would spill outside the Stack bounds).
+      return Stack(
+        clipBehavior: Clip.hardEdge,
+        children: [
+          Positioned.fill(child: grid),
+          AnimatedPositioned(
+            duration: sidebar.animationDuration,
+            curve: Curves.easeInOut,
+            top: 0,
+            bottom: 0,
+            width: width,
+            right: visible ? 0 : -width,
+            child: IgnorePointer(ignoring: !visible, child: panel(true)),
+          ),
+        ],
+      );
+    }
+
+    // Docked mode: take space and push the grid. When hidden, leave the grid
+    // untouched so grids that never use the sidebar keep their original tree.
+    if (!_stateManager.isSidebarVisible) {
+      return grid;
+    }
+
+    return Row(
+      children: [
+        Expanded(child: grid),
+        SizedBox(width: _stateManager.sidebarWidth, child: panel(false)),
+      ],
     );
   }
 }
