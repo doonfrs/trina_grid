@@ -106,6 +106,13 @@ class TrinaGridConfiguration {
 
   final TrinaGridLocaleText localeText;
 
+  /// Configure the record sidebar (a panel showing the selected row's fields).
+  ///
+  /// Toggle it at runtime with [TrinaGridStateManager.toggleSidebar],
+  /// [TrinaGridStateManager.showSidebar] and
+  /// [TrinaGridStateManager.hideSidebar].
+  final TrinaGridSidebarConfig sidebar;
+
   /// Display total number of rows in pagination footer.
   ///
   /// Default is true.
@@ -193,6 +200,7 @@ class TrinaGridConfiguration {
     this.columnFilter = const TrinaGridColumnFilterConfig(),
     this.columnSize = const TrinaGridColumnSizeConfig(),
     this.localeText = const TrinaGridLocaleText(),
+    this.sidebar = const TrinaGridSidebarConfig(),
     this.paginationShowTotalRows = true,
     this.paginationEnableGotoPage = true,
     this.enableDragSelection = false,
@@ -218,6 +226,7 @@ class TrinaGridConfiguration {
     this.columnFilter = const TrinaGridColumnFilterConfig(),
     this.columnSize = const TrinaGridColumnSizeConfig(),
     this.localeText = const TrinaGridLocaleText(),
+    this.sidebar = const TrinaGridSidebarConfig(),
     this.paginationShowTotalRows = true,
     this.paginationEnableGotoPage = true,
     this.enableDragSelection = false,
@@ -269,6 +278,7 @@ class TrinaGridConfiguration {
     TrinaGridColumnFilterConfig? columnFilter,
     TrinaGridColumnSizeConfig? columnSize,
     TrinaGridLocaleText? localeText,
+    TrinaGridSidebarConfig? sidebar,
     bool? enableDragSelection,
     bool? enableCtrlClickMultiSelect,
     Duration? dragSelectionDelayDuration,
@@ -294,6 +304,7 @@ class TrinaGridConfiguration {
       columnFilter: columnFilter ?? this.columnFilter,
       columnSize: columnSize ?? this.columnSize,
       localeText: localeText ?? this.localeText,
+      sidebar: sidebar ?? this.sidebar,
       enableDragSelection: enableDragSelection ?? this.enableDragSelection,
       enableCtrlClickMultiSelect:
           enableCtrlClickMultiSelect ?? this.enableCtrlClickMultiSelect,
@@ -329,6 +340,7 @@ class TrinaGridConfiguration {
             columnFilter == other.columnFilter &&
             columnSize == other.columnSize &&
             localeText == other.localeText &&
+            sidebar == other.sidebar &&
             enableDragSelection == other.enableDragSelection &&
             enableCtrlClickMultiSelect == other.enableCtrlClickMultiSelect &&
             dragSelectionDelayDuration == other.dragSelectionDelayDuration &&
@@ -352,6 +364,7 @@ class TrinaGridConfiguration {
     columnFilter,
     columnSize,
     localeText,
+    sidebar,
     enableDragSelection,
     enableCtrlClickMultiSelect,
     Object.hash(
@@ -1587,6 +1600,92 @@ class TrinaGridColumnSizeConfig {
     restoreAutoSizeAfterInsertColumn,
     restoreAutoSizeAfterRemoveColumn,
   );
+}
+
+/// Builds custom content for the record sidebar.
+///
+/// Receives the grid's [stateManager] so the content can read the current row
+/// (`stateManager.currentRow`), columns and write values back. Return the
+/// widget to display inside the sidebar panel. When null, the built-in record
+/// view (field list with search and inline editing) is used.
+typedef TrinaGridSidebarContentBuilder =
+    Widget Function(BuildContext context, TrinaGridStateManager stateManager);
+
+/// Configuration for the record sidebar - a panel that shows all fields of the
+/// currently selected row, with a search box and inline editing.
+///
+/// The sidebar is hidden by default. Toggle it at runtime through the state
+/// manager: [TrinaGridStateManager.showSidebar],
+/// [TrinaGridStateManager.hideSidebar] and
+/// [TrinaGridStateManager.toggleSidebar].
+class TrinaGridSidebarConfig {
+  const TrinaGridSidebarConfig({
+    this.enabled = true,
+    this.mode = TrinaGridSidebarMode.docked,
+    this.width = 320,
+    this.animationDuration = const Duration(milliseconds: 250),
+    this.contentBuilder,
+  });
+
+  /// Whether the sidebar feature is enabled.
+  ///
+  /// When false, [TrinaGridStateManager.showSidebar] and
+  /// [TrinaGridStateManager.toggleSidebar] have no effect.
+  final bool enabled;
+
+  /// The default display mode used when a mode is not passed to
+  /// [TrinaGridStateManager.showSidebar] / [TrinaGridStateManager.toggleSidebar].
+  ///
+  /// [TrinaGridSidebarMode.docked] takes space and pushes the grid.
+  /// [TrinaGridSidebarMode.floating] slides in over the grid.
+  final TrinaGridSidebarMode mode;
+
+  /// The default width of the sidebar panel in logical pixels.
+  ///
+  /// Change it at runtime with [TrinaGridStateManager.setSidebarWidth].
+  final double width;
+
+  /// Slide animation duration used in [TrinaGridSidebarMode.floating].
+  final Duration animationDuration;
+
+  /// Optional builder to replace the built-in record view with custom content.
+  ///
+  /// Note: because a new closure is not equal to the previous one, passing an
+  /// inline builder makes each [TrinaGridConfiguration] compare as unequal. Use
+  /// a stable function reference if you rely on configuration equality.
+  final TrinaGridSidebarContentBuilder? contentBuilder;
+
+  TrinaGridSidebarConfig copyWith({
+    bool? enabled,
+    TrinaGridSidebarMode? mode,
+    double? width,
+    Duration? animationDuration,
+    TrinaGridSidebarContentBuilder? contentBuilder,
+  }) {
+    return TrinaGridSidebarConfig(
+      enabled: enabled ?? this.enabled,
+      mode: mode ?? this.mode,
+      width: width ?? this.width,
+      animationDuration: animationDuration ?? this.animationDuration,
+      contentBuilder: contentBuilder ?? this.contentBuilder,
+    );
+  }
+
+  @override
+  bool operator ==(covariant Object other) {
+    return identical(this, other) ||
+        other is TrinaGridSidebarConfig &&
+            runtimeType == other.runtimeType &&
+            enabled == other.enabled &&
+            mode == other.mode &&
+            width == other.width &&
+            animationDuration == other.animationDuration &&
+            contentBuilder == other.contentBuilder;
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(enabled, mode, width, animationDuration, contentBuilder);
 }
 
 class TrinaGridLocaleText {

@@ -51,6 +51,7 @@ import 'feature/grid_as_popup_screen.dart';
 import 'feature/listing_mode_screen.dart';
 import 'feature/moving_screen.dart';
 import 'feature/number_type_column_screen.dart';
+import 'feature/record_sidebar_screen.dart';
 import 'feature/row_color_screen.dart';
 import 'feature/row_group_screen.dart';
 import 'feature/row_infinity_scroll_screen.dart';
@@ -439,6 +440,16 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
         onTapLiveDemo: () {
           Navigator.pushNamed(context, RowSelectionScreen.routeName);
         },
+      ),
+      TrinaListTile(
+        title: 'Record Sidebar',
+        description:
+            'Sidebar showing all fields of the selected row, with search and '
+            'inline editing. Docked or floating.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, RecordSidebarScreen.routeName);
+        },
+        trailing: newIcon,
       ),
       TrinaListTile(
         title: 'Row moving',
