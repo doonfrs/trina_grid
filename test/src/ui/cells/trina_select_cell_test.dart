@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:trina_grid/src/ui/cells/trina_select_cell.dart';
 import 'package:trina_grid/src/ui/widgets/trina_dropdown_menu.dart';
 import 'package:trina_grid/trina_grid.dart';
@@ -63,7 +62,13 @@ void main() {
   }
 
   group('Search Functionality', () {
-    final searchFieldFinder = find.byType(ShadInput);
+    // The search field is a plain Material TextField since #395 (ShadInput
+    // dropped for web a11y). Match it by its hint text to avoid picking up
+    // other TextFields in the tree.
+    final searchFieldFinder = find.byWidgetPredicate(
+      (widget) =>
+          widget is TextField && widget.decoration?.hintText == 'Search...',
+    );
 
     // The search field has a 250ms debounce; pumpAndSettle without a
     // duration can return before that timer fires, so callers must wait
