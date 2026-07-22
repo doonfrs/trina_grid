@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:trina_grid/src/ui/widgets/ensure_shad_theme.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 /// Chrome for the record sidebar panel.
 ///
-/// Provides the panel background and a left border from the grid style around
-/// its [child] (the built-in record view or a custom builder result).
+/// Provides the panel background and a left border (from the shadcn theme)
+/// around its [child] (the built-in record view or a custom builder result).
+/// Wraps the subtree in [EnsureShadTheme] so shadcn widgets work even when the
+/// host app is a plain `MaterialApp`.
 class TrinaSidebarContainer extends StatelessWidget {
   const TrinaSidebarContainer({
     super.key,
@@ -19,20 +24,21 @@ class TrinaSidebarContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = stateManager.style;
+    return EnsureShadTheme(
+      child: Builder(
+        builder: (context) {
+          final colors = ShadTheme.of(context).colorScheme;
 
-    return FocusTraversalGroup(
-      child: Container(
-        decoration: BoxDecoration(
-          color: style.gridBackgroundColor,
-          border: Border(
-            left: BorderSide(
-              color: style.gridBorderColor,
-              width: style.gridBorderWidth,
+          return FocusTraversalGroup(
+            child: Container(
+              decoration: BoxDecoration(
+                color: colors.background,
+                border: Border(left: BorderSide(color: colors.border)),
+              ),
+              child: child,
             ),
-          ),
-        ),
-        child: child,
+          );
+        },
       ),
     );
   }
@@ -41,11 +47,16 @@ class TrinaSidebarContainer extends StatelessWidget {
 /// The built-in record view for the sidebar.
 ///
 /// Lists every field of the grid's currently selected/active row as a
-/// `label -> value` list, with a search box to filter fields and inline editing
-/// that writes changes back to the grid.
+/// `label -> value` list, with a search box to filter fields. Tapping a
+/// (non read-only) field edits it using the grid's own per-type editor
+/// (text, number, date, boolean, select, ...), so editing behaves exactly like
+/// editing the cell in the grid - including any custom `editCellRenderer` or
+/// custom column types.
 ///
-/// It subscribes to the [TrinaGridStateManager] and rebuilds its field editors
-/// whenever the active row changes.
+/// The editor is shown for one field at a time, tracked by sidebar-local state.
+/// The grid's editing state is deliberately NOT enabled for the cell: doing so
+/// would make the grid body render a second editor for the same cell, and the
+/// two editors would fight over focus.
 class TrinaSidebar extends StatefulWidget {
   const TrinaSidebar({
     super.key,
@@ -65,103 +76,115 @@ class TrinaSidebar extends StatefulWidget {
 class _TrinaSidebarState extends State<TrinaSidebar> {
   TrinaGridStateManager get stateManager => widget.stateManager;
 
-  /// Controllers/focus nodes keyed by column field, rebuilt on row change.
-  final Map<String, TextEditingController> _controllers = {};
-  final Map<String, FocusNode> _focusNodes = {};
-
-  /// The key of the row currently shown, used to detect row changes.
-  Key? _currentRowKey;
-
   /// Current field search query (lower-cased).
   String _query = '';
+
+  /// The column field currently edited in the sidebar, or null when none.
+  String? _editingField;
+
+  // Mirrors of the grid state used to decide when to rebuild.
+  Key? _rowKey;
+  int? _rowVersion;
 
   @override
   void initState() {
     super.initState();
-    _currentRowKey = stateManager.currentRow?.key;
-    _rebuildControllers();
+    _rowKey = stateManager.currentRow?.key;
+    _rowVersion = stateManager.currentRow?.version;
     stateManager.addListener(_onGridChanged);
   }
 
   @override
   void dispose() {
     stateManager.removeListener(_onGridChanged);
-    _disposeControllers();
     super.dispose();
   }
 
-  /// Fires on any grid state change. We only rebuild when the active row
-  /// changes so that in-progress typing is never clobbered and edits that
-  /// themselves trigger a notification do not cause a rebuild loop.
+  /// Rebuild when the active row changes, a cell value in the row changes, or
+  /// the grid takes over editing/moves its current cell away from the field
+  /// being edited here (which exits the sidebar edit state).
   void _onGridChanged() {
-    final newKey = stateManager.currentRow?.key;
-    if (newKey != _currentRowKey) {
-      _currentRowKey = newKey;
-      _rebuildControllers();
-      if (mounted) setState(() {});
-    }
-  }
-
-  void _disposeControllers() {
-    for (final controller in _controllers.values) {
-      controller.dispose();
-    }
-    for (final node in _focusNodes.values) {
-      node.dispose();
-    }
-    _controllers.clear();
-    _focusNodes.clear();
-  }
-
-  void _rebuildControllers() {
-    _disposeControllers();
-
     final row = stateManager.currentRow;
-    if (row == null) return;
+    final rowKey = row?.key;
+    final rowVersion = row?.version;
 
-    for (final column in stateManager.columns) {
-      final value = row.cells[column.field]?.value;
-      _controllers[column.field] = TextEditingController(
-        text: value?.toString() ?? '',
-      );
+    bool changed = false;
 
-      final node = FocusNode();
-      node.addListener(() {
-        // Commit the value when the field loses focus.
-        if (!node.hasFocus) _commit(column);
+    if (rowKey != _rowKey) {
+      _rowKey = rowKey;
+      _editingField = null;
+      changed = true;
+    }
+
+    if (rowVersion != _rowVersion) {
+      _rowVersion = rowVersion;
+      changed = true;
+    }
+
+    if (_editingField != null) {
+      final editedCell = row?.cells[_editingField!];
+      final gridTookOver =
+          stateManager.isEditing ||
+          editedCell == null ||
+          stateManager.currentCell?.key != editedCell.key;
+      if (gridTookOver) {
+        _editingField = null;
+        changed = true;
+      }
+    }
+
+    if (changed) _safeRebuild();
+  }
+
+  /// Rebuilds now, or after the current frame when notified mid-frame (e.g.
+  /// an unmounting editor committing its pending value from dispose notifies
+  /// listeners synchronously while the framework is locked).
+  void _safeRebuild() {
+    if (!mounted) return;
+
+    if (SchedulerBinding.instance.schedulerPhase ==
+        SchedulerPhase.persistentCallbacks) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) setState(() {});
       });
-      _focusNodes[column.field] = node;
+    } else {
+      setState(() {});
     }
   }
 
-  /// Writes the edited text back to the grid cell.
-  void _commit(TrinaColumn column) {
-    if (column.readOnly) return;
+  /// Starts editing [cell] in the sidebar with the grid's per-type editor.
+  ///
+  /// Makes the cell the grid's current cell (so the grid highlights it and
+  /// editor internals that reference `currentCell` target the right cell) and
+  /// restores grid focus so the editor auto-focuses - but does NOT enable the
+  /// grid's editing state, which would render a duplicate editor in the grid.
+  void _editField(TrinaColumn column, TrinaCell cell) {
+    final rowIdx = stateManager.currentRowIdx;
+    if (rowIdx == null) return;
 
-    final row = stateManager.currentRow;
-    if (row == null) return;
-
-    final cell = row.cells[column.field];
-    final controller = _controllers[column.field];
-    if (cell == null || controller == null) return;
-
-    final text = controller.text;
-    if ((cell.value?.toString() ?? '') == text) return;
-
-    // changeCellValue casts the text according to the column type.
-    stateManager.changeCellValue(cell, text);
-
-    // Re-sync the field with the stored value (it may be reformatted, e.g.
-    // number/currency columns).
-    final storedText = cell.value?.toString() ?? '';
-    if (controller.text != storedText) {
-      controller.text = storedText;
+    if (!stateManager.hasFocus) {
+      stateManager.setKeepFocus(true);
     }
+    if (stateManager.isEditing) {
+      stateManager.setEditing(false, notify: false);
+    }
+    stateManager.setCurrentCell(cell, rowIdx);
+
+    setState(() => _editingField = column.field);
+  }
+
+  bool _isTextFamily(TrinaColumnType type) {
+    return type.isText ||
+        type.isNumber ||
+        type.isCurrency ||
+        type.isPercentage ||
+        type.isCustom;
   }
 
   @override
   Widget build(BuildContext context) {
-    final style = stateManager.style;
+    final shad = ShadTheme.of(context);
+    final colors = shad.colorScheme;
     final row = stateManager.currentRow;
 
     return Column(
@@ -171,16 +194,10 @@ class _TrinaSidebarState extends State<TrinaSidebar> {
           padding: const EdgeInsets.fromLTRB(12, 12, 4, 12),
           child: Row(
             children: [
-              Expanded(child: _buildSearchField(style)),
+              Expanded(child: _buildSearchField(colors)),
               if (widget.showCloseButton)
-                IconButton(
-                  icon: Icon(
-                    Icons.close,
-                    color: style.iconColor,
-                    size: style.iconSize,
-                  ),
-                  tooltip: 'Hide sidebar',
-                  visualDensity: VisualDensity.compact,
+                ShadIconButton.ghost(
+                  icon: const Icon(LucideIcons.x),
                   onPressed: stateManager.hideSidebar,
                 ),
             ],
@@ -188,21 +205,39 @@ class _TrinaSidebarState extends State<TrinaSidebar> {
         ),
         Expanded(
           child: row == null
-              ? _buildEmptyState(style)
-              : _buildFields(style, row),
+              ? _buildEmptyState(colors)
+              : _buildFields(shad, colors, row),
         ),
       ],
     );
   }
 
-  Widget _buildSearchField(TrinaGridStyleConfig style) {
+  Widget _buildSearchField(ShadColorScheme colors) {
+    // A plain Material [TextField] is used here (rather than shadcn's
+    // ShadInput) because ShadInput does not receive keyboard text input on
+    // Flutter web when accessibility semantics are enabled (see issue #394).
+    // It is styled from the shad color scheme to stay visually consistent.
     return TextField(
-      style: style.cellTextStyle,
+      style: TextStyle(fontSize: 14, color: colors.foreground),
       decoration: InputDecoration(
         hintText: 'Search for field...',
-        prefixIcon: Icon(Icons.search, color: style.iconColor),
+        hintStyle: TextStyle(color: colors.mutedForeground),
+        prefixIcon: Icon(
+          LucideIcons.search,
+          size: 16,
+          color: colors.mutedForeground,
+        ),
+        prefixIconConstraints: const BoxConstraints(
+          minWidth: 36,
+          minHeight: 36,
+        ),
         isDense: true,
-        border: const OutlineInputBorder(),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: colors.border),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: colors.ring),
+        ),
       ),
       onChanged: (value) {
         setState(() => _query = value.trim().toLowerCase());
@@ -210,22 +245,24 @@ class _TrinaSidebarState extends State<TrinaSidebar> {
     );
   }
 
-  Widget _buildEmptyState(TrinaGridStyleConfig style) {
+  Widget _buildEmptyState(ShadColorScheme colors) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
         child: Text(
           'Select a row to view its fields.',
           textAlign: TextAlign.center,
-          style: style.cellTextStyle.copyWith(
-            color: style.cellTextStyle.color?.withValues(alpha: 0.6),
-          ),
+          style: TextStyle(color: colors.mutedForeground),
         ),
       ),
     );
   }
 
-  Widget _buildFields(TrinaGridStyleConfig style, TrinaRow row) {
+  Widget _buildFields(
+    ShadThemeData shad,
+    ShadColorScheme colors,
+    TrinaRow row,
+  ) {
     final columns = stateManager.columns.where((column) {
       if (_query.isEmpty) return true;
       final value = row.cells[column.field]?.value?.toString() ?? '';
@@ -241,9 +278,7 @@ class _TrinaSidebarState extends State<TrinaSidebar> {
           child: Text(
             'No fields match "$_query".',
             textAlign: TextAlign.center,
-            style: style.cellTextStyle.copyWith(
-              color: style.cellTextStyle.color?.withValues(alpha: 0.6),
-            ),
+            style: TextStyle(color: colors.mutedForeground),
           ),
         ),
       );
@@ -253,13 +288,19 @@ class _TrinaSidebarState extends State<TrinaSidebar> {
       padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
       itemCount: columns.length,
       separatorBuilder: (_, _) => const SizedBox(height: 12),
-      itemBuilder: (context, index) => _buildFieldRow(style, columns[index]),
+      itemBuilder: (context, index) =>
+          _buildFieldRow(shad, colors, row, columns[index]),
     );
   }
 
-  Widget _buildFieldRow(TrinaGridStyleConfig style, TrinaColumn column) {
-    final controller = _controllers[column.field];
-    final labelColor = style.cellTextStyle.color?.withValues(alpha: 0.6);
+  Widget _buildFieldRow(
+    ShadThemeData shad,
+    ShadColorScheme colors,
+    TrinaRow row,
+    TrinaColumn column,
+  ) {
+    final cell = row.cells[column.field];
+    if (cell == null) return const SizedBox.shrink();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -269,36 +310,82 @@ class _TrinaSidebarState extends State<TrinaSidebar> {
             Expanded(
               child: Text(
                 column.title,
-                style: style.cellTextStyle.copyWith(
-                  fontSize: (style.cellTextStyle.fontSize ?? 14) - 2,
-                  color: labelColor,
-                ),
+                style: TextStyle(fontSize: 12, color: colors.mutedForeground),
                 overflow: TextOverflow.ellipsis,
               ),
             ),
             if (column.readOnly)
-              Icon(Icons.lock_outline, size: 14, color: labelColor),
+              Icon(LucideIcons.lock, size: 12, color: colors.mutedForeground),
           ],
         ),
         const SizedBox(height: 4),
-        TextField(
-          controller: controller,
-          focusNode: _focusNodes[column.field],
-          readOnly: column.readOnly,
-          style: style.cellTextStyle,
-          decoration: InputDecoration(
-            isDense: true,
-            filled: column.readOnly,
-            fillColor: column.readOnly ? style.cellColorInReadOnlyState : null,
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 10,
-              vertical: 8,
-            ),
-            border: const OutlineInputBorder(),
-          ),
-          onSubmitted: (_) => _commit(column),
-        ),
+        _buildValue(shad, colors, row, column, cell),
       ],
+    );
+  }
+
+  Widget _buildValue(
+    ShadThemeData shad,
+    ShadColorScheme colors,
+    TrinaRow row,
+    TrinaColumn column,
+    TrinaCell cell,
+  ) {
+    // When this field is being edited, render the grid's own per-type editor.
+    if (_editingField == column.field) {
+      Widget editor = column.type.buildCell(stateManager, cell, column, row);
+
+      if (_isTextFamily(column.type)) {
+        // Exit the edit state when the text editor loses focus. Unmounting the
+        // editor flushes its pending change (its dispose commits the value).
+        // Popup editors (select/boolean/date/time) must NOT exit on blur:
+        // their popup overlay takes focus while they are in use.
+        editor = Focus(
+          skipTraversal: true,
+          onFocusChange: (hasFocus) {
+            if (!hasFocus && _editingField == column.field && mounted) {
+              setState(() => _editingField = null);
+            }
+          },
+          child: editor,
+        );
+      }
+
+      return Container(
+        height: stateManager.rowHeight,
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        decoration: BoxDecoration(
+          border: Border.all(color: colors.ring),
+          borderRadius: shad.radius,
+        ),
+        clipBehavior: Clip.hardEdge,
+        child: editor,
+      );
+    }
+
+    final displayValue = column.formattedValueForDisplay(cell.value);
+
+    return GestureDetector(
+      key: ValueKey('trina_sidebar_field_${column.field}'),
+      behavior: HitTestBehavior.opaque,
+      onTap: column.readOnly ? null : () => _editField(column, cell),
+      child: Container(
+        width: double.infinity,
+        constraints: BoxConstraints(minHeight: stateManager.rowHeight),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        decoration: BoxDecoration(
+          color: column.readOnly ? colors.muted : null,
+          border: Border.all(color: colors.border),
+          borderRadius: shad.radius,
+        ),
+        alignment: Alignment.centerLeft,
+        child: Text(
+          displayValue,
+          style: TextStyle(
+            color: column.readOnly ? colors.mutedForeground : colors.foreground,
+          ),
+        ),
+      ),
     );
   }
 }

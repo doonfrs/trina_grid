@@ -1,6 +1,6 @@
 # Record Sidebar
 
-The record sidebar is a built-in panel that shows every field of the currently selected row as a `label -> value` list, with a search box to filter fields and inline editing that writes changes back to the grid.
+The record sidebar is a built-in panel that shows every field of the currently selected row as a `label -> value` list, with a search box to filter fields. Tapping a field edits it using the grid's own per-type editor and writes the change back to the grid.
 
 ## Overview
 
@@ -10,6 +10,20 @@ The sidebar is configured through the `sidebar` property in `TrinaGridConfigurat
 - **Floating**: the sidebar slides in from the right over the grid as an overlay with a close button, and slides back out when hidden.
 
 The sidebar is hidden by default. It updates automatically as the selected (active) row changes.
+
+The panel is styled with shadcn components (it follows the app's light/dark mode).
+
+## Editing fields
+
+Each field is displayed with its formatted value. Tapping a field (that is not read-only) switches it into the grid's own editor for that column type, so editing behaves exactly like editing the cell in the grid - including custom `editCellRenderer`s and custom column types:
+
+- text / number / currency / percentage: the grid's formatted text input
+- select / boolean: the grid's dropdown
+- date / time / dateTime: the grid's date/time picker
+
+Tapping a field makes that cell the grid's current cell (the grid highlights it), and one field is edited at a time. Text fields commit on Enter or when focus leaves the field. Read-only columns show a lock icon and are not editable. Committed edits go through the grid's value pipeline (formatting, validation, `onChanged`).
+
+Because the editors are the grid's own, grid keyboard navigation applies while editing: for example Enter and arrow keys behave as they do when editing a cell in the grid.
 
 ## Basic Usage
 
