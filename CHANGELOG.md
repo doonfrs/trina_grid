@@ -1,9 +1,28 @@
 # Changelog
 
-## [2.3.0] - 2026. 05. 15
+## [2.3.0] - 2026. 07. 23
 
+* Feature: Added built-in record sidebar with docked and floating modes (#396). @doonfrs
+* Feature: Sidebar fields are editable using grid cell editors with shadcn styling (#399). @doonfrs
 * Feature: Added `unfocusedSelectionColor` to `TrinaGridStyleConfig` for visually distinguishing focused vs. unfocused grids in multi-grid layouts (#372). @vasco-feltrin
 * Enhancement: `unfocusedSelectionColor` now also applies to multi-cell selections (not just the current cell), and falls back to `gridBackgroundColor` when unset so existing apps see no behavior change. Dark theme ships with a sensible default. @doonfrs
+* Feature: Made columnAscendingIcon and columnDescendingIcon clickable to trigger sorting (#379) (#380). @itsnotmeman
+* Feature: Made scrollbar track-click animation configurable (#277) (#388). @doonfrs
+* Feature: Added Hungarian locale (#382). @nagylzs
+* Feature: Added column filtering demo screen with lazy pagination and dynamic configuration controls (#387). @doonfrs
+* Fix: Arrow keys not working on Linux with NumLock on; all keyboard shortcuts are now NumLock-safe (#381) (#380) (#385). @itsnotmeman @doonfrs
+* Fix: Prevent crash when toggling docked sidebar visibility (#398). @doonfrs
+* Fix: Make selectWithSearch popup usable with a11y semantics on web (#394) (#395). @doonfrs
+* Fix: Decoupled checkbox colors from cell selection colors (#390) (#392). @doonfrs
+* Fix: Guard select cell initialValue against type mismatch (#391). @doonfrs
+* Fix: Scope column filter rebuilds to filter events (#367) (#386). @doonfrs
+* Fix: Include pagination and time picker fields in TrinaGridLocaleText equality (#384). @doonfrs
+* Fix: Column header alignment (#301) and scrollbar thumb overflow (#375). @doonfrs
+* Fix: Provide default ShadTheme so select popups work without ShadApp (#374). @doonfrs
+* Fix: Updated demo for font_awesome_flutter v11 (#397). @doonfrs
+* Chore: Updated shadcn_ui dependency to ^0.55.0. @doonfrs
+* Test: Cover filter popup ShadTheme path (#376) (#378). @doonfrs
+* Test: Updated select cell search tests for the Material TextField search field introduced in #395. @doonfrs
 
 ## [2.2.2] - 2026. 05. 15
 
