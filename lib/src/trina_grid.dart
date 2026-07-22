@@ -1134,6 +1134,8 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
       child: body,
     );
 
+    // The record sidebar stays inside the grid's FocusScope: its reused cell
+    // editors rely on the grid's keepFocus mechanics.
     return FocusScope(
       onFocusChange: _stateManager.setKeepFocus,
       onKeyEvent: _handleGridFocusOnKey,
@@ -1154,7 +1156,22 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
           sidebar.contentBuilder?.call(context, _stateManager) ??
           TrinaSidebar(stateManager: _stateManager, showCloseButton: floating);
 
-      return TrinaSidebarContainer(stateManager: _stateManager, child: content);
+      // Reparent the sidebar's focus subtree under the grid's focus node
+      // (attached inside _GridContainer, of which the sidebar is a sibling).
+      // The reused cell editors check `gridFocusNode.hasFocus` (via
+      // stateManager.hasFocus) - e.g. tapping a text editor calls
+      // setKeepFocus(true), which requests focus on the grid node unless it
+      // already has focus. Without reparenting, a click inside a focused
+      // sidebar editor would move focus back to the grid.
+      return Focus(
+        parentNode: _stateManager.gridFocusNode,
+        skipTraversal: true,
+        canRequestFocus: false,
+        child: TrinaSidebarContainer(
+          stateManager: _stateManager,
+          child: content,
+        ),
+      );
     }
 
     if (_stateManager.sidebarMode.isFloating) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:trina_grid/src/ui/ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 import '../../helper/column_helper.dart';
@@ -150,6 +151,51 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Search for field...'), findsNothing);
+    });
+
+    testWidgets('tapping a field shows the grid editor for that cell', (
+      tester,
+    ) async {
+      final columns = ColumnHelper.textColumn('col', count: 3, width: 150);
+      final rows = RowHelper.count(5, columns);
+
+      late TrinaGridStateManager stateManager;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Material(
+            child: TrinaGrid(
+              columns: columns,
+              rows: rows,
+              onLoaded: (event) => stateManager = event.stateManager,
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      // Establish a current row so the sidebar shows its fields.
+      stateManager.setCurrentCell(stateManager.rows.first.cells['col0']!, 0);
+      stateManager.showSidebar();
+      await tester.pumpAndSettle();
+
+      // Tap the second field's value box inside the sidebar.
+      await tester.tap(find.byKey(const ValueKey('trina_sidebar_field_col1')));
+      await tester.pumpAndSettle();
+
+      // The tapped cell became the grid's current cell, and the sidebar
+      // renders the grid's text editor for it. The grid's own editing state
+      // stays off (otherwise the grid would render a duplicate editor).
+      expect(stateManager.currentCell?.column.field, 'col1');
+      expect(stateManager.isEditing, false);
+      expect(find.byType(TrinaTextCell), findsOneWidget);
+
+      // The display box for that field is replaced by the editor.
+      expect(
+        find.byKey(const ValueKey('trina_sidebar_field_col1')),
+        findsNothing,
+      );
     });
   });
 }
