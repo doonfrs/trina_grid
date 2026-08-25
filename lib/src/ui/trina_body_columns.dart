@@ -111,7 +111,7 @@ class TrinaBodyColumnsState extends TrinaStateWithChange<TrinaBodyColumns> {
         // region while the linked header clamps short, visibly misaligning
         // header titles from their data cells.
         padding: scrollConfig.showVertical
-            ? EdgeInsetsDirectional.only(end: scrollConfig.thickness + 4)
+            ? EdgeInsetsDirectional.only(end: scrollConfig.effectiveThickness)
             : EdgeInsets.zero,
         child: TrinaVisibilityLayout(
           delegate: MainColumnLayoutDelegate(

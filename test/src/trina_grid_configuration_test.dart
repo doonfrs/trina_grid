@@ -236,6 +236,39 @@ void main() {
         expect(configA.hashCode == configB.hashCode, true);
       },
     );
+
+    test('The effective thickness should include the surrounding padding.', () {
+      expect(const TrinaGridScrollbarConfig().effectiveThickness, 12.0);
+
+      expect(
+        const TrinaGridScrollbarConfig(thickness: 20).effectiveThickness,
+        24.0,
+      );
+    });
+
+    test(
+      'The reserved width should follow the visibility of the vertical scrollbar.',
+      () {
+        expect(
+          const TrinaGridScrollbarConfig().verticalScrollBarReservedWidth,
+          12.0,
+        );
+
+        expect(
+          const TrinaGridScrollbarConfig(
+            thickness: 20,
+          ).verticalScrollBarReservedWidth,
+          24.0,
+        );
+
+        expect(
+          const TrinaGridScrollbarConfig(
+            showVertical: false,
+          ).verticalScrollBarReservedWidth,
+          0.0,
+        );
+      },
+    );
   });
 
   group('style', () {

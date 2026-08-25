@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 import '../../../helper/column_helper.dart';
@@ -254,6 +255,95 @@ void main() {
           ),
           false,
         );
+      },
+    );
+  });
+
+  group('When the body scroll controllers are not laid out', () {
+    late TrinaGridStateManager stateManager;
+
+    late MockTrinaGridScrollController scroll;
+
+    late MockLinkedScrollControllerGroup vertical;
+
+    late MockLinkedScrollControllerGroup horizontal;
+
+    late List<TrinaColumn> columns;
+
+    setUp(() {
+      scroll = MockTrinaGridScrollController();
+      vertical = MockLinkedScrollControllerGroup();
+      horizontal = MockLinkedScrollControllerGroup();
+
+      when(scroll.vertical).thenReturn(vertical);
+      when(scroll.horizontal).thenReturn(horizontal);
+      when(scroll.verticalOffset).thenReturn(0);
+      when(scroll.horizontalOffset).thenReturn(0);
+      when(vertical.offset).thenReturn(0);
+      when(horizontal.offset).thenReturn(0);
+
+      // Left unstubbed on purpose: a grid whose body lists have not been laid
+      // out yet has no body scroll controller, so the scrolling logic has to
+      // fall back to geometry computed from the configuration.
+      expect(scroll.bodyRowsVertical, isNull);
+      expect(scroll.bodyRowsHorizontal, isNull);
+
+      columns = ColumnHelper.textColumn('column', count: 5, width: 200);
+
+      stateManager = createStateManager(
+        columns: columns,
+        rows: RowHelper.count(20, columns),
+        scroll: scroll,
+        layout: const BoxConstraints(maxWidth: 500, maxHeight: 500),
+      );
+
+      stateManager.setGridGlobalOffset(Offset.zero);
+    });
+
+    test(
+      'moveScrollByColumn should exclude the reserved vertical scrollbar band.',
+      () {
+        stateManager.moveScrollByColumn(TrinaMoveDirection.right, 3);
+
+        final lastColumn = columns.last;
+
+        final expectedOffset =
+            lastColumn.startPosition +
+            lastColumn.width -
+            (500 -
+                stateManager
+                    .configuration
+                    .scrollbar
+                    .verticalScrollBarReservedWidth);
+
+        verify(horizontal.jumpTo(expectedOffset)).called(1);
+      },
+    );
+
+    test(
+      'moveScrollByRow should fall back to the computed viewport height.',
+      () {
+        stateManager.moveScrollByRow(TrinaMoveDirection.down, 12);
+
+        final style = stateManager.configuration.style;
+
+        final rowTotalHeight =
+            style.rowHeight + style.cellHorizontalBorderWidth;
+
+        final viewportHeight =
+            stateManager.columnRowContainerHeight -
+            stateManager.columnGroupHeight -
+            stateManager.columnHeight -
+            stateManager.columnFilterHeight -
+            stateManager.columnFooterHeight -
+            style.cellHorizontalBorderWidth;
+
+        // Rows 0 through 12 scrolled past, then the target row 13 has to fit
+        // fully, including the border the list lays out beneath it.
+        final expectedOffset =
+            (13 * rowTotalHeight) + rowTotalHeight - viewportHeight;
+
+        verify(vertical.jumpTo(expectedOffset)).called(1);
       },
     );
   });

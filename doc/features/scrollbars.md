@@ -78,6 +78,20 @@ The `TrinaGridScrollbarConfig` class provides the following key options for scro
 | `trackClickDuration` | `Duration` | `Duration(milliseconds: 200)` | Duration of the scroll animation when clicking the scrollbar track to jump to a position. Set to `Duration.zero` to jump instantly. |
 | `trackClickCurve` | `Curve` | `Curves.easeOutCubic` | Easing curve for the track-click jump animation. |
 
+### Layout footprint
+
+Scrollbars are drawn as overlays, but the grid still reserves space for them so that the last row and
+the last column are never left permanently underneath a scrollbar. Two read-only getters expose how
+much space that is:
+
+| Getter | Description |
+|--------|-------------|
+| `effectiveThickness` | Total cross axis space a scrollbar occupies: `thickness` plus 2px of padding on each side. This is the height of the horizontal scrollbar strip and the width of the vertical scrollbar overlay. |
+| `verticalScrollBarReservedWidth` | The trailing width reserved for the vertical scrollbar, or `0` when `showVertical` is `false`. |
+
+Increasing `thickness` therefore also increases the space the grid reserves. Use these getters
+instead of hardcoding the padding if you build custom layouts around the grid.
+
 ## Examples
 
 ### Always Visible Scrollbars
