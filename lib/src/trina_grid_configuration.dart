@@ -1328,6 +1328,24 @@ class TrinaGridScrollbarConfig {
   /// Get effective radius for the scrollbar
   double get effectiveRadius => radius ?? thickness / 2;
 
+  /// Total cross axis space a scrollbar occupies: the [thickness] of the
+  /// thumb and track plus 2px of padding on each side.
+  ///
+  /// This is the width of the box built by `TrinaVerticalScrollBar`, the height
+  /// of the box built by `TrinaHorizontalScrollBar`, and the amount of trailing
+  /// padding the body adds to the horizontal scroll extent so the last column
+  /// can be scrolled clear of the overlaid vertical scrollbar.
+  double get effectiveThickness => thickness + 4;
+
+  /// Trailing space reserved for the overlaid vertical scrollbar, or 0 when it
+  /// is hidden.
+  ///
+  /// The vertical scrollbar is drawn as an overlay, so it does not shrink the
+  /// horizontal viewport, it covers the trailing band of it. Scrolling logic
+  /// must exclude this band from the usable viewport width.
+  double get verticalScrollBarReservedWidth =>
+      showVertical ? effectiveThickness : 0;
+
   @override
   bool operator ==(covariant Object other) {
     return identical(this, other) ||

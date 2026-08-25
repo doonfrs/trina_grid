@@ -1,5 +1,10 @@
 # Changelog
 
+## [Unreleased]
+
+* Fix: Keyboard navigation now scrolls all the way to the end of the grid, so the last row and last column are no longer left partially hidden under the scrollbars (#389). @doonfrs
+* Fix: Frozen column rows now share the same scroll extent as the body, so Ctrl+End and vertical keyboard navigation reach the last row when frozen columns are visible. @doonfrs
+
 ## [2.3.0] - 2026. 07. 23
 
 * Feature: Added built-in record sidebar with docked and floating modes (#396). @doonfrs

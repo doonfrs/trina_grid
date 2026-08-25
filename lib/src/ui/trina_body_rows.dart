@@ -224,7 +224,7 @@ class TrinaBodyRowsState extends TrinaStateWithChange<TrinaBodyRows> {
                   child: Padding(
                     padding: scrollConfig.showVertical
                         ? EdgeInsetsDirectional.only(
-                            end: scrollConfig.thickness + 4,
+                            end: scrollConfig.effectiveThickness,
                           )
                         : EdgeInsets.zero,
                     child: CustomSingleChildLayout(

@@ -293,7 +293,7 @@ class _TrinaVerticalScrollBarState extends State<TrinaVerticalScrollBar>
                             (widget.height - thumbHeight);
 
                         return SizedBox(
-                          width: scrollConfig.thickness + 4, // Add padding
+                          width: scrollConfig.effectiveThickness,
                           height: widget.height,
                           child: Stack(
                             children: [

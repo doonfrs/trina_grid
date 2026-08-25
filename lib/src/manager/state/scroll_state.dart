@@ -66,6 +66,40 @@ mixin ScrollState implements ITrinaGridState {
     return Offset((maxWidth! + gridGlobalOffset!.dx) - offset.dx, offset.dy);
   }
 
+  /// The live [ScrollPosition] of [controller], or null when it has no client
+  /// or has not been laid out yet.
+  ///
+  /// Returns null during the frames before the body lists are laid out, and in
+  /// unit tests where the scroll controller is mocked. Callers must treat null
+  /// as "fall back to geometry computed from the configuration".
+  ScrollPosition? _laidOutPosition(ScrollController? controller) {
+    if (controller == null || !controller.hasClients) {
+      return null;
+    }
+
+    final position = controller.position;
+
+    if (!position.hasViewportDimension || !position.hasContentDimensions) {
+      return null;
+    }
+
+    return position;
+  }
+
+  /// Clamps [offset] to the scrollable range of [controller].
+  ///
+  /// When the position is not available this returns [offset] unchanged, so the
+  /// behaviour matches the computed geometry fallback.
+  double _clampToScrollExtent(ScrollController? controller, double offset) {
+    final position = _laidOutPosition(controller);
+
+    if (position == null) {
+      return offset;
+    }
+
+    return offset.clamp(position.minScrollExtent, position.maxScrollExtent);
+  }
+
   @override
   void scrollByDirection(TrinaMoveDirection direction, double offset) {
     if (direction.vertical) {
@@ -109,31 +143,46 @@ mixin ScrollState implements ITrinaGridState {
       }
     }
 
-    final double screenOffset =
-        scroll.verticalOffset +
-        columnRowContainerHeight -
-        columnGroupHeight -
-        columnHeight -
-        columnFilterHeight -
-        columnFooterHeight -
+    // Height of the region in which scrollable rows are actually visible.
+    //
+    // Prefer the live viewport of the body rows list: it already accounts for
+    // the horizontal scrollbar strip below the list, the frozen top and bottom
+    // row bands, and every divider, none of which the layout getters below know
+    // about. The computed value is only a fallback for the frames before the
+    // list is laid out.
+    final double viewportHeight =
+        _laidOutPosition(scroll.bodyRowsVertical)?.viewportDimension ??
+        (columnRowContainerHeight -
+            columnGroupHeight -
+            columnHeight -
+            columnFilterHeight -
+            columnFooterHeight -
+            configuration.style.cellHorizontalBorderWidth);
+
+    final double screenOffset = scroll.verticalOffset + viewportHeight;
+
+    // The row being moved to, and the space it occupies in the list. The border
+    // has to be included: the list lays each row out as height + border, so
+    // leaving it out stops one border short of the bottom of the last row.
+    final double targetRowHeight =
+        getRowHeight(rowIdx + direction.offset) +
         configuration.style.cellHorizontalBorderWidth;
 
     final bool inScrollStart = scroll.verticalOffset <= offsetToMove;
 
-    final bool inScrollEnd =
-        offsetToMove + getRowHeight(rowIdx) <= screenOffset;
+    final bool inScrollEnd = offsetToMove + targetRowHeight <= screenOffset;
 
     if (inScrollStart && inScrollEnd) {
       return;
     } else if (inScrollEnd == false) {
       offsetToMove =
-          scroll.verticalOffset +
-          offsetToMove +
-          getRowHeight(rowIdx) -
-          screenOffset;
+          scroll.verticalOffset + offsetToMove + targetRowHeight - screenOffset;
     }
 
-    scrollByDirection(direction, offsetToMove);
+    scrollByDirection(
+      direction,
+      _clampToScrollExtent(scroll.bodyRowsVertical, offsetToMove),
+    );
   }
 
   @override
@@ -153,13 +202,21 @@ mixin ScrollState implements ITrinaGridState {
 
     double offsetToMove = columnToMove.startPosition;
 
-    final double? screenOffset = showFrozenColumn == true
-        ? maxWidth! - leftFrozenColumnsWidth - rightFrozenColumnsWidth
-        : maxWidth;
+    // The vertical scrollbar is an overlay inside the body's Stack, so it does
+    // not shrink the horizontal viewport, it covers the trailing band of it.
+    // The body pads its scroll content by the same amount so the last column
+    // can be scrolled clear of the overlay. Exclude that band here, otherwise
+    // scrolling to the last column stops exactly one scrollbar width short of
+    // maxScrollExtent and leaves the column hidden under the scrollbar.
+    final double screenOffset =
+        (showFrozenColumn == true
+            ? maxWidth! - leftFrozenColumnsWidth - rightFrozenColumnsWidth
+            : maxWidth!) -
+        configuration.scrollbar.verticalScrollBarReservedWidth;
 
     if (direction.isRight) {
       if (offsetToMove > scroll.horizontal!.offset) {
-        offsetToMove -= screenOffset!;
+        offsetToMove -= screenOffset;
         offsetToMove += columnToMove.width;
         offsetToMove += scrollOffsetByFrozenColumn;
 
@@ -170,7 +227,7 @@ mixin ScrollState implements ITrinaGridState {
     } else {
       final offsetToNeed = offsetToMove + columnToMove.width;
 
-      final currentOffset = screenOffset! + scroll.horizontal!.offset;
+      final currentOffset = screenOffset + scroll.horizontal!.offset;
 
       if (offsetToNeed > currentOffset) {
         offsetToMove = scroll.horizontal!.offset + offsetToNeed - currentOffset;
@@ -180,7 +237,10 @@ mixin ScrollState implements ITrinaGridState {
       }
     }
 
-    scrollByDirection(direction, offsetToMove);
+    scrollByDirection(
+      direction,
+      _clampToScrollExtent(scroll.bodyRowsHorizontal, offsetToMove),
+    );
   }
 
   @override
