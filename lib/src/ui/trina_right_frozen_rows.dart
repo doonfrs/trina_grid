@@ -131,6 +131,15 @@ class TrinaRightFrozenRowsState
                 )
                 .toList(),
           ),
+        // Match the footprint of the body's horizontal scrollbar so that every
+        // list in the vertical scroll controller group has the same viewport
+        // height and therefore the same maxScrollExtent. Without this, scrolling
+        // the group to the body's maxScrollExtent overscrolls this list, whose
+        // ClampingScrollPhysics then springs back and drags the body with it.
+        if (stateManager.configuration.scrollbar.showHorizontal)
+          SizedBox(
+            height: stateManager.configuration.scrollbar.effectiveThickness,
+          ),
       ],
     );
   }

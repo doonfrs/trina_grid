@@ -267,7 +267,15 @@ class _TrinaHorizontalScrollBarState extends State<TrinaHorizontalScrollBar>
             valueListenable: widget.horizontalScrollExtentNotifier,
             builder: (context, scrollExtent, _) {
               if (scrollExtent <= 0) {
-                return SizedBox(height: scrollConfig.thickness);
+                // Keep the same footprint as the overflowing branch below.
+                //
+                // This strip is a sibling of the rows viewport, so its height is
+                // subtracted from the vertical scroll extent. Changing it with
+                // the overflow state would shift the body by 4px whenever a
+                // column resize crosses the overflow threshold, and would make
+                // the body's maxScrollExtent differ from the frozen rows lists
+                // that share its vertical scroll controller group.
+                return SizedBox(height: scrollConfig.effectiveThickness);
               }
 
               return ValueListenableBuilder<double>(
@@ -295,7 +303,7 @@ class _TrinaHorizontalScrollBarState extends State<TrinaHorizontalScrollBar>
 
                       return SizedBox(
                         width: widget.width,
-                        height: scrollConfig.thickness + 4, // Add padding
+                        height: scrollConfig.effectiveThickness,
                         child: Stack(
                           children: [
                             // Track
