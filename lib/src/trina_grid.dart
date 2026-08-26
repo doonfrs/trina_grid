@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -132,6 +133,8 @@ class TrinaGrid extends TrinaStatefulWidget {
     this.onValidationFailed,
     this.onLazyFetchCompleted,
     this.scrollPhysics,
+    this.horizontalScrollPhysics,
+    this.verticalScrollPhysics,
     this.fitContent = false,
   });
 
@@ -511,6 +514,10 @@ class TrinaGrid extends TrinaStatefulWidget {
 
   /// Custom scroll physics to control scrolling behavior.
   ///
+  /// Applies to both axes. To control the axes separately, use
+  /// [horizontalScrollPhysics] and [verticalScrollPhysics], which take
+  /// precedence over this value on the axis they cover.
+  ///
   /// If null, uses platform-specific default scroll physics from [MaterialScrollBehavior].
   ///
   /// Example:
@@ -521,6 +528,40 @@ class TrinaGrid extends TrinaStatefulWidget {
   /// )
   /// ```
   final ScrollPhysics? scrollPhysics;
+
+  /// Scroll physics applied only to horizontal scrolling.
+  ///
+  /// Takes precedence over [scrollPhysics] on this axis. When null, the axis
+  /// falls back to [scrollPhysics], then to the platform default.
+  ///
+  /// See [verticalScrollPhysics] for the typical use case.
+  final ScrollPhysics? horizontalScrollPhysics;
+
+  /// Scroll physics applied only to vertical scrolling.
+  ///
+  /// Takes precedence over [scrollPhysics] on this axis. When null, the axis
+  /// falls back to [scrollPhysics], then to the platform default.
+  ///
+  /// Use this to place the grid inside a scrolling page: the page owns vertical
+  /// scrolling while the grid keeps scrolling horizontally. Pair it with
+  /// [fitContent] so the grid sizes itself to its content instead of needing a
+  /// bounded height.
+  ///
+  /// ```dart
+  /// SingleChildScrollView(
+  ///   child: TrinaGrid(
+  ///     columns: columns,
+  ///     rows: rows,
+  ///     fitContent: true,
+  ///     verticalScrollPhysics: const NeverScrollableScrollPhysics(),
+  ///   ),
+  /// )
+  /// ```
+  ///
+  /// Note that fling and spring tuning still comes from [scrollPhysics] or the
+  /// platform default, since those values are not axis-specific. See
+  /// [TrinaAxisScrollPhysics].
+  final ScrollPhysics? verticalScrollPhysics;
 
   /// When `true`, the grid sizes its overall height to fit its content
   /// (header + columns + rows + footer + borders) instead of expanding to
@@ -929,6 +970,14 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
       height += (row.height ?? defaultRowHeight) + cellHorizontalBorder;
     }
 
+    // The horizontal scrollbar is a sibling of the rows viewport rather than an
+    // overlay, so it takes height away from the rows. Without this the grid is
+    // left short by exactly that strip and the rows scroll by it.
+    final scrollbar = widget.configuration.scrollbar;
+    if (scrollbar.showHorizontal) {
+      height += scrollbar.effectiveThickness;
+    }
+
     if (_stateManager.showColumnFooter) {
       final double columnFooterHeight = _stateManager.columnFooterHeight > 0
           ? _stateManager.columnFooterHeight
@@ -1131,6 +1180,8 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
     final Widget grid = _GridContainer(
       stateManager: _stateManager,
       scrollPhysics: widget.scrollPhysics,
+      horizontalScrollPhysics: widget.horizontalScrollPhysics,
+      verticalScrollPhysics: widget.verticalScrollPhysics,
       child: body,
     );
 
@@ -1598,11 +1649,15 @@ class _GridContainer extends StatelessWidget {
 
   final Widget child;
   final ScrollPhysics? scrollPhysics;
+  final ScrollPhysics? horizontalScrollPhysics;
+  final ScrollPhysics? verticalScrollPhysics;
 
   const _GridContainer({
     required this.stateManager,
     required this.child,
     required this.scrollPhysics,
+    required this.horizontalScrollPhysics,
+    required this.verticalScrollPhysics,
   });
 
   @override
@@ -1618,6 +1673,8 @@ class _GridContainer extends StatelessWidget {
           isMobile: PlatformHelper.isMobile,
           userDragDevices: stateManager.configuration.scrollbar.dragDevices,
           scrollPhysics: scrollPhysics,
+          horizontalScrollPhysics: horizontalScrollPhysics,
+          verticalScrollPhysics: verticalScrollPhysics,
         ),
         child: DecoratedBox(
           decoration: BoxDecoration(
@@ -1684,13 +1741,23 @@ class TrinaScrollBehavior extends MaterialScrollBehavior {
     required this.isMobile,
     Set<PointerDeviceKind>? userDragDevices,
     this.scrollPhysics,
+    this.horizontalScrollPhysics,
+    this.verticalScrollPhysics,
   }) : _dragDevices =
            userDragDevices ??
            (isMobile ? _mobileDragDevices : _desktopDragDevices),
        super();
 
   final bool isMobile;
+
+  /// Physics applied to both axes, unless overridden per axis.
   final ScrollPhysics? scrollPhysics;
+
+  /// Physics applied to horizontal scrolling only.
+  final ScrollPhysics? horizontalScrollPhysics;
+
+  /// Physics applied to vertical scrolling only.
+  final ScrollPhysics? verticalScrollPhysics;
 
   @override
   Set<PointerDeviceKind> get dragDevices => _dragDevices;
@@ -1719,9 +1786,41 @@ class TrinaScrollBehavior extends MaterialScrollBehavior {
     return child;
   }
 
+  /// [ScrollBehavior.shouldNotify] returns false by default, which would leave
+  /// every [Scrollable] below the [ScrollConfiguration] holding the physics it
+  /// resolved on its first build. Without this, changing any of the physics
+  /// after the grid is built has no effect.
+  @override
+  bool shouldNotify(TrinaScrollBehavior oldDelegate) {
+    return oldDelegate.isMobile != isMobile ||
+        oldDelegate.scrollPhysics != scrollPhysics ||
+        oldDelegate.horizontalScrollPhysics != horizontalScrollPhysics ||
+        oldDelegate.verticalScrollPhysics != verticalScrollPhysics ||
+        !setEquals(oldDelegate._dragDevices, _dragDevices);
+  }
+
   @override
   ScrollPhysics getScrollPhysics(BuildContext context) {
-    return scrollPhysics ?? super.getScrollPhysics(context);
+    final base = scrollPhysics ?? super.getScrollPhysics(context);
+
+    if (horizontalScrollPhysics == null && verticalScrollPhysics == null) {
+      return base;
+    }
+
+    // A ScrollBehavior resolves one physics for every Scrollable below it and
+    // is never told which axis it is resolving for. TrinaAxisScrollPhysics
+    // defers that decision to call time, where ScrollMetrics.axis is known.
+    //
+    // Each axis replaces [base] rather than layering onto it, the same way
+    // [scrollPhysics] replaces the platform default. Layering would let a
+    // blocking [scrollPhysics] override a per axis physics meant to re-enable
+    // that axis, since the behaviors a physics does not define defer to its
+    // parent.
+    return TrinaAxisScrollPhysics(
+      horizontal: horizontalScrollPhysics ?? base,
+      vertical: verticalScrollPhysics ?? base,
+      parent: base,
+    );
   }
 }
 

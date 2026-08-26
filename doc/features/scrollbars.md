@@ -345,6 +345,59 @@ TrinaGrid(
 )
 ```
 
+### Per-Axis Scroll Physics
+
+`scrollPhysics` applies to both axes at once, so blocking vertical scrolling with it blocks horizontal scrolling too. Use `horizontalScrollPhysics` and `verticalScrollPhysics` to control each axis on its own.
+
+The common case is a width-constrained grid inside a scrolling page: the page should own vertical scrolling while the grid keeps scrolling horizontally. Pair it with `fitContent: true` so the grid sizes itself to its content instead of needing a bounded height.
+
+```dart
+SingleChildScrollView(
+  child: TrinaGrid(
+    columns: columns,
+    rows: rows,
+    fitContent: true,
+    verticalScrollPhysics: const NeverScrollableScrollPhysics(),
+  ),
+)
+```
+
+The reverse works the same way, for a grid inside a horizontally scrolling parent:
+
+```dart
+TrinaGrid(
+  columns: columns,
+  rows: rows,
+  horizontalScrollPhysics: const NeverScrollableScrollPhysics(),
+)
+```
+
+#### Precedence
+
+For each axis, the physics is resolved in this order:
+
+1. `verticalScrollPhysics` / `horizontalScrollPhysics`, if set for that axis
+2. `scrollPhysics`, if set
+3. The platform default from `MaterialScrollBehavior`
+
+A per-axis value replaces the fallback for its axis rather than layering on top of it, so it can re-enable an axis that `scrollPhysics` disabled:
+
+```dart
+// Nothing scrolls except horizontally.
+TrinaGrid(
+  columns: columns,
+  rows: rows,
+  scrollPhysics: const NeverScrollableScrollPhysics(),
+  horizontalScrollPhysics: const ClampingScrollPhysics(),
+)
+```
+
+#### Limitation
+
+Only the parts of `ScrollPhysics` that receive scroll metrics can be resolved per axis, because that is where the axis is known. The axis-agnostic ones (fling velocity thresholds, the spring description, the drag start threshold) come from `scrollPhysics` or the platform default instead. None of Flutter's built-in physics differ through those values, so this only matters for custom `ScrollPhysics` subclasses that override them.
+
+Internally this is implemented by `TrinaAxisScrollPhysics`, which is exported and can be used directly anywhere a `ScrollPhysics` is accepted.
+
 ### Combining Scroll Physics
 
 You can combine multiple scroll physics using the `applyTo` method for more complex behaviors:
@@ -410,6 +463,7 @@ TrinaGrid(
 
 7. **Scroll Physics**: Choose appropriate scroll physics based on your use case:
    - Use `NeverScrollableScrollPhysics()` when the grid is inside a scrollable parent to prevent scroll conflicts
+   - Reach for `verticalScrollPhysics` / `horizontalScrollPhysics` instead of `scrollPhysics` when only one axis should be affected, so the other axis keeps working
    - Use platform-specific physics (default) for the most native feel on each platform
    - Consider `AlwaysScrollableScrollPhysics()` if you need scrolling gestures to work even when content fits the viewport
 

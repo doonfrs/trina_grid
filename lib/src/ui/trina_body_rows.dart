@@ -78,8 +78,19 @@ class TrinaBodyRowsState extends TrinaStateWithChange<TrinaBodyRows> {
     updateState(TrinaNotifierEventForceUpdate.instance);
   }
 
+  /// Having clients does not mean the position has been laid out yet, and
+  /// [ScrollPosition.maxScrollExtent] and [ScrollPosition.viewportDimension]
+  /// both throw before that happens.
+  bool _isLaidOut(ScrollController controller) {
+    if (!controller.hasClients) return false;
+
+    final position = controller.position;
+
+    return position.hasContentDimensions && position.hasViewportDimension;
+  }
+
   void _updateVerticalScrollInfo() {
-    if (!_verticalScroll.hasClients) return;
+    if (!_isLaidOut(_verticalScroll)) return;
 
     // Update value notifiers without triggering setState
     _verticalScrollOffsetNotifier.value = _verticalScroll.offset;
@@ -90,7 +101,7 @@ class TrinaBodyRowsState extends TrinaStateWithChange<TrinaBodyRows> {
   }
 
   void _updateHorizontalScrollInfo() {
-    if (!_horizontalScroll.hasClients) return;
+    if (!_isLaidOut(_horizontalScroll)) return;
 
     // Update value notifiers without triggering setState
     _horizontalScrollOffsetNotifier.value = _horizontalScroll.offset;
