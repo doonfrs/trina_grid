@@ -220,8 +220,9 @@ class TrinaColumn {
   )?
   editCellRenderer;
 
-  /// Custom renderer for the column title.
-  /// This allows complete customization of the column title UI.
+  /// Custom renderer for the column title (also known as the column header).
+  /// This allows complete customization of the column title UI, and is the
+  /// header counterpart of [footerRenderer].
   /// If provided, this takes precedence over the title, titleSpan, and other title-related properties.
   ///
   /// ```dart

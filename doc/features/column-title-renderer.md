@@ -1,6 +1,8 @@
 # Column Title Renderer
 
-The column title renderer feature allows you to fully customize the appearance and behavior of column titles in TrinaGrid. This is useful when you want to:
+> Looking for a `headerRenderer` or `headerBuilder`? This is it. TrinaGrid calls the column header the column *title*, so `TrinaColumn.titleRenderer` is the header customization API, and it is the direct counterpart of `footerRenderer`.
+
+The column title renderer feature allows you to fully customize the appearance and behavior of column titles (also known as column headers) in TrinaGrid. This is useful when you want to:
 
 - Create visually distinctive column headers
 - Add custom icons or badges to column titles
