@@ -104,7 +104,10 @@ abstract class TrinaPopupCellStateWithMenu<T extends PopupCell> extends State<T>
                 controller: textController,
                 stateManager: widget.stateManager,
                 onTap: () {
-                  if (widget.column.checkReadOnly(widget.row, widget.cell)) {
+                  if (widget.cell.resolveReadOnly(
+                    row: widget.row,
+                    column: widget.column,
+                  )) {
                     return;
                   }
                   controller.isOpen ? controller.close() : controller.open();

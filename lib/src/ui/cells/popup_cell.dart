@@ -61,8 +61,8 @@ mixin PopupCellState<T extends PopupCell> on State<T>
       widget.cell.onKeyPressed!(keyEvent);
     }
 
-    // If the column is readOnly, do not open the popup.
-    if (widget.column.checkReadOnly(widget.row, widget.cell)) {
+    // If the cell is readOnly, do not open the popup.
+    if (widget.cell.resolveReadOnly(row: widget.row, column: widget.column)) {
       node.unfocus();
       return KeyEventResult.ignored;
     }

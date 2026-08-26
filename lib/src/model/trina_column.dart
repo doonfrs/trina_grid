@@ -13,13 +13,20 @@ typedef TrinaColumnFooterRenderer =
 typedef TrinaColumnTitleRenderer =
     Widget Function(TrinaColumnTitleRendererContext rendererContext);
 
-/// It dynamically determines whether the cells of the column are in the edit state.
+/// It dynamically determines whether a cell is in the edit state.
 ///
-/// Once the [readOnly] value is set,
+/// Once a static `readOnly` value is set,
 /// whether the cell is editable cannot be changed during runtime,
 /// but if this callback is implemented,
 /// it can be determined whether the cell can be edited or not according to the state of the cell.
-typedef TrinaColumnCheckReadOnly = bool Function(TrinaRow row, TrinaCell cell);
+///
+/// The callback can be set on [TrinaCell.checkReadOnly], [TrinaRow.checkReadOnly]
+/// or [TrinaColumn.checkReadOnly]. See [TrinaCell.isReadOnly] for the
+/// resolution order.
+typedef TrinaCheckReadOnly = bool Function(TrinaRow row, TrinaCell cell);
+
+/// Alias of [TrinaCheckReadOnly], kept for backward compatibility.
+typedef TrinaColumnCheckReadOnly = TrinaCheckReadOnly;
 
 class TrinaColumn {
   /// A title to be displayed on the screen.
@@ -388,6 +395,11 @@ class TrinaColumn {
   /// or whether the columns in the center area are displayed in the screen area.
   double startPosition = 0;
 
+  /// Resolves the column level read-only state.
+  ///
+  /// This only considers the column, so cell and row level callbacks are
+  /// ignored. Use [TrinaCell.isReadOnly] to resolve the full
+  /// cell > row > column chain.
   bool checkReadOnly(TrinaRow row, TrinaCell cell) {
     return hasCheckReadOnly ? _checkReadOnly!(row, cell) : readOnly;
   }

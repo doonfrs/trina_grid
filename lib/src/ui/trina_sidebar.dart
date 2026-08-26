@@ -302,6 +302,10 @@ class _TrinaSidebarState extends State<TrinaSidebar> {
     final cell = row.cells[column.field];
     if (cell == null) return const SizedBox.shrink();
 
+    // Resolve the full cell > row > column chain so the record editor blocks
+    // exactly what the grid blocks.
+    final readOnly = cell.resolveReadOnly(row: row, column: column);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -314,12 +318,12 @@ class _TrinaSidebarState extends State<TrinaSidebar> {
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            if (column.readOnly)
+            if (readOnly)
               Icon(LucideIcons.lock, size: 12, color: colors.mutedForeground),
           ],
         ),
         const SizedBox(height: 4),
-        _buildValue(shad, colors, row, column, cell),
+        _buildValue(shad, colors, row, column, cell, readOnly),
       ],
     );
   }
@@ -330,6 +334,7 @@ class _TrinaSidebarState extends State<TrinaSidebar> {
     TrinaRow row,
     TrinaColumn column,
     TrinaCell cell,
+    bool readOnly,
   ) {
     // When this field is being edited, render the grid's own per-type editor.
     if (_editingField == column.field) {
@@ -368,13 +373,13 @@ class _TrinaSidebarState extends State<TrinaSidebar> {
     return GestureDetector(
       key: ValueKey('trina_sidebar_field_${column.field}'),
       behavior: HitTestBehavior.opaque,
-      onTap: column.readOnly ? null : () => _editField(column, cell),
+      onTap: readOnly ? null : () => _editField(column, cell),
       child: Container(
         width: double.infinity,
         constraints: BoxConstraints(minHeight: stateManager.rowHeight),
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         decoration: BoxDecoration(
-          color: column.readOnly ? colors.muted : null,
+          color: readOnly ? colors.muted : null,
           border: Border.all(color: colors.border),
           borderRadius: shad.radius,
         ),
@@ -382,7 +387,7 @@ class _TrinaSidebarState extends State<TrinaSidebar> {
         child: Text(
           displayValue,
           style: TextStyle(
-            color: column.readOnly ? colors.mutedForeground : colors.foreground,
+            color: readOnly ? colors.mutedForeground : colors.foreground,
           ),
         ),
       ),

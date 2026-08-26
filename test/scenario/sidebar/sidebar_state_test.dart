@@ -197,5 +197,51 @@ void main() {
         findsNothing,
       );
     });
+
+    testWidgets('a field blocked by checkReadOnly does not open an editor', (
+      tester,
+    ) async {
+      final columns = [
+        TrinaColumn(title: 'col0', field: 'col0', type: TrinaColumnType.text()),
+        TrinaColumn(
+          title: 'col1',
+          field: 'col1',
+          type: TrinaColumnType.text(),
+          checkReadOnly: (row, cell) => true,
+        ),
+      ];
+      final rows = RowHelper.count(5, columns);
+
+      late TrinaGridStateManager stateManager;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Material(
+            child: TrinaGrid(
+              columns: columns,
+              rows: rows,
+              onLoaded: (event) => stateManager = event.stateManager,
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      stateManager.setCurrentCell(stateManager.rows.first.cells['col0']!, 0);
+      stateManager.showSidebar();
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const ValueKey('trina_sidebar_field_col1')));
+      await tester.pumpAndSettle();
+
+      // The sidebar honours checkReadOnly, not just the static readOnly flag,
+      // so no editor is rendered and the display box stays in place.
+      expect(find.byType(TrinaTextCell), findsNothing);
+      expect(
+        find.byKey(const ValueKey('trina_sidebar_field_col1')),
+        findsOneWidget,
+      );
+    });
   });
 }

@@ -463,6 +463,8 @@ mixin RowState implements ITrinaGridState {
         key: oldRow.key,
         frozen: oldRow.frozen,
         height: height,
+        metadata: oldRow.metadata,
+        checkReadOnly: oldRow.checkReadOnly,
       );
 
       // Copy over internal state
@@ -489,6 +491,8 @@ mixin RowState implements ITrinaGridState {
         checked: oldRow.checked ?? false,
         key: oldRow.key,
         frozen: oldRow.frozen,
+        metadata: oldRow.metadata,
+        checkReadOnly: oldRow.checkReadOnly,
         // height will be null by default
       );
 

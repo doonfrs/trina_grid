@@ -60,7 +60,7 @@ abstract class TrinaPopupCellStateWithCustomPopup<T extends PopupCell>
 
   @override
   void openPopup(BuildContext context) {
-    if (widget.column.checkReadOnly(widget.row, widget.cell)) {
+    if (widget.cell.resolveReadOnly(row: widget.row, column: widget.column)) {
       return;
     }
     popupKey.currentState?.show();
