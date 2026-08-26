@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+* Feature: Added `TrinaGridConfiguration.fromTheme(context)` and `TrinaGridStyleConfig.fromTheme`/`fromColorScheme`, deriving the grid colors from the app's Material `ColorScheme` so the grid follows the host theme and its brightness. Opt-in: the existing light and dark palettes are unchanged (#336). @doonfrs @stan-at-work
+* Fix: `TrinaGridStyleConfig.copyWith` no longer drops `rowCheckedColor`, `rowHoveredColor`, `enableRowHoverColor` and `cellDefaultColor`. It rebuilt the style through the public light/dark constructors, which do not accept those fields, so any customized value silently reverted to the default. These are now also settable through `copyWith`, along with `cellDirtyColor`, `frozenRowColor` and `frozenRowBorderColor`. @doonfrs
+* Fix: The hidden-columns popup now inherits the grid's own configuration instead of rebuilding from a fresh default light or dark one, so custom and theme-derived styles reach it. @doonfrs
 * Feature: Added `checkReadOnly` to `TrinaRow` and `TrinaCell`, so read-only conditions can be declared per row or per cell instead of only per column. The first callback that is set wins: cell, then row, then column, then the static `TrinaColumn.readOnly` (#404). @doonfrs
 * Feature: Added `stateManager.refreshReadOnly()` to re-evaluate the read-only styling of the cells on screen. Read-only enforcement was already live, but the styling is memoized per cell and could go stale when a `checkReadOnly` callback depended on state outside its row (#404). @doonfrs
 * Fix: The record sidebar now honors `checkReadOnly`. It only read the static `TrinaColumn.readOnly`, so it let users edit fields the grid itself blocked (#404). @doonfrs

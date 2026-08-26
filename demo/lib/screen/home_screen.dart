@@ -44,6 +44,7 @@ import 'feature/copy_and_paste_screen.dart';
 import 'feature/currency_type_column_screen.dart';
 import 'feature/custom_pagination_screen.dart';
 import 'feature/dark_mode_screen.dart';
+import 'feature/theme_integration_screen.dart';
 import 'feature/date_type_column_screen.dart';
 import 'feature/dual_mode_screen.dart';
 import 'feature/editing_state_screen.dart';
@@ -668,6 +669,15 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
         onTapLiveDemo: () {
           Navigator.pushNamed(context, DarkModeScreen.routeName);
         },
+      ),
+      TrinaListTile(
+        title: 'Material theme integration',
+        description:
+            'Derive the grid colors from the app ColorScheme with fromTheme.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, ThemeIntegrationScreen.routeName);
+        },
+        trailing: newIcon,
       ),
       TrinaListTile(
         title: 'Dark mode Switching',

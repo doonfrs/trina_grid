@@ -32,6 +32,7 @@ import 'screen/feature/column_sorting_screen.dart';
 import 'screen/feature/copy_and_paste_screen.dart';
 import 'screen/feature/currency_type_column_screen.dart';
 import 'screen/feature/dark_mode_screen.dart';
+import 'screen/feature/theme_integration_screen.dart';
 import 'screen/feature/date_type_column_screen.dart';
 import 'screen/feature/dual_mode_screen.dart';
 import 'screen/feature/edit_cell_renderer_screen.dart';
@@ -130,6 +131,8 @@ class MyApp extends StatelessWidget {
         CustomTypeColumnScreen.routeName: (context) =>
             const CustomTypeColumnScreen(),
         DarkModeScreen.routeName: (context) => const DarkModeScreen(),
+        ThemeIntegrationScreen.routeName: (context) =>
+            const ThemeIntegrationScreen(),
         DateTypeColumnScreen.routeName: (context) =>
             const DateTypeColumnScreen(),
         DualModeScreen.routeName: (context) => const DualModeScreen(),

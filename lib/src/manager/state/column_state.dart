@@ -775,10 +775,10 @@ mixin ColumnState implements ITrinaGridState {
       }
     }
 
-    // Use dark configuration if the current configuration is in dark mode
-    final baseConfiguration = configuration.style.isDarkStyle
-        ? const TrinaGridConfiguration.dark()
-        : const TrinaGridConfiguration();
+    // Inherit the grid's own configuration so the popup matches it, including
+    // custom and theme-derived styles. Rebuilding from a fresh const light or
+    // dark configuration here used to discard them.
+    final baseConfiguration = configuration;
 
     TrinaGridPopup(
       context: context,
