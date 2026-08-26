@@ -14,6 +14,7 @@ class TrinaRow<T> {
     TrinaRowFrozen? frozen,
     this.height,
     this.metadata,
+    this.checkReadOnly,
   }) : type = type ?? TrinaRowTypeNormal.instance,
        _checked = checked,
        _state = TrinaRowState.none,
@@ -38,6 +39,13 @@ class TrinaRow<T> {
 
   /// Optional metadata to attach additional data to rows
   Map<String, dynamic>? metadata = {};
+
+  /// Dynamically determines whether the cells of this row are read-only.
+  ///
+  /// Takes precedence over [TrinaColumn.checkReadOnly] and is itself
+  /// overridden by [TrinaCell.checkReadOnly].
+  /// See [TrinaCell.isReadOnly] for the full resolution order.
+  final TrinaCheckReadOnly? checkReadOnly;
 
   Map<String, TrinaCell> cells;
 
@@ -64,6 +72,9 @@ class TrinaRow<T> {
 
   /// Increment the row version (called when any cell changes).
   void incrementVersion() => _version++;
+
+  /// Returns true if this row has a [checkReadOnly] callback.
+  bool get hasCheckReadOnly => checkReadOnly != null;
 
   bool get initialized {
     if (cells.isEmpty) {

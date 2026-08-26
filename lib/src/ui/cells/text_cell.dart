@@ -44,6 +44,7 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
   bool? _cachedReadOnly;
   dynamic _cachedCellValueForReadOnly;
   int? _cachedRowVersionForReadOnly;
+  int? _cachedReadOnlyGeneration;
 
   @override
   TextInputType get keyboardType => TextInputType.text;
@@ -55,14 +56,23 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
       widget.column.formattedValueForDisplayInEditing(widget.cell.value);
 
   bool get _readOnly {
-    // Cache the checkReadOnly result to avoid excessive callback executions
-    // Also invalidate when row version changes (cross-cell dependency)
+    // Cache the checkReadOnly result to avoid excessive callback executions.
+    // Invalidated when the cell value changes, when the row version changes
+    // (cross-cell dependency), or when TrinaGridStateManager.refreshReadOnly
+    // is called (dependency on state outside the row).
+    final generation = widget.stateManager.readOnlyGeneration;
+
     if (_cachedCellValueForReadOnly != widget.cell.value ||
         _cachedRowVersionForReadOnly != widget.row.version ||
+        _cachedReadOnlyGeneration != generation ||
         _cachedReadOnly == null) {
       _cachedCellValueForReadOnly = widget.cell.value;
       _cachedRowVersionForReadOnly = widget.row.version;
-      _cachedReadOnly = widget.column.checkReadOnly(widget.row, widget.cell);
+      _cachedReadOnlyGeneration = generation;
+      _cachedReadOnly = widget.cell.resolveReadOnly(
+        row: widget.row,
+        column: widget.column,
+      );
     }
     return _cachedReadOnly!;
   }
@@ -135,7 +145,7 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
       return false;
     }
 
-    if (widget.column.checkReadOnly(widget.row, widget.cell)) {
+    if (widget.cell.resolveReadOnly(row: widget.row, column: widget.column)) {
       return true;
     }
 

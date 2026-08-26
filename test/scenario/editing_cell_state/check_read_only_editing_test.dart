@@ -173,5 +173,191 @@ void main() {
         expect(stateManager.isEditing, false);
       },
     );
+
+    testWidgets(
+      'Cell level checkReadOnly should block editing on that cell only',
+      (tester) async {
+        columns = [
+          TrinaColumn(
+            title: 'editable',
+            field: 'editable',
+            type: TrinaColumnType.text(),
+          ),
+        ];
+
+        rows = [
+          TrinaRow(
+            cells: {
+              'editable': TrinaCell(
+                value: 'locked cell',
+                checkReadOnly: (row, cell) => true,
+              ),
+            },
+          ),
+          TrinaRow(cells: {'editable': TrinaCell(value: 'free cell')}),
+        ];
+
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Material(
+              child: TrinaGrid(
+                columns: columns,
+                rows: rows,
+                onLoaded: (TrinaGridOnLoadedEvent event) {
+                  stateManager = event.stateManager;
+                  stateManager.setKeepFocus(true);
+                },
+              ),
+            ),
+          ),
+        );
+
+        // The cell that carries the callback is blocked.
+        await tester.tap(find.text('locked cell'));
+        await tester.pumpAndSettle();
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.keyA);
+        await tester.pumpAndSettle();
+
+        expect(stateManager.isEditing, false);
+
+        // The sibling cell in the same column is not.
+        await tester.tap(find.text('free cell'));
+        await tester.pumpAndSettle();
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.keyB);
+        await tester.pumpAndSettle();
+
+        expect(stateManager.isEditing, true);
+      },
+    );
+
+    testWidgets(
+      'Row level checkReadOnly should block editing on every cell of the row',
+      (tester) async {
+        columns = [
+          TrinaColumn(
+            title: 'first',
+            field: 'first',
+            type: TrinaColumnType.text(),
+          ),
+          TrinaColumn(
+            title: 'second',
+            field: 'second',
+            type: TrinaColumnType.text(),
+          ),
+        ];
+
+        rows = [
+          TrinaRow(
+            cells: {
+              'first': TrinaCell(value: 'locked first'),
+              'second': TrinaCell(value: 'locked second'),
+            },
+            checkReadOnly: (row, cell) => true,
+          ),
+          TrinaRow(
+            cells: {
+              'first': TrinaCell(value: 'free first'),
+              'second': TrinaCell(value: 'free second'),
+            },
+          ),
+        ];
+
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Material(
+              child: TrinaGrid(
+                columns: columns,
+                rows: rows,
+                onLoaded: (TrinaGridOnLoadedEvent event) {
+                  stateManager = event.stateManager;
+                  stateManager.setKeepFocus(true);
+                },
+              ),
+            ),
+          ),
+        );
+
+        for (final text in ['locked first', 'locked second']) {
+          await tester.tap(find.text(text));
+          await tester.pumpAndSettle();
+
+          await tester.sendKeyEvent(LogicalKeyboardKey.keyA);
+          await tester.pumpAndSettle();
+
+          expect(stateManager.isEditing, false, reason: text);
+        }
+
+        await tester.tap(find.text('free first'));
+        await tester.pumpAndSettle();
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.keyB);
+        await tester.pumpAndSettle();
+
+        expect(stateManager.isEditing, true);
+      },
+    );
+
+    testWidgets('A cell level callback should override a row level callback', (
+      tester,
+    ) async {
+      columns = [
+        TrinaColumn(
+          title: 'first',
+          field: 'first',
+          type: TrinaColumnType.text(),
+        ),
+        TrinaColumn(
+          title: 'second',
+          field: 'second',
+          type: TrinaColumnType.text(),
+        ),
+      ];
+
+      rows = [
+        TrinaRow(
+          cells: {
+            'first': TrinaCell(value: 'locked by row'),
+            'second': TrinaCell(
+              value: 'unlocked by cell',
+              checkReadOnly: (row, cell) => false,
+            ),
+          },
+          checkReadOnly: (row, cell) => true,
+        ),
+      ];
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Material(
+            child: TrinaGrid(
+              columns: columns,
+              rows: rows,
+              onLoaded: (TrinaGridOnLoadedEvent event) {
+                stateManager = event.stateManager;
+                stateManager.setKeepFocus(true);
+              },
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('locked by row'));
+      await tester.pumpAndSettle();
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.keyA);
+      await tester.pumpAndSettle();
+
+      expect(stateManager.isEditing, false);
+
+      await tester.tap(find.text('unlocked by cell'));
+      await tester.pumpAndSettle();
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.keyB);
+      await tester.pumpAndSettle();
+
+      expect(stateManager.isEditing, true);
+    });
   });
 }

@@ -63,13 +63,78 @@ The `checkReadOnly` function provides:
 - `row`: The current row containing the cell
 - `cell`: The current cell being evaluated
 
-This callback is evaluated dynamically each time the grid needs to determine if a cell is editable, and it takes precedence over the static `readOnly` property. This allows for real-time updates when the underlying data changes.
+It takes precedence over the static `readOnly` property. Note that it *replaces* `readOnly` rather than being combined with it, so a callback returning `false` makes the cell editable even on a column declared `readOnly: true`.
 
 **Common use cases:**
 - Make cells read-only based on row status
 - Conditional editing based on user permissions
 - Time-based restrictions
 - Complex business logic for field editability
+
+### Row and Cell Level Read-Only Control
+
+The same callback can also be set on a single row or a single cell, which is more convenient than routing every condition through the column:
+
+```dart
+TrinaRow(
+  cells: {
+    'id': TrinaCell(value: 1),
+    // Only this cell is locked.
+    'name': TrinaCell(
+      value: 'Alice',
+      checkReadOnly: (row, cell) => cell.value == 'Alice',
+    ),
+    'status': TrinaCell(value: 'approved'),
+  },
+  // Every cell of this row is locked.
+  checkReadOnly: (row, cell) => row.cells['status']?.value == 'approved',
+)
+```
+
+The first callback that is set wins:
+
+| Priority | Where | Property |
+| --- | --- | --- |
+| 1 (highest) | `TrinaCell` | `checkReadOnly` |
+| 2 | `TrinaRow` | `checkReadOnly` |
+| 3 | `TrinaColumn` | `checkReadOnly` |
+| 4 (lowest) | `TrinaColumn` | `readOnly` |
+
+Because the first callback that is set wins, a cell level callback returning `false` unlocks a cell inside a row that is otherwise locked by its row level callback.
+
+### Refreshing the Read-Only State
+
+Read-only *enforcement* is always live. The callback is consulted on every edit, paste and popup attempt, so a cell is blocked as soon as the callback starts returning `true`, with no rebuild and no refresh call.
+
+The read-only *styling* (the background color, and the editor's read-only state) is memoized per cell, keyed on the cell value and the row version. That covers callbacks that depend on the row itself, but not callbacks that depend on state outside the row. For those, call `refreshReadOnly()`:
+
+```dart
+bool _locked = false;
+
+// A callback that depends on state outside the grid.
+TrinaColumn(
+  title: 'Name',
+  field: 'name',
+  type: TrinaColumnType.text(),
+  checkReadOnly: (row, cell) => _locked,
+);
+
+void toggleLock() {
+  _locked = !_locked;
+
+  // Re-evaluate the read-only styling of the cells that are on screen.
+  stateManager.refreshReadOnly();
+}
+```
+
+Only the cells that are currently built are re-evaluated, so the cost is proportional to the visible rows and not to the total number of rows. There is no need to rebuild the grid widget.
+
+To refresh a single row instead of the whole viewport, bump its version:
+
+```dart
+row.incrementVersion();
+stateManager.notifyListeners();
+```
 
 ## Editing Modes
 

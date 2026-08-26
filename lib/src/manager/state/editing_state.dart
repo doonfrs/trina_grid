@@ -28,6 +28,29 @@ abstract class IEditingState {
 
   bool isEditableCell(TrinaCell cell);
 
+  /// Incremented by [refreshReadOnly].
+  ///
+  /// Cell widgets include this value in the key they memoize the result of
+  /// [TrinaCell.isReadOnly] under, so bumping it invalidates those caches.
+  int get readOnlyGeneration;
+
+  /// Re-evaluate the read-only state of the cells that are currently built.
+  ///
+  /// Read-only *enforcement* is always live: a `checkReadOnly` callback is
+  /// consulted on every edit, paste and popup attempt, so a cell is blocked as
+  /// soon as the callback starts returning `true` without any refresh.
+  ///
+  /// The read-only *styling* is memoized per cell, keyed on the cell value and
+  /// the row version. Call this when a `checkReadOnly` callback depends on
+  /// state outside its row (external app state, another row, the current time)
+  /// and the styling needs to catch up. Only the cells currently built are
+  /// re-evaluated, so this is proportional to the visible rows, not to the
+  /// total number of rows.
+  ///
+  /// To refresh a single row instead, use [TrinaRow.incrementVersion] followed
+  /// by [TrinaChangeNotifier.notifyListeners].
+  void refreshReadOnly({bool notify = true});
+
   /// Change the editing status of the current cell.
   void setEditing(bool flag, {bool notify = true});
 
@@ -80,6 +103,8 @@ class _State {
   bool _autoEditing = false;
 
   TextEditingController? _textEditingController;
+
+  int _readOnlyGeneration = 0;
 }
 
 mixin EditingState implements ITrinaGridState {
@@ -116,10 +141,7 @@ mixin EditingState implements ITrinaGridState {
       return false;
     }
 
-    if (cell.column.checkReadOnly(
-      cell.row,
-      cell.row.cells[cell.column.field]!,
-    )) {
+    if (cell.isReadOnly) {
       return false;
     }
 
@@ -128,6 +150,16 @@ mixin EditingState implements ITrinaGridState {
     }
 
     return true;
+  }
+
+  @override
+  int get readOnlyGeneration => _state._readOnlyGeneration;
+
+  @override
+  void refreshReadOnly({bool notify = true}) {
+    ++_state._readOnlyGeneration;
+
+    notifyListeners(notify, refreshReadOnly.hashCode);
   }
 
   @override

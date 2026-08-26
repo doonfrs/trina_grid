@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+* Feature: Added `checkReadOnly` to `TrinaRow` and `TrinaCell`, so read-only conditions can be declared per row or per cell instead of only per column. The first callback that is set wins: cell, then row, then column, then the static `TrinaColumn.readOnly` (#404). @doonfrs
+* Feature: Added `stateManager.refreshReadOnly()` to re-evaluate the read-only styling of the cells on screen. Read-only enforcement was already live, but the styling is memoized per cell and could go stale when a `checkReadOnly` callback depended on state outside its row (#404). @doonfrs
+* Fix: The record sidebar now honors `checkReadOnly`. It only read the static `TrinaColumn.readOnly`, so it let users edit fields the grid itself blocked (#404). @doonfrs
+* Fix: `setRowHeight` and `resetRowHeight` no longer drop the row `metadata` when rebuilding the row. @doonfrs
 * Feature: Added `horizontalScrollPhysics` and `verticalScrollPhysics` to `TrinaGrid`, so each scroll axis can have its own `ScrollPhysics`. Pair `verticalScrollPhysics: NeverScrollableScrollPhysics()` with `fitContent: true` to place a grid inside a scrolling page while keeping its horizontal scrolling (#270). @doonfrs
 * Fix: `scrollPhysics` now takes effect when it changes after the grid is built. `TrinaScrollBehavior` did not override `ScrollBehavior.shouldNotify`, so scrollables kept the physics they resolved on their first build. @doonfrs
 * Fix: `fitContent` now accounts for the horizontal scrollbar strip, which is a sibling of the rows viewport rather than an overlay. The grid used to come up short by that strip, leaving the rows scrollable by a few pixels. @doonfrs

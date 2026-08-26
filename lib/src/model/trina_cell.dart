@@ -32,6 +32,7 @@ class TrinaCell {
   /// The [renderer] parameter allows for custom rendering of the cell.
   /// The [onChanged] parameter allows for cell-level control over value changes.
   /// The [onKeyPressed] parameter allows for capturing keyboard events in the cell.
+  /// The [checkReadOnly] parameter allows for cell-level control over editability.
   TrinaCell({
     dynamic value,
     Key? key,
@@ -40,6 +41,7 @@ class TrinaCell {
     this.onKeyPressed,
     this.padding,
     this.metadata,
+    this.checkReadOnly,
   }) : _key = key ?? UniqueKey(),
        _value = value,
        _originalValue = value,
@@ -78,8 +80,17 @@ class TrinaCell {
   /// Optional metadata to attach additional data to cells
   Map<String, dynamic>? metadata = {};
 
+  /// Dynamically determines whether this specific cell is read-only.
+  ///
+  /// Takes precedence over [TrinaRow.checkReadOnly] and
+  /// [TrinaColumn.checkReadOnly]. See [isReadOnly] for the full resolution order.
+  final TrinaCheckReadOnly? checkReadOnly;
+
   /// Returns true if this cell has a custom renderer.
   bool get hasRenderer => renderer != null;
+
+  /// Returns true if this cell has a [checkReadOnly] callback.
+  bool get hasCheckReadOnly => checkReadOnly != null;
 
   /// Set initial value according to [TrinaColumn] setting.
   ///
@@ -110,6 +121,37 @@ class TrinaCell {
 
     return _row!;
   }
+
+  /// Whether this cell is read-only, against an explicit [row] and [column].
+  ///
+  /// Resolution order, the first callback that is set wins:
+  /// [TrinaCell.checkReadOnly] > [TrinaRow.checkReadOnly] >
+  /// [TrinaColumn.checkReadOnly] > [TrinaColumn.readOnly].
+  ///
+  /// A callback replaces the static [TrinaColumn.readOnly] value rather than
+  /// being combined with it, so a callback returning `false` makes the cell
+  /// editable even on a column declared `readOnly: true`.
+  ///
+  /// Prefer [isReadOnly] when the cell is [initialized]. This form exists for
+  /// the cell widgets, which are handed their row and column directly and must
+  /// not depend on the cell back references being set.
+  bool resolveReadOnly({required TrinaRow row, required TrinaColumn column}) {
+    if (hasCheckReadOnly) {
+      return checkReadOnly!(row, this);
+    }
+
+    if (row.hasCheckReadOnly) {
+      return row.checkReadOnly!(row, this);
+    }
+
+    return column.checkReadOnly(row, this);
+  }
+
+  /// Whether this cell is read-only.
+  ///
+  /// See [resolveReadOnly] for the resolution order.
+  /// The cell must be [initialized] before this is read.
+  bool get isReadOnly => resolveReadOnly(row: row, column: column);
 
   dynamic get value {
     if (_needToApplyFormatOnInit) {

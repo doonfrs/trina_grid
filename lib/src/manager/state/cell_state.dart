@@ -289,10 +289,7 @@ mixin CellState implements ITrinaGridState {
       return false;
     }
 
-    if (cell.column.checkReadOnly(
-      cell.row,
-      cell.row.cells[cell.column.field]!,
-    )) {
+    if (cell.isReadOnly) {
       return false;
     }
 
