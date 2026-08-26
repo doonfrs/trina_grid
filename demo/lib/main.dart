@@ -61,6 +61,7 @@ import 'screen/feature/value_formatter_screen.dart';
 import 'screen/home_screen.dart';
 import 'screen/feature/pages_list_screen.dart';
 import 'screen/feature/frozen_rows_screen.dart';
+import 'screen/feature/scroll_physics_screen.dart';
 import 'screen/feature/scrollbars.dart';
 import 'screen/feature/row_wrapper_screen.dart';
 import 'screen/feature/row_wrapper_frozen_screen.dart';
@@ -169,6 +170,7 @@ class MyApp extends StatelessWidget {
         EmptyScreen.routeName: (context) => const EmptyScreen(),
         PagesListScreen.routeName: (context) => const PagesListScreen(),
         FrozenRowsScreen.routeName: (context) => const FrozenRowsScreen(),
+        ScrollPhysicsScreen.routeName: (context) => const ScrollPhysicsScreen(),
         ScrollbarsScreen.routeName: (context) => const ScrollbarsScreen(),
         LoadingOptionsScreen.routeName: (context) =>
             const LoadingOptionsScreen(),

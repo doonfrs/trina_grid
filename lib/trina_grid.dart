@@ -41,6 +41,7 @@ export './src/plugin/trina_aggregate_column_footer.dart';
 export './src/plugin/trina_infinity_scroll_rows.dart';
 export './src/plugin/trina_lazy_pagination.dart';
 export './src/plugin/trina_pagination.dart';
+export './src/trina_axis_scroll_physics.dart';
 export './src/trina_dual_grid.dart';
 export './src/trina_dual_grid_popup.dart';
 export './src/trina_grid.dart';

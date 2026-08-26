@@ -67,6 +67,7 @@ import 'feature/theme_switching_screen.dart';
 import 'feature/time_type_column_screen.dart';
 import 'feature/value_formatter_screen.dart';
 import 'feature/pages_list_screen.dart';
+import 'feature/scroll_physics_screen.dart';
 import 'feature/scrollbars.dart';
 import 'feature/date_time_column_screen.dart';
 import 'feature/row_wrapper_screen.dart';
@@ -517,6 +518,15 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
         description: 'Customize scrollbar appearance, behavior, and visibility',
         onTapLiveDemo: () {
           Navigator.pushNamed(context, ScrollbarsScreen.routeName);
+        },
+        trailing: newIcon,
+      ),
+      TrinaListTile(
+        title: 'Scroll Physics',
+        description:
+            'Set scroll physics per axis to embed a grid in a scrolling page',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, ScrollPhysicsScreen.routeName);
         },
         trailing: newIcon,
       ),

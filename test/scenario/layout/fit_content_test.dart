@@ -24,12 +24,17 @@ void main() {
     //   columnHeight                        (column titles)
     // + gridBorderWidth                     (column-row divider)
     // + rows * (rowHeight + cellHorizontalBorderWidth)
+    // + effectiveThickness                  (horizontal scrollbar strip, which
+    //                                        is a sibling of the rows viewport
+    //                                        rather than an overlay)
     double expectedHeightFor(int rowCount) {
       const style = TrinaGridStyleConfig();
+      const scrollbar = TrinaGridScrollbarConfig();
       final inner =
           style.columnHeight +
           style.gridBorderWidth +
-          rowCount * (style.rowHeight + style.cellHorizontalBorderWidth);
+          rowCount * (style.rowHeight + style.cellHorizontalBorderWidth) +
+          (scrollbar.showHorizontal ? scrollbar.effectiveThickness : 0);
       return inner + 2 * style.gridPadding;
     }
 
@@ -130,16 +135,55 @@ void main() {
       await tester.pumpAndSettle();
 
       const style = TrinaGridStyleConfig();
+      const scrollbar = TrinaGridScrollbarConfig();
       final inner =
           style.columnHeight +
           style.gridBorderWidth +
           // two default rows + one 100px row
           2 * (style.rowHeight + style.cellHorizontalBorderWidth) +
-          (100 + style.cellHorizontalBorderWidth);
+          (100 + style.cellHorizontalBorderWidth) +
+          (scrollbar.showHorizontal ? scrollbar.effectiveThickness : 0);
       final expected = inner + 2 * style.gridPadding;
 
       final gridSize = tester.getSize(find.byType(TrinaGrid));
       expect(gridSize.height, expected);
+    });
+
+    testWidgets('leaves the rows with nothing left to scroll vertically', (
+      tester,
+    ) async {
+      // The grid used to come up short by the horizontal scrollbar strip, which
+      // left the rows scrollable by exactly that much even though `fitContent`
+      // is meant to show all of them.
+      late TrinaGridStateManager stateManager;
+
+      await TestHelperUtil.changeWidth(tester: tester, width: 800, height: 900);
+
+      final manyColumns = ColumnHelper.textColumn(
+        'column',
+        count: 10,
+        width: 200,
+      );
+      final manyRows = RowHelper.count(12, manyColumns);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Material(
+            child: SingleChildScrollView(
+              child: TrinaGrid(
+                columns: manyColumns,
+                rows: manyRows,
+                fitContent: true,
+                onLoaded: (event) => stateManager = event.stateManager,
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      expect(stateManager.scroll.bodyRowsVertical!.position.maxScrollExtent, 0);
     });
 
     testWidgets('fitContent: false (default) still expands to parent height', (

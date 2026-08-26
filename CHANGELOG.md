@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+* Feature: Added `horizontalScrollPhysics` and `verticalScrollPhysics` to `TrinaGrid`, so each scroll axis can have its own `ScrollPhysics`. Pair `verticalScrollPhysics: NeverScrollableScrollPhysics()` with `fitContent: true` to place a grid inside a scrolling page while keeping its horizontal scrolling (#270). @doonfrs
+* Fix: `scrollPhysics` now takes effect when it changes after the grid is built. `TrinaScrollBehavior` did not override `ScrollBehavior.shouldNotify`, so scrollables kept the physics they resolved on their first build. @doonfrs
+* Fix: `fitContent` now accounts for the horizontal scrollbar strip, which is a sibling of the rows viewport rather than an overlay. The grid used to come up short by that strip, leaving the rows scrollable by a few pixels. @doonfrs
+* Fix: Guard the body rows scroll listeners against positions that have clients but have not been laid out yet, which threw a null check error. @doonfrs
 * Fix: Keyboard navigation now scrolls all the way to the end of the grid, so the last row and last column are no longer left partially hidden under the scrollbars (#389). @doonfrs
 * Fix: Frozen column rows now share the same scroll extent as the body, so Ctrl+End and vertical keyboard navigation reach the last row when frozen columns are visible. @doonfrs
 
