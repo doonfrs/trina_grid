@@ -29,7 +29,7 @@ TrinaGridConfiguration(
     gridBackgroundColor: Colors.white,
     borderColor: Colors.grey[300]!,
     activatedBorderColor: Colors.blue,
-    activatedColor: Colors.blue.withOpacity(0.2),
+    activatedColor: Colors.blue.withValues(alpha: 0.2),
     inactivatedBorderColor: Colors.grey[300]!,
     
     // Cell styles
@@ -118,10 +118,10 @@ TrinaGridConfiguration(
     // Appearance settings
     thickness: 8.0,
     minThumbLength: 40.0,
-    thumbColor: Colors.blue.withOpacity(0.6),
-    trackColor: Colors.grey.withOpacity(0.2),
-    thumbHoverColor: Colors.blue.withOpacity(0.8),
-    trackHoverColor: Colors.grey.withOpacity(0.3),
+    thumbColor: Colors.blue.withValues(alpha: 0.6),
+    trackColor: Colors.grey.withValues(alpha: 0.2),
+    thumbHoverColor: Colors.blue.withValues(alpha: 0.8),
+    trackHoverColor: Colors.grey.withValues(alpha: 0.3),
     isDraggable: true,
   ),
 )
@@ -270,6 +270,38 @@ TrinaGrid(
 )
 ```
 
+### Material Theme Integration
+
+By default the grid does not follow your app theme: the defaults are compile-time
+constants, so a `const` constructor cannot read `Theme.of(context)`. Use
+`fromTheme` to derive the grid colors from your app's `ColorScheme` instead:
+
+```dart
+TrinaGrid(
+  columns: columns,
+  rows: rows,
+  configuration: TrinaGridConfiguration.fromTheme(context),
+)
+```
+
+This also follows light/dark automatically, because `ColorScheme.brightness`
+decides the grid's dark styling. Call it inside `build` so the grid tracks
+theme changes.
+
+`fromTheme` only sets `style`; chain `copyWith` for the other options, and
+`TrinaGridStyleConfig.copyWith` to override individual colors:
+
+```dart
+TrinaGridConfiguration.fromTheme(context).copyWith(
+  selectingMode: TrinaGridSelectingMode.row,
+)
+```
+
+It is entirely opt-in - `TrinaGridConfiguration()` and
+`TrinaGridConfiguration.dark()` keep the colors they have always had.
+
+See [Themes](../features/themes.md) for the full role mapping.
+
 ### Custom Theme
 
 You can create your own theme by extending the default configuration:
@@ -280,7 +312,7 @@ final myTheme = TrinaGridConfiguration(
     gridBackgroundColor: Colors.indigo[50]!,
     borderColor: Colors.indigo[300]!,
     activatedBorderColor: Colors.indigo,
-    activatedColor: Colors.indigo.withOpacity(0.2),
+    activatedColor: Colors.indigo.withValues(alpha: 0.2),
     columnTextStyle: const TextStyle(
       color: Colors.indigo[900]!,
       fontWeight: FontWeight.bold,
@@ -401,7 +433,7 @@ TrinaGrid(
       gridBackgroundColor: Colors.white,
       borderColor: Colors.grey[300]!,
       activatedBorderColor: Colors.blue,
-      activatedColor: Colors.blue.withOpacity(0.2),
+      activatedColor: Colors.blue.withValues(alpha: 0.2),
       cellTextStyle: const TextStyle(fontSize: 14),
       columnTextStyle: const TextStyle(
         fontSize: 14,
@@ -429,10 +461,10 @@ TrinaGrid(
       showTrack: true,             // Show scrollbar tracks
       thickness: 8.0,              // Scrollbar thickness
       minThumbLength: 40.0,        // Minimum thumb length
-      thumbColor: Colors.blue.withOpacity(0.6),  // Thumb color
-      trackColor: Colors.grey.withOpacity(0.2),  // Track color
-      thumbHoverColor: Colors.blue.withOpacity(0.8),
-      trackHoverColor: Colors.grey.withOpacity(0.3),
+      thumbColor: Colors.blue.withValues(alpha: 0.6),  // Thumb color
+      trackColor: Colors.grey.withValues(alpha: 0.2),  // Track color
+      thumbHoverColor: Colors.blue.withValues(alpha: 0.8),
+      trackHoverColor: Colors.grey.withValues(alpha: 0.3),
       isDraggable: true,
     ),
     
