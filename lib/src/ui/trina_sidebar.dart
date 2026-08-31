@@ -220,7 +220,7 @@ class _TrinaSidebarState extends State<TrinaSidebar> {
     return TextField(
       style: TextStyle(fontSize: 14, color: colors.foreground),
       decoration: InputDecoration(
-        hintText: 'Search for field...',
+        hintText: stateManager.localeText.sidebarSearchHint,
         hintStyle: TextStyle(color: colors.mutedForeground),
         prefixIcon: Icon(
           LucideIcons.search,
@@ -250,7 +250,7 @@ class _TrinaSidebarState extends State<TrinaSidebar> {
       child: Padding(
         padding: const EdgeInsets.all(24),
         child: Text(
-          'Select a row to view its fields.',
+          stateManager.localeText.sidebarSelectRowPrompt,
           textAlign: TextAlign.center,
           style: TextStyle(color: colors.mutedForeground),
         ),
@@ -276,7 +276,7 @@ class _TrinaSidebarState extends State<TrinaSidebar> {
         child: Padding(
           padding: const EdgeInsets.all(24),
           child: Text(
-            'No fields match "$_query".',
+            '${stateManager.localeText.sidebarNoMatchingFields} "$_query".',
             textAlign: TextAlign.center,
             style: TextStyle(color: colors.mutedForeground),
           ),
