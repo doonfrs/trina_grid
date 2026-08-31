@@ -2,10 +2,16 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:trina_grid/src/widgets/boolean_column_filter.dart';
 import 'package:trina_grid/src/widgets/multi_line_column_filter.dart';
+import 'package:trina_grid/src/widgets/multi_select_column_filter.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 import '../ui.dart';
+
+/// The widget mode the column filter renders, resolved from
+/// [TrinaColumn.filterWidgetDelegate] and the column type.
+enum _ColumnFilterMode { builder, multiItems, booleanSelect, multiSelect, text }
 
 class TrinaColumnFilter extends TrinaStatefulWidget {
   final TrinaGridStateManager stateManager;
@@ -27,6 +33,10 @@ class TrinaColumnFilterState extends TrinaStateWithChange<TrinaColumnFilter> {
 
   String _text = '';
 
+  /// Last value rendered by a dropdown filter mode, used to detect in-place
+  /// mutations of the filter rows.
+  String _dropdownFilterValue = '';
+
   bool _enabled = false;
 
   late final StreamSubscription _event;
@@ -34,6 +44,75 @@ class TrinaColumnFilterState extends TrinaStateWithChange<TrinaColumnFilter> {
   late final FocusNode _focusNode;
 
   late final TextEditingController _controller;
+
+  /// Opens the dropdown of the boolean / multi-select filter modes.
+  /// Also driven by Down / Enter / Space through [_handleOnKey].
+  final MenuController _menuController = MenuController();
+
+  _ColumnFilterMode get _filterMode {
+    final delegate = widget.column.filterWidgetDelegate;
+
+    if (delegate?.filterWidgetBuilder != null) {
+      return _ColumnFilterMode.builder;
+    }
+
+    if (delegate?.isMultiItems == true) {
+      return _ColumnFilterMode.multiItems;
+    }
+
+    if (delegate?.isBooleanSelect == true) {
+      return _ColumnFilterMode.booleanSelect;
+    }
+
+    if (delegate?.isMultiSelect == true) {
+      return _ColumnFilterMode.multiSelect;
+    }
+
+    // Any other explicitly set delegate (e.g. textField) opts out of the
+    // automatic resolution below.
+    if (delegate != null) {
+      return _ColumnFilterMode.text;
+    }
+
+    final type = widget.column.type;
+
+    if (type is TrinaColumnTypeBoolean) {
+      return _ColumnFilterMode.booleanSelect;
+    }
+
+    if (type is TrinaColumnTypeSelect && type.enableColumnFilter) {
+      return _ColumnFilterMode.multiSelect;
+    }
+
+    return _ColumnFilterMode.text;
+  }
+
+  bool get _isDropdownFilterMode {
+    final mode = _filterMode;
+
+    return mode == _ColumnFilterMode.booleanSelect ||
+        mode == _ColumnFilterMode.multiSelect;
+  }
+
+  /// The items offered by the multi-select filter: the delegate items when
+  /// provided, otherwise the values of a select column type.
+  List<String> _resolveMultiSelectItems() {
+    final delegateItems = widget.column.filterWidgetDelegate?.multiSelectItems;
+
+    if (delegateItems != null) {
+      return delegateItems;
+    }
+
+    final type = widget.column.type;
+
+    if (type is TrinaColumnTypeSelect) {
+      return type.items
+          .map((item) => (type.itemToValue?.call(item) ?? item).toString())
+          .toList();
+    }
+
+    return const <String>[];
+  }
 
   String get _filterValue {
     return _filterRows.isEmpty
@@ -120,6 +199,13 @@ class TrinaColumnFilterState extends TrinaStateWithChange<TrinaColumnFilter> {
       compare: listEquals,
     );
 
+    if (_isDropdownFilterMode) {
+      // The filter rows are mutated in place by the change-filter event, so
+      // track the raw value to detect external updates (e.g. a filter set
+      // through the filter popup or programmatically).
+      _dropdownFilterValue = update<String>(_dropdownFilterValue, _filterValue);
+    }
+
     if (_focusNode.hasPrimaryFocus != true) {
       _text = update<String>(_text, _filterValue);
 
@@ -154,6 +240,25 @@ class TrinaColumnFilterState extends TrinaStateWithChange<TrinaColumnFilter> {
 
   KeyEventResult _handleOnKey(FocusNode node, KeyEvent event) {
     var keyManager = TrinaKeyManagerEvent(focusNode: node, event: event);
+
+    // Dropdown filter modes: Down / Enter / Space toggles the dropdown
+    // instead of moving the focus into the rows.
+    if (_isDropdownFilterMode && _enabled) {
+      final isMenuTriggerKey =
+          keyManager.isDown || keyManager.isEnter || keyManager.isSpace;
+
+      if (isMenuTriggerKey) {
+        if (keyManager.isKeyUpEvent) {
+          return KeyEventResult.handled;
+        }
+
+        _menuController.isOpen
+            ? _menuController.close()
+            : _menuController.open();
+
+        return KeyEventResult.handled;
+      }
+    }
 
     // Check if column has a specific filter enter key action
     final enterKeyAction =
@@ -241,15 +346,22 @@ class TrinaColumnFilterState extends TrinaStateWithChange<TrinaColumnFilter> {
     stateManager.setKeepFocus(false);
   }
 
-  void _handleOnChanged(dynamic changed) {
+  void _handleOnChanged(
+    dynamic changed, {
+    TrinaFilterType? filterType,
+    bool immediate = false,
+  }) {
     stateManager.eventManager!.addEvent(
       TrinaGridChangeColumnFilterEvent(
         column: widget.column,
-        filterType: widget.column.defaultFilter,
+        filterType: filterType ?? widget.column.defaultFilter,
         filterValue: changed,
-        eventType: TrinaGridEventType.debounce,
-        debounceMilliseconds:
-            stateManager.configuration.columnFilter.debounceMilliseconds,
+        eventType: immediate
+            ? TrinaGridEventType.normal
+            : TrinaGridEventType.debounce,
+        debounceMilliseconds: immediate
+            ? 0
+            : stateManager.configuration.columnFilter.debounceMilliseconds,
       ),
     );
   }
@@ -310,7 +422,46 @@ class TrinaColumnFilterState extends TrinaStateWithChange<TrinaColumnFilter> {
       stateManager,
     );
 
-    if (filterDelegate?.isMultiItems == true) {
+    final mode = _filterMode;
+
+    if (mode == _ColumnFilterMode.booleanSelect) {
+      w = BooleanColumnFilter(
+        stateManager: stateManager,
+        column: widget.column,
+        focusNode: _focusNode,
+        menuController: _menuController,
+        enabled: _enabled,
+        filterValue: _filterValue,
+        allLabel: stateManager.localeText.filterAll,
+        trueLabel: stateManager.localeText.filterTrue,
+        falseLabel: stateManager.localeText.filterFalse,
+        onChanged: (value) => _handleOnChanged(
+          value,
+          filterType: const TrinaFilterTypeEquals(),
+          immediate: true,
+        ),
+      );
+    } else if (mode == _ColumnFilterMode.multiSelect) {
+      final caseSensitive = filterDelegate?.caseSensitive ?? false;
+
+      w = MultiSelectColumnFilter(
+        stateManager: stateManager,
+        column: widget.column,
+        focusNode: _focusNode,
+        menuController: _menuController,
+        enabled: _enabled,
+        filterValue: _filterValue,
+        items: _resolveMultiSelectItems(),
+        caseSensitive: caseSensitive,
+        allLabel: stateManager.localeText.filterAll,
+        selectAllLabel: stateManager.localeText.filterSelectAll,
+        onChanged: (value) => _handleOnChanged(
+          value,
+          filterType: TrinaFilterTypeMultiItems(caseSensitive: caseSensitive),
+          immediate: true,
+        ),
+      );
+    } else if (mode == _ColumnFilterMode.multiItems) {
       w = MultiLineColumnFilter(
         focusNode: _focusNode,
         controller: _controller,

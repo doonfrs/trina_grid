@@ -70,6 +70,75 @@ The filter UI consists of:
 
 Users can click on the filter icon in a column to open the filter type selector and choose the appropriate filter type for that column.
 
+## Filter Widget Modes
+
+The widget rendered in the filter row is resolved automatically from the column type:
+
+| Column type | Filter widget |
+| --- | --- |
+| `TrinaColumnTypeBoolean` | Dropdown with **ALL / True / False** |
+| `TrinaColumnTypeSelect` (with `enableColumnFilter: true`, the default) | Checkbox multi-select dropdown with a **Select all** toggle |
+| Any other type | Text field |
+
+- **Boolean dropdown**: selecting **True** / **False** keeps only the rows whose cell value is `true` / `false`. Selecting **ALL** clears the filter.
+- **Multi-select dropdown**: shows one checkbox per item (the column items, or the values produced by `itemToValue`). Every check/uncheck re-filters the grid immediately and the menu stays open; unchecking everything clears the filter. Rows match when their cell value equals any of the checked items (`TrinaFilterTypeMultiItems`).
+
+```dart
+final columns = [
+  // Text column: regular text filter.
+  TrinaColumn(title: 'Name', field: 'name', type: TrinaColumnType.text()),
+
+  // Boolean column: ALL / True / False dropdown filter.
+  TrinaColumn(
+    title: 'Is Active',
+    field: 'is_active',
+    type: TrinaColumnType.boolean(),
+  ),
+
+  // Select column: checkbox multi-select filter with the column items.
+  TrinaColumn(
+    title: 'Hobby',
+    field: 'hobby',
+    type: TrinaColumnType.select(['swimming', 'gym', 'reading']),
+  ),
+];
+```
+
+### Overriding the Automatic Resolution
+
+Use `TrinaColumn.filterWidgetDelegate` to force a mode on any column, or to opt out:
+
+```dart
+// Force the boolean dropdown on any column.
+TrinaColumn(
+  filterWidgetDelegate: const TrinaFilterColumnWidgetDelegate.booleanSelect(),
+),
+
+// Force the checkbox multi-select filter on any column.
+TrinaColumn(
+  filterWidgetDelegate: const TrinaFilterColumnWidgetDelegate.multiSelect(
+    multiSelectItems: ['swimming', 'gym', 'reading'],
+    caseSensitive: false,
+  ),
+),
+
+// Keep the plain text filter on a boolean or select column.
+TrinaColumn(
+  type: TrinaColumnType.boolean(),
+  filterWidgetDelegate: const TrinaFilterColumnWidgetDelegate.textField(),
+),
+```
+
+A select column can also opt out of the checkbox filter with the column type flag:
+
+```dart
+TrinaColumnType.select(hobbies, enableColumnFilter: false)
+```
+
+The dropdown labels (ALL, True, False, Select all) are localizable through
+`TrinaGridLocaleText.filterAll`, `filterTrue`, `filterFalse` and
+`filterSelectAll`.
+
 ## Filtering Behavior
 
 ### Column-Specific Filtering
