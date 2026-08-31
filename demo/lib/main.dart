@@ -67,6 +67,7 @@ import 'screen/feature/scrollbars.dart';
 import 'screen/feature/row_wrapper_screen.dart';
 import 'screen/feature/row_wrapper_frozen_screen.dart';
 import 'screen/feature/multiitems_delegate_demo_screen.dart';
+import 'screen/feature/column_filter_modes_screen.dart';
 import 'screen/feature/custom_footer_screen.dart';
 import 'screen/feature/dynamic_row_height_demo.dart';
 
@@ -182,6 +183,8 @@ class MyApp extends StatelessWidget {
             const RowWrapperFrozenScreen(),
         MultiItemsDelegateDemoScreen.routeName: (context) =>
             const MultiItemsDelegateDemoScreen(),
+        ColumnFilterModesScreen.routeName: (context) =>
+            const ColumnFilterModesScreen(),
         DynamicRowHeightDemo.routeName: (context) =>
             const DynamicRowHeightDemo(),
         RTLScrollbarScreen.routeName: (context) => const RTLScrollbarScreen(),

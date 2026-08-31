@@ -207,7 +207,16 @@ class TrinaColumn {
   /// Hide the column.
   bool hide;
 
-  /// The widget of the filter column, this can be customized with the multiple constructors, defaults to a [TrinaFilterColumnWidgetDelegate.initial()]
+  /// The widget of the filter column, this can be customized with the multiple constructors.
+  ///
+  /// When null, the filter widget is resolved automatically from the column type:
+  /// a [TrinaColumnTypeBoolean] column renders the ALL / True / False dropdown
+  /// filter and a [TrinaColumnTypeSelect] column (with
+  /// [TrinaColumnTypeSelect.enableColumnFilter] enabled) renders the checkbox
+  /// multi-select filter. Any other column renders the default text field.
+  ///
+  /// Set [TrinaFilterColumnWidgetDelegate.textField] explicitly to opt out of
+  /// the automatic resolution and keep the text field filter.
   TrinaFilterColumnWidgetDelegate? filterWidgetDelegate;
 
   /// Optional validator function that returns an error message string if validation fails,
@@ -331,8 +340,7 @@ class TrinaColumn {
     this.enableAutoEditing = false,
     this.enableEditingMode = true,
     this.hide = false,
-    this.filterWidgetDelegate =
-        const TrinaFilterColumnWidgetDelegate.textField(),
+    this.filterWidgetDelegate,
     this.disableRowCheckboxWhen,
     this.validator,
     this.editCellRenderer,
@@ -491,7 +499,10 @@ class TrinaFilterColumnWidgetDelegate {
     this.keyboardType,
   }) : filterWidgetBuilder = null,
        caseSensitive = null,
-       isMultiItems = false;
+       multiSelectItems = null,
+       isMultiItems = false,
+       isBooleanSelect = false,
+       isMultiSelect = false;
 
   const TrinaFilterColumnWidgetDelegate.builder({this.filterWidgetBuilder})
     : filterSuffixIcon = null,
@@ -502,7 +513,10 @@ class TrinaFilterColumnWidgetDelegate {
       onClear = null,
       keyboardType = null,
       caseSensitive = null,
-      isMultiItems = false;
+      multiSelectItems = null,
+      isMultiItems = false,
+      isBooleanSelect = false,
+      isMultiSelect = false;
 
   const TrinaFilterColumnWidgetDelegate.multiItems({this.caseSensitive = true})
     : filterSuffixIcon = null,
@@ -513,7 +527,55 @@ class TrinaFilterColumnWidgetDelegate {
       clearIcon = const Icon(Icons.clear),
       onClear = null,
       keyboardType = null,
-      isMultiItems = true;
+      multiSelectItems = null,
+      isMultiItems = true,
+      isBooleanSelect = false,
+      isMultiSelect = false;
+
+  /// Renders the boolean filter dropdown (ALL / True / False) instead of the
+  /// text field.
+  ///
+  /// Selecting ALL clears the filter. True and False filter the rows whose
+  /// cell value is strictly `true` or `false`.
+  const TrinaFilterColumnWidgetDelegate.booleanSelect()
+    : filterSuffixIcon = null,
+      onFilterSuffixTap = null,
+      filterHintText = null,
+      filterHintTextColor = null,
+      filterWidgetBuilder = null,
+      clearIcon = const Icon(Icons.clear),
+      onClear = null,
+      keyboardType = null,
+      caseSensitive = null,
+      multiSelectItems = null,
+      isMultiItems = false,
+      isBooleanSelect = true,
+      isMultiSelect = false;
+
+  /// Renders the multi-select checkbox dropdown instead of the text field.
+  ///
+  /// The filter matches rows whose cell value equals any of the checked
+  /// items. Checking nothing (or unchecking everything) clears the filter.
+  ///
+  /// [multiSelectItems] is the list of selectable items. When null, the items
+  /// are derived from a [TrinaColumnTypeSelect] column type.
+  ///
+  /// [caseSensitive] controls whether item comparison with cell values is
+  /// case sensitive. Defaults to false.
+  const TrinaFilterColumnWidgetDelegate.multiSelect({
+    this.multiSelectItems,
+    this.caseSensitive = false,
+  }) : filterSuffixIcon = null,
+       onFilterSuffixTap = null,
+       filterHintText = null,
+       filterHintTextColor = null,
+       filterWidgetBuilder = null,
+       clearIcon = const Icon(Icons.clear),
+       onClear = null,
+       keyboardType = null,
+       isMultiItems = false,
+       isBooleanSelect = false,
+       isMultiSelect = true;
 
   ///Set hint text for filter field
   final String? filterHintText;
@@ -550,6 +612,19 @@ class TrinaFilterColumnWidgetDelegate {
   filterWidgetBuilder;
 
   final bool? isMultiItems;
+
+  /// Whether this delegate renders the boolean (ALL / True / False)
+  /// dropdown filter.
+  final bool isBooleanSelect;
+
+  /// Whether this delegate renders the multi-select checkbox dropdown filter.
+  final bool isMultiSelect;
+
+  /// The items offered by the multi-select checkbox dropdown filter.
+  ///
+  /// When null, the items are derived from the column's
+  /// [TrinaColumnTypeSelect] items.
+  final List<String>? multiSelectItems;
 
   final bool? caseSensitive;
 

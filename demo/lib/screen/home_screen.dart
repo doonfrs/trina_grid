@@ -74,6 +74,7 @@ import 'feature/date_time_column_screen.dart';
 import 'feature/row_wrapper_screen.dart';
 import 'feature/row_wrapper_frozen_screen.dart';
 import 'feature/multiitems_delegate_demo_screen.dart';
+import 'feature/column_filter_modes_screen.dart';
 import 'feature/custom_footer_screen.dart';
 import 'feature/dynamic_row_height_demo.dart';
 
@@ -728,6 +729,14 @@ class _TrinaFeaturesState extends State<TrinaFeatures> {
             'Demonstrates the use of TrinaFilterColumnWidgetDelegate.multiItems for multi-line or multi-item column filtering.',
         onTapLiveDemo: () {
           Navigator.pushNamed(context, MultiItemsDelegateDemoScreen.routeName);
+        },
+      ),
+      TrinaListTile(
+        title: 'Column Filter Modes',
+        description:
+            'Boolean columns filter with an ALL / True / False dropdown and select columns with a checkbox multi-select dropdown.',
+        onTapLiveDemo: () {
+          Navigator.pushNamed(context, ColumnFilterModesScreen.routeName);
         },
       ),
       TrinaListTile(

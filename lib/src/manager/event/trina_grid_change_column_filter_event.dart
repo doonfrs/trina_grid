@@ -40,8 +40,15 @@ class TrinaGridChangeColumnFilterEvent extends TrinaGridEvent {
       ];
     }
 
+    // Update both the value and the type of the existing filter row.
+    // The type must be refreshed as well, otherwise a row previously created
+    // with a different type (e.g. Contains via the filter popup or a
+    // programmatic setColumnFilter call) would keep comparing with the old
+    // semantics.
     foundFilterRows.first.cells[FilterHelper.filterFieldValue]!.value =
         filterValue;
+    foundFilterRows.first.cells[FilterHelper.filterFieldType]!.value =
+        filterType;
 
     return stateManager.filterRows;
   }

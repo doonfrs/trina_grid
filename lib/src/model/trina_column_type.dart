@@ -127,7 +127,8 @@ abstract interface class TrinaColumnType {
   ///
   /// - [items]: The list of values to display in the popup menu.
   /// - [onItemSelected]: A callback invoked when an item is selected.
-  /// - [enableColumnFilter]: Whether to enable the default column filter UI.
+  /// - [enableColumnFilter]: Whether the column filter row uses the built-in
+  ///   checkbox multi-select filter for this column. Defaults to true.
   /// - [popupIcon]: The icon used to open the selection menu.
   ///
   /// ### Popup Menu Properties
@@ -152,7 +153,7 @@ abstract interface class TrinaColumnType {
     List<T> items, {
     void Function(T item)? onItemSelected,
     T? defaultValue,
-    bool enableColumnFilter = false,
+    bool enableColumnFilter = true,
     IconData? popupIcon = Icons.arrow_drop_down,
     double? menuWidth,
     double menuItemHeight = 40,
@@ -183,7 +184,8 @@ abstract interface class TrinaColumnType {
   /// - [itemToString]: **Required.** A function to convert an item to its string
   ///   representation for searching.
   /// - [onItemSelected]: A callback invoked when an item is selected.
-  /// - [enableColumnFilter]: Whether to enable the default column filter UI.
+  /// - [enableColumnFilter]: Whether the column filter row uses the built-in
+  ///   checkbox multi-select filter for this column. Defaults to true.
   /// - [popupIcon]: The icon used to open the selection menu.
   ///
   /// ### Popup Menu Properties
@@ -208,7 +210,7 @@ abstract interface class TrinaColumnType {
     List<T> items, {
     required String Function(T item) itemToString,
     T? defaultValue,
-    bool enableColumnFilter = false,
+    bool enableColumnFilter = true,
     IconData? popupIcon = Icons.arrow_drop_down,
     ItemBuilder<T>? menuItemBuilder,
     double? menuWidth,
@@ -239,7 +241,8 @@ abstract interface class TrinaColumnType {
   ///
   /// - [items]: The list of values to display in the popup menu.
   /// - [onItemSelected]: A callback invoked when an item is selected.
-  /// - [enableColumnFilter]: Whether to enable the default column filter UI.
+  /// - [enableColumnFilter]: Whether the column filter row uses the built-in
+  ///   checkbox multi-select filter for this column. Defaults to true.
   /// - [popupIcon]: The icon used to open the selection menu.
   ///
   /// ### Popup Menu Properties
@@ -267,7 +270,7 @@ abstract interface class TrinaColumnType {
     List<T> items, {
     required List<TrinaDropdownMenuFilter> menuFilters,
     T? defaultValue,
-    bool enableColumnFilter = false,
+    bool enableColumnFilter = true,
     IconData? popupIcon = Icons.arrow_drop_down,
     ItemBuilder<T>? menuItemBuilder,
     WidgetBuilder? menuEmptyFilterResultBuilder,
