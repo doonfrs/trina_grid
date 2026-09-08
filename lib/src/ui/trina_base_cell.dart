@@ -1,6 +1,7 @@
 import 'ui.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:trina_grid/trina_grid.dart';
 import 'package:trina_grid/src/helper/platform_helper.dart';
 import 'package:trina_grid/src/helper/trina_double_tap_detector.dart';
@@ -392,6 +393,10 @@ class _CellContainer extends TrinaStatefulWidget {
 class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
   BoxDecoration _decoration = const BoxDecoration();
 
+  Border _activatedBorder = const Border();
+
+  double _activatedBorderEndInset = 0;
+
   // Cache for checkReadOnly callback result
   bool? _cachedReadOnly;
   dynamic _cachedCellValueForReadOnly;
@@ -436,6 +441,12 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
 
     final isCurrentCell = stateManager.isCurrentCell(widget.cell);
 
+    final isSelectedCell = stateManager.isSelectedCell(
+      widget.cell,
+      widget.column,
+      widget.rowIdx,
+    );
+
     _decoration = update(
       _decoration,
       _boxDecoration(
@@ -443,19 +454,13 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
         readOnly: _getReadOnly(),
         isEditing: stateManager.isEditing,
         isCurrentCell: isCurrentCell,
-        isSelectedCell: stateManager.isSelectedCell(
-          widget.cell,
-          widget.column,
-          widget.rowIdx,
-        ),
+        isSelectedCell: isSelectedCell,
         isGroupedRowCell:
             stateManager.enabledRowGroups &&
             stateManager.rowGroupDelegate!.isExpandableCell(widget.cell),
         enableCellVerticalBorder: style.enableCellBorderVertical,
         borderColor: style.borderColor,
-        activatedBorderColor: style.activatedBorderColor,
         activatedColor: style.activatedColor,
-        inactivatedBorderColor: style.inactivatedBorderColor,
         gridBackgroundColor: style.gridBackgroundColor,
         unfocusedSelectionColor: style.unfocusedSelectionColor,
         cellColorInEditState: style.cellColorInEditState,
@@ -465,6 +470,25 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
         cellReadonlyColor: style.cellReadonlyColor,
         cellDefaultColor: style.cellDefaultColor,
       ),
+    );
+
+    // update treats a null old value as changed, including null -> null.
+    // An empty border keeps unselected cells out of the rebuild path.
+    _activatedBorder = update(
+      _activatedBorder,
+      isCurrentCell || isSelectedCell
+          ? Border.all(
+              color: stateManager.hasFocus
+                  ? style.activatedBorderColor
+                  : style.inactivatedBorderColor,
+              width: 1,
+            )
+          : const Border(),
+    );
+
+    _activatedBorderEndInset = update(
+      _activatedBorderEndInset,
+      style.enableCellBorderVertical ? style.cellVerticalBorderWidth : 0,
     );
   }
 
@@ -515,9 +539,7 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
     required bool isGroupedRowCell,
     required bool enableCellVerticalBorder,
     required Color borderColor,
-    required Color activatedBorderColor,
     required Color activatedColor,
-    required Color inactivatedBorderColor,
     required Color gridBackgroundColor,
     Color? unfocusedSelectionColor,
     required Color cellColorInEditState,
@@ -530,6 +552,17 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
     // Check if the cell has uncommitted changes (is dirty)
     final bool isDirty = widget.cell.isDirty;
     final Color dirtyColor = stateManager.configuration.style.cellDirtyColor;
+
+    // Paint the activated border over the contents, inset from this border.
+    final BoxBorder? cellBorder =
+        (isCurrentCell || isSelectedCell) && enableCellVerticalBorder
+        ? BorderDirectional(
+            end: BorderSide(
+              color: borderColor,
+              width: stateManager.style.cellVerticalBorderWidth,
+            ),
+          )
+        : null;
 
     if (isCurrentCell) {
       return BoxDecoration(
@@ -546,10 +579,7 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
                 cellColorInEditState: cellColorInEditState,
                 selectingMode: selectingMode,
               ),
-        border: Border.all(
-          color: hasFocus ? activatedBorderColor : inactivatedBorderColor,
-          width: 1,
-        ),
+        border: cellBorder,
       );
     } else if (isSelectedCell) {
       return BoxDecoration(
@@ -558,10 +588,7 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
             : (hasFocus
                   ? activatedColor
                   : (unfocusedSelectionColor ?? activatedColor)),
-        border: Border.all(
-          color: hasFocus ? activatedBorderColor : inactivatedBorderColor,
-          width: 1,
-        ),
+        border: cellBorder,
       );
     } else {
       // Get color from cell callback if available, otherwise fall back to default colors
@@ -605,8 +632,93 @@ class _CellContainerState extends TrinaStateWithChange<_CellContainer> {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: _decoration,
-      child: Padding(padding: widget.cellPadding, child: widget.child),
+      child: _CellContent(
+        padding: widget.cellPadding,
+        activatedBorder: _activatedBorder,
+        endInset: _activatedBorderEndInset,
+        child: widget.child,
+      ),
     );
+  }
+}
+
+// Extend the existing padding render object so selection only changes paint.
+// Adding/removing a wrapper would remount the cell's contents; keeping an
+// overlay wrapper on every cell would add unnecessary layout work.
+class _CellContent extends SingleChildRenderObjectWidget {
+  final EdgeInsets padding;
+  final Border activatedBorder;
+  final double endInset;
+
+  const _CellContent({
+    required this.padding,
+    required this.activatedBorder,
+    required this.endInset,
+    required super.child,
+  });
+
+  @override
+  _RenderCellContent createRenderObject(BuildContext context) {
+    return _RenderCellContent(
+      padding: padding,
+      activatedBorder: activatedBorder,
+      endInset: endInset,
+      textDirection: Directionality.of(context),
+    );
+  }
+
+  @override
+  void updateRenderObject(
+    BuildContext context,
+    _RenderCellContent renderObject,
+  ) {
+    renderObject
+      ..padding = padding
+      ..textDirection = Directionality.of(context)
+      ..activatedBorder = activatedBorder
+      ..endInset = endInset;
+  }
+}
+
+class _RenderCellContent extends RenderPadding {
+  _RenderCellContent({
+    required super.padding,
+    required super.textDirection,
+    required Border activatedBorder,
+    required double endInset,
+  }) : _activatedBorder = activatedBorder,
+       _endInset = endInset;
+
+  Border _activatedBorder;
+
+  set activatedBorder(Border value) {
+    if (_activatedBorder == value) return;
+    _activatedBorder = value;
+    markNeedsPaint();
+  }
+
+  double _endInset;
+
+  set endInset(double value) {
+    if (_endInset == value) return;
+    _endInset = value;
+    markNeedsPaint();
+  }
+
+  @override
+  void paint(PaintingContext context, Offset offset) {
+    super.paint(context, offset);
+
+    if (_activatedBorder == const Border()) return;
+
+    final inset = _endInset.clamp(0.0, size.width);
+    final rect = Rect.fromLTWH(
+      offset.dx + (textDirection == TextDirection.rtl ? inset : 0),
+      offset.dy,
+      size.width - inset,
+      size.height,
+    );
+    _activatedBorder.paint(context.canvas, rect, textDirection: textDirection);
   }
 }
 
