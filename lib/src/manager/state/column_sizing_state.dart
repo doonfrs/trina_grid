@@ -110,7 +110,11 @@ mixin ColumnSizingState implements ITrinaGridState {
       items: columns,
       isSuppressed: (e) => e.suppressedAutoSize,
       getItemSize: (e) => e.width,
-      getItemMinSize: (e) => minFitContentWidth ?? e.minWidth,
+      // A column with a renderer draws something the measuring cannot see, so
+      // it keeps its own minWidth as the floor: that is the width its author
+      // declared it needs. Only measurable columns get the override.
+      getItemMinSize: (e) =>
+          e.renderer == null ? (minFitContentWidth ?? e.minWidth) : e.minWidth,
       setItemSize: (e, size) => e.width = size,
       mode: columnsAutoSizeMode,
       getItemPreferredSize: isFitContent ? _measureContentWidth : null,
@@ -126,7 +130,8 @@ mixin ColumnSizingState implements ITrinaGridState {
   ///
   /// Only the loaded rows are measured, so on a paginated grid this is the
   /// current page. Widths from a [TrinaColumn.renderer] are not measured, the
-  /// same limitation [autoFitColumn] has.
+  /// same limitation [autoFitColumn] has, which is why such a column keeps its
+  /// own [TrinaColumn.minWidth] as its floor rather than the configured one.
   double _measureContentWidth(TrinaColumn column) {
     final titleWidth = _textWidth(column.title, style.columnTextStyle);
     final valueWidth = _widestValueWidth(column);

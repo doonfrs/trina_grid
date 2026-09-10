@@ -76,9 +76,15 @@ filter placeholder and buttons rather than being squeezed down to the values
 above them. Toggling the filter row with `setShowColumnFilter` re-runs the fit.
 
 Only the loaded rows are measured, so on a paginated grid this is the current
-page. Widths produced by a `TrinaColumn.renderer` are not measured, the same
-limitation `autoFitColumn` has, so a column whose cell is a custom widget is
-fitted to its text.
+page.
+
+Widths produced by a `TrinaColumn.renderer` cannot be measured, the same
+limitation `autoFitColumn` has. Such a column therefore keeps its own
+`minWidth` as its floor and ignores `minFitContentWidth`, on the grounds that
+the declared minimum is the best statement available of how much room the
+renderer needs. This matters when a renderer draws something derived from the
+cell rather than the cell itself, for example a code column that paints the
+code plus a looked-up name: the measuring only sees the code.
 
 Columns with `suppressedAutoSize: true` keep their explicit width and take no
 part in the sharing.

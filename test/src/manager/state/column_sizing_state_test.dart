@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:trina_grid/trina_grid.dart';
 
@@ -180,6 +181,36 @@ void main() {
           .update();
 
       expect(columns[0].width + columns[1].width, closeTo(2000, 0.01));
+    });
+
+    test('When a column has a renderer, minFitContentWidth should not apply '
+        'and its own minWidth should be the floor', () {
+      // The renderer can draw anything, and the measuring only sees the cell
+      // value, so shrinking such a column below the width its author declared
+      // clips whatever the renderer paints.
+      final columns = _wideMinWidthColumns();
+      columns[0].renderer = (context) => const SizedBox();
+
+      final stateManager = TrinaGridStateManager(
+        columns: columns,
+        rows: [],
+        gridFocusNode: MockFocusNode(),
+        scroll: MockTrinaGridScrollController(),
+        configuration: const TrinaGridConfiguration(
+          columnSize: TrinaGridColumnSizeConfig(
+            autoSizeMode: TrinaAutoSizeMode.fitContent,
+            minFitContentWidth: 30,
+          ),
+        ),
+      );
+
+      stateManager
+          .getColumnsAutoSizeHelper(columns: columns, maxWidth: 100)
+          .update();
+
+      expect(columns[0].width, 400);
+      // The column without a renderer is still measured and fitted.
+      expect(columns[1].width, lessThan(400));
     });
 
     test('When fitContent sizes columns and minFitContentWidth is not set, '
