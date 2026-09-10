@@ -4,6 +4,20 @@ import 'package:trina_grid/trina_grid.dart';
 import '../../../helper/column_helper.dart';
 import '../../../mock/shared_mocks.mocks.dart';
 
+/// Columns whose minWidth is far wider than their titles need, the shape that
+/// makes minFitContentWidth matter.
+List<TrinaColumn> _wideMinWidthColumns() {
+  return Iterable<int>.generate(2).map((e) {
+    return TrinaColumn(
+      title: 'title$e',
+      field: 'title$e',
+      width: 400,
+      minWidth: 400,
+      type: TrinaColumnType.text(),
+    );
+  }).toList();
+}
+
 void main() {
   group('getColumnsAutoSizeHelper', () {
     test('When columns is empty, assertion should be thrown', () {
@@ -88,6 +102,108 @@ void main() {
       );
 
       expect(helper, isA<TrinaAutoSize>());
+    });
+
+    test('When TrinaAutoSizeMode is fitContent, should return '
+        'TrinaAutoSizeFitContent', () {
+      final columns = ColumnHelper.textColumn('title', count: 5);
+
+      final stateManager = TrinaGridStateManager(
+        columns: columns,
+        rows: [],
+        gridFocusNode: MockFocusNode(),
+        scroll: MockTrinaGridScrollController(),
+        configuration: const TrinaGridConfiguration(
+          columnSize: TrinaGridColumnSizeConfig(
+            autoSizeMode: TrinaAutoSizeMode.fitContent,
+          ),
+        ),
+      );
+
+      final helper = stateManager.getColumnsAutoSizeHelper(
+        columns: columns,
+        maxWidth: 500,
+      );
+
+      expect(helper, isA<TrinaAutoSizeFitContent>());
+    });
+
+    test('When fitContent sizes columns, a column should shrink to its content '
+        'even though minWidth is far wider', () {
+      // minWidth doubles as the drag limit and is often set well above the
+      // width the content needs, so minFitContentWidth overrides it.
+      final columns = _wideMinWidthColumns();
+
+      final stateManager = TrinaGridStateManager(
+        columns: columns,
+        rows: [],
+        gridFocusNode: MockFocusNode(),
+        scroll: MockTrinaGridScrollController(),
+        configuration: const TrinaGridConfiguration(
+          columnSize: TrinaGridColumnSizeConfig(
+            autoSizeMode: TrinaAutoSizeMode.fitContent,
+            minFitContentWidth: 30,
+          ),
+        ),
+      );
+
+      // A tight width, so there is nothing left over to share and the fitted
+      // width is what lands on the column.
+      stateManager
+          .getColumnsAutoSizeHelper(columns: columns, maxWidth: 100)
+          .update();
+
+      // No rows, so only the titles are measured, and those need far less than
+      // the 400 minWidth would have allowed.
+      expect(columns[0].width, lessThan(400));
+      expect(columns[1].width, lessThan(400));
+    });
+
+    test('When fitContent leaves width over, the columns should fill it', () {
+      final columns = _wideMinWidthColumns();
+
+      final stateManager = TrinaGridStateManager(
+        columns: columns,
+        rows: [],
+        gridFocusNode: MockFocusNode(),
+        scroll: MockTrinaGridScrollController(),
+        configuration: const TrinaGridConfiguration(
+          columnSize: TrinaGridColumnSizeConfig(
+            autoSizeMode: TrinaAutoSizeMode.fitContent,
+            minFitContentWidth: 30,
+          ),
+        ),
+      );
+
+      stateManager
+          .getColumnsAutoSizeHelper(columns: columns, maxWidth: 2000)
+          .update();
+
+      expect(columns[0].width + columns[1].width, closeTo(2000, 0.01));
+    });
+
+    test('When fitContent sizes columns and minFitContentWidth is not set, '
+        'minWidth should still be the floor', () {
+      final columns = _wideMinWidthColumns();
+
+      final stateManager = TrinaGridStateManager(
+        columns: columns,
+        rows: [],
+        gridFocusNode: MockFocusNode(),
+        scroll: MockTrinaGridScrollController(),
+        configuration: const TrinaGridConfiguration(
+          columnSize: TrinaGridColumnSizeConfig(
+            autoSizeMode: TrinaAutoSizeMode.fitContent,
+          ),
+        ),
+      );
+
+      stateManager
+          .getColumnsAutoSizeHelper(columns: columns, maxWidth: 800)
+          .update();
+
+      expect(columns[0].width, 400);
+      expect(columns[1].width, 400);
     });
   });
 

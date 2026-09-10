@@ -159,6 +159,10 @@ TrinaGridConfiguration(
 )
 ```
 
+To size columns to the values they hold rather than stretching them, use
+`TrinaAutoSizeMode.fitContent`. See
+[Column Resizing](../features/column-resizing.md) for its options.
+
 ## Behavior Configuration
 
 ### Selection Mode

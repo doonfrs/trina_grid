@@ -156,6 +156,10 @@ class _HeaderState extends State<_Header> {
     _setAutoSize(TrinaAutoSizeMode.scale);
   }
 
+  void _handleAutoSizeFitContent() {
+    _setAutoSize(TrinaAutoSizeMode.fitContent);
+  }
+
   void _handleResizeNone() {
     _setResizeMode(TrinaResizeMode.none);
   }
@@ -204,6 +208,15 @@ class _HeaderState extends State<_Header> {
               ),
               onPressed: _handleAutoSizeScale,
               child: const Text('AutoSize scale'),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: columnSizeConfig.autoSizeMode.isFitContent
+                    ? Colors.blue
+                    : Colors.grey,
+              ),
+              onPressed: _handleAutoSizeFitContent,
+              child: const Text('AutoSize fit content'),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(

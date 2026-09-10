@@ -1661,10 +1661,42 @@ class TrinaGridColumnSizeConfig {
     this.restoreAutoSizeAfterMoveColumn = true,
     this.restoreAutoSizeAfterInsertColumn = true,
     this.restoreAutoSizeAfterRemoveColumn = true,
+    this.minFitContentWidth,
+    this.maxFitContentWidth,
+    this.refitOnRowsChanged = true,
   });
 
   /// Automatically change the column width.
   final TrinaAutoSizeMode autoSizeMode;
+
+  /// The floor [TrinaAutoSizeMode.fitContent] clamps a fitted column to.
+  ///
+  /// When null the column's own [TrinaColumn.minWidth] is used. Set this when
+  /// `minWidth` is generous enough to swallow the fit: `minWidth` doubles as the
+  /// limit for dragging a column, so it is often set well above the width the
+  /// content actually needs, which would leave every column at that floor.
+  ///
+  /// Ignored by every other [TrinaAutoSizeMode].
+  final double? minFitContentWidth;
+
+  /// The ceiling [TrinaAutoSizeMode.fitContent] clamps a fitted column to.
+  ///
+  /// Null leaves fitted widths uncapped, so a single long value can push the
+  /// other columns off screen.
+  ///
+  /// Ignored by every other [TrinaAutoSizeMode].
+  final double? maxFitContentWidth;
+
+  /// Whether [TrinaAutoSizeMode.fitContent] measures again when the rows are
+  /// replaced, so paging through a grid refits to the page on screen.
+  ///
+  /// Only rows being inserted or removed count. Rows appended or prepended to
+  /// the existing list, as infinite scroll does, never trigger a refit: that
+  /// would re-measure on every batch and shift the columns while the user is
+  /// reading them.
+  ///
+  /// Ignored by every other [TrinaAutoSizeMode].
+  final bool refitOnRowsChanged;
 
   /// This is the condition for changing the width of the column.
   final TrinaResizeMode resizeMode;
@@ -1702,6 +1734,9 @@ class TrinaGridColumnSizeConfig {
     bool? restoreAutoSizeAfterMoveColumn,
     bool? restoreAutoSizeAfterInsertColumn,
     bool? restoreAutoSizeAfterRemoveColumn,
+    double? minFitContentWidth,
+    double? maxFitContentWidth,
+    bool? refitOnRowsChanged,
   }) {
     return TrinaGridColumnSizeConfig(
       autoSizeMode: autoSizeMode ?? this.autoSizeMode,
@@ -1719,6 +1754,9 @@ class TrinaGridColumnSizeConfig {
       restoreAutoSizeAfterRemoveColumn:
           restoreAutoSizeAfterRemoveColumn ??
           this.restoreAutoSizeAfterRemoveColumn,
+      minFitContentWidth: minFitContentWidth ?? this.minFitContentWidth,
+      maxFitContentWidth: maxFitContentWidth ?? this.maxFitContentWidth,
+      refitOnRowsChanged: refitOnRowsChanged ?? this.refitOnRowsChanged,
     );
   }
 
@@ -1738,7 +1776,10 @@ class TrinaGridColumnSizeConfig {
             restoreAutoSizeAfterInsertColumn ==
                 other.restoreAutoSizeAfterInsertColumn &&
             restoreAutoSizeAfterRemoveColumn ==
-                other.restoreAutoSizeAfterRemoveColumn;
+                other.restoreAutoSizeAfterRemoveColumn &&
+            minFitContentWidth == other.minFitContentWidth &&
+            maxFitContentWidth == other.maxFitContentWidth &&
+            refitOnRowsChanged == other.refitOnRowsChanged;
   }
 
   @override
@@ -1750,6 +1791,9 @@ class TrinaGridColumnSizeConfig {
     restoreAutoSizeAfterMoveColumn,
     restoreAutoSizeAfterInsertColumn,
     restoreAutoSizeAfterRemoveColumn,
+    minFitContentWidth,
+    maxFitContentWidth,
+    refitOnRowsChanged,
   );
 }
 

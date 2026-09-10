@@ -264,6 +264,8 @@ mixin RowState implements ITrinaGridState {
       );
     }
 
+    _refitColumnsToContent();
+
     notifyListeners(notify, insertRows.hashCode);
   }
 
@@ -372,7 +374,27 @@ mixin RowState implements ITrinaGridState {
 
     currentSelectingRows.removeWhere((row) => removeKeys.contains(row.key));
 
+    _refitColumnsToContent();
+
     notifyListeners(notify, removeRows.hashCode);
+  }
+
+  /// Re-runs [TrinaAutoSizeMode.fitContent] against the rows now loaded, so
+  /// paging a grid sizes its columns to the page on screen.
+  ///
+  /// Deliberately not called from appendRows/prependRows: infinite scroll adds
+  /// rows continuously, and re-measuring on every batch would shift the columns
+  /// under the user as they scroll.
+  void _refitColumnsToContent() {
+    if (!columnsAutoSizeMode.isFitContent) return;
+    if (!configuration.columnSize.refitOnRowsChanged) return;
+    // Before the first layout there is no width to fit into; the pass that runs
+    // on that first layout covers it.
+    if (maxWidth == null) return;
+    if (refColumns.isEmpty) return;
+
+    activateColumnsAutoSize();
+    updateVisibilityLayout();
   }
 
   @override

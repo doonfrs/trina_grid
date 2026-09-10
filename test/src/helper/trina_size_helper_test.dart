@@ -7,6 +7,7 @@ class _ResizeItem {
     required this.size,
     required this.minSize,
     this.suppressed = false,
+    this.preferred = 0,
   });
 
   final int index;
@@ -16,6 +17,9 @@ class _ResizeItem {
   final double minSize;
 
   final bool suppressed;
+
+  /// The width the item's content wants, used by TrinaAutoSizeMode.fitContent.
+  final double preferred;
 }
 
 void main() {
@@ -206,6 +210,180 @@ void main() {
         expect(items[2].size, 130 * scale);
         expect(items[3].size, 140);
         expect(items[4].size, 150);
+      });
+    });
+
+    group('TrinaAutoSizeMode.fitContent.', () {
+      const mode = TrinaAutoSizeMode.fitContent;
+
+      TrinaAutoSize helper({
+        required double maxSize,
+        required List<_ResizeItem> items,
+        double? maxItemSize,
+      }) {
+        return TrinaAutoSizeHelper.items<_ResizeItem>(
+          maxSize: maxSize,
+          items: items,
+          isSuppressed: (i) => i.suppressed,
+          getItemSize: (i) => i.size,
+          getItemMinSize: (i) => i.minSize,
+          setItemSize: (i, size) => i.size = size,
+          mode: mode,
+          getItemPreferredSize: (i) => i.preferred,
+          getItemMaxSize: maxItemSize == null ? null : (i) => maxItemSize,
+        );
+      }
+
+      test('When the content fits exactly, each item should take its content '
+          'width.', () {
+        final items = [
+          _ResizeItem(index: 0, size: 200, minSize: 10, preferred: 100),
+          _ResizeItem(index: 1, size: 200, minSize: 10, preferred: 150),
+          _ResizeItem(index: 2, size: 200, minSize: 10, preferred: 250),
+        ];
+
+        helper(maxSize: 500, items: items).update();
+
+        expect(items[0].size, 100);
+        expect(items[1].size, 150);
+        expect(items[2].size, 250);
+      });
+
+      test(
+        'An item narrower than its minimum should be held at the minimum.',
+        () {
+          final items = [
+            _ResizeItem(index: 0, size: 200, minSize: 80, preferred: 20),
+            _ResizeItem(index: 1, size: 200, minSize: 10, preferred: 420),
+          ];
+
+          helper(maxSize: 500, items: items).update();
+
+          expect(items[0].size, 80);
+          expect(items[1].size, 420);
+        },
+      );
+
+      test('An item wider than the maximum should be capped.', () {
+        final items = [
+          _ResizeItem(index: 0, size: 200, minSize: 10, preferred: 1000),
+          _ResizeItem(index: 1, size: 200, minSize: 10, preferred: 100),
+        ];
+
+        // maxSize equals the capped total, so no width is left to share.
+        helper(maxSize: 400, items: items, maxItemSize: 300).update();
+
+        expect(items[0].size, 300);
+        expect(items[1].size, 100);
+      });
+
+      test(
+        'The maximum should bound the content fit, not the share of leftover '
+        'width.',
+        () {
+          final items = [
+            _ResizeItem(index: 0, size: 0, minSize: 10, preferred: 1000),
+          ];
+
+          // Capped to 300, then given the remaining 700 because nothing else
+          // wants it. Holding it at 300 would leave the grid short of its own
+          // width for no benefit.
+          helper(maxSize: 1000, items: items, maxItemSize: 300).update();
+
+          expect(items[0].size, 1000);
+        },
+      );
+
+      test('A minimum above the maximum should win, so nothing inverts.', () {
+        final items = [
+          _ResizeItem(index: 0, size: 200, minSize: 400, preferred: 50),
+        ];
+
+        helper(maxSize: 400, items: items, maxItemSize: 300).update();
+
+        expect(items[0].size, 400);
+      });
+
+      test('Leftover width should be shared in proportion to content.', () {
+        final items = [
+          _ResizeItem(index: 0, size: 0, minSize: 10, preferred: 100),
+          _ResizeItem(index: 1, size: 0, minSize: 10, preferred: 300),
+        ];
+
+        // 400 of content, 400 left over, shared 1:3.
+        helper(maxSize: 800, items: items).update();
+
+        expect(items[0].size, 200);
+        expect(items[1].size, 600);
+        expect(items[0].size + items[1].size, 800);
+      });
+
+      test('When the content overflows, items should keep their content width '
+          'rather than shrink.', () {
+        final items = [
+          _ResizeItem(index: 0, size: 0, minSize: 10, preferred: 400),
+          _ResizeItem(index: 1, size: 0, minSize: 10, preferred: 500),
+        ];
+
+        // This is the case scale collapses onto the minimum.
+        helper(maxSize: 300, items: items).update();
+
+        expect(items[0].size, 400);
+        expect(items[1].size, 500);
+      });
+
+      test(
+        'A suppressed item should keep its size and be excluded from sharing.',
+        () {
+          final items = [
+            _ResizeItem(
+              index: 0,
+              size: 200,
+              minSize: 10,
+              preferred: 50,
+              suppressed: true,
+            ),
+            _ResizeItem(index: 1, size: 0, minSize: 10, preferred: 100),
+            _ResizeItem(index: 2, size: 0, minSize: 10, preferred: 300),
+          ];
+
+          // 200 suppressed + 400 content = 600, leaving 400 shared 1:3.
+          helper(maxSize: 1000, items: items).update();
+
+          expect(items[0].size, 200);
+          expect(items[1].size, 200);
+          expect(items[2].size, 600);
+        },
+      );
+
+      test('All items suppressed should leave every size untouched.', () {
+        final items = [
+          _ResizeItem(
+            index: 0,
+            size: 120,
+            minSize: 10,
+            preferred: 50,
+            suppressed: true,
+          ),
+        ];
+
+        helper(maxSize: 1000, items: items).update();
+
+        expect(items[0].size, 120);
+      });
+
+      test('Omitting getItemPreferredSize should throw.', () {
+        expect(() {
+          TrinaAutoSizeHelper.items<_ResizeItem>(
+            maxSize: 100,
+            items: [_ResizeItem(index: 0, size: 10, minSize: 10)],
+            isSuppressed: (i) => i.suppressed,
+            getItemSize: (i) => i.size,
+            getItemMinSize: (i) => i.minSize,
+            setItemSize: (i, size) => i.size = size,
+            mode: mode,
+          );
+        }, throwsAssertionError);
       });
     });
   });

@@ -43,6 +43,46 @@ All columns are sized equally, regardless of their content.
 
 Columns are sized proportionally based on their current widths.
 
+### 4. Fit content (`TrinaAutoSizeMode.fitContent`)
+
+Each column is sized to the widest value it actually holds, then any width left
+over is shared between the columns in proportion to their content, so the grid
+still fills its width.
+
+Unlike `scale`, it never sizes a column below its content: when the fitted
+widths already overflow, the columns keep those widths and the grid scrolls
+horizontally instead of every column collapsing onto its minimum.
+
+```dart
+TrinaGridColumnSizeConfig(
+  autoSizeMode: TrinaAutoSizeMode.fitContent,
+  // The floor for fitting. Without it the column's own minWidth is used, which
+  // is often set well above the width the content needs because it doubles as
+  // the limit for dragging a column.
+  minFitContentWidth: 60,
+  // Stops one long value pushing the other columns off screen. It bounds the
+  // fitted width only; a column can still grow past it when leftover width is
+  // shared out.
+  maxFitContentWidth: 400,
+  // Measure again when the rows are replaced, so paging refits to the page on
+  // screen. Rows appended by infinite scroll never trigger a refit.
+  refitOnRowsChanged: true,
+)
+```
+
+The fit covers the column's title, its values and, when the filter row is
+shown, its filter field, so a column of short values stays wide enough for the
+filter placeholder and buttons rather than being squeezed down to the values
+above them. Toggling the filter row with `setShowColumnFilter` re-runs the fit.
+
+Only the loaded rows are measured, so on a paginated grid this is the current
+page. Widths produced by a `TrinaColumn.renderer` are not measured, the same
+limitation `autoFitColumn` has, so a column whose cell is a custom widget is
+fitted to its text.
+
+Columns with `suppressedAutoSize: true` keep their explicit width and take no
+part in the sharing.
+
 ## How to Configure Column Resizing
 
 ### Basic Configuration

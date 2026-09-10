@@ -29,14 +29,21 @@ enum TrinaResizeMode {
 /// [equal] changes the width equally regardless of the current size.
 ///
 /// [scale] scales the width proportionally according to the current size.
+///
+/// [fitContent] sizes each column to the widest value it actually holds, then
+/// shares any width left over so the columns still fill the grid. Unlike
+/// [scale] it never sizes a column below its content, so a grid wider than the
+/// viewport scrolls instead of collapsing every column onto its minimum.
 enum TrinaAutoSizeMode {
   none,
   equal,
-  scale;
+  scale,
+  fitContent;
 
   bool get isNone => this == TrinaAutoSizeMode.none;
   bool get isEqual => this == TrinaAutoSizeMode.equal;
   bool get isScale => this == TrinaAutoSizeMode.scale;
+  bool get isFitContent => this == TrinaAutoSizeMode.fitContent;
 }
 
 /// Returns the auto-sizing class according to
@@ -50,6 +57,8 @@ class TrinaAutoSizeHelper {
     required double Function(T) getItemMinSize,
     required void Function(T, double) setItemSize,
     required TrinaAutoSizeMode mode,
+    double Function(T)? getItemPreferredSize,
+    double Function(T)? getItemMaxSize,
   }) {
     switch (mode) {
       case TrinaAutoSizeMode.equal:
@@ -69,6 +78,22 @@ class TrinaAutoSizeHelper {
           getItemSize: getItemSize,
           getItemMinSize: getItemMinSize,
           setItemSize: setItemSize,
+        );
+      case TrinaAutoSizeMode.fitContent:
+        assert(
+          getItemPreferredSize != null,
+          'TrinaAutoSizeMode.fitContent needs getItemPreferredSize to measure '
+          'the content of each item.',
+        );
+        return TrinaAutoSizeFitContent<T>(
+          maxSize: maxSize,
+          items: items,
+          isSuppressedItem: isSuppressed,
+          getItemSize: getItemSize,
+          getItemMinSize: getItemMinSize,
+          setItemSize: setItemSize,
+          getItemPreferredSize: getItemPreferredSize!,
+          getItemMaxSize: getItemMaxSize,
         );
       case TrinaAutoSizeMode.none:
         throw Exception('Mode cannot be called with TrinaAutoSizeMode.none.');
@@ -199,6 +224,86 @@ class TrinaAutoSizeScale<T> extends TrinaAutoSize<T> {
       final size = max(minSize, getItemSize(item) * scale);
 
       setItemSize(item, size);
+    }
+  }
+}
+
+/// Size each item to the width its own content needs, then share out whatever
+/// width is left so the items still fill [maxSize].
+///
+/// The fitted width comes from [getItemPreferredSize], clamped to the item's
+/// minimum and, when [getItemMaxSize] supplies one, to that maximum. Suppressed
+/// items keep the width they already have and take no part in the sharing.
+///
+/// The sharing is one-way on purpose: when the fitted widths already overflow
+/// [maxSize] the items keep those widths and the grid scrolls. Shrinking them
+/// to fit is what makes [TrinaAutoSizeScale] collapse every item onto its
+/// minimum once there are more items than the viewport can hold.
+class TrinaAutoSizeFitContent<T> extends TrinaAutoSize<T> {
+  const TrinaAutoSizeFitContent({
+    required super.maxSize,
+    required super.items,
+    required super.isSuppressedItem,
+    required super.getItemSize,
+    required super.getItemMinSize,
+    required super.setItemSize,
+    required this.getItemPreferredSize,
+    this.getItemMaxSize,
+  });
+
+  /// The width the item's content wants, before any clamping.
+  final double Function(T) getItemPreferredSize;
+
+  /// An optional ceiling, so one long value cannot push everything else off
+  /// screen.
+  ///
+  /// It bounds the fitted width only. An item can still end up wider once the
+  /// leftover width is shared out, which is the point: holding it at the
+  /// ceiling would leave the grid short of its own width for no benefit.
+  final double Function(T)? getItemMaxSize;
+
+  @override
+  void update() {
+    final sizable = items.whereNot(isSuppressedItem).toList();
+    if (sizable.isEmpty) return;
+
+    double totalSuppressed = 0;
+    for (final item in items) {
+      if (isSuppressedItem(item)) totalSuppressed += getItemSize(item);
+    }
+
+    final fitted = <double>[];
+    double totalFitted = 0;
+    for (final item in sizable) {
+      final minSize = getItemMinSize(item);
+      final maxItemSize = getItemMaxSize?.call(item);
+      var size = max(minSize, getItemPreferredSize(item));
+      // A maximum below the minimum would invert the range, so the minimum wins.
+      if (maxItemSize != null) size = max(minSize, min(size, maxItemSize));
+      fitted.add(size);
+      totalFitted += size;
+    }
+
+    final remaining = maxSize - totalSuppressed - totalFitted;
+
+    if (remaining <= 0 || totalFitted <= 0) {
+      for (int i = 0; i < sizable.length; i += 1) {
+        setItemSize(sizable[i], fitted[i]);
+      }
+      return;
+    }
+
+    // Share the leftover in proportion to the fitted widths, so a column that
+    // needed more room keeps more room. The last item takes the rounding
+    // remainder, so the total lands exactly on maxSize.
+    double distributed = 0;
+    for (int i = 0; i < sizable.length; i += 1) {
+      final isLast = i == sizable.length - 1;
+      final extra = isLast
+          ? remaining - distributed
+          : remaining * (fitted[i] / totalFitted);
+      distributed += extra;
+      setItemSize(sizable[i], fitted[i] + extra);
     }
   }
 }
