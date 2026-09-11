@@ -54,12 +54,7 @@ void main() {
             configuration: TrinaGridConfiguration(
               rowWrapperIsConstantHeight: constantWrapper,
               style: const TrinaGridStyleConfig(rowHeight: 40),
-              scrollbar: TrinaGridScrollbarConfig(
-                smoothScrolling: smooth,
-                // Isolate frozen-row geometry from the scrollbar footprint:
-                // published 2.2.2 reserves it only in the body pane.
-                showHorizontal: !frozenRows,
-              ),
+              scrollbar: TrinaGridScrollbarConfig(smoothScrolling: smooth),
             ),
           ),
         ),

@@ -25,6 +25,7 @@ class TrinaBodyRowsState extends TrinaStateWithChange<TrinaBodyRows> {
   List<TrinaRow> _frozenTopRows = [];
   List<TrinaRow> _frozenBottomRows = [];
   List<TrinaRow> _scrollableRows = [];
+  TrinaRowExtent _rowExtent = const TrinaRowExtent();
 
   late final ScrollController _verticalScroll;
   late final ScrollController _horizontalScroll;
@@ -152,6 +153,8 @@ class TrinaBodyRowsState extends TrinaStateWithChange<TrinaBodyRows> {
         .where((row) => row.frozen == TrinaRowFrozen.none)
         .toList();
 
+    _rowExtent = TrinaRowExtent.resolve(_scrollableRows, stateManager);
+
     // Cancel existing timers before creating new ones
     _verticalScrollTimer?.cancel();
     _horizontalScrollTimer?.cancel();
@@ -207,7 +210,6 @@ class TrinaBodyRowsState extends TrinaStateWithChange<TrinaBodyRows> {
 
   @override
   Widget build(BuildContext context) {
-    final itemExtent = fixedRowExtent(_scrollableRows, stateManager);
     final scrollConfig = stateManager.configuration.scrollbar;
 
     return DecoratedBox(
@@ -265,24 +267,9 @@ class TrinaBodyRowsState extends TrinaStateWithChange<TrinaBodyRows> {
                                   controller: _verticalScroll,
                                   scrollDirection: Axis.vertical,
                                   itemCount: _scrollableRows.length,
-                                  itemExtent: itemExtent,
+                                  itemExtent: _rowExtent.itemExtent,
                                   itemExtentBuilder:
-                                      (itemExtent != null ||
-                                          (stateManager.rowWrapper != null &&
-                                              !stateManager
-                                                  .configuration
-                                                  .rowWrapperIsConstantHeight))
-                                      ? null
-                                      : (index, _) =>
-                                            (_scrollableRows[index].height ??
-                                                stateManager
-                                                    .configuration
-                                                    .style
-                                                    .rowHeight) +
-                                            stateManager
-                                                .configuration
-                                                .style
-                                                .cellHorizontalBorderWidth,
+                                      _rowExtent.itemExtentBuilder,
                                   addRepaintBoundaries: false,
                                   itemBuilder: (ctx, i) => _buildRow(
                                     context,
