@@ -95,5 +95,5 @@ Uses `package:flutter_lints/flutter.yaml`. Excludes `**.mocks.dart` from analysi
 
 ### CI
 
-- `tests.yaml` — runs `flutter test` on PRs to master
-- `coverage.yml` — runs `flutter test --coverage` on push to master, uploads to codecov
+- `tests.yaml` — runs `dart analyze` and `flutter test` on PRs to main
+- `coverage.yml` — runs `flutter test --coverage` on push to main, uploads to codecov

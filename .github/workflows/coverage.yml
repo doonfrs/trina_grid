@@ -3,7 +3,9 @@ name: Coverage
 on:
   push:
     branches:
-      - 'master'
+      - 'main'
+
+  workflow_dispatch:
 
 jobs:
   build:
@@ -12,9 +14,9 @@ jobs:
       CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
     steps:
       # Without this, there are no files in the directory.
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       # using flutter
-      - uses: subosito/flutter-action@v2.4.0
+      - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
       - run: dart --version
@@ -22,6 +24,6 @@ jobs:
       - run: flutter pub get
       - run: flutter test --coverage
       # codecov.io
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v5
         with:
-          file: ./coverage/lcov.info
+          files: ./coverage/lcov.info
