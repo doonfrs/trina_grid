@@ -1911,6 +1911,10 @@ class TrinaGridLocaleText {
   final String filterLessThan;
   final String filterLessThanOrEqualTo;
 
+  // Filter dropdown modes (booleanSelect / multiSelect filter delegates)
+  final String filterAll;
+  final String filterSelectAll;
+
   // Date column popup
   final String sunday;
   final String monday;
@@ -1952,6 +1956,9 @@ class TrinaGridLocaleText {
   final String timePickerInvalidValueMessage;
 
   const TrinaGridLocaleText({
+    // Filter select modes
+    this.filterAll = 'ALL',
+    this.filterSelectAll = 'Select all',
     // Column menu
     this.unfreezeColumn = 'Unfreeze',
     this.freezeColumnToStart = 'Freeze to start',
@@ -2012,6 +2019,9 @@ class TrinaGridLocaleText {
   });
 
   const TrinaGridLocaleText.french({
+    // Filter select modes
+    this.filterAll = 'Tous',
+    this.filterSelectAll = 'Tout sélectionner',
     // Column menu
     this.unfreezeColumn = 'Libérer',
     this.freezeColumnToStart = 'Figer au début',
@@ -2073,6 +2083,9 @@ class TrinaGridLocaleText {
   });
 
   const TrinaGridLocaleText.china({
+    // Filter select modes
+    this.filterAll = '全部',
+    this.filterSelectAll = '全选',
     // Column menu
     this.unfreezeColumn = '解冻列',
     this.freezeColumnToStart = '冻结列至起点',
@@ -2132,6 +2145,9 @@ class TrinaGridLocaleText {
   });
 
   const TrinaGridLocaleText.korean({
+    // Filter select modes
+    this.filterAll = '전체',
+    this.filterSelectAll = '모두 선택',
     // Column menu
     this.unfreezeColumn = '고정 해제',
     this.freezeColumnToStart = '시작에 고정',
@@ -2191,6 +2207,9 @@ class TrinaGridLocaleText {
   });
 
   const TrinaGridLocaleText.russian({
+    // Filter select modes
+    this.filterAll = 'Все',
+    this.filterSelectAll = 'Выбрать все',
     // Column menu
     this.unfreezeColumn = 'Открепить',
     this.freezeColumnToStart = 'Закрепить в начале',
@@ -2251,6 +2270,9 @@ class TrinaGridLocaleText {
   });
 
   const TrinaGridLocaleText.czech({
+    // Filter select modes
+    this.filterAll = 'Vše',
+    this.filterSelectAll = 'Vybrat vše',
     // Column menu
     this.unfreezeColumn = 'Uvolnit',
     this.freezeColumnToStart = 'Ukotvit na začátek',
@@ -2311,6 +2333,9 @@ class TrinaGridLocaleText {
   });
 
   const TrinaGridLocaleText.brazilianPortuguese({
+    // Filter select modes
+    this.filterAll = 'Todos',
+    this.filterSelectAll = 'Selecionar tudo',
     // Column menu
     this.unfreezeColumn = 'Descongelar',
     this.freezeColumnToStart = 'Congelar ao início',
@@ -2371,6 +2396,9 @@ class TrinaGridLocaleText {
   });
 
   const TrinaGridLocaleText.spanish({
+    // Filter select modes
+    this.filterAll = 'Todos',
+    this.filterSelectAll = 'Seleccionar todo',
     // Column menu
     this.unfreezeColumn = 'Descongelar',
     this.freezeColumnToStart = 'Inmovilizar al principio',
@@ -2431,6 +2459,9 @@ class TrinaGridLocaleText {
   });
 
   const TrinaGridLocaleText.persian({
+    // Filter select modes
+    this.filterAll = 'همه',
+    this.filterSelectAll = 'انتخاب همه',
     // Column menu
     this.unfreezeColumn = 'جدا کردن',
     this.freezeColumnToStart = 'چسباندن به ابتدا',
@@ -2491,6 +2522,9 @@ class TrinaGridLocaleText {
   });
 
   const TrinaGridLocaleText.arabic({
+    // Filter select modes
+    this.filterAll = 'الكل',
+    this.filterSelectAll = 'تحديد الكل',
     // Column menu
     this.unfreezeColumn = 'إلغاء التجميد',
     this.freezeColumnToStart = 'تجميد إلى البداية',
@@ -2550,6 +2584,9 @@ class TrinaGridLocaleText {
   });
 
   const TrinaGridLocaleText.norway({
+    // Filter select modes
+    this.filterAll = 'Alle',
+    this.filterSelectAll = 'Velg alle',
     // Column menu
     this.unfreezeColumn = 'Løsne',
     this.freezeColumnToStart = 'Fest til start',
@@ -2610,6 +2647,9 @@ class TrinaGridLocaleText {
   });
 
   const TrinaGridLocaleText.german({
+    // Filter select modes
+    this.filterAll = 'Alle',
+    this.filterSelectAll = 'Alle auswählen',
     // Column menu
     this.unfreezeColumn = 'Spalte lösen',
     this.freezeColumnToStart = 'An den Anfang pinnen',
@@ -2672,6 +2712,9 @@ class TrinaGridLocaleText {
   });
 
   const TrinaGridLocaleText.turkish({
+    // Filter select modes
+    this.filterAll = 'Tümü',
+    this.filterSelectAll = 'Tümünü seç',
     // Column menu
     this.unfreezeColumn = 'Sütunu serbest bırak',
     this.freezeColumnToStart = 'Başa sabitle',
@@ -2732,6 +2775,9 @@ class TrinaGridLocaleText {
   });
 
   const TrinaGridLocaleText.japanese({
+    // Filter select modes
+    this.filterAll = 'すべて',
+    this.filterSelectAll = 'すべて選択',
     // Column menu
     this.unfreezeColumn = '列の固定を解除する',
     this.freezeColumnToStart = '列を最初に固定する',
@@ -2791,6 +2837,9 @@ class TrinaGridLocaleText {
   });
 
   const TrinaGridLocaleText.hungarian({
+    // Filter select modes
+    this.filterAll = 'Mind',
+    this.filterSelectAll = 'Összes kijelölése',
     // Column menu
     this.unfreezeColumn = 'Oszlop rögzítés felold',
     this.freezeColumnToStart = 'Rögzítés balra',

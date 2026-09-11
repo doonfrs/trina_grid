@@ -87,6 +87,58 @@ The filter UI consists of:
 
 Users can click on the filter icon in a column to open the filter type selector and choose the appropriate filter type for that column.
 
+## Dropdown Filter Widgets
+
+Every column renders a text field in the filter row by default. Two opt-in delegates replace it with a dropdown:
+
+| Delegate | Filter widget |
+| --- | --- |
+| `TrinaFilterColumnWidgetDelegate.booleanSelect()` | Dropdown with **ALL** / true / false. On a boolean column the two options are labeled with the column's `trueText` / `falseText` (**Yes** / **No** by default) |
+| `TrinaFilterColumnWidgetDelegate.multiSelect(...)` | Checkbox multi-select dropdown with a **Select all** toggle |
+
+- **Boolean dropdown**: selecting the true / false option keeps only the rows whose cell value is `true` / `false` (`TrinaFilterTypeEquals`). Selecting **ALL** clears the filter.
+- **Multi-select dropdown**: shows one checkbox per item. Every check/uncheck re-filters the grid immediately and the menu stays open; unchecking everything clears the filter. Rows match when their cell value equals any of the checked items (`TrinaFilterTypeMultiItems`). The items come from `multiSelectItems`, or from the column items (or the values produced by `itemToValue`) when the column is a select column and `multiSelectItems` is omitted.
+
+```dart
+final columns = [
+  // Text column: the default text filter.
+  TrinaColumn(title: 'Name', field: 'name', type: TrinaColumnType.text()),
+
+  // Boolean column: ALL / Yes / No dropdown filter.
+  TrinaColumn(
+    title: 'Is Active',
+    field: 'is_active',
+    type: TrinaColumnType.boolean(),
+    filterWidgetDelegate: const TrinaFilterColumnWidgetDelegate.booleanSelect(),
+  ),
+
+  // Select column: checkbox multi-select filter with the column items.
+  TrinaColumn(
+    title: 'Hobby',
+    field: 'hobby',
+    type: TrinaColumnType.select(['swimming', 'gym', 'reading']),
+    filterWidgetDelegate: const TrinaFilterColumnWidgetDelegate.multiSelect(),
+  ),
+
+  // Any other column: provide the items explicitly.
+  TrinaColumn(
+    title: 'Status',
+    field: 'status',
+    type: TrinaColumnType.text(),
+    filterWidgetDelegate: const TrinaFilterColumnWidgetDelegate.multiSelect(
+      multiSelectItems: ['open', 'closed'],
+      caseSensitive: false,
+    ),
+  ),
+];
+```
+
+Both dropdowns apply the filter immediately on selection, without the debounce used by the text filter. Multi-select item labels must not contain commas or newlines, since the filter value is split on those (the same constraint as `TrinaFilterTypeMultiItems`).
+
+With the focus on a dropdown filter, **Down**, **Enter** and **Space** open and close the menu; **Tab** and **F3** navigation are unchanged.
+
+The **ALL** and **Select all** labels are localizable through `TrinaGridLocaleText.filterAll` and `filterSelectAll`.
+
 ## Filtering Behavior
 
 ### Column-Specific Filtering
