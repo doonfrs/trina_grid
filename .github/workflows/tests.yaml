@@ -18,6 +18,13 @@ jobs:
             - name: Get all Flutter Packages
               run: flutter pub get
 
+            # dart analyze covers the whole repository, and demo/ is a separate
+            # package. Without its own resolution every package: import there is
+            # unresolved, including demo's self-references.
+            - name: Get Demo Packages
+              run: flutter pub get
+              working-directory: demo
+
             - name: Analyze
               run: dart analyze
 
