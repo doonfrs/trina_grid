@@ -23,6 +23,7 @@ void main() {
     String filterValue = '',
     bool enabled = true,
     bool caseSensitive = false,
+    List<String> filterItems = items,
   }) async {
     await tester.pumpWidget(
       MaterialApp(
@@ -37,7 +38,7 @@ void main() {
               menuController: menuController,
               enabled: enabled,
               filterValue: filterValue,
-              items: items,
+              items: filterItems,
               caseSensitive: caseSensitive,
               allLabel: allLabel,
               selectAllLabel: selectAllLabel,
@@ -240,4 +241,64 @@ void main() {
     expect(find.text(selectAllLabel), findsNothing);
     expect(changedValues, isEmpty);
   });
+
+  testWidgets(
+    'A filter value holding a value outside the items should not count '
+    'towards select all',
+    (tester) async {
+      // The shape an app produces through setColumnFilter, or a value left
+      // over from another filter widget: 'cycling' is not one of the items.
+      await buildFilter(
+        tester,
+        filterValue: 'swimming\ngym\ncycling',
+        caseSensitive: true,
+      );
+
+      await openMenu(tester);
+
+      final checkedItems = find.byWidgetPredicate(
+        (widget) => widget is Checkbox && !widget.tristate && widget.value!,
+      );
+
+      expect(checkedItems, findsNWidgets(2));
+
+      final tristateCheckbox = find.byWidgetPredicate(
+        (widget) => widget is Checkbox && widget.tristate,
+      );
+
+      expect(
+        tester.widget<Checkbox>(tristateCheckbox).value,
+        isNull,
+        reason:
+            'two of the three items are checked, so select all is partial '
+            'even though the filter value holds three values',
+      );
+
+      await tester.tap(find.text(selectAllLabel));
+      await tester.pumpAndSettle();
+
+      expect(changedValues, [items.join('\n')]);
+    },
+  );
+
+  testWidgets(
+    'A case sensitive filter value should check an item with surrounding '
+    'whitespace',
+    (tester) async {
+      await buildFilter(
+        tester,
+        filterValue: 'gym',
+        caseSensitive: true,
+        filterItems: const ['swimming', ' gym ', 'reading'],
+      );
+
+      await openMenu(tester);
+
+      final checked = find.byWidgetPredicate(
+        (widget) => widget is Checkbox && !widget.tristate && widget.value!,
+      );
+
+      expect(checked, findsOneWidget);
+    },
+  );
 }

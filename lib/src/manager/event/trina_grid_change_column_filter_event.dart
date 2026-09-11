@@ -9,12 +9,24 @@ class TrinaGridChangeColumnFilterEvent extends TrinaGridEvent {
   final int? debounceMilliseconds;
   final TrinaGridEventType? eventType;
 
+  /// Whether [filterType] also replaces the type of an existing filter row.
+  ///
+  /// Defaults to false so the filter field only edits the value: a type the
+  /// user picked in the filter popup, or set through
+  /// [TrinaGridStateManager.setColumnFilter], survives typing in the column
+  /// filter field.
+  ///
+  /// The dropdown filter widgets set this to true, because the value they
+  /// send is only meaningful with the type they send it with.
+  final bool updateFilterType;
+
   TrinaGridChangeColumnFilterEvent({
     required this.column,
     required this.filterType,
     required this.filterValue,
     this.debounceMilliseconds,
     this.eventType,
+    this.updateFilterType = false,
   }) : super(
          type: eventType ?? TrinaGridEventType.normal,
          duration: Duration(
@@ -40,15 +52,18 @@ class TrinaGridChangeColumnFilterEvent extends TrinaGridEvent {
       ];
     }
 
-    // Update both the value and the type of the existing filter row.
-    // The type must be refreshed as well, otherwise a row previously created
-    // with a different type (e.g. Contains via the filter popup or a
-    // programmatic setColumnFilter call) would keep comparing with the old
-    // semantics.
     foundFilterRows.first.cells[FilterHelper.filterFieldValue]!.value =
         filterValue;
-    foundFilterRows.first.cells[FilterHelper.filterFieldType]!.value =
-        filterType;
+
+    // The type is only refreshed when the sender asks for it. A row created
+    // with another type (e.g. Contains through the filter popup, or a
+    // programmatic setColumnFilter call) would otherwise keep comparing with
+    // the old semantics for the dropdown filters, while the text field must
+    // leave the type the user chose alone.
+    if (updateFilterType) {
+      foundFilterRows.first.cells[FilterHelper.filterFieldType]!.value =
+          filterType;
+    }
 
     return stateManager.filterRows;
   }

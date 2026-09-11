@@ -222,4 +222,34 @@ void main() {
     expect(find.text(trueLabel), findsNothing);
     expect(changedValues, isEmpty);
   });
+
+  testWidgets(
+    'The field should show the focused border while it holds the focus, '
+    'without the menu being open',
+    (tester) async {
+      await buildFilter(tester);
+
+      InputDecorator decorator() => tester.widget<InputDecorator>(
+        find.descendant(
+          of: find.byType(FilterDropdownField),
+          matching: find.byType(InputDecorator),
+        ),
+      );
+
+      expect(decorator().isFocused, isFalse);
+
+      // The focus arrives without a tap when the filter is reached with Tab
+      // or F3, which requests the focus on the column filter focus node.
+      focusNode.requestFocus();
+      await tester.pumpAndSettle();
+
+      expect(menuController.isOpen, isFalse);
+      expect(decorator().isFocused, isTrue);
+
+      focusNode.unfocus();
+      await tester.pumpAndSettle();
+
+      expect(decorator().isFocused, isFalse);
+    },
+  );
 }

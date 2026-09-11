@@ -353,6 +353,10 @@ class TrinaColumnFilterState extends TrinaStateWithChange<TrinaColumnFilter> {
         column: widget.column,
         filterType: filterType ?? widget.column.defaultFilter,
         filterValue: changed,
+        // Only the dropdown modes pass an explicit type, and only they may
+        // replace the type of an existing filter row. Typing in the text
+        // field keeps the type the user picked in the filter popup.
+        updateFilterType: filterType != null,
         eventType: immediate
             ? TrinaGridEventType.normal
             : TrinaGridEventType.debounce,

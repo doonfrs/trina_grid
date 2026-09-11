@@ -138,4 +138,38 @@ void main() {
       expect(find.text('column0 value 19'), findsOneWidget);
     },
   );
+
+  testWidgets(
+    'When a filter type was set for the column, typing in the filter field '
+    'should keep that type instead of falling back to the default filter',
+    (tester) async {
+      final columns = ColumnHelper.textColumn('column');
+
+      final rows = RowHelper.count(20, columns);
+
+      await tester.pumpWidget(buildGrid(columns: columns, rows: rows));
+
+      await tester.pump();
+
+      stateManager.setColumnFilter(
+        columnField: 'column0',
+        filterType: const TrinaFilterTypeEquals(),
+        filterValue: 'column0 value 5',
+      );
+
+      await tester.pumpAndSettle();
+
+      await tapAndEnterTextColumnFilter(tester, 'column0 value 1');
+
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+
+      expect(
+        stateManager.getColumnFilterType('column0'),
+        isA<TrinaFilterTypeEquals>(),
+      );
+
+      // With the default Contains filter this would also match value 10 to 19.
+      expect(stateManager.refRows.length, 1);
+    },
+  );
 }

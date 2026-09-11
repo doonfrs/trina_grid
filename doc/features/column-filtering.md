@@ -135,6 +135,8 @@ final columns = [
 
 Both dropdowns apply the filter immediately on selection, without the debounce used by the text filter. Multi-select item labels must not contain commas or newlines, since the filter value is split on those (the same constraint as `TrinaFilterTypeMultiItems`).
 
+A dropdown also sets the filter type of its column (Equals or MultiItems), replacing a type previously chosen in the filter popup or through `setColumnFilter`, because the value it sends is only meaningful with that type. The text filter field does not: it only changes the value and leaves the chosen type alone.
+
 With the focus on a dropdown filter, **Down**, **Enter** and **Space** open and close the menu; **Tab** and **F3** navigation are unchanged.
 
 The **ALL** and **Select all** labels are localizable through `TrinaGridLocaleText.filterAll` and `filterSelectAll`.

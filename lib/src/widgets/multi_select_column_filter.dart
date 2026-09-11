@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:trina_grid/src/ui/widgets/ensure_shad_theme.dart';
@@ -72,36 +73,57 @@ class _MultiSelectColumnFilterState extends State<MultiSelectColumnFilter> {
   /// mirroring the cell editor menus.
   static const double _menuVerticalChrome = 16.0;
 
-  Set<String> _toLowerCaseSet(Iterable<String> values) =>
-      values.map((e) => e.trim().toLowerCase()).toSet();
-
   /// The currently selected items, resolved against [MultiSelectColumnFilter.items]
   /// so the checkbox state and the filter value stay in sync even when the
   /// value was set externally.
-  Set<String> get _selectedItems {
+  ///
+  /// Resolved once per change instead of once per item, and always a subset of
+  /// [MultiSelectColumnFilter.items] so that the case sensitive and the case
+  /// insensitive paths agree on what "everything is selected" means.
+  late Set<String> _selectedItems;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _selectedItems = _resolveSelectedItems();
+  }
+
+  @override
+  void didUpdateWidget(covariant MultiSelectColumnFilter oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.filterValue != widget.filterValue ||
+        oldWidget.caseSensitive != widget.caseSensitive ||
+        !listEquals(oldWidget.items, widget.items)) {
+      _selectedItems = _resolveSelectedItems();
+    }
+  }
+
+  Set<String> _resolveSelectedItems() {
     final raw = widget.filterValue
         .split(RegExp(r'[\n,]'))
         .map((e) => e.trim())
         .where((e) => e.isNotEmpty);
 
     if (widget.caseSensitive) {
-      return raw.toSet();
+      final selected = raw.toSet();
+
+      // The item is trimmed like the parsed values, otherwise an item with
+      // surrounding whitespace could never match what it emits itself.
+      return widget.items
+          .where((item) => selected.contains(item.trim()))
+          .toSet();
     }
 
-    final lowerCased = _toLowerCaseSet(raw);
+    final lowerCased = raw.map((e) => e.toLowerCase()).toSet();
 
     return widget.items
         .where((item) => lowerCased.contains(item.trim().toLowerCase()))
         .toSet();
   }
 
-  bool _isSelected(String item) {
-    if (widget.caseSensitive) {
-      return _selectedItems.contains(item);
-    }
-
-    return _toLowerCaseSet(_selectedItems).contains(item.toLowerCase());
-  }
+  bool _isSelected(String item) => _selectedItems.contains(item);
 
   bool? get _selectAllValue {
     if (widget.items.isEmpty || _selectedItems.isEmpty) {
@@ -139,7 +161,7 @@ class _MultiSelectColumnFilterState extends State<MultiSelectColumnFilter> {
   }
 
   void _toggleItem(String item, bool checked) {
-    final selected = widget.items.where(_isSelected).toSet();
+    final selected = _selectedItems.toSet();
 
     checked ? selected.add(item) : selected.remove(item);
 

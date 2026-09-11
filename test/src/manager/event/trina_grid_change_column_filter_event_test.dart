@@ -52,7 +52,7 @@ void main() {
   );
 
   test(
-    'When the column already has a filter row, both its value and type are updated',
+    'When the column already has a filter row, updateFilterType replaces its value and type',
     () {
       final existing = FilterHelper.createFilterRow(
         columnField: column.field,
@@ -67,6 +67,7 @@ void main() {
         column: column,
         filterType: const TrinaFilterTypeMultiItems(),
         filterValue: 'swimming\ngym',
+        updateFilterType: true,
       ).handler(stateManager);
 
       expect(
@@ -76,6 +77,34 @@ void main() {
       expect(
         existing.cells[FilterHelper.filterFieldType]!.value,
         isA<TrinaFilterTypeMultiItems>(),
+      );
+
+      verify(stateManager.setFilterWithFilterRows([existing])).called(1);
+    },
+  );
+
+  test(
+    'When the column already has a filter row, its type is kept by default',
+    () {
+      final existing = FilterHelper.createFilterRow(
+        columnField: column.field,
+        filterType: const TrinaFilterTypeGreaterThan(),
+        filterValue: 'old',
+      );
+
+      when(stateManager.filterRowsByField(column.field)).thenReturn([existing]);
+      when(stateManager.filterRows).thenReturn([existing]);
+
+      TrinaGridChangeColumnFilterEvent(
+        column: column,
+        filterType: const TrinaFilterTypeContains(),
+        filterValue: 'new',
+      ).handler(stateManager);
+
+      expect(existing.cells[FilterHelper.filterFieldValue]!.value, 'new');
+      expect(
+        existing.cells[FilterHelper.filterFieldType]!.value,
+        isA<TrinaFilterTypeGreaterThan>(),
       );
 
       verify(stateManager.setFilterWithFilterRows([existing])).called(1);
