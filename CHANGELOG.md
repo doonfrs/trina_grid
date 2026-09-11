@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+* Fix: Boolean columns can now be filtered by the text they display. A boolean column stores a raw `bool` but renders `trueText` / `falseText` (`Yes` / `No` by default), while the filter only ever compared against `true` / `false`, so typing the visible text matched nothing. Both representations now match, and the raw `true` / `false` keeps working. Reported through #414. @doonfrs @Baghdady92
+
 * Feature: Added `TrinaGridConfiguration.fromTheme(context)` and `TrinaGridStyleConfig.fromTheme`/`fromColorScheme`, deriving the grid colors from the app's Material `ColorScheme` so the grid follows the host theme and its brightness. Opt-in: the existing light and dark palettes are unchanged (#336). @doonfrs @stan-at-work
 * Fix: `TrinaGridStyleConfig.copyWith` no longer drops `rowCheckedColor`, `rowHoveredColor`, `enableRowHoverColor` and `cellDefaultColor`. It rebuilt the style through the public light/dark constructors, which do not accept those fields, so any customized value silently reverted to the default. These are now also settable through `copyWith`, along with `cellDirtyColor`, `frozenRowColor` and `frozenRowBorderColor`. @doonfrs
 * Fix: The hidden-columns popup now inherits the grid's own configuration instead of rebuilding from a fresh default light or dark one, so custom and theme-derived styles reach it. @doonfrs

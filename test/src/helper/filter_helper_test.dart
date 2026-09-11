@@ -617,6 +617,103 @@ void main() {
         expect(compare('apple', r'[unclosed'), isFalse);
       });
     });
+
+    group('Boolean column', () {
+      TrinaColumn booleanColumn({
+        String trueText = 'Yes',
+        String falseText = 'No',
+        bool allowEmpty = false,
+      }) {
+        return TrinaColumn(
+          title: 'column',
+          field: 'column',
+          type: TrinaColumnType.boolean(
+            trueText: trueText,
+            falseText: falseText,
+            allowEmpty: allowEmpty,
+          ),
+        );
+      }
+
+      test('true matches the default trueText', () {
+        final compare = makeCompareFunction(
+          const TrinaFilterTypeEquals(),
+          column: booleanColumn(),
+        );
+
+        expect(compare(true, 'Yes'), isTrue);
+        expect(compare(true, 'No'), isFalse);
+      });
+
+      test('false matches the default falseText', () {
+        final compare = makeCompareFunction(
+          const TrinaFilterTypeEquals(),
+          column: booleanColumn(),
+        );
+
+        expect(compare(false, 'No'), isTrue);
+        expect(compare(false, 'Yes'), isFalse);
+      });
+
+      test('the displayed text matching is case insensitive', () {
+        final compare = makeCompareFunction(
+          const TrinaFilterTypeEquals(),
+          column: booleanColumn(),
+        );
+
+        expect(compare(true, 'yes'), isTrue);
+        expect(compare(true, 'YES'), isTrue);
+      });
+
+      test('custom trueText and falseText are matched', () {
+        final compare = makeCompareFunction(
+          const TrinaFilterTypeEquals(),
+          column: booleanColumn(trueText: 'Active', falseText: 'Inactive'),
+        );
+
+        expect(compare(true, 'Active'), isTrue);
+        expect(compare(false, 'Inactive'), isTrue);
+        expect(compare(true, 'Inactive'), isFalse);
+      });
+
+      test('the raw true and false values still match', () {
+        final compare = makeCompareFunction(
+          const TrinaFilterTypeEquals(),
+          column: booleanColumn(trueText: 'Active', falseText: 'Inactive'),
+        );
+
+        expect(compare(true, 'true'), isTrue);
+        expect(compare(false, 'false'), isTrue);
+        expect(compare(true, 'false'), isFalse);
+      });
+
+      test('Contains matches a part of the displayed text', () {
+        final compare = makeCompareFunction(
+          const TrinaFilterTypeContains(),
+          column: booleanColumn(trueText: 'Active', falseText: 'Inactive'),
+        );
+
+        expect(compare(true, 'ctiv'), isTrue);
+        expect(compare(false, 'Inact'), isTrue);
+      });
+
+      test('a null value of an allowEmpty column does not match falseText', () {
+        final compare = makeCompareFunction(
+          const TrinaFilterTypeEquals(),
+          column: booleanColumn(allowEmpty: true),
+        );
+
+        expect(compare(null, 'No'), isFalse);
+        expect(compare(null, 'Yes'), isFalse);
+      });
+
+      test('a non boolean column is not affected', () {
+        final compare = makeCompareFunction(const TrinaFilterTypeEquals());
+
+        expect(compare(true, 'Yes'), isFalse);
+        expect(compare(true, 'true'), isTrue);
+      });
+    });
   });
 
   group('FilterPopupState', () {

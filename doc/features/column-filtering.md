@@ -60,6 +60,23 @@ The Regex filter allows more advanced pattern matching:
 - **Less Than** (`TrinaFilterTypeLessThan`): Matches rows where the cell value is less than the search value
 - **Less Than or Equal To** (`TrinaFilterTypeLessThanOrEqualTo`): Matches rows where the cell value is less than or equal to the search value
 
+### Boolean Filters
+
+A boolean column stores a raw `bool` but displays `trueText` / `falseText` (`Yes` / `No` by default). Filtering matches **either** representation, so both of these work on the same column:
+
+```dart
+TrinaColumn(
+  title: 'Is Active',
+  field: 'is_active',
+  type: TrinaColumnType.boolean(trueText: 'Enabled', falseText: 'Disabled'),
+),
+```
+
+- Typing `Enabled` matches the `true` rows (the text the user actually sees in the grid).
+- Typing `true` still matches the `true` rows.
+
+Matching on the displayed text is case insensitive. Note that with the default **Contains** filter type, overlapping labels match each other: with `trueText: 'Active'` and `falseText: 'Inactive'`, searching `Active` also matches `Inactive` rows. Choose distinct labels, or switch the column to the **Equals** filter type.
+
 ## Filter UI
 
 The filter UI consists of:

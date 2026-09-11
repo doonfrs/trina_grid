@@ -221,6 +221,24 @@ class FilterHelper {
   }) {
     bool compare = false;
 
+    if (column.type is TrinaColumnTypeBoolean) {
+      final booleanColumn = column.type as TrinaColumnTypeBoolean;
+
+      // Boolean cells hold a raw bool, so [base] is 'true'/'false' while the
+      // grid displays trueText/falseText. Compare against what the user
+      // actually sees as well, otherwise typing the visible text matches
+      // nothing.
+      if (base == 'true' || base == 'false') {
+        compare =
+            compare ||
+            filterType.compare(
+              base: booleanColumn.formatValue(base),
+              search: search,
+              column: column,
+            );
+      }
+    }
+
     if (column.type is TrinaColumnTypeWithNumberFormat) {
       final numberColumn = column.type as TrinaColumnTypeWithNumberFormat;
 
