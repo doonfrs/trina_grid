@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trina_grid/trina_grid.dart';
 
+import 'miscellaneous/row_extent.dart';
 import 'ui.dart';
 
 class TrinaRightFrozenRows extends TrinaStatefulWidget {
@@ -83,6 +84,7 @@ class TrinaRightFrozenRowsState
 
   @override
   Widget build(BuildContext context) {
+    final itemExtent = fixedRowExtent(_scrollableRows, stateManager);
     return Column(
       children: [
         // Frozen top rows
@@ -101,9 +103,11 @@ class TrinaRightFrozenRowsState
             scrollDirection: Axis.vertical,
             physics: const ClampingScrollPhysics(),
             itemCount: _scrollableRows.length,
+            itemExtent: itemExtent,
             itemExtentBuilder:
-                (stateManager.rowWrapper != null &&
-                    !stateManager.configuration.rowWrapperIsConstantHeight)
+                (itemExtent != null ||
+                    (stateManager.rowWrapper != null &&
+                        !stateManager.configuration.rowWrapperIsConstantHeight))
                 ? null
                 : (index, _) =>
                       (_scrollableRows[index].height ??

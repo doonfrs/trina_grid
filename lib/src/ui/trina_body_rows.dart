@@ -6,6 +6,7 @@ import 'package:trina_grid/trina_grid.dart';
 
 import 'scrolls/trina_single_child_smooth_scroll_view.dart';
 import 'scrolls/trina_smooth_list_view.dart';
+import 'miscellaneous/row_extent.dart';
 import 'ui.dart';
 
 class TrinaBodyRows extends TrinaStatefulWidget {
@@ -206,6 +207,7 @@ class TrinaBodyRowsState extends TrinaStateWithChange<TrinaBodyRows> {
 
   @override
   Widget build(BuildContext context) {
+    final itemExtent = fixedRowExtent(_scrollableRows, stateManager);
     final scrollConfig = stateManager.configuration.scrollbar;
 
     return DecoratedBox(
@@ -263,11 +265,13 @@ class TrinaBodyRowsState extends TrinaStateWithChange<TrinaBodyRows> {
                                   controller: _verticalScroll,
                                   scrollDirection: Axis.vertical,
                                   itemCount: _scrollableRows.length,
+                                  itemExtent: itemExtent,
                                   itemExtentBuilder:
-                                      (stateManager.rowWrapper != null &&
-                                          !stateManager
-                                              .configuration
-                                              .rowWrapperIsConstantHeight)
+                                      (itemExtent != null ||
+                                          (stateManager.rowWrapper != null &&
+                                              !stateManager
+                                                  .configuration
+                                                  .rowWrapperIsConstantHeight))
                                       ? null
                                       : (index, _) =>
                                             (_scrollableRows[index].height ??
