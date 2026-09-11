@@ -1954,6 +1954,12 @@ class TrinaGridLocaleText {
   // Sidebar
   final String sidebarSearchHint;
   final String sidebarSelectRowPrompt;
+
+  /// Shown in the sidebar when the field search matches nothing.
+  ///
+  /// `{query}` is replaced with what the user typed. It carries the whole
+  /// sentence (quoting and punctuation included) so each language can place
+  /// the query where its grammar needs it.
   final String sidebarNoMatchingFields;
 
   const TrinaGridLocaleText({
@@ -2017,7 +2023,7 @@ class TrinaGridLocaleText {
     // Sidebar
     this.sidebarSearchHint = 'Search for field...',
     this.sidebarSelectRowPrompt = 'Select a row to view its fields.',
-    this.sidebarNoMatchingFields = 'No fields match',
+    this.sidebarNoMatchingFields = 'No fields match "{query}".',
   });
 
   const TrinaGridLocaleText.french({
@@ -2083,7 +2089,7 @@ class TrinaGridLocaleText {
     this.sidebarSearchHint = 'Rechercher un champ...',
     this.sidebarSelectRowPrompt =
         'Sélectionnez une ligne pour afficher ses champs.',
-    this.sidebarNoMatchingFields = 'Aucun champ ne correspond à',
+    this.sidebarNoMatchingFields = 'Aucun champ ne correspond à « {query} ».',
   });
 
   const TrinaGridLocaleText.china({
@@ -2146,7 +2152,7 @@ class TrinaGridLocaleText {
     // Sidebar
     this.sidebarSearchHint = '搜索字段...',
     this.sidebarSelectRowPrompt = '选择一行以查看其字段。',
-    this.sidebarNoMatchingFields = '没有匹配的字段',
+    this.sidebarNoMatchingFields = '没有与“{query}”匹配的字段。',
   });
 
   const TrinaGridLocaleText.korean({
@@ -2209,7 +2215,7 @@ class TrinaGridLocaleText {
     // Sidebar
     this.sidebarSearchHint = '필드 검색...',
     this.sidebarSelectRowPrompt = '필드를 보려면 행을 선택하세요.',
-    this.sidebarNoMatchingFields = '일치하는 필드가 없습니다',
+    this.sidebarNoMatchingFields = '"{query}"과(와) 일치하는 필드가 없습니다.',
   });
 
   const TrinaGridLocaleText.russian({
@@ -2273,7 +2279,7 @@ class TrinaGridLocaleText {
     // Sidebar
     this.sidebarSearchHint = 'Поиск по полям...',
     this.sidebarSelectRowPrompt = 'Выберите строку для просмотра полей.',
-    this.sidebarNoMatchingFields = 'Нет полей, соответствующих',
+    this.sidebarNoMatchingFields = 'Нет полей, соответствующих «{query}».',
   });
 
   const TrinaGridLocaleText.czech({
@@ -2337,7 +2343,7 @@ class TrinaGridLocaleText {
     // Sidebar
     this.sidebarSearchHint = 'Hledat pole...',
     this.sidebarSelectRowPrompt = 'Vyberte řádek pro zobrazení jeho polí.',
-    this.sidebarNoMatchingFields = 'Žádná pole neodpovídají',
+    this.sidebarNoMatchingFields = 'Žádná pole neodpovídají „{query}“.',
   });
 
   const TrinaGridLocaleText.brazilianPortuguese({
@@ -2401,7 +2407,7 @@ class TrinaGridLocaleText {
     // Sidebar
     this.sidebarSearchHint = 'Buscar por campo...',
     this.sidebarSelectRowPrompt = 'Selecione uma linha para ver seus campos.',
-    this.sidebarNoMatchingFields = 'Nenhum campo corresponde a',
+    this.sidebarNoMatchingFields = 'Nenhum campo corresponde a "{query}".',
   });
 
   const TrinaGridLocaleText.spanish({
@@ -2465,7 +2471,7 @@ class TrinaGridLocaleText {
     // Sidebar
     this.sidebarSearchHint = 'Buscar por campo...',
     this.sidebarSelectRowPrompt = 'Seleccione una fila para ver sus campos.',
-    this.sidebarNoMatchingFields = 'Ningún campo coincide con',
+    this.sidebarNoMatchingFields = 'Ningún campo coincide con "{query}".',
   });
 
   const TrinaGridLocaleText.persian({
@@ -2530,7 +2536,7 @@ class TrinaGridLocaleText {
     this.sidebarSearchHint = 'جستجوی فیلد...',
     this.sidebarSelectRowPrompt =
         'یک سطر را برای مشاهده فیلدهای آن انتخاب کنید.',
-    this.sidebarNoMatchingFields = 'هیچ فیلدی مطابقت ندارد با',
+    this.sidebarNoMatchingFields = 'هیچ فیلدی با "{query}" مطابقت ندارد.',
   });
 
   const TrinaGridLocaleText.arabic({
@@ -2593,7 +2599,7 @@ class TrinaGridLocaleText {
     // Sidebar
     this.sidebarSearchHint = 'البحث عن حقل...',
     this.sidebarSelectRowPrompt = 'حدد صفًا لعرض حقوله.',
-    this.sidebarNoMatchingFields = 'لا توجد حقول مطابقة لـ',
+    this.sidebarNoMatchingFields = 'لا توجد حقول مطابقة لـ "{query}".',
   });
 
   const TrinaGridLocaleText.norway({
@@ -2657,7 +2663,7 @@ class TrinaGridLocaleText {
     // Sidebar
     this.sidebarSearchHint = 'Søk etter felt...',
     this.sidebarSelectRowPrompt = 'Velg en rad for å se feltene.',
-    this.sidebarNoMatchingFields = 'Ingen felt samsvarer med',
+    this.sidebarNoMatchingFields = 'Ingen felt samsvarer med "{query}".',
   });
 
   const TrinaGridLocaleText.german({
@@ -2724,7 +2730,7 @@ class TrinaGridLocaleText {
     this.sidebarSearchHint = 'Nach Feld suchen...',
     this.sidebarSelectRowPrompt =
         'Wählen Sie eine Zeile aus, um ihre Felder anzuzeigen.',
-    this.sidebarNoMatchingFields = 'Keine Felder entsprechen',
+    this.sidebarNoMatchingFields = 'Keine Felder entsprechen „{query}“.',
   });
 
   const TrinaGridLocaleText.turkish({
@@ -2788,7 +2794,7 @@ class TrinaGridLocaleText {
     // Sidebar
     this.sidebarSearchHint = 'Alan ara...',
     this.sidebarSelectRowPrompt = 'Alanlarını görmek için bir satır seçin.',
-    this.sidebarNoMatchingFields = 'Eşleşen alan yok',
+    this.sidebarNoMatchingFields = '"{query}" ile eşleşen alan yok.',
   });
 
   const TrinaGridLocaleText.japanese({
@@ -2851,7 +2857,7 @@ class TrinaGridLocaleText {
     // Sidebar
     this.sidebarSearchHint = 'フィールドを検索...',
     this.sidebarSelectRowPrompt = 'フィールドを表示する行を選択してください。',
-    this.sidebarNoMatchingFields = '一致するフィールドがありません',
+    this.sidebarNoMatchingFields = '「{query}」に一致するフィールドがありません。',
   });
 
   const TrinaGridLocaleText.hungarian({
@@ -2916,7 +2922,8 @@ class TrinaGridLocaleText {
     this.sidebarSearchHint = 'Mező keresése...',
     this.sidebarSelectRowPrompt =
         'Válasszon ki egy sort a mezők megtekintéséhez.',
-    this.sidebarNoMatchingFields = 'Nincs egyező mező',
+    this.sidebarNoMatchingFields =
+        'Nincs „{query}” kifejezésre illeszkedő mező.',
   });
 
   @override

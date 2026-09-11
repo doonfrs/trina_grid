@@ -113,6 +113,34 @@ TrinaGrid(
 
 > Note: passing an inline closure to `contentBuilder` makes each `TrinaGridConfiguration` compare as unequal (closures compare by identity). Use a stable function reference if you rely on configuration equality.
 
+## Localization
+
+The three texts of the built-in record view come from `TrinaGridLocaleText`, so they follow whichever locale you pass to the grid and can be overridden individually:
+
+| Key | Default | Used for |
+|-----|---------|----------|
+| `sidebarSearchHint` | `Search for field...` | Hint of the field search box. |
+| `sidebarSelectRowPrompt` | `Select a row to view its fields.` | Shown when no row is selected. |
+| `sidebarNoMatchingFields` | `No fields match "{query}".` | Shown when the search matches no field. |
+
+`sidebarNoMatchingFields` carries the whole sentence, and `{query}` is replaced with what the user typed. Keeping the quoting and punctuation inside the string lets each language put the query where its grammar needs it - Japanese, for instance, places it first: `「{query}」に一致するフィールドがありません。`
+
+```dart
+TrinaGrid(
+  columns: columns,
+  rows: rows,
+  configuration: const TrinaGridConfiguration(
+    localeText: TrinaGridLocaleText(
+      sidebarSearchHint: 'Find a field...',
+      sidebarSelectRowPrompt: 'Pick a record to inspect it.',
+      sidebarNoMatchingFields: 'Nothing here matches "{query}".',
+    ),
+  ),
+)
+```
+
+Translations ship for every locale `TrinaGridLocaleText` supports, so `const TrinaGridLocaleText.japanese()` and friends already cover the sidebar.
+
 ## Configuration Options
 
 ### TrinaGridSidebarConfig

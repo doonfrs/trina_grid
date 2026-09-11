@@ -276,7 +276,10 @@ class _TrinaSidebarState extends State<TrinaSidebar> {
         child: Padding(
           padding: const EdgeInsets.all(24),
           child: Text(
-            '${stateManager.localeText.sidebarNoMatchingFields} "$_query".',
+            stateManager.localeText.sidebarNoMatchingFields.replaceAll(
+              '{query}',
+              _query,
+            ),
             textAlign: TextAlign.center,
             style: TextStyle(color: colors.mutedForeground),
           ),
