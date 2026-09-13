@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl;
+import 'package:trina_grid/src/helper/trina_general_helper.dart';
 import 'package:trina_grid/src/ui/cells/trina_percentage_cell.dart';
 import 'package:trina_grid/trina_grid.dart';
 
@@ -116,7 +117,7 @@ class TrinaColumnTypePercentage
     }
 
     formatted = formatted
-        .replaceAll(RegExp('[^$match]'), '')
+        .replaceAll(TrinaGeneralHelper.cachedRegExp('[^$match]'), '')
         .replaceFirst(numberFormat.symbols.DECIMAL_SEP, '.');
 
     final num formattedNumber = num.tryParse(formatted) ?? 0;
