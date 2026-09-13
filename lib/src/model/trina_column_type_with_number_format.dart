@@ -38,11 +38,17 @@ mixin TrinaColumnTypeWithNumberFormat {
   }
 
   String applyFormat(dynamic value) {
-    num number =
-        num.tryParse(
-          value.toString().replaceAll(numberFormat.symbols.DECIMAL_SEP, '.'),
-        ) ??
-        0;
+    // A num round-trips through toString/tryParse unchanged (NaN and the
+    // infinities included), so it is used as is; only strings need parsing.
+    num number = value is num
+        ? value
+        : num.tryParse(
+                value.toString().replaceAll(
+                  numberFormat.symbols.DECIMAL_SEP,
+                  '.',
+                ),
+              ) ??
+              0;
 
     if (negative == false && number < 0) {
       number = 0;
@@ -60,7 +66,7 @@ mixin TrinaColumnTypeWithNumberFormat {
     }
 
     formatted = formatted
-        .replaceAll(RegExp('[^$match]'), '')
+        .replaceAll(TrinaGeneralHelper.cachedRegExp('[^$match]'), '')
         .replaceFirst(numberFormat.symbols.DECIMAL_SEP, '.');
 
     final num formattedNumber = num.tryParse(formatted) ?? 0;
