@@ -278,6 +278,9 @@ class TrinaGridConfiguration {
         localeText.filterGreaterThanOrEqualTo;
     TrinaFilterTypeLessThan.name = localeText.filterLessThan;
     TrinaFilterTypeLessThanOrEqualTo.name = localeText.filterLessThanOrEqualTo;
+    TrinaFilterTypeIsEmpty.name = localeText.filterIsEmpty;
+    TrinaFilterTypeIsNotEmpty.name = localeText.filterIsNotEmpty;
+    TrinaFilterTypeRegex.name = localeText.filterRegex;
   }
 
   /// Fired when setConfiguration is called in [TrinaGridStateManager]'s constructor.
@@ -1910,6 +1913,9 @@ class TrinaGridLocaleText {
   final String filterGreaterThanOrEqualTo;
   final String filterLessThan;
   final String filterLessThanOrEqualTo;
+  final String filterIsEmpty;
+  final String filterIsNotEmpty;
+  final String filterRegex;
 
   // Filter dropdown modes (booleanSelect / multiSelect filter delegates)
   final String filterAll;
@@ -1994,6 +2000,9 @@ class TrinaGridLocaleText {
     this.filterGreaterThanOrEqualTo = 'Greater than or equal to',
     this.filterLessThan = 'Less than',
     this.filterLessThanOrEqualTo = 'Less than or equal to',
+    this.filterIsEmpty = 'Is Empty',
+    this.filterIsNotEmpty = 'Is Not Empty',
+    this.filterRegex = 'Regex',
     // Date popup
     this.sunday = 'Su',
     this.monday = 'Mo',
@@ -2061,6 +2070,9 @@ class TrinaGridLocaleText {
     this.filterGreaterThanOrEqualTo = 'Supérieur ou égal à',
     this.filterLessThan = 'Inférieur à',
     this.filterLessThanOrEqualTo = 'Inférieur ou égal à',
+    this.filterIsEmpty = 'Est vide',
+    this.filterIsNotEmpty = 'N\'est pas vide',
+    this.filterRegex = 'Expression régulière',
     // Date popup
     this.sunday = 'Di',
     this.monday = 'Lu',
@@ -2130,6 +2142,9 @@ class TrinaGridLocaleText {
     this.filterGreaterThanOrEqualTo = '大于等于',
     this.filterLessThan = '小于',
     this.filterLessThanOrEqualTo = '小于等于',
+    this.filterIsEmpty = '为空',
+    this.filterIsNotEmpty = '不为空',
+    this.filterRegex = '正则表达式',
     // Date popup
     this.sunday = '日',
     this.monday = '一',
@@ -2196,6 +2211,9 @@ class TrinaGridLocaleText {
     this.filterGreaterThanOrEqualTo = '~보다 크거나 같은',
     this.filterLessThan = '~보다 작은',
     this.filterLessThanOrEqualTo = '~보다 작거나 같은',
+    this.filterIsEmpty = '비어 있음',
+    this.filterIsNotEmpty = '비어 있지 않음',
+    this.filterRegex = '정규식',
     // Date popup
     this.sunday = '일',
     this.monday = '월',
@@ -2262,6 +2280,9 @@ class TrinaGridLocaleText {
     this.filterGreaterThanOrEqualTo = 'Больше или равно',
     this.filterLessThan = 'Меньше чем',
     this.filterLessThanOrEqualTo = 'Меньше или равно',
+    this.filterIsEmpty = 'Пусто',
+    this.filterIsNotEmpty = 'Не пусто',
+    this.filterRegex = 'Регулярное выражение',
     // Date popup
     this.sunday = 'Вск',
     this.monday = 'Пн',
@@ -2329,6 +2350,9 @@ class TrinaGridLocaleText {
     this.filterGreaterThanOrEqualTo = 'Větší než nebo rovno',
     this.filterLessThan = 'Menší než',
     this.filterLessThanOrEqualTo = 'Menší než nebo rovno',
+    this.filterIsEmpty = 'Je prázdné',
+    this.filterIsNotEmpty = 'Není prázdné',
+    this.filterRegex = 'Regulární výraz',
     // Date popup
     this.sunday = 'Ne',
     this.monday = 'Po',
@@ -2396,6 +2420,9 @@ class TrinaGridLocaleText {
     this.filterGreaterThanOrEqualTo = 'Maior ou igual que',
     this.filterLessThan = 'Menor que',
     this.filterLessThanOrEqualTo = 'Menor ou igual que',
+    this.filterIsEmpty = 'Está vazio',
+    this.filterIsNotEmpty = 'Não está vazio',
+    this.filterRegex = 'Expressão regular',
     // Date popup
     this.sunday = 'Dom',
     this.monday = 'Seg',
@@ -2463,6 +2490,9 @@ class TrinaGridLocaleText {
     this.filterGreaterThanOrEqualTo = 'Más grande o igual que',
     this.filterLessThan = 'Más pequeño que',
     this.filterLessThanOrEqualTo = 'Más pequeño o igual que',
+    this.filterIsEmpty = 'Está vacío',
+    this.filterIsNotEmpty = 'No está vacío',
+    this.filterRegex = 'Expresión regular',
     // Date popup
     this.sunday = 'Dom',
     this.monday = 'Lu',
@@ -2530,6 +2560,9 @@ class TrinaGridLocaleText {
     this.filterGreaterThanOrEqualTo = 'بزرگتر مساوی از',
     this.filterLessThan = 'کمتر از',
     this.filterLessThanOrEqualTo = 'کمتر مساوی از',
+    this.filterIsEmpty = 'خالی است',
+    this.filterIsNotEmpty = 'خالی نیست',
+    this.filterRegex = 'عبارت باقاعده',
     // Date popup
     this.sunday = 'ی',
     this.monday = 'د',
@@ -2598,6 +2631,9 @@ class TrinaGridLocaleText {
     this.filterGreaterThanOrEqualTo = 'أكبر من أو يساوي',
     this.filterLessThan = 'اصغر من',
     this.filterLessThanOrEqualTo = 'أصغر من أو يساوي',
+    this.filterIsEmpty = 'فارغ',
+    this.filterIsNotEmpty = 'ليس فارغاً',
+    this.filterRegex = 'تعبير نمطي',
     // Date popup
     this.sunday = 'أح',
     this.monday = 'إث',
@@ -2664,6 +2700,9 @@ class TrinaGridLocaleText {
     this.filterGreaterThanOrEqualTo = 'Større enn eller lik',
     this.filterLessThan = 'Mindre enn',
     this.filterLessThanOrEqualTo = 'Mindre enn eller lik',
+    this.filterIsEmpty = 'Er tom',
+    this.filterIsNotEmpty = 'Er ikke tom',
+    this.filterRegex = 'Regulært uttrykk',
     // Date popup
     this.sunday = 'Søn',
     this.monday = 'Man',
@@ -2731,6 +2770,9 @@ class TrinaGridLocaleText {
     this.filterGreaterThanOrEqualTo = 'Größer als oder gleich',
     this.filterLessThan = 'Kleiner als',
     this.filterLessThanOrEqualTo = 'Kleiner als oder gleich',
+    this.filterIsEmpty = 'Ist leer',
+    this.filterIsNotEmpty = 'Ist nicht leer',
+    this.filterRegex = 'Regulärer Ausdruck',
     // Date popup
     this.sunday = 'So',
     this.monday = 'Mo',
@@ -2801,6 +2843,9 @@ class TrinaGridLocaleText {
     this.filterGreaterThanOrEqualTo = 'Büyük veya eşittir',
     this.filterLessThan = 'Küçüktür',
     this.filterLessThanOrEqualTo = 'Küçük veya eşittir',
+    this.filterIsEmpty = 'Boş',
+    this.filterIsNotEmpty = 'Boş değil',
+    this.filterRegex = 'Düzenli ifade',
     // Date popup
     this.sunday = 'Paz',
     this.monday = 'Pzt',
@@ -2868,6 +2913,9 @@ class TrinaGridLocaleText {
     this.filterGreaterThanOrEqualTo = '以上',
     this.filterLessThan = '未満',
     this.filterLessThanOrEqualTo = '以下',
+    this.filterIsEmpty = '空である',
+    this.filterIsNotEmpty = '空ではない',
+    this.filterRegex = '正規表現',
     // Date popup
     this.sunday = '日',
     this.monday = '月',
@@ -2934,6 +2982,9 @@ class TrinaGridLocaleText {
     this.filterGreaterThanOrEqualTo = 'Nagyobb vagy egyenlő',
     this.filterLessThan = 'Kisebb mint',
     this.filterLessThanOrEqualTo = 'Kisebb vagy egyenlő',
+    this.filterIsEmpty = 'Üres',
+    this.filterIsNotEmpty = 'Nem üres',
+    this.filterRegex = 'Rendszeres kifejezés',
     // Date popup
     this.sunday = 'Va',
     this.monday = 'Hé',
@@ -3001,6 +3052,9 @@ class TrinaGridLocaleText {
             filterGreaterThanOrEqualTo == other.filterGreaterThanOrEqualTo &&
             filterLessThan == other.filterLessThan &&
             filterLessThanOrEqualTo == other.filterLessThanOrEqualTo &&
+            filterIsEmpty == other.filterIsEmpty &&
+            filterIsNotEmpty == other.filterIsNotEmpty &&
+            filterRegex == other.filterRegex &&
             sunday == other.sunday &&
             monday == other.monday &&
             tuesday == other.tuesday &&
@@ -3060,6 +3114,9 @@ class TrinaGridLocaleText {
     filterGreaterThanOrEqualTo,
     filterLessThan,
     filterLessThanOrEqualTo,
+    filterIsEmpty,
+    filterIsNotEmpty,
+    filterRegex,
     sunday,
     monday,
     tuesday,
