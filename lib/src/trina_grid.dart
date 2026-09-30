@@ -997,6 +997,10 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
 
   @override
   Widget build(BuildContext context) {
+    // Set before setLayout below, which can fit the columns to their content
+    // and so has to measure text at the scale the cells are drawn with.
+    _stateManager.setTextScaler(MediaQuery.textScalerOf(context));
+
     Widget body = LayoutBuilder(
       builder: (c, size) {
         _stateManager.setLayout(size);

@@ -147,6 +147,54 @@ void main() {
   );
 
   testWidgets(
+    'When the text is scaled, the columns should fit the scaled text',
+    (tester) async {
+      // Narrow on purpose: the long column overflows it at either scale, so
+      // there is no leftover width to share and the fit itself is measured.
+      await TestHelperUtil.changeWidth(tester: tester, width: 400, height: 600);
+
+      const longValue =
+          'a value long enough on its own to overflow the whole grid';
+
+      Future<double> fittedWidth(TextScaler textScaler) async {
+        final columns = buildColumns();
+
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Builder(
+              builder: (context) {
+                return MediaQuery(
+                  data: MediaQuery.of(context).copyWith(textScaler: textScaler),
+                  child: Material(
+                    child: TrinaGrid(
+                      // A fresh grid per scale rather than an updated one.
+                      key: ValueKey(textScaler),
+                      columns: columns,
+                      rows: [row('a', longValue)],
+                      configuration: fitContent,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        return columns[1].width;
+      }
+
+      final unscaled = await fittedWidth(TextScaler.noScaling);
+      final scaled = await fittedWidth(const TextScaler.linear(2));
+
+      // The text doubles while the padding and icons stay put, so the column
+      // grows by well over half but not quite to twice its width.
+      expect(scaled, greaterThan(unscaled * 1.5));
+      expect(scaled, lessThan(unscaled * 2));
+    },
+  );
+
+  testWidgets(
     'When refitOnRowsChanged is off, replacing the rows should leave the '
     'widths alone',
     (tester) async {
