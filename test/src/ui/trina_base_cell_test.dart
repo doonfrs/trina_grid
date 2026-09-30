@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:trina_grid/trina_grid.dart';
@@ -760,5 +761,189 @@ void main() {
         expect(size.height, stateManager.rowTotalHeight);
       },
     );
+  });
+
+  group('activated border', () {
+    const borderColor = Colors.deepOrange;
+
+    const activatedBorderColor = Colors.deepPurple;
+
+    Future<void> pumpCell(
+      WidgetTester tester, {
+      bool isCurrentCell = true,
+      bool isSelectedCell = false,
+      bool enableCellBorderVertical = true,
+      TextDirection textDirection = TextDirection.ltr,
+    }) async {
+      final configuration = TrinaGridConfiguration(
+        style: TrinaGridStyleConfig(
+          enableCellBorderVertical: enableCellBorderVertical,
+          borderColor: borderColor,
+          activatedBorderColor: activatedBorderColor,
+        ),
+      );
+
+      when(stateManager.configuration).thenReturn(configuration);
+      when(stateManager.style).thenReturn(configuration.style);
+      when(stateManager.isCurrentCell(any)).thenReturn(isCurrentCell);
+      when(
+        stateManager.isSelectedCell(any, any, any),
+      ).thenReturn(isSelectedCell);
+      when(stateManager.isEditing).thenReturn(false);
+
+      final cell = TrinaCell(value: 'one');
+
+      final column = TrinaColumn(
+        title: 'header',
+        field: 'header',
+        type: TrinaColumnType.text(),
+      );
+
+      final row = TrinaRow(cells: {'header': cell});
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Material(
+            child: Directionality(
+              textDirection: textDirection,
+              child: TrinaBaseCell(
+                cell: cell,
+                column: column,
+                rowIdx: 0,
+                row: row,
+                stateManager: stateManager,
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    Finder cellDecoratedBox() {
+      return find
+          .descendant(
+            of: find.byType(GestureDetector),
+            matching: find.byType(DecoratedBox),
+          )
+          .first;
+    }
+
+    BoxBorder? cellBorder(WidgetTester tester) {
+      final box = tester.widget<DecoratedBox>(cellDecoratedBox());
+
+      return (box.decoration as BoxDecoration).border;
+    }
+
+    // The render object inside the cell decoration paints the activated border.
+    RenderBox cellContent(WidgetTester tester) {
+      return tester.renderObject<RenderDecoratedBox>(cellDecoratedBox()).child
+          as RenderBox;
+    }
+
+    testWidgets('The current cell keeps its end divider', (tester) async {
+      await pumpCell(tester);
+
+      final border = cellBorder(tester) as BorderDirectional;
+
+      expect(border.end.color, borderColor);
+      expect(
+        border.end.width,
+        stateManager.configuration.style.cellVerticalBorderWidth,
+      );
+      expect(border.top, BorderSide.none);
+      expect(border.bottom, BorderSide.none);
+      expect(border.start, BorderSide.none);
+    });
+
+    testWidgets('A selected cell keeps its end divider', (tester) async {
+      await pumpCell(tester, isCurrentCell: false, isSelectedCell: true);
+
+      final border = cellBorder(tester) as BorderDirectional;
+
+      expect(border.end.color, borderColor);
+    });
+
+    testWidgets(
+      'The current cell has no divider when enableCellBorderVertical is false',
+      (tester) async {
+        await pumpCell(tester, enableCellBorderVertical: false);
+
+        expect(cellBorder(tester), isNull);
+      },
+    );
+
+    testWidgets('The activated border stops before the end divider', (
+      tester,
+    ) async {
+      await pumpCell(tester);
+
+      final content = cellContent(tester);
+      final inset = stateManager.configuration.style.cellVerticalBorderWidth;
+
+      expect(
+        content,
+        paints..rect(
+          rect: Rect.fromLTWH(
+            0,
+            0,
+            content.size.width - inset,
+            content.size.height,
+          ).deflate(0.5),
+          color: activatedBorderColor,
+        ),
+      );
+    });
+
+    testWidgets('The activated border starts after the divider in RTL', (
+      tester,
+    ) async {
+      await pumpCell(tester, textDirection: TextDirection.rtl);
+
+      final content = cellContent(tester);
+      final inset = stateManager.configuration.style.cellVerticalBorderWidth;
+
+      expect(
+        content,
+        paints..rect(
+          rect: Rect.fromLTWH(
+            inset,
+            0,
+            content.size.width - inset,
+            content.size.height,
+          ).deflate(0.5),
+          color: activatedBorderColor,
+        ),
+      );
+    });
+
+    testWidgets('The activated border fills the cell without a divider', (
+      tester,
+    ) async {
+      await pumpCell(tester, enableCellBorderVertical: false);
+
+      final content = cellContent(tester);
+
+      expect(
+        content,
+        paints..rect(
+          rect: (Offset.zero & content.size).deflate(0.5),
+          color: activatedBorderColor,
+        ),
+      );
+    });
+
+    testWidgets('An inactive cell paints no activated border', (tester) async {
+      await pumpCell(tester, isCurrentCell: false);
+
+      expect(
+        cellContent(tester),
+        isNot(
+          paints..something((method, arguments) {
+            return method == #drawRect &&
+                (arguments[1] as Paint).color == activatedBorderColor;
+          }),
+        ),
+      );
+    });
   });
 }
