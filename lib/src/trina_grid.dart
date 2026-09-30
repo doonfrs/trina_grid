@@ -1191,10 +1191,24 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
 
     // The record sidebar stays inside the grid's FocusScope: its reused cell
     // editors rely on the grid's keepFocus mechanics.
-    return FocusScope(
+    final Widget scope = FocusScope(
       onFocusChange: _stateManager.setKeepFocus,
       onKeyEvent: _handleGridFocusOnKey,
       child: _wrapWithSidebar(grid),
+    );
+
+    // The cell editors and the filter row are Material widgets and assert a
+    // Material ancestor. Provide one when the host has none, e.g. an app on
+    // the standalone material_ui package, whose Material is a different type
+    // (#423). It keeps the ambient text style, so nothing changes visually.
+    if (Material.maybeOf(context) != null) {
+      return scope;
+    }
+
+    return Material(
+      type: MaterialType.transparency,
+      textStyle: DefaultTextStyle.of(context).style,
+      child: scope,
     );
   }
 
