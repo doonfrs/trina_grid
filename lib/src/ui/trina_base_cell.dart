@@ -663,7 +663,7 @@ class _CellContent extends SingleChildRenderObjectWidget {
       padding: padding,
       activatedBorder: activatedBorder,
       endInset: endInset,
-      textDirection: Directionality.of(context),
+      textDirection: Directionality.maybeOf(context),
     );
   }
 
@@ -674,7 +674,7 @@ class _CellContent extends SingleChildRenderObjectWidget {
   ) {
     renderObject
       ..padding = padding
-      ..textDirection = Directionality.of(context)
+      ..textDirection = Directionality.maybeOf(context)
       ..activatedBorder = activatedBorder
       ..endInset = endInset;
   }
