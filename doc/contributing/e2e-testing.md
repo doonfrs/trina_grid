@@ -39,6 +39,7 @@ These tests need a real device, so CI does not run them. Pair every E2E test wit
 | `pumpGridApp(tester, grid)` | Runs the grid as the whole app, under a `Scaffold`, and waits for it to settle. |
 | `settle(tester)` | Waits for scroll animations, smooth scrolling timers and post frame callbacks. |
 | `takeScreenshot(tester, name)` | Saves a PNG of the app and returns its path. |
+| `pixelColorAt(tester, position)` | Returns the color drawn at a global position, for bugs that only show in paint. |
 | `wheelScrollHorizontally` / `wheelScrollVertically` | Scrolls the body with mouse wheel events. |
 | `swipeHorizontally(tester, dx:)` | Swipes the body with a finger (touch drag and fling). |
 | `clickHorizontalScrollbarTrack(tester)` | Clicks the horizontal scrollbar track near its end. Needs `isAlwaysShown: true`. |

@@ -499,6 +499,7 @@ class TrinaGridStyleConfig {
     this.filterHeaderColor,
     this.filterPopupHeaderColor,
     this.filterHeaderIconColor,
+    this.columnBackgroundColor,
     // Checkbox colors default to their own constants rather than the cell
     // selection colors, so customizing (or hiding) selection does not affect
     // checkbox visibility. These constants match the historical light defaults.
@@ -588,6 +589,7 @@ class TrinaGridStyleConfig {
     this.filterHeaderColor,
     this.filterPopupHeaderColor,
     this.filterHeaderIconColor,
+    this.columnBackgroundColor,
     // Checkbox colors default to their own constants rather than the cell
     // selection colors, so customizing (or hiding) selection does not affect
     // checkbox visibility. These constants match the historical dark defaults.
@@ -684,6 +686,7 @@ class TrinaGridStyleConfig {
     this.filterHeaderColor,
     this.filterPopupHeaderColor,
     this.filterHeaderIconColor,
+    this.columnBackgroundColor,
   });
 
   /// Derives the grid style from a Material [ThemeData].
@@ -1010,6 +1013,18 @@ class TrinaGridStyleConfig {
   /// Set color of filter popup header icon
   final Color? filterHeaderIconColor;
 
+  /// Fills the whole column header area: behind the column titles, the column
+  /// groups and the filter row, across the full width of the grid.
+  ///
+  /// This also covers the parts no column paints, such as the band reserved
+  /// for the vertical scrollbar at the end of the header and the space after
+  /// the last column when the columns are narrower than the grid.
+  ///
+  /// A column's own [TrinaColumn.backgroundColor], a group's
+  /// [TrinaColumnGroup.backgroundColor] and [filterHeaderColor] are drawn on
+  /// top of it. Defaults to null, which leaves the header unfilled.
+  final Color? columnBackgroundColor;
+
   /// A flag indicating whether the style is dark or not
   final bool isDarkStyle;
 
@@ -1087,6 +1102,7 @@ class TrinaGridStyleConfig {
     Color? filterPopupHeaderColor,
     Color? filterHeaderColor,
     Color? filterHeaderIconColor,
+    Color? columnBackgroundColor,
   }) {
     // Delegates to the private constructor so every field is carried over and
     // [isDarkStyle] is preserved as a plain value. Going through the public
@@ -1191,6 +1207,8 @@ class TrinaGridStyleConfig {
           filterPopupHeaderColor ?? this.filterPopupHeaderColor,
       filterHeaderIconColor:
           filterHeaderIconColor ?? this.filterHeaderIconColor,
+      columnBackgroundColor:
+          columnBackgroundColor ?? this.columnBackgroundColor,
     );
   }
 
@@ -1259,6 +1277,7 @@ class TrinaGridStyleConfig {
             filterHeaderColor == other.filterHeaderColor &&
             filterPopupHeaderColor == other.filterPopupHeaderColor &&
             filterHeaderIconColor == other.filterHeaderIconColor &&
+            columnBackgroundColor == other.columnBackgroundColor &&
             isDarkStyle == other.isDarkStyle;
   }
 
@@ -1324,6 +1343,7 @@ class TrinaGridStyleConfig {
     filterPopupHeaderColor,
     filterHeaderColor,
     filterHeaderIconColor,
+    columnBackgroundColor,
     isDarkStyle,
   ]);
 }
@@ -1443,7 +1463,12 @@ class TrinaGridScrollbarConfig {
   /// Color of the scrollbar track when hovered
   final Color? trackHoverColor;
 
-  /// Whether to show the scrollbar width in the column header
+  /// Whether the column auto sizing leaves room for the vertical scrollbar.
+  ///
+  /// When true, [TrinaAutoSizeMode] fits the columns to the grid width minus
+  /// [verticalScrollBarReservedWidth]. The header and body always reserve
+  /// that band at their end, so both scroll to the same end. To color the
+  /// band in the header, use [TrinaGridStyleConfig.columnBackgroundColor].
   final bool columnShowScrollWidth;
 
   /// Get effective thumb color

@@ -92,7 +92,7 @@ TrinaGridStyleConfig.fromColorScheme(
 
 Everything that is not a color keeps the default value: `rowHeight`, `columnHeight`, paddings, icon sizes, border widths, and the sort/group/context icons.
 
-The opt-in nullable colors stay `null` so their existing fallbacks still apply: `oddRowColor`, `evenRowColor`, `cellReadonlyColor`, `cellDefaultColor`, `cellColorGroupedRow`, `filterHeaderColor`, `filterPopupHeaderColor`, `filterHeaderIconColor`.
+The opt-in nullable colors stay `null` so their existing fallbacks still apply: `oddRowColor`, `evenRowColor`, `cellReadonlyColor`, `cellDefaultColor`, `cellColorGroupedRow`, `filterHeaderColor`, `filterPopupHeaderColor`, `filterHeaderIconColor`, `columnBackgroundColor`.
 
 ## Backward compatibility
 

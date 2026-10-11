@@ -1027,6 +1027,14 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
             Directionality.of(context),
           ),
           children: [
+            /// Fill behind the whole column header. Painted first, so the
+            /// columns, groups and filters draw on top of it.
+            if (style.columnBackgroundColor != null)
+              LayoutId(
+                id: _StackName.columnsBackground,
+                child: ColoredBox(color: style.columnBackgroundColor!),
+              ),
+
             /// Body columns and rows.
             LayoutId(
               id: _StackName.bodyRows,
@@ -1468,6 +1476,20 @@ class TrinaGridLayoutDelegate extends MultiChildLayoutDelegate {
       positionChild(_StackName.bodyColumns, Offset(posX, columnsTopOffset));
 
       bodyRowsTopOffset += s.height;
+
+      // Span the full width, so the band reserved for the vertical scrollbar
+      // and any space after the last column are filled too.
+      if (hasChild(_StackName.columnsBackground)) {
+        layoutChild(
+          _StackName.columnsBackground,
+          BoxConstraints.tight(Size(size.width, s.height)),
+        );
+
+        positionChild(
+          _StackName.columnsBackground,
+          Offset(0, columnsTopOffset),
+        );
+      }
     }
 
     if (hasChild(_StackName.bodyColumnFooters)) {
@@ -1850,6 +1872,7 @@ class TrinaOptional<T> {
 }
 
 enum _StackName {
+  columnsBackground,
   header,
   headerDivider,
   leftFrozenColumns,
