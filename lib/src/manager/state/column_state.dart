@@ -576,11 +576,19 @@ mixin ColumnState implements ITrinaGridState {
 
     // Get size after rendering virtually
     // https://stackoverflow.com/questions/54351655/flutter-textfield-width-should-match-width-of-contained-text
+    // The titles and cells are drawn with Text widgets, which apply the ambient
+    // text scale, so measure with it too.
+    final textScaler = MediaQuery.textScalerOf(context);
     final titleTextWidth = _visualTextWidth(
       column.title,
       style.columnTextStyle,
+      textScaler,
     );
-    final maxValueTextWidth = _visualTextWidth(maxValue, style.cellTextStyle);
+    final maxValueTextWidth = _visualTextWidth(
+      maxValue,
+      style.cellTextStyle,
+      textScaler,
+    );
 
     // todo : Handle (renderer) width
 
@@ -610,11 +618,12 @@ mixin ColumnState implements ITrinaGridState {
     resizeColumn(column, math.max(calculatedTileWidth, calculatedCellWidth));
   }
 
-  double _visualTextWidth(String text, TextStyle style) {
+  double _visualTextWidth(String text, TextStyle style, TextScaler textScaler) {
     if (text.isEmpty) return 0;
     final painter = TextPainter(
       text: TextSpan(style: style, text: text),
       textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
+      textScaler: textScaler,
     )..layout();
     return painter.width;
   }

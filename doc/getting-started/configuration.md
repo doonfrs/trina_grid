@@ -38,6 +38,9 @@ TrinaGridConfiguration(
     cellHorizontalBorderWidth: 1.0,
     cellVerticalBorderWidth: 1.0,
     
+    // Column header background, across the full grid width
+    columnBackgroundColor: Colors.blue[50],
+
     // Text styles
     columnTextStyle: TextStyle(
       color: Colors.black,
@@ -66,6 +69,23 @@ TrinaGridConfiguration(
     // Even/odd row colors
     oddRowColor: Colors.grey[100],
     evenRowColor: Colors.white,
+  ),
+)
+```
+
+### Column Header Background
+
+`columnBackgroundColor` fills the whole column header area: behind the column titles, the column groups and the filter row, across the full width of the grid. Use it for a solid header bar instead of giving every column a `backgroundColor`. It also fills the parts no column paints:
+
+- the band at the end of the header reserved for the vertical scrollbar, so the header and the rows scroll to the same end (see [Scrollbars](../features/scrollbars.md));
+- the space after the last column when the columns are narrower than the grid.
+
+A column's own `backgroundColor`, a column group's `backgroundColor` and `filterHeaderColor` are drawn on top of it. It defaults to `null`, which leaves the header unfilled.
+
+```dart
+TrinaGridConfiguration(
+  style: TrinaGridStyleConfig(
+    columnBackgroundColor: Colors.blue[100],
   ),
 )
 ```

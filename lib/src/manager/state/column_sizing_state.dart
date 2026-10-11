@@ -243,6 +243,9 @@ mixin ColumnSizingState implements ITrinaGridState {
     final painter = TextPainter(
       text: TextSpan(style: textStyle, text: text),
       textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
+      // The titles and cells are drawn with Text widgets, which apply the
+      // ambient text scale, so measure with it too.
+      textScaler: textScaler,
     )..layout();
     return painter.width;
   }

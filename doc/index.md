@@ -102,6 +102,7 @@ Welcome to the official documentation for TrinaGrid, a powerful data grid for Fl
 
 - [Contributors](contributing/contributors.md) - Meet our amazing contributors
 - [How to Contribute](contributing/how-to-contribute.md) - Guidelines for contributing
+- [End to End Testing](contributing/e2e-testing.md) - Reproduce and verify bugs in a real app window
 - [Code of Conduct](contributing/code-of-conduct.md) - Community standards
 
 ## Release Notes

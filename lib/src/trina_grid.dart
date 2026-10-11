@@ -997,6 +997,10 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
 
   @override
   Widget build(BuildContext context) {
+    // Set before setLayout below, which can fit the columns to their content
+    // and so has to measure text at the scale the cells are drawn with.
+    _stateManager.setTextScaler(MediaQuery.textScalerOf(context));
+
     Widget body = LayoutBuilder(
       builder: (c, size) {
         _stateManager.setLayout(size);
@@ -1023,6 +1027,14 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
             Directionality.of(context),
           ),
           children: [
+            /// Fill behind the whole column header. Painted first, so the
+            /// columns, groups and filters draw on top of it.
+            if (style.columnBackgroundColor != null)
+              LayoutId(
+                id: _StackName.columnsBackground,
+                child: ColoredBox(color: style.columnBackgroundColor!),
+              ),
+
             /// Body columns and rows.
             LayoutId(
               id: _StackName.bodyRows,
@@ -1187,10 +1199,24 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
 
     // The record sidebar stays inside the grid's FocusScope: its reused cell
     // editors rely on the grid's keepFocus mechanics.
-    return FocusScope(
+    final Widget scope = FocusScope(
       onFocusChange: _stateManager.setKeepFocus,
       onKeyEvent: _handleGridFocusOnKey,
       child: _wrapWithSidebar(grid),
+    );
+
+    // The cell editors and the filter row are Material widgets and assert a
+    // Material ancestor. Provide one when the host has none, e.g. an app on
+    // the standalone material_ui package, whose Material is a different type
+    // (#423). It keeps the ambient text style, so nothing changes visually.
+    if (Material.maybeOf(context) != null) {
+      return scope;
+    }
+
+    return Material(
+      type: MaterialType.transparency,
+      textStyle: DefaultTextStyle.of(context).style,
+      child: scope,
     );
   }
 
@@ -1450,6 +1476,20 @@ class TrinaGridLayoutDelegate extends MultiChildLayoutDelegate {
       positionChild(_StackName.bodyColumns, Offset(posX, columnsTopOffset));
 
       bodyRowsTopOffset += s.height;
+
+      // Span the full width, so the band reserved for the vertical scrollbar
+      // and any space after the last column are filled too.
+      if (hasChild(_StackName.columnsBackground)) {
+        layoutChild(
+          _StackName.columnsBackground,
+          BoxConstraints.tight(Size(size.width, s.height)),
+        );
+
+        positionChild(
+          _StackName.columnsBackground,
+          Offset(0, columnsTopOffset),
+        );
+      }
     }
 
     if (hasChild(_StackName.bodyColumnFooters)) {
@@ -1832,6 +1872,7 @@ class TrinaOptional<T> {
 }
 
 enum _StackName {
+  columnsBackground,
   header,
   headerDivider,
   leftFrozenColumns,

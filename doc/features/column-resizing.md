@@ -203,6 +203,10 @@ stateManager.autoFitColumn(context, column);
 ```
 
 This calculates the optimal width based on the column's content and header text.
+The text is measured at the ambient text scale (`MediaQuery.textScalerOf`), the
+same scale the cells are drawn with, so the fit holds under desktop font scaling
+or accessibility font sizes. `TrinaAutoSizeMode.fitContent` measures the same
+way.
 
 ## Example
 

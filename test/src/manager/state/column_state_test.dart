@@ -1848,6 +1848,76 @@ void main() {
 
       expect(columns.first.width, greaterThan(columns.first.minWidth));
     });
+
+    testWidgets(
+      'When the text is scaled, the fitted width should grow by the extra '
+      'text width only',
+      (tester) async {
+        // Long enough for the value, not the title, to set the width.
+        const value = 'T2026-00752 T2026-00752 T2026-00752';
+
+        late TrinaGridStateManager stateManager;
+
+        Future<double> fittedWidth(TextScaler textScaler) async {
+          final columns = ColumnHelper.textColumn('title');
+          final rows = RowHelper.count(1, columns);
+          rows[0].cells['title0']!.value = value;
+
+          late BuildContext context;
+
+          stateManager = getStateManager(
+            columns: columns,
+            rows: rows,
+            gridFocusNode: null,
+            scroll: scroll,
+          );
+
+          await tester.pumpWidget(
+            MaterialApp(
+              home: Material(
+                child: Builder(
+                  builder: (appContext) {
+                    return MediaQuery(
+                      data: MediaQuery.of(
+                        appContext,
+                      ).copyWith(textScaler: textScaler),
+                      child: Builder(
+                        builder: (builderContext) {
+                          context = builderContext;
+                          return Directionality(
+                            textDirection: TextDirection.ltr,
+                            child: TrinaBaseColumn(
+                              stateManager: stateManager,
+                              column: columns.first,
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          );
+
+          stateManager.autoFitColumn(context, columns.first);
+
+          return columns.first.width;
+        }
+
+        final unscaled = await fittedWidth(TextScaler.noScaling);
+        final scaled = await fittedWidth(const TextScaler.linear(2));
+
+        final textWidth = (TextPainter(
+          text: TextSpan(style: stateManager.style.cellTextStyle, text: value),
+          textDirection: TextDirection.ltr,
+        )..layout()).width;
+
+        // Doubling the text adds one more text width. The padding and icons
+        // around it do not scale, so nothing else should change.
+        expect(scaled - unscaled, closeTo(textWidth, 0.01));
+      },
+    );
   });
 
   group('hideColumn', () {
