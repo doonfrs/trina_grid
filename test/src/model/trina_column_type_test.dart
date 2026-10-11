@@ -43,6 +43,79 @@ void main() {
     });
   });
 
+  group('number-family formatting', () {
+    final types = <String, TrinaColumnType>{
+      'number': TrinaColumnType.number(format: '#,##0.00', locale: 'en_US'),
+      'nonnegative number': TrinaColumnType.number(
+        negative: false,
+        locale: 'sk',
+      ),
+      'currency': TrinaColumnType.currency(
+        locale: 'sk',
+        symbol: '€',
+        decimalDigits: 2,
+      ),
+      'percentage': TrinaColumnType.percentage(
+        locale: 'en_US',
+        decimalDigits: 1,
+      ),
+      'decimal-input percentage': TrinaColumnType.percentage(
+        decimalInput: true,
+        decimalDigits: 0,
+      ),
+    };
+    final values = <num>[
+      0,
+      0.0,
+      -0.0,
+      12,
+      12.345,
+      -12.345,
+      0.235,
+      9999.995,
+      1e21,
+      1e-7,
+      double.nan,
+      double.infinity,
+      double.negativeInfinity,
+    ];
+
+    for (final entry in types.entries) {
+      test('${entry.key}: a num formats the same as its string form', () {
+        final type = entry.value as TrinaColumnTypeWithNumberFormat;
+        for (final value in values) {
+          expect(
+            type.applyFormat(value),
+            type.applyFormat(value.toString()),
+            reason: '$value',
+          );
+        }
+      });
+    }
+
+    test('toNumber of a formatted value is the same after other types ran', () {
+      final expected = <String, List<dynamic>>{};
+      for (final entry in types.entries) {
+        final type = entry.value as TrinaColumnTypeWithNumberFormat;
+        expected[entry.key] = [
+          for (final value in values) type.toNumber(type.applyFormat(value)),
+        ];
+      }
+      for (var round = 0; round < 2; round++) {
+        for (final entry in types.entries) {
+          final type = entry.value as TrinaColumnTypeWithNumberFormat;
+          for (final (index, value) in values.indexed) {
+            expect(
+              type.toNumber(type.applyFormat(value)),
+              expected[entry.key]![index],
+              reason: '${entry.key} $value',
+            );
+          }
+        }
+      }
+    });
+  });
+
   group('custom', () {
     const customType = TrinaColumnTypeCustom();
 

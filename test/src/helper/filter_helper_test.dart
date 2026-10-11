@@ -618,6 +618,62 @@ void main() {
       });
     });
 
+    group('the same search text through different filter types', () {
+      test('Contains ignores case while Regex keeps it, in any order', () {
+        final contains = makeCompareFunction(const TrinaFilterTypeContains());
+        final regex = makeCompareFunction(const TrinaFilterTypeRegex());
+        for (var round = 0; round < 3; round++) {
+          expect(contains('APPLE', 'apple'), isTrue);
+          expect(regex('APPLE', 'apple'), isFalse);
+          expect(regex('apple', 'apple'), isTrue);
+          expect(contains('apple', 'APPLE'), isTrue);
+        }
+      });
+
+      test(
+        'Equals, StartsWith, EndsWith and Contains keep their own anchors',
+        () {
+          final contains = makeCompareFunction(const TrinaFilterTypeContains());
+          final equals = makeCompareFunction(const TrinaFilterTypeEquals());
+          final startsWith = makeCompareFunction(
+            const TrinaFilterTypeStartsWith(),
+          );
+          final endsWith = makeCompareFunction(const TrinaFilterTypeEndsWith());
+          for (var round = 0; round < 3; round++) {
+            expect(contains('pineapple', 'apple'), isTrue);
+            expect(equals('pineapple', 'apple'), isFalse);
+            expect(startsWith('pineapple', 'apple'), isFalse);
+            expect(endsWith('pineapple', 'apple'), isTrue);
+            expect(startsWith('applesauce', 'apple'), isTrue);
+            expect(endsWith('applesauce', 'apple'), isFalse);
+            expect(equals('apple', 'apple'), isTrue);
+          }
+        },
+      );
+
+      test(
+        'results stay correct across hundreds of distinct searches, repeated',
+        () {
+          final contains = makeCompareFunction(const TrinaFilterTypeContains());
+          for (var round = 0; round < 3; round++) {
+            for (var i = 0; i < 200; i++) {
+              expect(contains('value$i', 'VALUE$i'), isTrue);
+              expect(contains('value$i', 'x$i'), isFalse);
+            }
+          }
+        },
+      );
+
+      test('MultiItems splits on commas and newlines every time', () {
+        final multi = makeCompareFunction(const TrinaFilterTypeMultiItems());
+        for (var round = 0; round < 3; round++) {
+          expect(multi('banana', 'apple, banana\ncherry'), isTrue);
+          expect(multi('kiwi', 'apple, banana\ncherry'), isFalse);
+          expect(multi('Banana', 'apple, banana'), isFalse);
+        }
+      });
+    });
+
     group('Boolean column', () {
       TrinaColumn booleanColumn({
         String trueText = 'Yes',
