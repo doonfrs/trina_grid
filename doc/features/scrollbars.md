@@ -90,7 +90,8 @@ much space that is:
 | `verticalScrollBarReservedWidth` | The trailing width reserved for the vertical scrollbar, or `0` when `showVertical` is `false`. |
 
 The column headers, the rows and the column footers all reserve the same trailing band, so they share
-one scroll extent and stay aligned when scrolled to the end.
+one scroll extent and stay aligned when scrolled to the end. No column is drawn in that band, so set
+`TrinaGridStyleConfig.columnBackgroundColor` to fill it, and the rest of the header, with your header color.
 
 Increasing `thickness` therefore also increases the space the grid reserves. Use these getters
 instead of hardcoding the padding if you build custom layouts around the grid.

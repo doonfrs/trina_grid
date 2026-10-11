@@ -98,6 +98,36 @@ Future<String> takeScreenshot(WidgetTester tester, String name) async {
   return path!;
 }
 
+/// Returns the color the app drew at [position], in global logical pixels.
+///
+/// Use it for bugs that only show in paint (a missing fill, a wrong color),
+/// where there is no widget geometry to assert on.
+Future<Color> pixelColorAt(WidgetTester tester, Offset position) async {
+  await tester.pumpAndSettle();
+
+  final boundary =
+      _screenshotKey.currentContext!.findRenderObject()!
+          as RenderRepaintBoundary;
+  final ratio = tester.view.devicePixelRatio;
+  final local = boundary.globalToLocal(position) * ratio;
+
+  final color = await tester.runAsync(() async {
+    final ui.Image image = await boundary.toImage(pixelRatio: ratio);
+    final bytes = await image.toByteData(format: ui.ImageByteFormat.rawRgba);
+    final i = (local.dy.floor() * image.width + local.dx.floor()) * 4;
+    image.dispose();
+
+    return Color.fromARGB(
+      bytes!.getUint8(i + 3),
+      bytes.getUint8(i),
+      bytes.getUint8(i + 1),
+      bytes.getUint8(i + 2),
+    );
+  });
+
+  return color!;
+}
+
 /// Scrolls the grid body horizontally with mouse wheel events, the way a
 /// user with a horizontal wheel or a trackpad does.
 ///
