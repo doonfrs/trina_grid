@@ -59,6 +59,8 @@ flutter test
 flutter test --coverage
 ```
 
+For bugs that only show up in a real app window (scrolling, alignment, focus, keyboard), also add an end to end test that runs the grid in a desktop app and saves screenshots. See [End to End Testing](e2e-testing.md).
+
 ### 4. Commit Your Changes
 
 Use clear, descriptive commit messages:
