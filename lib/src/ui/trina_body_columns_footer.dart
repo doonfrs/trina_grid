@@ -67,19 +67,31 @@ class TrinaBodyColumnsFooterState
 
   @override
   Widget build(BuildContext context) {
+    final scrollConfig = stateManager.configuration.scrollbar;
+
     return SingleChildScrollView(
       controller: _scroll,
       scrollDirection: Axis.horizontal,
       physics: const ClampingScrollPhysics(),
-      child: TrinaVisibilityLayout(
-        delegate: ColumnFooterLayoutDelegate(
-          stateManager: stateManager,
-          columns: _columns,
-          textDirection: stateManager.textDirection,
+      child: Padding(
+        // Mirror the trailing padding applied to the body rows and the column
+        // headers so that all three share the same maxScrollExtent. Without
+        // it, an animated or dragged scroll to the end clamps the footer one
+        // scrollbar width short of the body, shifting the footers against
+        // their columns.
+        padding: scrollConfig.showVertical
+            ? EdgeInsetsDirectional.only(end: scrollConfig.effectiveThickness)
+            : EdgeInsets.zero,
+        child: TrinaVisibilityLayout(
+          delegate: ColumnFooterLayoutDelegate(
+            stateManager: stateManager,
+            columns: _columns,
+            textDirection: stateManager.textDirection,
+          ),
+          scrollController: _scroll,
+          initialViewportDimension: MediaQuery.of(context).size.width,
+          children: _columns.map(_makeFooter).toList(growable: false),
         ),
-        scrollController: _scroll,
-        initialViewportDimension: MediaQuery.of(context).size.width,
-        children: _columns.map(_makeFooter).toList(growable: false),
       ),
     );
   }

@@ -12,6 +12,7 @@ TrinaGrid is a Flutter package providing a keyboard-navigable data grid widget. 
 flutter pub get                      # Install dependencies
 flutter test                         # Run all tests
 flutter test test/path/to_test.dart  # Run a single test file
+cd example && flutter test integration_test -d windows  # Run the E2E tests in a real app window
 flutter test --coverage              # Run tests with coverage
 dart analyze                         # Check for analysis errors
 dart format .                        # Format all code
@@ -22,6 +23,11 @@ dart fix --apply                     # Apply automated fixes
 
 - **IMPORTANT: After finishing any code changes**, you MUST run `dart format` on the edited files and then run `dart analyze` to check for errors. Fix any issues found before considering the task done. Never skip this step.
 - If an API or feature was changed/added, check `/doc` for relevant documentation to update, and update `/doc/index.md` if a new doc page was added.
+- **Bug fixes are verified end to end.** For any bug that shows in the UI (layout, scrolling, alignment, rendering, focus, keyboard), follow `doc/contributing/e2e-testing.md`:
+  1. Reproduce it first with an E2E test in `example/integration_test/issue_<n>_<topic>_test.dart`, built on `e2e_harness.dart` (real window, real input, geometry assertions, PNG screenshots). Run it with `cd example && flutter test integration_test/<file> -d windows` and confirm it fails for the reported reason.
+  2. Fix, rerun, and **look at the saved screenshots** in `example/build/e2e_screenshots/` with the Read tool to validate the result visually. Revert the fix once to confirm the test fails without it.
+  3. Also add a widget test in `test/`, since CI does not run the E2E tests.
+  4. If the report does not reproduce on main, run the same E2E test against the reporter's release (git worktree of the release commit) before concluding.
 
 ## Git Workflow
 

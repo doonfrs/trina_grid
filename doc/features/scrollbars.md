@@ -89,6 +89,9 @@ much space that is:
 | `effectiveThickness` | Total cross axis space a scrollbar occupies: `thickness` plus 2px of padding on each side. This is the height of the horizontal scrollbar strip and the width of the vertical scrollbar overlay. |
 | `verticalScrollBarReservedWidth` | The trailing width reserved for the vertical scrollbar, or `0` when `showVertical` is `false`. |
 
+The column headers, the rows and the column footers all reserve the same trailing band, so they share
+one scroll extent and stay aligned when scrolled to the end.
+
 Increasing `thickness` therefore also increases the space the grid reserves. Use these getters
 instead of hardcoding the padding if you build custom layouts around the grid.
 
