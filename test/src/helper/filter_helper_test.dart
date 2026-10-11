@@ -1021,7 +1021,7 @@ void main() {
         var columnType = filterColumn.type as TrinaColumnTypeSelect;
 
         // configuration's filter count should be created. (default 11)
-        expect(configuration.columnFilter.filters.length, 11);
+        expect(configuration.columnFilter.filters.length, 13);
         expect(
           columnType.items.length,
           configuration.columnFilter.filters.length,

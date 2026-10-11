@@ -24,6 +24,7 @@ executables:
   trina_grid: trina_grid
 
 dependencies:
+  material_ui: ^1.4.0
   flutter:
     sdk: flutter
   # Follows the intl version included in Flutter.
@@ -36,8 +37,10 @@ dependencies:
   shadcn_ui: ^0.55.0
 
 dev_dependencies:
+  material_ui: ^1.4.0
   flutter_test:
     sdk: flutter
   mockito: ^5.5.0
   build_runner: ^2.6.0
   flutter_lints: ^6.0.0
+

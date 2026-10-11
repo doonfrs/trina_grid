@@ -199,6 +199,9 @@ class TrinaColumnTitleState extends TrinaStateWithChange<TrinaColumnTitle> {
         child: IconButton(
           icon: TrinaGridColumnIcon(
             sort: _sort,
+            sortPriority: stateManager.sortedColumns.length > 1
+                ? widget.column.sortPriority
+                : null,
             color: style.iconColor,
             customResizeWidget: widget.column.enableContextMenu
                 ? null
@@ -291,6 +294,8 @@ class TrinaColumnTitleState extends TrinaStateWithChange<TrinaColumnTitle> {
 class TrinaGridColumnIcon extends StatelessWidget {
   final TrinaColumnSort? sort;
 
+  final int? sortPriority;
+
   final Color color;
 
   final IconData icon;
@@ -303,6 +308,7 @@ class TrinaGridColumnIcon extends StatelessWidget {
 
   const TrinaGridColumnIcon({
     this.sort,
+    this.sortPriority,
     this.color = Colors.black26,
     this.icon = Icons.dehaze,
     this.customResizeWidget,
@@ -313,21 +319,47 @@ class TrinaGridColumnIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Widget? iconWidget;
+    Color? sortColor;
+
     switch (sort) {
       case TrinaColumnSort.ascending:
-        return ascendingIcon == null
-            ? Transform.rotate(
-                angle: 90 * pi / 90,
-                child: const Icon(Icons.sort, color: Colors.green),
-              )
-            : ascendingIcon!;
+        iconWidget = ascendingIcon ??
+            Transform.rotate(
+              angle: 90 * pi / 90,
+              child: const Icon(Icons.sort, color: Colors.green),
+            );
+        sortColor = Colors.green;
+        break;
       case TrinaColumnSort.descending:
-        return descendingIcon == null
-            ? const Icon(Icons.sort, color: Colors.red)
-            : descendingIcon!;
+        iconWidget = descendingIcon ??
+            const Icon(Icons.sort, color: Colors.red);
+        sortColor = Colors.red;
+        break;
       default:
         return customResizeWidget ?? Icon(icon, color: color);
     }
+
+    if (sortPriority != null && sortPriority! > 0) {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          iconWidget,
+          const SizedBox(width: 1),
+          Text(
+            '$sortPriority',
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+              color: sortColor,
+            ),
+          ),
+        ],
+      );
+    }
+
+    return iconWidget;
   }
 }
 

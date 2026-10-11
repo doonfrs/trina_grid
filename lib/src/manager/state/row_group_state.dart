@@ -779,7 +779,7 @@ mixin RowGroupState implements ITrinaGridState {
   }
 
   void _updateRowGroup() {
-    assert(hasRowGroups);
+    if (!hasRowGroups && !_previousEnabledRowGroups) return;
 
     List<TrinaRow> rows;
 

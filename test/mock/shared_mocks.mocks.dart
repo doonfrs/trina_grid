@@ -1899,8 +1899,8 @@ class MockTrinaGridStateManager extends _i1.Mock
   );
 
   @override
-  void toggleSortColumn(_i2.TrinaColumn? column) => super.noSuchMethod(
-    Invocation.method(#toggleSortColumn, [column]),
+  void toggleSortColumn(_i2.TrinaColumn? column, {bool? multiSort}) => super.noSuchMethod(
+    Invocation.method(#toggleSortColumn, [column], {#multiSort: multiSort}),
     returnValueForMissingStub: null,
   );
 
@@ -1969,18 +1969,36 @@ class MockTrinaGridStateManager extends _i1.Mock
   );
 
   @override
-  void sortAscending(_i2.TrinaColumn? column, {bool? notify = true}) =>
-      super.noSuchMethod(
-        Invocation.method(#sortAscending, [column], {#notify: notify}),
+  void sortAscending(
+    _i2.TrinaColumn? column, {
+    bool? append = false,
+    bool? notify = true,
+  }) => super.noSuchMethod(
+        Invocation.method(#sortAscending, [column], {#append: append, #notify: notify}),
         returnValueForMissingStub: null,
       );
 
   @override
-  void sortDescending(_i2.TrinaColumn? column, {bool? notify = true}) =>
-      super.noSuchMethod(
-        Invocation.method(#sortDescending, [column], {#notify: notify}),
+  void sortDescending(
+    _i2.TrinaColumn? column, {
+    bool? append = false,
+    bool? notify = true,
+  }) => super.noSuchMethod(
+        Invocation.method(#sortDescending, [column], {#append: append, #notify: notify}),
         returnValueForMissingStub: null,
       );
+
+  @override
+  void clearSorting({bool? notify = true}) => super.noSuchMethod(
+        Invocation.method(#clearSorting, [], {#notify: notify}),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  List<_i2.TrinaColumn> get sortedColumns => (super.noSuchMethod(
+        Invocation.getter(#sortedColumns),
+        returnValue: <_i2.TrinaColumn>[],
+      ) as List<_i2.TrinaColumn>);
 
   @override
   void sortBySortIdx(_i2.TrinaColumn? column, {bool? notify = true}) =>

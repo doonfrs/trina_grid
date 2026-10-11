@@ -25,6 +25,8 @@ class FilterHelper {
   static const List<TrinaFilterType> defaultFilters = [
     TrinaFilterTypeContains(),
     TrinaFilterTypeEquals(),
+    TrinaFilterTypeNotEquals(),
+    TrinaFilterTypeDoesNotContain(),
     TrinaFilterTypeStartsWith(),
     TrinaFilterTypeEndsWith(),
     TrinaFilterTypeGreaterThan(),
@@ -219,6 +221,45 @@ class FilterHelper {
     required String search,
     required TrinaColumn column,
   }) {
+    final isNegative = filterType is TrinaFilterTypeNotEquals ||
+        filterType is TrinaFilterTypeDoesNotContain;
+
+    if (isNegative) {
+      if (column.type is TrinaColumnTypeWithNumberFormat) {
+        final numberColumn = column.type as TrinaColumnTypeWithNumberFormat;
+        final formattedMatches = filterType is TrinaFilterTypeNotEquals
+            ? FilterHelper.compareEquals(
+                base: numberColumn.applyFormat(base),
+                search: search,
+                column: column,
+              )
+            : FilterHelper.compareContains(
+                base: numberColumn.applyFormat(base),
+                search: search,
+                column: column,
+              );
+        final rawMatches = filterType is TrinaFilterTypeNotEquals
+            ? FilterHelper.compareEquals(
+                base: base,
+                search: search.replaceFirst(
+                  numberColumn.numberFormat.symbols.DECIMAL_SEP,
+                  '.',
+                ),
+                column: column,
+              )
+            : FilterHelper.compareContains(
+                base: base,
+                search: search.replaceFirst(
+                  numberColumn.numberFormat.symbols.DECIMAL_SEP,
+                  '.',
+                ),
+                column: column,
+              );
+        return !(formattedMatches || rawMatches);
+      }
+      return filterType.compare(base: base, search: search, column: column);
+    }
+
     bool compare = false;
 
     if (column.type is TrinaColumnTypeBoolean) {
@@ -267,6 +308,31 @@ class FilterHelper {
     required TrinaColumn column,
   }) {
     return _compareWithRegExp(RegExp.escape(search!), base!);
+  }
+
+  /// Whether [search] is not equal to [base].
+  static bool compareNotEquals({
+    required String? base,
+    required String? search,
+    required TrinaColumn column,
+  }) {
+    if (search == null || search.isEmpty) return true;
+    if (base == null) return true;
+    return !_compareWithRegExp(
+      r'^' + RegExp.escape(search) + r'$',
+      base,
+    );
+  }
+
+  /// Whether [search] is not contained in [base].
+  static bool compareDoesNotContain({
+    required String? base,
+    required String? search,
+    required TrinaColumn column,
+  }) {
+    if (search == null || search.isEmpty) return true;
+    if (base == null) return true;
+    return !_compareWithRegExp(RegExp.escape(search), base);
   }
 
   /// Whether [search] is equals to [base].
@@ -674,6 +740,30 @@ class TrinaFilterTypeEquals implements TrinaFilterType {
   TrinaCompareFunction get compare => FilterHelper.compareEquals;
 
   const TrinaFilterTypeEquals();
+}
+
+class TrinaFilterTypeNotEquals implements TrinaFilterType {
+  static String name = 'Not equals';
+
+  @override
+  String get title => TrinaFilterTypeNotEquals.name;
+
+  @override
+  TrinaCompareFunction get compare => FilterHelper.compareNotEquals;
+
+  const TrinaFilterTypeNotEquals();
+}
+
+class TrinaFilterTypeDoesNotContain implements TrinaFilterType {
+  static String name = 'Does not contain';
+
+  @override
+  String get title => TrinaFilterTypeDoesNotContain.name;
+
+  @override
+  TrinaCompareFunction get compare => FilterHelper.compareDoesNotContain;
+
+  const TrinaFilterTypeDoesNotContain();
 }
 
 class TrinaFilterTypeStartsWith implements TrinaFilterType {

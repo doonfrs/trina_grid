@@ -1,6 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
+import '../ui/widgets/ensure_material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class MultiLineColumnFilter extends StatefulWidget {
@@ -35,7 +36,8 @@ class _MultiLineColumnFilterState extends State<MultiLineColumnFilter> {
         widget.stateManager.configuration.style.filterHeaderColor ??
         widget.stateManager.configuration.style.cellColorInEditState;
 
-    return Stack(
+    return EnsureMaterialUi(
+      child: Stack(
       children: [
         TextField(
           focusNode: widget.focusNode,
@@ -156,6 +158,7 @@ class _MultiLineColumnFilterState extends State<MultiLineColumnFilter> {
           ),
         ),
       ],
+      ),
     );
   }
 

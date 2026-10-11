@@ -1,7 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
+import '../widgets/ensure_material_ui.dart';
 import 'package:trina_grid/src/widgets/boolean_column_filter.dart';
 import 'package:trina_grid/src/widgets/multi_line_column_filter.dart';
 import 'package:trina_grid/src/widgets/multi_select_column_filter.dart';
@@ -516,7 +517,7 @@ class TrinaColumnFilterState extends TrinaStateWithChange<TrinaColumnFilter> {
                 : BorderSide.none,
           ),
         ),
-        child: Padding(padding: _padding, child: w),
+        child: Padding(padding: _padding, child: EnsureMaterialUi(child: w)),
       ),
     );
   }
