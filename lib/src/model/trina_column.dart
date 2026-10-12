@@ -89,6 +89,9 @@ class TrinaColumn {
   /// Set column sorting.
   TrinaColumnSort sort;
 
+  /// Priority in multi-column sorting (1-based, 0 means unranked/single).
+  int sortPriority;
+
   /// Formatter for display of cell values.
   TrinaColumnValueFormatter? formatter;
 
@@ -314,6 +317,7 @@ class TrinaColumn {
     this.titleTextAlign = TrinaColumnTextAlign.start,
     this.frozen = TrinaColumnFrozen.none,
     this.sort = TrinaColumnSort.none,
+    this.sortPriority = 0,
     this.formatter,
     this.applyFormatterInEditing = false,
     this.backgroundColor,
