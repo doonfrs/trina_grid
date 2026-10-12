@@ -24,7 +24,9 @@ class FilterHelper {
 
   static const List<TrinaFilterType> defaultFilters = [
     TrinaFilterTypeContains(),
+    TrinaFilterTypeDoesNotContain(),
     TrinaFilterTypeEquals(),
+    TrinaFilterTypeNotEquals(),
     TrinaFilterTypeStartsWith(),
     TrinaFilterTypeEndsWith(),
     TrinaFilterTypeGreaterThan(),
@@ -90,6 +92,10 @@ class FilterHelper {
 
       for (final condition in conditions) {
         if (condition.field == filterFieldAllColumns) {
+          // A negated type over all columns keeps the rows where no column
+          // matches, rather than the rows where any one column does not.
+          final filterType = condition.filterType!;
+          final negated = filterType is TrinaNegatedFilterType;
           bool? flagAllColumns;
 
           row!.cells.forEach((key, value) {
@@ -99,7 +105,7 @@ class FilterHelper {
               flagAllColumns = compareOr(
                 flagAllColumns,
                 compareByFilterType(
-                  filterType: condition.filterType!,
+                  filterType: negated ? filterType.negates : filterType,
                   base: value.value.toString(),
                   search: condition.search,
                   column: foundColumn,
@@ -107,6 +113,10 @@ class FilterHelper {
               );
             }
           });
+
+          if (negated && flagAllColumns != null) {
+            flagAllColumns = !flagAllColumns!;
+          }
 
           flag = compareAnd(flag, flagAllColumns);
         } else {
@@ -233,6 +243,17 @@ class FilterHelper {
     required String search,
     required TrinaColumn column,
   }) {
+    // A cell matches when any of its representations below matches, so a
+    // negated type has to negate that whole match, not each representation.
+    if (filterType is TrinaNegatedFilterType) {
+      return !compareByFilterType(
+        filterType: filterType.negates,
+        base: base,
+        search: search,
+        column: column,
+      );
+    }
+
     bool compare = false;
 
     if (column.type is TrinaColumnTypeBoolean) {
@@ -693,6 +714,51 @@ class TrinaFilterTypeEquals implements TrinaFilterType {
   TrinaCompareFunction get compare => FilterHelper.compareEquals;
 
   const TrinaFilterTypeEquals();
+}
+
+/// A filter type that keeps the rows [negates] filters out, and the reverse.
+///
+/// [FilterHelper.compareByFilterType] negates the whole match of [negates], so
+/// a number cell is excluded when either its formatted or its raw value
+/// matches, and a search over all columns keeps the rows where no column
+/// matches.
+abstract class TrinaNegatedFilterType implements TrinaFilterType {
+  const TrinaNegatedFilterType();
+
+  /// The filter type whose matches this type excludes.
+  TrinaFilterType get negates;
+
+  @override
+  TrinaCompareFunction get compare =>
+      ({
+        required String? base,
+        required String? search,
+        required TrinaColumn column,
+      }) => !negates.compare(base: base, search: search, column: column);
+}
+
+class TrinaFilterTypeDoesNotContain extends TrinaNegatedFilterType {
+  static String name = 'Does not contain';
+
+  @override
+  String get title => TrinaFilterTypeDoesNotContain.name;
+
+  @override
+  TrinaFilterType get negates => const TrinaFilterTypeContains();
+
+  const TrinaFilterTypeDoesNotContain();
+}
+
+class TrinaFilterTypeNotEquals extends TrinaNegatedFilterType {
+  static String name = 'Not equals';
+
+  @override
+  String get title => TrinaFilterTypeNotEquals.name;
+
+  @override
+  TrinaFilterType get negates => const TrinaFilterTypeEquals();
+
+  const TrinaFilterTypeNotEquals();
 }
 
 class TrinaFilterTypeStartsWith implements TrinaFilterType {

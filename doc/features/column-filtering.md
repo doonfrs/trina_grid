@@ -30,10 +30,26 @@ TrinaGrid includes several built-in filter types that can be used to filter data
 ### Text Filters
 
 - **Contains** (`TrinaFilterTypeContains`): Matches rows where the cell value contains the search text
+- **Does Not Contain** (`TrinaFilterTypeDoesNotContain`): Matches rows where the cell value does not contain the search text
 - **Equals** (`TrinaFilterTypeEquals`): Matches rows where the cell value exactly matches the search text
+- **Not Equals** (`TrinaFilterTypeNotEquals`): Matches rows where the cell value does not exactly match the search text
 - **Starts With** (`TrinaFilterTypeStartsWith`): Matches rows where the cell value starts with the search text
 - **Ends With** (`TrinaFilterTypeEndsWith`): Matches rows where the cell value ends with the search text
 - **Regex** (`TrinaFilterTypeRegex`): Matches rows where the cell value matches the regular expression pattern
+
+The negated types exclude exactly the rows their positive type matches. A number cell is excluded when either its formatted or its raw value matches (`1,000` and `1000` both exclude 1000), and with **All columns** a row is kept only when no column matches. To negate another filter type, extend `TrinaNegatedFilterType`:
+
+```dart
+class DoesNotStartWith extends TrinaNegatedFilterType {
+  const DoesNotStartWith();
+
+  @override
+  String get title => 'Does not start with';
+
+  @override
+  TrinaFilterType get negates => const TrinaFilterTypeStartsWith();
+}
+```
 
 #### Regular Expression (Regex) Filter Example
 
