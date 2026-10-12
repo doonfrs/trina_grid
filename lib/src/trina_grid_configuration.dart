@@ -271,6 +271,8 @@ class TrinaGridConfiguration {
   void updateLocale() {
     TrinaFilterTypeContains.name = localeText.filterContains;
     TrinaFilterTypeEquals.name = localeText.filterEquals;
+    TrinaFilterTypeNotEquals.name = localeText.filterNotEquals;
+    TrinaFilterTypeDoesNotContain.name = localeText.filterDoesNotContain;
     TrinaFilterTypeStartsWith.name = localeText.filterStartsWith;
     TrinaFilterTypeEndsWith.name = localeText.filterEndsWith;
     TrinaFilterTypeGreaterThan.name = localeText.filterGreaterThan;
@@ -1932,6 +1934,8 @@ class TrinaGridLocaleText {
   final String filterAllColumns;
   final String filterContains;
   final String filterEquals;
+  final String filterNotEquals;
+  final String filterDoesNotContain;
   final String filterStartsWith;
   final String filterEndsWith;
   final String filterGreaterThan;
@@ -2019,6 +2023,8 @@ class TrinaGridLocaleText {
     this.filterAllColumns = 'All columns',
     this.filterContains = 'Contains',
     this.filterEquals = 'Equals',
+    this.filterNotEquals = 'Not equals',
+    this.filterDoesNotContain = 'Does not contain',
     this.filterStartsWith = 'Starts with',
     this.filterEndsWith = 'Ends with',
     this.filterGreaterThan = 'Greater than',
@@ -2089,6 +2095,8 @@ class TrinaGridLocaleText {
     this.filterAllColumns = 'Toutes colonnes',
     this.filterContains = 'Contient',
     this.filterEquals = 'Egal',
+    this.filterNotEquals = 'Différent de',
+    this.filterDoesNotContain = 'Ne contient pas',
     this.filterStartsWith = 'Commence par',
     this.filterEndsWith = 'Termine par',
     this.filterGreaterThan = 'Supérieur à',
@@ -2161,6 +2169,8 @@ class TrinaGridLocaleText {
     this.filterAllColumns = '全部列',
     this.filterContains = '包含',
     this.filterEquals = '等于',
+    this.filterNotEquals = '不等于',
+    this.filterDoesNotContain = '不包含',
     this.filterStartsWith = '开始于',
     this.filterEndsWith = '结束于',
     this.filterGreaterThan = '大于',
@@ -2230,6 +2240,8 @@ class TrinaGridLocaleText {
     this.filterAllColumns = '전체 컬럼',
     this.filterContains = '포함',
     this.filterEquals = '일치',
+    this.filterNotEquals = '일치하지 않음',
+    this.filterDoesNotContain = '포함하지 않음',
     this.filterStartsWith = '~로 시작',
     this.filterEndsWith = '~로 끝',
     this.filterGreaterThan = '~보다 큰',
@@ -2299,6 +2311,8 @@ class TrinaGridLocaleText {
     this.filterAllColumns = 'Все колонки',
     this.filterContains = 'Содержит',
     this.filterEquals = 'Равно',
+    this.filterNotEquals = 'Не равно',
+    this.filterDoesNotContain = 'Не содержит',
     this.filterStartsWith = 'Начинается с',
     this.filterEndsWith = 'Заканчивается на',
     this.filterGreaterThan = 'Больше чем',
@@ -2369,6 +2383,8 @@ class TrinaGridLocaleText {
     this.filterAllColumns = 'Všechny sloupce',
     this.filterContains = 'Obsahuje',
     this.filterEquals = 'Rovná se',
+    this.filterNotEquals = 'Nerovná se',
+    this.filterDoesNotContain = 'Neobsahuje',
     this.filterStartsWith = 'Začíná na',
     this.filterEndsWith = 'Končí na',
     this.filterGreaterThan = 'Větší než',
@@ -2439,6 +2455,8 @@ class TrinaGridLocaleText {
     this.filterAllColumns = 'Todas as colunas',
     this.filterContains = 'Contenha',
     this.filterEquals = 'Igual',
+    this.filterNotEquals = 'Diferente',
+    this.filterDoesNotContain = 'Não contenha',
     this.filterStartsWith = 'Inicia com',
     this.filterEndsWith = 'Termina com',
     this.filterGreaterThan = 'Maior que',
@@ -2509,6 +2527,8 @@ class TrinaGridLocaleText {
     this.filterAllColumns = 'Todas las columnas',
     this.filterContains = 'Contenga',
     this.filterEquals = 'Igual',
+    this.filterNotEquals = 'Distinto',
+    this.filterDoesNotContain = 'No contenga',
     this.filterStartsWith = 'Empieza con',
     this.filterEndsWith = 'Termina con',
     this.filterGreaterThan = 'Más grande que',
@@ -2579,6 +2599,8 @@ class TrinaGridLocaleText {
     this.filterAllColumns = 'تمام ستون ها',
     this.filterContains = 'شامل',
     this.filterEquals = 'برابر',
+    this.filterNotEquals = 'برابر نیست',
+    this.filterDoesNotContain = 'شامل نیست',
     this.filterStartsWith = 'شروع با',
     this.filterEndsWith = 'خاتمه با',
     this.filterGreaterThan = 'بزرگتر از',
@@ -2650,6 +2672,8 @@ class TrinaGridLocaleText {
     this.filterAllColumns = 'كل الأعمدة',
     this.filterContains = 'يحتوي',
     this.filterEquals = 'يساوي',
+    this.filterNotEquals = 'لا يساوي',
+    this.filterDoesNotContain = 'لا يحتوي',
     this.filterStartsWith = 'يبدأ بـ',
     this.filterEndsWith = 'ينتهي بـ',
     this.filterGreaterThan = 'أكبر من',
@@ -2719,6 +2743,8 @@ class TrinaGridLocaleText {
     this.filterAllColumns = 'Alle kolonner',
     this.filterContains = 'Inneholder',
     this.filterEquals = 'Er lik',
+    this.filterNotEquals = 'Er ikke lik',
+    this.filterDoesNotContain = 'Inneholder ikke',
     this.filterStartsWith = 'Starter men',
     this.filterEndsWith = 'Ender med',
     this.filterGreaterThan = 'Større enn',
@@ -2789,6 +2815,8 @@ class TrinaGridLocaleText {
     this.filterAllColumns = 'Alle Spalten',
     this.filterContains = 'Beinhaltet',
     this.filterEquals = 'Ist gleich',
+    this.filterNotEquals = 'Ist ungleich',
+    this.filterDoesNotContain = 'Beinhaltet nicht',
     this.filterStartsWith = 'Started mit',
     this.filterEndsWith = 'Endet mit',
     this.filterGreaterThan = 'Größer als',
@@ -2862,6 +2890,8 @@ class TrinaGridLocaleText {
     this.filterAllColumns = 'Tüm sütunlar',
     this.filterContains = 'İçerir',
     this.filterEquals = 'Eşittir',
+    this.filterNotEquals = 'Eşit değildir',
+    this.filterDoesNotContain = 'İçermez',
     this.filterStartsWith = 'Başlar',
     this.filterEndsWith = 'Biter',
     this.filterGreaterThan = 'Büyüktür',
@@ -2932,6 +2962,8 @@ class TrinaGridLocaleText {
     this.filterAllColumns = '全列',
     this.filterContains = '含む',
     this.filterEquals = '等しい',
+    this.filterNotEquals = '等しくない',
+    this.filterDoesNotContain = '含まない',
     this.filterStartsWith = '指定の値で始まる',
     this.filterEndsWith = '指定の値で終わる',
     this.filterGreaterThan = 'より大きい',
@@ -3001,6 +3033,8 @@ class TrinaGridLocaleText {
     this.filterAllColumns = 'Minden oszlop',
     this.filterContains = 'Tartalmazza',
     this.filterEquals = 'Egyenlő',
+    this.filterNotEquals = 'Nem egyenlő',
+    this.filterDoesNotContain = 'Nem tartalmazza',
     this.filterStartsWith = 'Ezzel kezdődik',
     this.filterEndsWith = 'Ezzel végződik',
     this.filterGreaterThan = 'Nagyobb mint',
@@ -3071,6 +3105,8 @@ class TrinaGridLocaleText {
             filterAllColumns == other.filterAllColumns &&
             filterContains == other.filterContains &&
             filterEquals == other.filterEquals &&
+            filterNotEquals == other.filterNotEquals &&
+            filterDoesNotContain == other.filterDoesNotContain &&
             filterStartsWith == other.filterStartsWith &&
             filterEndsWith == other.filterEndsWith &&
             filterGreaterThan == other.filterGreaterThan &&
@@ -3133,6 +3169,8 @@ class TrinaGridLocaleText {
     filterAllColumns,
     filterContains,
     filterEquals,
+    filterNotEquals,
+    filterDoesNotContain,
     filterStartsWith,
     filterEndsWith,
     filterGreaterThan,

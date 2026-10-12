@@ -184,6 +184,48 @@ void main() {
           isFalse,
         );
       });
+
+      test('filterFieldColumn : All, '
+          'filterFieldType : DoesNotContain, '
+          'keeps the row only when no column contains the search', () {
+        bool filter(String search) {
+          final filterRows = [
+            FilterHelper.createFilterRow(
+              filterType: const TrinaFilterTypeDoesNotContain(),
+              filterValue: search,
+            ),
+          ];
+
+          return FilterHelper.convertRowsToFilter(filterRows, columns)!(row);
+        }
+
+        expect(filter('column1'), isFalse);
+        expect(filter('value'), isFalse);
+        expect(filter('column4'), isTrue);
+      });
+
+      test('filterFieldColumn : column1, '
+          'filterFieldType : NotEquals, '
+          'combined with another condition', () {
+        bool filter(String notEquals) {
+          final filterRows = [
+            FilterHelper.createFilterRow(
+              columnField: 'column1',
+              filterType: const TrinaFilterTypeNotEquals(),
+              filterValue: notEquals,
+            ),
+            FilterHelper.createFilterRow(
+              columnField: 'column2',
+              filterValue: 'column2',
+            ),
+          ];
+
+          return FilterHelper.convertRowsToFilter(filterRows, columns)!(row);
+        }
+
+        expect(filter('column1 value'), isFalse);
+        expect(filter('column1'), isTrue);
+      });
     });
   });
 
@@ -485,6 +527,82 @@ void main() {
 
       test('0 equals "0"', () {
         expect(compare(0, '0'), isTrue);
+      });
+    });
+
+    group('DoesNotContain', () {
+      late Function compare;
+
+      setUp(() {
+        compare = makeCompareFunction(const TrinaFilterTypeDoesNotContain());
+      });
+
+      test('apple does not contain banana', () {
+        expect(compare('apple', 'banana'), isTrue);
+      });
+
+      test('apple contains le, ignoring case', () {
+        expect(compare('apple', 'le'), isFalse);
+        expect(compare('apple', 'LE'), isFalse);
+      });
+    });
+
+    group('NotEquals', () {
+      late Function compare;
+
+      setUp(() {
+        compare = makeCompareFunction(const TrinaFilterTypeNotEquals());
+      });
+
+      test('apple is not equal to banana or app', () {
+        expect(compare('apple', 'banana'), isTrue);
+        expect(compare('apple', 'app'), isTrue);
+      });
+
+      test('apple equals apple, ignoring case', () {
+        expect(compare('apple', 'apple'), isFalse);
+        expect(compare('apple', 'APPLE'), isFalse);
+      });
+    });
+
+    group('negated types on formatted columns', () {
+      test('a number is excluded by its formatted and its raw value', () {
+        final column = TrinaColumn(
+          title: 'column',
+          field: 'column',
+          type: TrinaColumnType.number(),
+        );
+        final notEquals = makeCompareFunction(
+          const TrinaFilterTypeNotEquals(),
+          column: column,
+        );
+        final doesNotContain = makeCompareFunction(
+          const TrinaFilterTypeDoesNotContain(),
+          column: column,
+        );
+
+        expect(notEquals(1000, '1,000'), isFalse);
+        expect(notEquals(1000, '1000'), isFalse);
+        expect(notEquals(1000, '2,000'), isTrue);
+        expect(doesNotContain(1000, '1,0'), isFalse);
+        expect(doesNotContain(1000, '10'), isFalse);
+        expect(doesNotContain(1000, '5'), isTrue);
+      });
+
+      test('a boolean is excluded by its displayed and its raw value', () {
+        final notEquals = makeCompareFunction(
+          const TrinaFilterTypeNotEquals(),
+          column: TrinaColumn(
+            title: 'column',
+            field: 'column',
+            type: TrinaColumnType.boolean(),
+          ),
+        );
+
+        expect(notEquals(true, 'Yes'), isFalse);
+        expect(notEquals(true, 'true'), isFalse);
+        expect(notEquals(true, 'No'), isTrue);
+        expect(notEquals(false, 'Yes'), isTrue);
       });
     });
 
@@ -1077,7 +1195,7 @@ void main() {
         var columnType = filterColumn.type as TrinaColumnTypeSelect;
 
         // configuration's filter count should be created. (default 11)
-        expect(configuration.columnFilter.filters.length, 11);
+        expect(configuration.columnFilter.filters.length, 13);
         expect(
           columnType.items.length,
           configuration.columnFilter.filters.length,
