@@ -13,6 +13,7 @@ flutter pub get                      # Install dependencies
 flutter test                         # Run all tests
 flutter test test/path/to_test.dart  # Run a single test file
 cd example && flutter test integration_test -d windows  # Run the E2E tests in a real app window
+cd example && for f in integration_test/issue_*_test.dart; do flutter test "$f" -d windows; done  # All E2E files, one at a time (a multi-file run fails to relaunch the app on Windows)
 flutter test --coverage              # Run tests with coverage
 dart analyze                         # Check for analysis errors
 dart format .                        # Format all code

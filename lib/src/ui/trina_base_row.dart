@@ -299,12 +299,27 @@ class _RowContainerWidgetState extends TrinaStateWithChange<_RowContainerWidget>
 
     Color rowColor = _rowColor;
 
+    final style = stateManager.configuration.style;
+    final hasFocus = stateManager.hasFocus;
+
+    // While the grid is unfocused, the current and selected rows use
+    // unfocusedSelectionColor when it is set, like the current and selected
+    // cells do, so the row stays marked when focus moves to a form field.
+    final Color? activeRowColor;
+    if ((isCurrentRow || isSelectedRow) &&
+        !hasFocus &&
+        style.unfocusedSelectionColor != null) {
+      activeRowColor = style.unfocusedSelectionColor;
+    } else if ((isCurrentRow && hasFocus) || isSelectedRow) {
+      activeRowColor = style.activatedColor;
+    } else {
+      activeRowColor = null;
+    }
+
     // Only apply non-transparent activated color here
     // For transparent colors, we'll overlay them in the build method
-    final isActiveRow =
-        (isCurrentRow && stateManager.hasFocus) || isSelectedRow;
-    if (isActiveRow && stateManager.configuration.style.activatedColor.a > 0) {
-      rowColor = stateManager.configuration.style.activatedColor;
+    if (activeRowColor != null && activeRowColor.a > 0) {
+      rowColor = activeRowColor;
     } else if (isCheckedRow) {
       rowColor = stateManager.configuration.style.rowCheckedColor;
     } else if (isHoveredRow &&

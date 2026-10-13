@@ -17,6 +17,12 @@ flutter test integration_test/issue_402_column_alignment_test.dart -d windows
 flutter test integration_test -d windows
 ```
 
+On Windows, a run with several files can fail to start the app again after the first file ("Unable to start the app on the device"). Run the files one at a time instead:
+
+```bash
+for f in integration_test/issue_*_test.dart; do flutter test "$f" -d windows; done
+```
+
 Use `-d macos` or `-d linux` on those platforms. The first run builds the app, so it takes a minute; later runs reuse the build.
 
 Screenshots are written to `example/build/e2e_screenshots/` (git ignored). The test output prints the path of each one:
