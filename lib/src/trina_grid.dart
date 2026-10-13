@@ -231,14 +231,15 @@ class TrinaGrid extends TrinaStatefulWidget {
   final TrinaOnChangedEventCallback? onChanged;
 
   /// {@template trina_grid_property_onSelected}
-  /// [onSelected] can receive a response only if [TrinaGrid.mode] is set to [TrinaGridMode.select] .
+  /// Called when rows are selected. It fires in these modes:
   ///
-  /// When a row is tapped or the Enter key is pressed, the row information can be returned.
-  /// When [TrinaGrid] is used for row selection, you can use [TrinaGridMode.select] .
-  /// Basically, in [TrinaGridMode.select], the [onLoaded] callback works
-  /// when the current selected row is tapped or the Enter key is pressed.
-  /// This will require a double tap if no row is selected.
-  /// In [TrinaGridMode.selectWithOneTap], the [onLoaded] callback works when the unselected row is tapped once.
+  /// - [TrinaGridMode.select]: when the current row is tapped or the Enter
+  ///   key is pressed, so a row that is not current needs two taps.
+  /// - [TrinaGridMode.selectWithOneTap]: when a row is tapped once.
+  /// - [TrinaGridMode.multiSelect]: when rows are selected or unselected,
+  ///   with every selected row in [TrinaGridOnSelectedEvent.selectedRows].
+  /// - [TrinaGridMode.normal] with [TrinaGridSelectingMode.row]: when a row
+  ///   is tapped, or selected with a long press or Shift/Ctrl click.
   /// {@endtemplate}
   final TrinaOnSelectedEventCallback? onSelected;
 
