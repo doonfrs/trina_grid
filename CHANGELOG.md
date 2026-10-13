@@ -28,6 +28,7 @@
 * Fix: Guard the body rows scroll listeners against positions that have clients but have not been laid out yet, which threw a null check error. @doonfrs
 * Fix: Keyboard navigation now scrolls all the way to the end of the grid, so the last row and last column are no longer left partially hidden under the scrollbars (#389). @doonfrs
 * Fix: Frozen column rows now share the same scroll extent as the body, so Ctrl+End and vertical keyboard navigation reach the last row when frozen columns are visible. @doonfrs
+* Docs: The `TrinaGrid.onSelected` doc comment and the row selection doc now say when `onSelected` fires. The comment said it only worked in `TrinaGridMode.select`, but it also fires in `multiSelect`, `selectWithOneTap` and the normal mode with `TrinaGridSelectingMode.row`. Added end to end and widget tests for the normal mode with row selection (#46). @doonfrs
 
 ## [2.3.0] - 2026. 07. 23
 

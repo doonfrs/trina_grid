@@ -87,20 +87,26 @@ for (var row in selectedRows) {
 
 ## Selection Events
 
-TrinaGrid provides events to respond to selection changes:
+`onSelected` is called when the selection changes. With row selection mode in the normal grid mode, it fires when a row is clicked, and when rows are selected with Shift or Ctrl/Cmd click or a long press:
 
 ```dart
 TrinaGrid(
   columns: columns,
   rows: rows,
+  onLoaded: (TrinaGridOnLoadedEvent event) {
+    event.stateManager.setSelectingMode(TrinaGridSelectingMode.row);
+  },
   onSelected: (TrinaGridOnSelectedEvent event) {
-    // Handle selection change
-    print('Selected rows: ${event.row}');
-    print('Selected cell: ${event.cell}');
-    print('Selected column: ${event.column}');
+    // The current row, the one that was clicked.
+    print('Current row: ${event.rowIdx}');
+
+    // Every selected row.
+    print('Selected rows: ${event.selectedRows?.length}');
   },
 )
 ```
+
+`onSelected` also fires in the `TrinaGridMode.select`, `selectWithOneTap` and `multiSelect` grid modes. `event.selectedRows` is filled in `multiSelect` and in row selection mode; in the other cases use `event.row`.
 
 ## Visual Feedback
 
