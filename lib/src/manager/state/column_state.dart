@@ -388,6 +388,15 @@ mixin ColumnState implements ITrinaGridState {
 
     _updateLimitedFrozenColumns(columns);
 
+    for (final col in columns) {
+      if (!col.sort.isNone && col.sortPriority == 0) {
+        final maxPriority = refColumns.originalList
+            .map((c) => c.sortPriority)
+            .fold<int>(0, math.max);
+        col.sortPriority = maxPriority + 1;
+      }
+    }
+
     if (columnIdx >= refColumns.originalLength) {
       refColumns.addAll(columns);
     } else {
@@ -680,46 +689,77 @@ mixin ColumnState implements ITrinaGridState {
     return a.sortIdx.compareTo(b.sortIdx);
   }
 
-  int _compareCompound(TrinaRow a, TrinaRow b) {
-    final sorts = sortedColumns;
-    if (sorts.isEmpty) {
-      return _compareSortIdx(a, b);
-    }
-
-    for (final col in sorts) {
-      final cellA = a.cells[col.field];
-      final cellB = b.cells[col.field];
-      if (cellA == null || cellB == null) {
-        if (cellA == null && cellB == null) continue;
-        return cellA == null ? -1 : 1;
-      }
-
-      final valA = cellA.valueForSorting;
-      final valB = cellB.valueForSorting;
-      int cmp;
-      if (col.sort.isAscending) {
-        cmp = col.type.compare(valA, valB);
-      } else {
-        cmp = col.type.compare(valB, valA);
-      }
-      if (cmp != 0) return cmp;
-    }
-
-    return _compareSortIdx(a, b);
-  }
-
   void _applyCompoundSort({TrinaColumn? primaryColumn}) {
     if (sortOnlyEvent) return;
 
+    final sorts = sortedColumns;
     final targetColumn = primaryColumn ??
-        (sortedColumns.isNotEmpty
-            ? sortedColumns.first
-            : (refColumns.originalList.isNotEmpty ? refColumns.originalList.first : null));
+        (sorts.isNotEmpty
+            ? sorts.first
+            : (refColumns.originalList.isNotEmpty
+                ? refColumns.originalList.first
+                : null));
+
+    int Function(TrinaRow, TrinaRow) compare;
+
+    if (sorts.isEmpty) {
+      compare = _compareSortIdx;
+    } else if (sorts.length == 1) {
+      final col = sorts.first;
+      final field = col.field;
+      final type = col.type;
+      final isAscending = col.sort.isAscending;
+
+      if (isAscending) {
+        compare = (TrinaRow a, TrinaRow b) {
+          final cellA = a.cells[field];
+          final cellB = b.cells[field];
+          if (cellA == null || cellB == null) {
+            if (cellA == null && cellB == null) return a.sortIdx.compareTo(b.sortIdx);
+            return cellA == null ? -1 : 1;
+          }
+          final cmp = type.compare(cellA.valueForSorting, cellB.valueForSorting);
+          return cmp != 0 ? cmp : a.sortIdx.compareTo(b.sortIdx);
+        };
+      } else {
+        compare = (TrinaRow a, TrinaRow b) {
+          final cellA = a.cells[field];
+          final cellB = b.cells[field];
+          if (cellA == null || cellB == null) {
+            if (cellA == null && cellB == null) return a.sortIdx.compareTo(b.sortIdx);
+            return cellA == null ? -1 : 1;
+          }
+          final cmp = type.compare(cellB.valueForSorting, cellA.valueForSorting);
+          return cmp != 0 ? cmp : a.sortIdx.compareTo(b.sortIdx);
+        };
+      }
+    } else {
+      final criteria = sorts
+          .map((c) => (field: c.field, type: c.type, isAscending: c.sort.isAscending))
+          .toList(growable: false);
+
+      compare = (TrinaRow a, TrinaRow b) {
+        for (int i = 0; i < criteria.length; i++) {
+          final c = criteria[i];
+          final cellA = a.cells[c.field];
+          final cellB = b.cells[c.field];
+          if (cellA == null || cellB == null) {
+            if (cellA == null && cellB == null) continue;
+            return cellA == null ? -1 : 1;
+          }
+          final cmp = c.isAscending
+              ? c.type.compare(cellA.valueForSorting, cellB.valueForSorting)
+              : c.type.compare(cellB.valueForSorting, cellA.valueForSorting);
+          if (cmp != 0) return cmp;
+        }
+        return a.sortIdx.compareTo(b.sortIdx);
+      };
+    }
 
     if (enabledRowGroups && targetColumn != null) {
-      sortRowGroup(column: targetColumn, compare: _compareCompound);
+      sortRowGroup(column: targetColumn, compare: compare);
     } else {
-      refRows.sort(_compareCompound);
+      refRows.sort(compare);
     }
   }
 
@@ -814,6 +854,21 @@ mixin ColumnState implements ITrinaGridState {
     }
 
     _applyCompoundSort();
+
+    if (sortOnlyEvent) {
+      eventManager?.addEvent(
+        TrinaGridChangeColumnSortEvent(
+          column: refColumns.originalList.isNotEmpty
+              ? refColumns.originalList.first
+              : TrinaColumn(
+                  title: '',
+                  field: '',
+                  type: TrinaColumnType.text(),
+                ),
+          oldSort: TrinaColumnSort.none,
+        ),
+      );
+    }
 
     notifyListeners(notify, clearSorting.hashCode);
   }

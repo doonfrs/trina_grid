@@ -317,7 +317,7 @@ class TrinaColumn {
     this.titleTextAlign = TrinaColumnTextAlign.start,
     this.frozen = TrinaColumnFrozen.none,
     this.sort = TrinaColumnSort.none,
-    this.sortPriority = 0,
+    int sortPriority = 0,
     this.formatter,
     this.applyFormatterInEditing = false,
     this.backgroundColor,
@@ -346,7 +346,10 @@ class TrinaColumn {
     this.editCellRenderer,
     this.filterEnterKeyAction,
     this.metadata,
-  }) : _key = UniqueKey(),
+  }) : sortPriority = sortPriority != 0
+           ? sortPriority
+           : (sort != TrinaColumnSort.none ? 1 : 0),
+       _key = UniqueKey(),
        _checkReadOnly = checkReadOnly;
 
   final Key _key;

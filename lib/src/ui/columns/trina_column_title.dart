@@ -32,6 +32,10 @@ class TrinaColumnTitleState extends TrinaStateWithChange<TrinaColumnTitle> {
 
   TrinaColumnSort _sort = TrinaColumnSort.none;
 
+  int _sortPriority = 0;
+
+  bool _hasMultipleSorts = false;
+
   bool get showContextIcon {
     return widget.column.enableContextMenu ||
         widget.column.enableDropToResize ||
@@ -65,6 +69,11 @@ class TrinaColumnTitleState extends TrinaStateWithChange<TrinaColumnTitle> {
   @override
   void updateState(TrinaNotifierEvent event) {
     _sort = update<TrinaColumnSort>(_sort, widget.column.sort);
+    _sortPriority = update<int>(_sortPriority, widget.column.sortPriority);
+    _hasMultipleSorts = update<bool>(
+      _hasMultipleSorts,
+      stateManager.sortedColumns.length > 1,
+    );
   }
 
   void _showContextMenu(BuildContext context, Offset position) async {
@@ -199,9 +208,7 @@ class TrinaColumnTitleState extends TrinaStateWithChange<TrinaColumnTitle> {
         child: IconButton(
           icon: TrinaGridColumnIcon(
             sort: _sort,
-            sortPriority: stateManager.sortedColumns.length > 1
-                ? widget.column.sortPriority
-                : null,
+            sortPriority: _hasMultipleSorts ? _sortPriority : null,
             color: style.iconColor,
             customResizeWidget: widget.column.enableContextMenu
                 ? null

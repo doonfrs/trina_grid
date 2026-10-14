@@ -220,10 +220,17 @@ void main() {
       await tester.sendKeyUpEvent(LogicalKeyboardKey.shiftLeft);
     });
 
-    test('clearSorting resets all columns', () {
+    test('clearSorting resets all columns and notifies with clearSorting hashCode', () {
       stateManager.sortAscending(columns[0]);
       stateManager.sortDescending(columns[1], append: true);
       expect(stateManager.sortedColumns.length, 2);
+
+      // Verify defaultRowsFilter includes clearSorting.hashCode
+      final rowsFilter = TrinaNotifierFilterResolverDefault.defaultRowsFilter(stateManager);
+      expect(rowsFilter.contains(stateManager.clearSorting.hashCode), isTrue);
+
+      final footerFilter = TrinaNotifierFilterResolverDefault.defaultAggregateColumnFooterFilter(stateManager);
+      expect(footerFilter.contains(stateManager.clearSorting.hashCode), isTrue);
 
       stateManager.clearSorting();
       expect(stateManager.sortedColumns.isEmpty, isTrue);
@@ -231,6 +238,130 @@ void main() {
       expect(columns[0].sortPriority, 0);
       expect(columns[1].sort.isNone, isTrue);
       expect(columns[1].sortPriority, 0);
+    });
+
+    test('Column sorted via constructor receives priority 1 and increments when more join', () {
+      final initialSortedCol = TrinaColumn(
+        title: 'Initial',
+        field: 'initial',
+        type: TrinaColumnType.text(),
+        sort: TrinaColumnSort.ascending,
+      );
+      expect(initialSortedCol.sortPriority, 1);
+
+      final secondCol = TrinaColumn(
+        title: 'Second',
+        field: 'second',
+        type: TrinaColumnType.text(),
+      );
+
+      final manager = createStateManager(
+        columns: [initialSortedCol, secondCol],
+        rows: [
+          TrinaRow(cells: {'initial': TrinaCell(value: 'A'), 'second': TrinaCell(value: '1')}),
+          TrinaRow(cells: {'initial': TrinaCell(value: 'B'), 'second': TrinaCell(value: '2')}),
+        ],
+      );
+
+      expect(initialSortedCol.sortPriority, 1);
+      expect(manager.sortedColumns.length, 1);
+      expect(manager.sortedColumns.first.field, 'initial');
+
+      // Append second column
+      manager.sortDescending(secondCol, append: true);
+      expect(initialSortedCol.sortPriority, 1);
+      expect(secondCol.sortPriority, 2);
+      expect(manager.sortedColumns.length, 2);
+      expect(manager.sortedColumns[0].field, 'initial');
+      expect(manager.sortedColumns[1].field, 'second');
+    });
+
+    test('TrinaLazyPaginationRequest and TrinaInfinityScrollRowsRequest carry sortedColumns', () {
+      stateManager.sortAscending(columns[0]);
+      stateManager.sortDescending(columns[1], append: true);
+
+      final lazyRequest = TrinaLazyPaginationRequest(
+        page: 1,
+        pageSize: 20,
+        sortColumn: stateManager.getSortedColumn,
+        sortedColumns: stateManager.sortedColumns,
+      );
+
+      expect(lazyRequest.sortColumn?.field, 'dept');
+      expect(lazyRequest.sortedColumns.length, 2);
+      expect(lazyRequest.sortedColumns[0].field, 'dept');
+      expect(lazyRequest.sortedColumns[1].field, 'score');
+
+      final scrollRequest = TrinaInfinityScrollRowsRequest(
+        sortColumn: stateManager.getSortedColumn,
+        sortedColumns: stateManager.sortedColumns,
+      );
+
+      expect(scrollRequest.sortColumn?.field, 'dept');
+      expect(scrollRequest.sortedColumns.length, 2);
+      expect(scrollRequest.sortedColumns[0].field, 'dept');
+      expect(scrollRequest.sortedColumns[1].field, 'score');
+    });
+
+    testWidgets('Priority badges appear and update when columns join and leave compound sort', (tester) async {
+      late TrinaGridStateManager stateManager;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: TrinaGrid(
+              columns: columns,
+              rows: rows,
+              configuration: const TrinaGridConfiguration(enableMultiColumnSort: true),
+              onLoaded: (event) => stateManager = event.stateManager,
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // No badges initially
+      expect(find.text('1'), findsNothing);
+      expect(find.text('2'), findsNothing);
+
+      // Tap column 0 (Department) -> single sort, no badge
+      await tester.tap(find.text('Department'));
+      await tester.pumpAndSettle();
+      expect(columns[0].sort.isAscending, isTrue);
+      expect(stateManager.sortedColumns.length, 1);
+      expect(find.text('1'), findsNothing);
+
+      // Shift-tap column 1 (Score) -> multi sort, column 0 gets badge 1, column 1 gets badge 2
+      await tester.sendKeyDownEvent(LogicalKeyboardKey.shiftLeft);
+      await tester.tap(find.text('Score'));
+      await tester.sendKeyUpEvent(LogicalKeyboardKey.shiftLeft);
+      await tester.pumpAndSettle();
+
+      expect(stateManager.sortedColumns.length, 2);
+      expect(columns[0].sortPriority, 1);
+      expect(columns[1].sortPriority, 2);
+      expect(find.text('1'), findsOneWidget);
+      expect(find.text('2'), findsOneWidget);
+
+      // Shift-tap column 2 (Name) -> column 2 gets badge 3
+      await tester.sendKeyDownEvent(LogicalKeyboardKey.shiftLeft);
+      await tester.tap(find.text('Name'));
+      await tester.sendKeyUpEvent(LogicalKeyboardKey.shiftLeft);
+      await tester.pumpAndSettle();
+
+      expect(stateManager.sortedColumns.length, 3);
+      expect(find.text('1'), findsOneWidget);
+      expect(find.text('2'), findsOneWidget);
+      expect(find.text('3'), findsOneWidget);
+
+      // Clear sorting -> badges disappear
+      stateManager.clearSorting();
+      await tester.pumpAndSettle();
+
+      expect(stateManager.sortedColumns.isEmpty, isTrue);
+      expect(find.text('1'), findsNothing);
+      expect(find.text('2'), findsNothing);
+      expect(find.text('3'), findsNothing);
     });
   });
 }
