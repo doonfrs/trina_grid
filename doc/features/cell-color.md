@@ -372,7 +372,7 @@ This example demonstrates comprehensive cell coloring based on different column 
 
 ## Unfocused Selection Color
 
-When a `TrinaGrid` loses focus (for example, the user clicks into another grid or input on the page), the current cell and any multi-cell selection can switch to a desaturated color so it is visually obvious which grid is currently receiving keyboard input. This is configured via `TrinaGridStyleConfig.unfocusedSelectionColor`:
+When a `TrinaGrid` loses focus (for example, the user clicks into another grid or input on the page), the current cell, the current row and any selection can switch to a desaturated color so it is visually obvious which grid is currently receiving keyboard input. This is configured via `TrinaGridStyleConfig.unfocusedSelectionColor`:
 
 ```dart
 TrinaGrid(
@@ -391,6 +391,9 @@ TrinaGrid(
 - **Current cell, grid unfocused**: uses `unfocusedSelectionColor` if set; otherwise falls back to `gridBackgroundColor` (matching pre-2.3.0 behavior, so existing apps see no visual change after upgrading).
 - **Multi-cell selection, grid focused**: uses `activatedColor`.
 - **Multi-cell selection, grid unfocused**: uses `unfocusedSelectionColor` if set; otherwise keeps `activatedColor`.
+- **Current row, grid focused**: uses `activatedColor`.
+- **Current row, grid unfocused**: uses `unfocusedSelectionColor` if set, so the row stays marked when the user moves to a form field next to the grid; otherwise goes back to its normal row color.
+- **Selected rows (row selecting mode), grid unfocused**: uses `unfocusedSelectionColor` if set; otherwise keeps `activatedColor`.
 
 ### Defaults
 

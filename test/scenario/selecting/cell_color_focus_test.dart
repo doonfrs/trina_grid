@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:trina_grid/src/ui/trina_base_cell.dart';
+import 'package:trina_grid/src/ui/trina_base_row.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 import '../../helper/column_helper.dart';
@@ -50,6 +51,22 @@ void main() {
                     of: cellFinder,
                     matching: find.byType(DecoratedBox),
                   ),
+                )
+                .decoration
+            as BoxDecoration;
+    return decoration.color;
+  }
+
+  Color? rowColorAt(WidgetTester tester, int index) {
+    final decoration =
+        tester
+                .widget<DecoratedBox>(
+                  find
+                      .descendant(
+                        of: find.byType(TrinaBaseRow).at(index),
+                        matching: find.byType(DecoratedBox),
+                      )
+                      .first,
                 )
                 .decoration
             as BoxDecoration;
@@ -132,4 +149,78 @@ void main() {
 
     expect(cellColorAt(tester, 1 * 3 + 1), activated);
   });
+
+  // #303: the current row must stay marked when focus moves to a form field.
+  for (final mode in [
+    TrinaGridSelectingMode.cell,
+    TrinaGridSelectingMode.row,
+  ]) {
+    testWidgets('current row uses unfocusedSelectionColor on focus loss when '
+        'configured (${mode.name} mode)', (tester) async {
+      const configured = Color(0xFF8E44AD);
+      final stateManager = await pumpGrid(
+        tester,
+        unfocusedSelectionColor: configured,
+        selectingMode: mode,
+      );
+
+      await tester.tap(find.byType(TrinaBaseCell).at(1 * 3));
+      await tester.pumpAndSettle();
+      expect(rowColorAt(tester, 1), stateManager.style.activatedColor);
+
+      stateManager.setKeepFocus(false);
+      await tester.pumpAndSettle();
+
+      expect(rowColorAt(tester, 1), configured);
+      expect(rowColorAt(tester, 0), stateManager.style.rowColor);
+
+      await tester.tap(find.byType(TrinaBaseCell).at(1 * 3 + 2));
+      await tester.pumpAndSettle();
+      expect(stateManager.hasFocus, isTrue);
+
+      expect(rowColorAt(tester, 1), stateManager.style.activatedColor);
+    });
+  }
+
+  testWidgets('current row goes back to its row color on focus loss when '
+      'unfocusedSelectionColor is not configured (regression guard)', (
+    tester,
+  ) async {
+    final stateManager = await pumpGrid(tester);
+
+    await tester.tap(find.byType(TrinaBaseCell).at(1 * 3));
+    await tester.pumpAndSettle();
+
+    stateManager.setKeepFocus(false);
+    await tester.pumpAndSettle();
+
+    expect(rowColorAt(tester, 1), stateManager.style.rowColor);
+  });
+
+  for (final configured in [const Color(0xFF8E44AD), null]) {
+    testWidgets(
+      'selected rows use ${configured == null ? 'activatedColor' : 'unfocusedSelectionColor'} '
+      'on focus loss when unfocusedSelectionColor is '
+      '${configured == null ? 'not ' : ''}configured',
+      (tester) async {
+        final stateManager = await pumpGrid(
+          tester,
+          unfocusedSelectionColor: configured,
+          selectingMode: TrinaGridSelectingMode.row,
+        );
+
+        stateManager.setCurrentCell(stateManager.rows[0].cells['header0'], 0);
+        stateManager.toggleSelectingRow(2);
+        await tester.pumpAndSettle();
+
+        stateManager.setKeepFocus(false);
+        await tester.pumpAndSettle();
+
+        expect(
+          rowColorAt(tester, 2),
+          configured ?? stateManager.style.activatedColor,
+        );
+      },
+    );
+  }
 }

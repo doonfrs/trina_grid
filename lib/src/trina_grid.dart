@@ -231,14 +231,15 @@ class TrinaGrid extends TrinaStatefulWidget {
   final TrinaOnChangedEventCallback? onChanged;
 
   /// {@template trina_grid_property_onSelected}
-  /// [onSelected] can receive a response only if [TrinaGrid.mode] is set to [TrinaGridMode.select] .
+  /// Called when rows are selected. It fires in these modes:
   ///
-  /// When a row is tapped or the Enter key is pressed, the row information can be returned.
-  /// When [TrinaGrid] is used for row selection, you can use [TrinaGridMode.select] .
-  /// Basically, in [TrinaGridMode.select], the [onLoaded] callback works
-  /// when the current selected row is tapped or the Enter key is pressed.
-  /// This will require a double tap if no row is selected.
-  /// In [TrinaGridMode.selectWithOneTap], the [onLoaded] callback works when the unselected row is tapped once.
+  /// - [TrinaGridMode.select]: when the current row is tapped or the Enter
+  ///   key is pressed, so a row that is not current needs two taps.
+  /// - [TrinaGridMode.selectWithOneTap]: when a row is tapped once.
+  /// - [TrinaGridMode.multiSelect]: when rows are selected or unselected,
+  ///   with every selected row in [TrinaGridOnSelectedEvent.selectedRows].
+  /// - [TrinaGridMode.normal] with [TrinaGridSelectingMode.row]: when a row
+  ///   is tapped, or selected with a long press or Shift/Ctrl click.
   /// {@endtemplate}
   final TrinaOnSelectedEventCallback? onSelected;
 
@@ -889,6 +890,35 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
     }
   }
 
+  void _handleGridFocusChange(bool hasFocus) {
+    // Focus entered the grid on a column filter field. setKeepFocus(true)
+    // would move the focus to the grid node and take it away from the filter
+    // that was just tapped, so the user had to tap it a second time (#437).
+    if (hasFocus && _isColumnFilterFocused()) {
+      return;
+    }
+
+    _stateManager.setKeepFocus(hasFocus);
+  }
+
+  bool _isColumnFilterFocused() {
+    final FocusNode? primaryFocus = FocusManager.instance.primaryFocus;
+
+    if (primaryFocus == null) {
+      return false;
+    }
+
+    // A builder filter may focus its own node instead of the provided one, so
+    // the descendants of the filter node count as well.
+    return _stateManager.refColumns.any((column) {
+      final filterFocusNode = column.filterFocusNode;
+
+      return filterFocusNode != null &&
+          (primaryFocus == filterFocusNode ||
+              primaryFocus.ancestors.contains(filterFocusNode));
+    });
+  }
+
   KeyEventResult _handleGridFocusOnKey(FocusNode focusNode, KeyEvent event) {
     // Get the current primary focus
     final FocusNode? primaryFocus = FocusManager.instance.primaryFocus;
@@ -1200,7 +1230,7 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
     // The record sidebar stays inside the grid's FocusScope: its reused cell
     // editors rely on the grid's keepFocus mechanics.
     final Widget scope = FocusScope(
-      onFocusChange: _stateManager.setKeepFocus,
+      onFocusChange: _handleGridFocusChange,
       onKeyEvent: _handleGridFocusOnKey,
       child: _wrapWithSidebar(grid),
     );
