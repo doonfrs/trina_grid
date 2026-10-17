@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:math' as math;
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -277,6 +278,17 @@ class TrinaGridStateChangeNotifier extends TrinaChangeNotifier
   }
 
   void _initialize() {
+    int nextPriority = 1;
+    for (final column in refColumns.originalList) {
+      if (!column.sort.isNone) {
+        if (column.sortPriority == 0) {
+          column.sortPriority = nextPriority++;
+        } else {
+          nextPriority = math.max(nextPriority, column.sortPriority + 1);
+        }
+      }
+    }
+
     TrinaGridStateManager.initializeRows(
       refColumns.originalList,
       refRows.originalList,

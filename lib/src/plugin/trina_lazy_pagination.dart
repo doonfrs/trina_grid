@@ -22,8 +22,10 @@ class TrinaLazyPaginationRequest {
     required this.page,
     this.pageSize = 10,
     this.sortColumn,
+    List<TrinaColumn>? sortedColumns,
     this.filterRows = const <TrinaRow>[],
-  });
+  }) : sortedColumns = sortedColumns ??
+           (sortColumn != null ? [sortColumn] : const <TrinaColumn>[]);
 
   /// Request page.
   final int page;
@@ -34,6 +36,10 @@ class TrinaLazyPaginationRequest {
   /// If the sort condition is set, the column for which the sort is set.
   /// The value of [TrinaColumn.sort] is the sort status of the column.
   final TrinaColumn? sortColumn;
+
+  /// List of all sorted columns ordered by priority in multi-column sorting.
+  /// When only a single column is sorted, contains that column.
+  final List<TrinaColumn> sortedColumns;
 
   /// Filtering status when filtering conditions are set.
   ///
@@ -322,6 +328,7 @@ class TrinaLazyPaginationState extends State<TrinaLazyPagination> {
             page: page,
             pageSize: _pageSize,
             sortColumn: stateManager.getSortedColumn,
+            sortedColumns: stateManager.sortedColumns,
             filterRows: stateManager.filterRows,
           ),
         )

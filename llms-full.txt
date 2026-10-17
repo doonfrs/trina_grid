@@ -3270,7 +3270,7 @@ class CustomColumnType extends TrinaColumnType {
 
 ## Multi-Column Sorting
 
-TrinaGrid currently supports single-column sorting. When a column is sorted, any previous sorting on other columns is cleared. If you need multi-column sorting (sorting by one column, then by another within the same values), you would need to implement custom sorting logic.
+TrinaGrid supports multi-column sorting when `enableMultiColumnSort` is enabled on `TrinaGridConfiguration`. Users can Shift-click or Ctrl-click column headers to append secondary and tertiary sorts, with numerical priority badges displayed in the headers. Developers can also programmatically pass `append: true` to `sortAscending` / `sortDescending`, define `sortPriority` in column definitions, inspect `sortedColumns`, clear sorting via `clearSorting()`, and handle multi-column server-side sorting via `request.sortedColumns` in `TrinaLazyPagination` and `TrinaInfinityScrollRows`.
 
 ## Best Practices
 
