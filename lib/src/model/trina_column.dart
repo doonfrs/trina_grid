@@ -89,7 +89,11 @@ class TrinaColumn {
   /// Set column sorting.
   TrinaColumnSort sort;
 
-  /// Priority in multi-column sorting (1-based, 0 means unranked/single).
+  /// Priority in multi-column sorting, starting at 1.
+  ///
+  /// 0 means not ranked yet. When the grid loads, the columns that set [sort]
+  /// without a priority are numbered in column order, after the ones that
+  /// set it.
   int sortPriority;
 
   /// Formatter for display of cell values.
@@ -317,7 +321,7 @@ class TrinaColumn {
     this.titleTextAlign = TrinaColumnTextAlign.start,
     this.frozen = TrinaColumnFrozen.none,
     this.sort = TrinaColumnSort.none,
-    int sortPriority = 0,
+    this.sortPriority = 0,
     this.formatter,
     this.applyFormatterInEditing = false,
     this.backgroundColor,
@@ -346,10 +350,7 @@ class TrinaColumn {
     this.editCellRenderer,
     this.filterEnterKeyAction,
     this.metadata,
-  }) : sortPriority = sortPriority != 0
-           ? sortPriority
-           : (sort != TrinaColumnSort.none ? 1 : 0),
-       _key = UniqueKey(),
+  }) : _key = UniqueKey(),
        _checkReadOnly = checkReadOnly;
 
   final Key _key;

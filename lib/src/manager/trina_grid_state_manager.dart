@@ -278,14 +278,14 @@ class TrinaGridStateChangeNotifier extends TrinaChangeNotifier
   }
 
   void _initialize() {
-    int nextPriority = 1;
-    for (final column in refColumns.originalList) {
-      if (!column.sort.isNone) {
-        if (column.sortPriority == 0) {
-          column.sortPriority = nextPriority++;
-        } else {
-          nextPriority = math.max(nextPriority, column.sortPriority + 1);
-        }
+    // Columns sorted in their constructors without a sortPriority are ranked
+    // in column order, after the ones that set it.
+    final sorted = refColumns.originalList.where((c) => !c.sort.isNone);
+    int nextPriority =
+        sorted.fold<int>(0, (max, c) => math.max(max, c.sortPriority)) + 1;
+    for (final column in sorted) {
+      if (column.sortPriority == 0) {
+        column.sortPriority = nextPriority++;
       }
     }
 
