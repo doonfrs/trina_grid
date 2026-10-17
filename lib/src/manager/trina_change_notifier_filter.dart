@@ -86,6 +86,7 @@ abstract class TrinaChangeNotifierFilterResolver {
       stateManager.sortAscending.hashCode: 'sortAscending',
       stateManager.sortDescending.hashCode: 'sortDescending',
       stateManager.sortBySortIdx.hashCode: 'sortBySortIdx',
+      stateManager.clearSorting.hashCode: 'clearSorting',
       stateManager.hideColumn.hashCode: 'hideColumn',
 
       /// dragging_row_state
@@ -260,6 +261,7 @@ class TrinaNotifierFilterResolverDefault
       stateManager.sortAscending.hashCode,
       stateManager.sortDescending.hashCode,
       stateManager.sortBySortIdx.hashCode,
+      stateManager.clearSorting.hashCode,
       stateManager.setShowColumnGroups.hashCode,
       stateManager.setFilter.hashCode,
       stateManager.removeColumnsInColumnGroup.hashCode,
@@ -291,6 +293,7 @@ class TrinaNotifierFilterResolverDefault
       stateManager.sortAscending.hashCode,
       stateManager.sortDescending.hashCode,
       stateManager.sortBySortIdx.hashCode,
+      stateManager.clearSorting.hashCode,
       stateManager.insertRows.hashCode,
       stateManager.prependRows.hashCode,
       stateManager.appendRows.hashCode,

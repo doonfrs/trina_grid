@@ -14,16 +14,22 @@ class TrinaInfinityScrollRowsRequest {
   TrinaInfinityScrollRowsRequest({
     this.lastRow,
     this.sortColumn,
+    List<TrinaColumn>? sortedColumns,
     this.filterRows = const <TrinaRow>[],
-  });
+  }) : sortedColumns = sortedColumns ??
+           (sortColumn != null ? [sortColumn] : const <TrinaColumn>[]);
 
   /// If [lastRow] is null , it points to the beginning of the data.
   /// If not null, the next data is loaded with reference to this value.
   final TrinaRow? lastRow;
 
-  /// If the sort condition is set, the column for which the sort is set.
+  /// If the sort condition is set, the primary column for which the sort is set.
   /// The value of [TrinaColumn.sort] is the sort status of the column.
   final TrinaColumn? sortColumn;
+
+  /// List of all sorted columns ordered by priority in multi-column sorting.
+  /// When only a single column is sorted, contains that column.
+  final List<TrinaColumn> sortedColumns;
 
   /// Filtering status when filtering conditions are set.
   ///
@@ -186,6 +192,7 @@ class _TrinaInfinityScrollRowsState extends State<TrinaInfinityScrollRows> {
     final request = TrinaInfinityScrollRowsRequest(
       lastRow: lastRow,
       sortColumn: stateManager.getSortedColumn,
+      sortedColumns: stateManager.sortedColumns,
       filterRows: stateManager.filterRows,
     );
 

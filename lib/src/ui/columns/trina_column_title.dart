@@ -32,6 +32,10 @@ class TrinaColumnTitleState extends TrinaStateWithChange<TrinaColumnTitle> {
 
   TrinaColumnSort _sort = TrinaColumnSort.none;
 
+  int _sortPriority = 0;
+
+  bool _hasMultipleSorts = false;
+
   bool get showContextIcon {
     return widget.column.enableContextMenu ||
         widget.column.enableDropToResize ||
@@ -65,6 +69,11 @@ class TrinaColumnTitleState extends TrinaStateWithChange<TrinaColumnTitle> {
   @override
   void updateState(TrinaNotifierEvent event) {
     _sort = update<TrinaColumnSort>(_sort, widget.column.sort);
+    _sortPriority = update<int>(_sortPriority, widget.column.sortPriority);
+    _hasMultipleSorts = update<bool>(
+      _hasMultipleSorts,
+      stateManager.sortedColumns.length > 1,
+    );
   }
 
   void _showContextMenu(BuildContext context, Offset position) async {
@@ -199,6 +208,7 @@ class TrinaColumnTitleState extends TrinaStateWithChange<TrinaColumnTitle> {
         child: IconButton(
           icon: TrinaGridColumnIcon(
             sort: _sort,
+            sortPriority: _hasMultipleSorts ? _sortPriority : null,
             color: style.iconColor,
             customResizeWidget: widget.column.enableContextMenu
                 ? null
@@ -291,6 +301,8 @@ class TrinaColumnTitleState extends TrinaStateWithChange<TrinaColumnTitle> {
 class TrinaGridColumnIcon extends StatelessWidget {
   final TrinaColumnSort? sort;
 
+  final int? sortPriority;
+
   final Color color;
 
   final IconData icon;
@@ -303,6 +315,7 @@ class TrinaGridColumnIcon extends StatelessWidget {
 
   const TrinaGridColumnIcon({
     this.sort,
+    this.sortPriority,
     this.color = Colors.black26,
     this.icon = Icons.dehaze,
     this.customResizeWidget,
@@ -313,21 +326,47 @@ class TrinaGridColumnIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Widget iconWidget;
+    Color sortColor = color;
+
     switch (sort) {
       case TrinaColumnSort.ascending:
-        return ascendingIcon == null
-            ? Transform.rotate(
-                angle: 90 * pi / 90,
-                child: const Icon(Icons.sort, color: Colors.green),
-              )
-            : ascendingIcon!;
+        iconWidget = ascendingIcon ??
+            Transform.rotate(
+              angle: 90 * pi / 90,
+              child: const Icon(Icons.sort, color: Colors.green),
+            );
+        sortColor = Colors.green;
+        break;
       case TrinaColumnSort.descending:
-        return descendingIcon == null
-            ? const Icon(Icons.sort, color: Colors.red)
-            : descendingIcon!;
+        iconWidget = descendingIcon ??
+            const Icon(Icons.sort, color: Colors.red);
+        sortColor = Colors.red;
+        break;
       default:
         return customResizeWidget ?? Icon(icon, color: color);
     }
+
+    if (sortPriority != null && sortPriority! > 0) {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          iconWidget,
+          const SizedBox(width: 1),
+          Text(
+            '$sortPriority',
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+              color: sortColor,
+            ),
+          ),
+        ],
+      );
+    }
+
+    return iconWidget;
   }
 }
 

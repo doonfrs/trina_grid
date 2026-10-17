@@ -1899,10 +1899,11 @@ class MockTrinaGridStateManager extends _i1.Mock
   );
 
   @override
-  void toggleSortColumn(_i2.TrinaColumn? column) => super.noSuchMethod(
-    Invocation.method(#toggleSortColumn, [column]),
-    returnValueForMissingStub: null,
-  );
+  void toggleSortColumn(_i2.TrinaColumn? column, {bool? multiSort}) =>
+      super.noSuchMethod(
+        Invocation.method(#toggleSortColumn, [column], {#multiSort: multiSort}),
+        returnValueForMissingStub: null,
+      );
 
   @override
   int? columnIndex(_i2.TrinaColumn? column) =>
@@ -1969,16 +1970,22 @@ class MockTrinaGridStateManager extends _i1.Mock
   );
 
   @override
-  void sortAscending(_i2.TrinaColumn? column, {bool? notify = true}) =>
-      super.noSuchMethod(
-        Invocation.method(#sortAscending, [column], {#notify: notify}),
+  void sortAscending(
+    _i2.TrinaColumn? column, {
+    bool? notify = true,
+    bool? append = false,
+  }) => super.noSuchMethod(
+        Invocation.method(#sortAscending, [column], {#notify: notify, #append: append}),
         returnValueForMissingStub: null,
       );
 
   @override
-  void sortDescending(_i2.TrinaColumn? column, {bool? notify = true}) =>
-      super.noSuchMethod(
-        Invocation.method(#sortDescending, [column], {#notify: notify}),
+  void sortDescending(
+    _i2.TrinaColumn? column, {
+    bool? notify = true,
+    bool? append = false,
+  }) => super.noSuchMethod(
+        Invocation.method(#sortDescending, [column], {#notify: notify, #append: append}),
         returnValueForMissingStub: null,
       );
 
@@ -1988,6 +1995,19 @@ class MockTrinaGridStateManager extends _i1.Mock
         Invocation.method(#sortBySortIdx, [column], {#notify: notify}),
         returnValueForMissingStub: null,
       );
+
+  @override
+  void clearSorting({bool? notify = true}) => super.noSuchMethod(
+        Invocation.method(#clearSorting, [], {#notify: notify}),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  List<_i2.TrinaColumn> get sortedColumns => (super.noSuchMethod(
+        Invocation.getter(#sortedColumns),
+        returnValue: <_i2.TrinaColumn>[],
+        returnValueForMissingStub: <_i2.TrinaColumn>[],
+      ) as List<_i2.TrinaColumn>);
 
   @override
   void showSetColumnsPopup(_i3.BuildContext? context) => super.noSuchMethod(

@@ -253,7 +253,100 @@ class CustomColumnType extends TrinaColumnType {
 
 ## Multi-Column Sorting
 
-TrinaGrid currently supports single-column sorting. When a column is sorted, any previous sorting on other columns is cleared. If you need multi-column sorting (sorting by one column, then by another within the same values), you would need to implement custom sorting logic.
+TrinaGrid supports multi-column sorting, allowing users and developers to sort rows across multiple columns in priority order (compound sorting).
+
+### Enabling Multi-Column Sorting
+
+Multi-column sorting via keyboard modifiers is enabled through `TrinaGridConfiguration`:
+
+```dart
+TrinaGrid(
+  columns: columns,
+  rows: rows,
+  configuration: const TrinaGridConfiguration(
+    enableMultiColumnSort: true, // Enable Shift-click and Ctrl-click multi-sort
+  ),
+)
+```
+
+### User Interaction
+
+When `enableMultiColumnSort` is enabled:
+- **Click**: Performs a standard single-column sort, resetting any previous sorts.
+- **Shift + Click** or **Ctrl + Click**: Appends the clicked column to the sort hierarchy without clearing existing sorts.
+- **Priority Indicators**: When multiple columns are sorted, each header displays a priority badge number (1, 2, 3...) next to the sort direction icon indicating its sort precedence.
+- Clicking an active column with Shift/Ctrl cycles its sort state (`ascending` -> `descending` -> `none`). When a column is un-sorted, the remaining sorted columns automatically re-rank their priority badges.
+
+### Initial Multi-Column Sorting via Constructors
+
+You can define initial sort states directly on column definitions:
+
+```dart
+final columns = [
+  TrinaColumn(
+    title: 'Department',
+    field: 'dept',
+    type: TrinaColumnType.text(),
+    sort: TrinaColumnSort.ascending,
+    sortPriority: 1,
+  ),
+  TrinaColumn(
+    title: 'Score',
+    field: 'score',
+    type: TrinaColumnType.number(),
+    sort: TrinaColumnSort.descending,
+    sortPriority: 2,
+  ),
+];
+```
+
+If `sort` is set without specifying `sortPriority`, TrinaGrid automatically assigns sequential priorities to all initial sorted columns.
+
+### Programmatic Multi-Column Sorting
+
+Use the `append` parameter on sorting methods to build multi-column sorts programmatically:
+
+```dart
+// Primary sort by department ascending
+stateManager.sortAscending(deptColumn);
+
+// Secondary sort by score descending (appended)
+stateManager.sortDescending(scoreColumn, append: true);
+
+// Tertiary sort by name ascending (appended)
+stateManager.sortAscending(nameColumn, append: true);
+
+// Inspect currently sorted columns ordered by priority
+final List<TrinaColumn> activeSorts = stateManager.sortedColumns;
+
+// Clear all active sorting at once
+stateManager.clearSorting();
+```
+
+### Server-Side Multi-Column Sorting
+
+Both `TrinaLazyPagination` and `TrinaInfinityScrollRows` provide the full list of sorted columns via `request.sortedColumns`:
+
+```dart
+TrinaLazyPagination(
+  stateManager: stateManager,
+  fetch: (request) async {
+    // Access all sorted columns in priority order:
+    for (final column in request.sortedColumns) {
+      print('Sort by ${column.field}: ${column.sort.name} (priority: ${column.sortPriority})');
+    }
+
+    // Single-column fallback (returns the first sorted column):
+    final primaryColumn = request.sortColumn;
+
+    return TrinaLazyPaginationResponse(
+      totalPage: totalPages,
+      totalRecords: totalCount,
+      rows: fetchedRows,
+    );
+  },
+)
+```
 
 ## Best Practices
 

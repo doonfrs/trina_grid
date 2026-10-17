@@ -185,6 +185,14 @@ class TrinaGridConfiguration {
   /// Default is false for backward compatibility.
   final bool rowWrapperIsConstantHeight;
 
+  /// Enable multi-column sorting when clicking column headers with Shift or Ctrl pressed.
+  ///
+  /// When true, Shift+Click or Ctrl+Click on a column header toggles sorting for that
+  /// column and appends it to the multi-column sort hierarchy instead of resetting other sorts.
+  ///
+  /// Default is false for backward compatibility.
+  final bool enableMultiColumnSort;
+
   const TrinaGridConfiguration({
     this.enableMoveDownAfterSelecting = false,
     this.enableMoveHorizontalInEditing = false,
@@ -209,6 +217,7 @@ class TrinaGridConfiguration {
     this.copyPasteCellSeparator,
     this.copyPasteLineSeparator,
     this.rowWrapperIsConstantHeight = false,
+    this.enableMultiColumnSort = false,
   });
 
   const TrinaGridConfiguration.dark({
@@ -235,6 +244,7 @@ class TrinaGridConfiguration {
     this.copyPasteCellSeparator,
     this.copyPasteLineSeparator,
     this.rowWrapperIsConstantHeight = false,
+    this.enableMultiColumnSort = false,
   });
 
   /// Builds a configuration whose [style] is derived from the Material theme
@@ -321,6 +331,7 @@ class TrinaGridConfiguration {
     String? copyPasteCellSeparator,
     String? copyPasteLineSeparator,
     bool? rowWrapperIsConstantHeight,
+    bool? enableMultiColumnSort,
   }) {
     return TrinaGridConfiguration(
       enableMoveDownAfterSelecting:
@@ -352,6 +363,8 @@ class TrinaGridConfiguration {
           copyPasteLineSeparator ?? this.copyPasteLineSeparator,
       rowWrapperIsConstantHeight:
           rowWrapperIsConstantHeight ?? this.rowWrapperIsConstantHeight,
+      enableMultiColumnSort:
+          enableMultiColumnSort ?? this.enableMultiColumnSort,
     );
   }
 
@@ -382,7 +395,8 @@ class TrinaGridConfiguration {
             dragSelectionDelayDuration == other.dragSelectionDelayDuration &&
             copyPasteCellSeparator == other.copyPasteCellSeparator &&
             copyPasteLineSeparator == other.copyPasteLineSeparator &&
-            rowWrapperIsConstantHeight == other.rowWrapperIsConstantHeight;
+            rowWrapperIsConstantHeight == other.rowWrapperIsConstantHeight &&
+            enableMultiColumnSort == other.enableMultiColumnSort;
   }
 
   @override
@@ -408,6 +422,7 @@ class TrinaGridConfiguration {
       copyPasteCellSeparator,
       copyPasteLineSeparator,
       rowWrapperIsConstantHeight,
+      enableMultiColumnSort,
     ),
   );
 }
