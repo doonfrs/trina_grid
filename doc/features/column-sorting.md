@@ -300,7 +300,7 @@ final columns = [
 ];
 ```
 
-If `sort` is set without specifying `sortPriority`, TrinaGrid automatically assigns sequential priorities to all initial sorted columns.
+If `sort` is set without specifying `sortPriority`, TrinaGrid numbers those columns in column order when the grid loads, after any columns that set `sortPriority` themselves.
 
 ### Programmatic Multi-Column Sorting
 
