@@ -8,6 +8,10 @@ on:
 jobs:
     build:
         runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                shadcn_ui: ["0.55.0", "0.56.0", "0.57.3"]
 
         steps:
             - uses: actions/checkout@v4
@@ -16,7 +20,7 @@ jobs:
                   channel: stable # or: beta, master (or main)
 
             - name: Get all Flutter Packages
-              run: flutter pub get
+              run: flutter pub add "shadcn_ui:${{ matrix.shadcn_ui }}"
 
             # dart analyze covers the whole repository, and demo/ is a separate
             # package. Without its own resolution every package: import there is
