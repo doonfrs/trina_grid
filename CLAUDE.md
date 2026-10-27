@@ -32,11 +32,12 @@ dart fix --apply                     # Apply automated fixes
 
 ## Git Workflow
 
-When asked to commit & push:
-1. Create a new branch from the current branch (never push directly to main).
+When asked to commit & push (including via `/push`):
+1. If on main, create a new branch first (never push directly to main). This overrides the "never create or switch branches" rule in the global `/push` command; do it without stopping to ask.
 2. Commit the changes. Don't add `## Test plan` to commit messages.
-3. Push the branch.
+3. Push the branch and open a PR with `gh pr create`.
 4. If fixing a GitHub issue, link it in the PR so it closes on merge.
+5. After pushing, switch back to main (`git switch main`) so the next task starts from there.
 
 ## Architecture
 
