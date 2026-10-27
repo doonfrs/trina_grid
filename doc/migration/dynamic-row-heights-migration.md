@@ -414,9 +414,9 @@ After successful migration:
 
 If you encounter issues during migration:
 
-1. Check the [Dynamic Row Heights](features/dynamic-row-heights.md) documentation
-2. Review the [examples](examples/dynamic-row-heights.md)
-3. Check the [API reference](api/trina-grid-state-manager.md)
+1. Check the [Dynamic Row Heights](../features/dynamic-row-heights.md) documentation
+2. Review the [examples](../examples/dynamic-row-heights.md)
+3. Check the [API reference](https://pub.dev/documentation/trina_grid/latest/trina_grid/TrinaGridStateManager-class.html)
 4. Report issues on the project's issue tracker
 
 The dynamic row heights feature is designed to be a smooth, opt-in enhancement to your existing TrinaGrid implementation. Take your time with the migration and test thoroughly at each step!

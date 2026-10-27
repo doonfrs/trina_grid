@@ -552,7 +552,7 @@ TrinaGrid comes with comprehensive documentation covering all features and use c
 - **🚀 [Migration Guide](https://github.com/doonfrs/trina_grid/blob/main/doc/migration/pluto-to-trina.md)** - Migrate from PlutoGrid with our automated tool
 - **✨ [Feature Documentation](https://github.com/doonfrs/trina_grid/blob/main/doc/features/)** - Detailed guides for all features
 - **🧑‍💻 [Examples & Tutorials](https://github.com/doonfrs/trina_grid/blob/main/doc/examples/)** - Practical examples and use cases
-- **📚 [API Reference](https://github.com/doonfrs/trina_grid/blob/main/doc/api/)** - Complete API documentation
+- **📚 [API Reference](https://pub.dev/documentation/trina_grid/latest/trina_grid/)** - Complete API documentation
 
 Visit our [Documentation Index](https://github.com/doonfrs/trina_grid/blob/main/doc/index.md) for a complete overview.
 
@@ -570,9 +570,9 @@ Check out the [example project](https://github.com/doonfrs/trina_grid/tree/maste
 
 For detailed API documentation, refer to the following resources:
 
-- **Core Classes**: [TrinaGrid](https://github.com/doonfrs/trina_grid/blob/main/doc/api/trina-grid.md), [TrinaColumn](https://github.com/doonfrs/trina_grid/blob/main/doc/api/trina-column.md), [TrinaRow](https://github.com/doonfrs/trina_grid/blob/main/doc/api/trina-row.md), [TrinaCell](https://github.com/doonfrs/trina_grid/blob/main/doc/api/trina-cell.md)
-- **State Management**: [TrinaGridStateManager](https://github.com/doonfrs/trina_grid/blob/main/doc/api/trina-grid-state-manager.md)
-- **Advanced Features**: [Custom Renderers](https://github.com/doonfrs/trina_grid/blob/main/doc/examples/custom-renderers.md), [Filtering & Sorting](https://github.com/doonfrs/trina_grid/blob/main/doc/examples/filtering-sorting.md)
+- **Core Classes**: [TrinaGrid](https://pub.dev/documentation/trina_grid/latest/trina_grid/TrinaGrid-class.html), [TrinaColumn](https://pub.dev/documentation/trina_grid/latest/trina_grid/TrinaColumn-class.html), [TrinaRow](https://pub.dev/documentation/trina_grid/latest/trina_grid/TrinaRow-class.html), [TrinaCell](https://pub.dev/documentation/trina_grid/latest/trina_grid/TrinaCell-class.html)
+- **State Management**: [TrinaGridStateManager](https://pub.dev/documentation/trina_grid/latest/trina_grid/TrinaGridStateManager-class.html)
+- **Advanced Features**: [Custom Renderers](https://github.com/doonfrs/trina_grid/blob/main/doc/examples/custom-renderers.md), [Filtering](https://github.com/doonfrs/trina_grid/blob/main/doc/features/column-filtering.md), [Sorting](https://github.com/doonfrs/trina_grid/blob/main/doc/features/column-sorting.md)
 
 ---
 
