@@ -66,37 +66,32 @@ Welcome to the official documentation for TrinaGrid, a powerful data grid for Fl
 ### UI Customization
 
 - [Themes](features/themes.md)
-- [Custom Styling](features/custom-styling.md)
 - [Loading Options](features/loading-options.md)
 - [Scrollbars](features/scrollbars.md)
 - [Record Sidebar](features/sidebar.md)
 - [Fit Content (Auto-Size)](features/fit-content.md)
-- [RTL Support](features/rtl-support.md)
 
 ### Other Features
 
-- [Keyboard Navigation](features/keyboard-navigation.md)
 - [Context Menus](features/context-menus.md)
 - [Dual Grid Mode](features/dual-grid-mode.md)
-- [Popup Mode](features/popup-mode.md)
 - [Change Tracking](features/change-tracking.md)
 
 ## Examples
 
-- [Basic Grid](examples/basic-grid.md)
 - [Custom Renderers](examples/custom-renderers.md)
-- [Filtering and Sorting](examples/filtering-sorting.md)
-- [Pagination](examples/pagination.md)
-- [Row and Cell Selection](examples/selection.md)
 - [Dynamic Row Heights](examples/dynamic-row-heights.md)
 
 ## API Reference
 
-- [TrinaGrid](api/trina-grid.md) - Main grid widget
-- [TrinaColumn](api/trina-column.md) - Column definition
-- [TrinaRow](api/trina-row.md) - Row data model
-- [TrinaCell](api/trina-cell.md) - Cell data model
-- [TrinaGridStateManager](api/trina-grid-state-manager.md) - State management
+The full API reference is generated from the source and published on pub.dev:
+
+- [TrinaGrid](https://pub.dev/documentation/trina_grid/latest/trina_grid/TrinaGrid-class.html) - Main grid widget
+- [TrinaColumn](https://pub.dev/documentation/trina_grid/latest/trina_grid/TrinaColumn-class.html) - Column definition
+- [TrinaRow](https://pub.dev/documentation/trina_grid/latest/trina_grid/TrinaRow-class.html) - Row data model
+- [TrinaCell](https://pub.dev/documentation/trina_grid/latest/trina_grid/TrinaCell-class.html) - Cell data model
+- [TrinaGridStateManager](https://pub.dev/documentation/trina_grid/latest/trina_grid/TrinaGridStateManager-class.html) - State management
+- [All classes](https://pub.dev/documentation/trina_grid/latest/trina_grid/)
 
 ## Contributing
 
@@ -107,4 +102,4 @@ Welcome to the official documentation for TrinaGrid, a powerful data grid for Fl
 
 ## Release Notes
 
-- [Changelog](changelog.md)
+- [Changelog](../CHANGELOG.md)
