@@ -37,6 +37,7 @@ When asked to commit & push (including via `/push`):
 2. Commit the changes. Don't add `## Test plan` to commit messages.
 3. Push the branch and open a PR with `gh pr create`.
 4. If fixing a GitHub issue, link it in the PR so it closes on merge.
+5. After pushing, switch back to main (`git switch main`) so the next task starts from there.
 
 ## Architecture
 
