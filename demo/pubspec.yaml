@@ -27,6 +27,7 @@ dependency_overrides:
 dependencies:
     flutter:
         sdk: flutter
+    material_ui: ^1.11.0
     trina_grid:
         path: ../
     faker: ^2.1.0

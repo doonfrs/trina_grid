@@ -18,6 +18,8 @@ documentation: https://github.com/doonfrs/trina_grid/blob/main/doc/index.md
 
 environment:
   sdk: ^3.9.2
+  # The floor of material_ui and cupertino_ui.
+  flutter: ">=3.47.0"
 
 # This allows the package to be run as an executable
 executables:
@@ -26,6 +28,10 @@ executables:
 dependencies:
   flutter:
     sdk: flutter
+  # Material and Cupertino as standalone packages: the copies bundled in the
+  # Flutter SDK are deprecated since Flutter 3.50.
+  material_ui: ^1.11.0
+  cupertino_ui: ^1.1.6
   # Follows the intl version included in Flutter.
   # https://github.com/flutter/flutter/blob/84a1e904f44f9b0e9c4510138010edcc653163f8/packages/flutter_localizations/pubspec.yaml#L11
   intl: ^0.20.2

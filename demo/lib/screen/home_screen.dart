@@ -13,7 +13,7 @@ import 'package:demo/screen/feature/frozen_rows_screen.dart';
 import 'package:demo/screen/feature/grid_export_screen.dart';
 import 'package:demo/screen/feature/percentage_type_column_screen.dart';
 import 'package:demo/screen/feature/rtl_scrollbar_screen.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../helper/launch_url.dart';

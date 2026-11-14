@@ -4,8 +4,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-/// @docImport 'package:flutter/cupertino.dart';
-/// @docImport 'package:flutter/material.dart';
+/// @docImport 'package:cupertino_ui/cupertino_ui.dart';
+/// @docImport 'package:material_ui/material_ui.dart';
 /// @docImport 'package:flutter/widgets.dart';
 library;
 
@@ -13,7 +13,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/gestures.dart'
     show DiagnosticPropertiesBuilder, DragStartBehavior;
-import 'package:flutter/material.dart'
+import 'package:material_ui/material_ui.dart'
     show
         AlwaysScrollableScrollPhysics,
         AppBar,

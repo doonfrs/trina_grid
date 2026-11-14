@@ -7,7 +7,7 @@ import 'dart:async' as _i6;
 import 'dart:ui' as _i5;
 
 import 'package:flutter/animation.dart' as _i10;
-import 'package:flutter/cupertino.dart' as _i3;
+import 'package:cupertino_ui/cupertino_ui.dart' as _i3;
 import 'package:flutter/foundation.dart' as _i8;
 import 'package:flutter/gestures.dart' as _i7;
 import 'package:flutter/rendering.dart' as _i11;

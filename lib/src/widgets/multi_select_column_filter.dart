@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:trina_grid/src/ui/widgets/ensure_shad_theme.dart';
 import 'package:trina_grid/src/widgets/filter_dropdown_field.dart';

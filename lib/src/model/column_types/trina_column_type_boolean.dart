@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/src/model/trina_column_type_has_menu_popup.dart';
 import 'package:trina_grid/src/ui/cells/trina_boolean_cell.dart';
 import 'package:trina_grid/src/ui/widgets/trina_dropdown_menu.dart';

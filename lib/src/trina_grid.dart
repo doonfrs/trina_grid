@@ -2,7 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart' show Intl;
@@ -1236,9 +1236,9 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
     );
 
     // The cell editors and the filter row are Material widgets and assert a
-    // Material ancestor. Provide one when the host has none, e.g. an app on
-    // the standalone material_ui package, whose Material is a different type
-    // (#423). It keeps the ambient text style, so nothing changes visually.
+    // Material ancestor. Provide one when the host has none, e.g. a grid
+    // placed outside a Scaffold (#423). It keeps the ambient text style, so
+    // nothing changes visually.
     if (Material.maybeOf(context) != null) {
       return scope;
     }

@@ -164,7 +164,7 @@ Row hover effects may temporarily change the row color. Consider this when desig
 Here's a complete example demonstrating row coloring in TrinaGrid:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class RowColorExample extends StatefulWidget {

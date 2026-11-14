@@ -110,35 +110,24 @@ A few colors are not reachable through `TrinaGridStyleConfig` yet, so they stay 
 
 These need their own configuration fields before they can follow a theme. Track this with [issue #336](https://github.com/doonfrs/trina_grid/issues/336).
 
-## Apps on the standalone material_ui package
+## Material comes from the material_ui package
 
-Flutter 3.47 ships Material as the standalone `material_ui` package. TrinaGrid still builds on the Material library bundled with the SDK (`package:flutter/material.dart`), which is a separate set of types, so an app that migrated to `material_ui` needs two things:
+TrinaGrid builds on the standalone `material_ui` and `cupertino_ui` packages. Flutter 3.50 deprecated the Material and Cupertino libraries bundled with the SDK (`package:flutter/material.dart`, `package:flutter/cupertino.dart`), and the bundled classes and the package classes are separate types, so the host app has to be on `material_ui` as well:
 
-1. Wrap the app in `MaterialUiCompatibilityBridge` so the grid can read your theme. Without it, `Theme.of(context)` inside the grid returns the SDK default theme, and `fromTheme(context)` ignores yours.
+```dart
+import 'package:material_ui/material_ui.dart';
+import 'package:trina_grid/trina_grid.dart';
+```
 
-   ```dart
-   import 'package:material_ui/material_ui.dart';
+An app that still imports `package:flutter/material.dart` hits three things:
 
-   MaterialApp(
-     theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal)),
-     builder: (context, child) => MaterialUiCompatibilityBridge(child: child!),
-     home: const HomeScreen(),
-   );
-   ```
+1. The grid cannot read its theme. `Theme.of(context)` inside the grid returns the `material_ui` default theme, so the grid stays light under a dark app and `fromTheme(context)` ignores the app colors.
+2. The filter row and the cell editors throw `No MaterialLocalizations found`, because the app only provides the SDK localizations.
+3. The Material types in the grid API are the `material_ui` ones, so code that passes or returns the SDK type does not compile: `TrinaGridStyleConfig.fromTheme` (`ThemeData`), `TrinaGridStyleConfig.fromColorScheme` (`ColorScheme`, `TextTheme`), the `minTime` / `maxTime` of `TrinaColumnType.time` (`TimeOfDay`), and the menu items of a custom column menu (`PopupMenuEntry`, in `TrinaColumnMenuDelegate.buildMenuItems` and `showColumnMenu`).
 
-2. Pass SDK types where the grid API asks for Material types: `TrinaGridStyleConfig.fromTheme` (`ThemeData`), `TrinaGridStyleConfig.fromColorScheme` (`ColorScheme`, `TextTheme`) and the `minTime` / `maxTime` of `TrinaColumnType.time` (`TimeOfDay`). Import the SDK library with a prefix for those:
+Move the app to `material_ui` to use this version of the grid, or stay on a TrinaGrid release that builds on the SDK library until you do.
 
-   ```dart
-   import 'package:flutter/material.dart' as legacy;
-
-   TrinaColumnType.time(
-     minTime: const legacy.TimeOfDay(hour: 8, minute: 0),
-   );
-   ```
-
-   `TrinaGridConfiguration.fromTheme(context)` takes a `BuildContext`, so it needs no prefix and follows your theme through the bridge.
-
-The grid provides its own Material ancestor when the host has none of the SDK type, so cell editing and the filter row work under a `material_ui` `Scaffold` without extra wrapping.
+The grid provides its own Material ancestor when the host has none, so cell editing and the filter row work outside a `Scaffold` without extra wrapping.
 
 ## Dark mode without theme integration
 

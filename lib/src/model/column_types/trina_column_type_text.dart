@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/src/helper/trina_general_helper.dart';
 import 'package:trina_grid/src/ui/cells/trina_text_cell.dart';
 import 'package:trina_grid/trina_grid.dart';

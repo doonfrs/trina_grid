@@ -79,7 +79,7 @@ TrinaGrid has built-in safeguards to prevent freezing too many columns:
 Here's a complete example demonstrating column freezing:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class ColumnFreezingExample extends StatefulWidget {

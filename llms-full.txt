@@ -95,7 +95,7 @@ This guide will walk you through creating a simple TrinaGrid implementation.
 Here's a complete example of a basic TrinaGrid implementation:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 void main() {
@@ -2082,7 +2082,7 @@ TrinaGrid has built-in safeguards to prevent freezing too many columns:
 Here's a complete example demonstrating column freezing:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class ColumnFreezingExample extends StatefulWidget {
@@ -2344,7 +2344,7 @@ This calculates the optimal width based on the column's content and header text.
 Here's a complete example demonstrating column resizing:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class ColumnResizingExample extends StatefulWidget {
@@ -2588,7 +2588,7 @@ TrinaGrid(
 Here's a complete example demonstrating column moving:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class ColumnMovingExample extends StatefulWidget {
@@ -2854,7 +2854,7 @@ void saveColumnVisibility(List<TrinaColumn> columns, bool isHidden) {
 Here's a complete example demonstrating column hiding:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class ColumnHidingExample extends StatefulWidget {
@@ -3111,7 +3111,7 @@ The `TrinaGridOnSortedEvent` provides:
 Here's a complete example demonstrating column sorting:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class ColumnSortingExample extends StatefulWidget {
@@ -3699,7 +3699,7 @@ TrinaGrid(
 Here's a complete example demonstrating column filtering:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class ColumnFilteringExample extends StatefulWidget {
@@ -4104,7 +4104,7 @@ Column resizing works normally within column groups:
 Here's a complete example demonstrating column groups:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class ColumnGroupExample extends StatefulWidget {
@@ -5218,7 +5218,7 @@ When creating custom footer widgets, you'll need to handle updates to the widget
 Here's a complete example demonstrating various types of column footers:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class ColumnFooterExample extends StatefulWidget {
@@ -5632,7 +5632,7 @@ When a row is selected, TrinaGrid provides visual feedback by highlighting the e
 Here's a complete example demonstrating row selection:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class RowSelectionExample extends StatefulWidget {
@@ -5864,7 +5864,7 @@ TrinaGrid(
 Here's a complete example demonstrating row moving functionality:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class RowMovingExample extends StatefulWidget {
@@ -6163,7 +6163,7 @@ Row hover effects may temporarily change the row color. Consider this when desig
 Here's a complete example demonstrating row coloring in TrinaGrid:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class RowColorExample extends StatefulWidget {
@@ -6521,7 +6521,7 @@ stateManager.notifyListeners();
 Here's a complete example demonstrating row checking functionality:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class RowCheckingExample extends StatefulWidget {
@@ -7028,7 +7028,7 @@ List<TrinaRow> getAllGroupRows() {
 Here's a complete example demonstrating both types of row grouping:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class RowGroupExample extends StatefulWidget {
@@ -7464,7 +7464,7 @@ List<TrinaRow> frozenBottomRows = stateManager.refRows.originalList
 Here's a complete example demonstrating frozen rows functionality:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class FrozenRowsExample extends StatefulWidget {
@@ -7739,7 +7739,7 @@ print('Row 0 height: ${height}px');
 Here's a complete example demonstrating dynamic row heights:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class DynamicRowHeightExample extends StatefulWidget {
@@ -8351,7 +8351,7 @@ TrinaGrid(
 Here's a complete example demonstrating cell selection functionality:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class CellSelectionExample extends StatefulWidget {
@@ -9183,7 +9183,7 @@ TrinaColumn(
 Here's a complete example demonstrating cell editing functionality:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class CellEditingExample extends StatefulWidget {
@@ -10799,7 +10799,7 @@ Fields that don't exist in the row's cells are silently skipped. Cells that fail
 Here's a complete example demonstrating value change and keyboard event handling:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class CellChangeHandlingExample extends StatefulWidget {
@@ -13537,7 +13537,7 @@ TrinaGrid(
 Here's a complete example demonstrating context menus:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class ContextMenuExample extends StatefulWidget {
@@ -14089,7 +14089,7 @@ This page provides complete examples of using custom renderers in TrinaGrid.
 This example demonstrates a task management grid with various custom renderers:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class TaskManagementGrid extends StatefulWidget {
@@ -14563,7 +14563,7 @@ This example demonstrates how to use TrinaGrid's dynamic row heights feature to 
 Here's a simple example showing how to create rows with custom heights:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class DynamicRowHeightExample extends StatefulWidget {
@@ -14656,7 +14656,7 @@ class _DynamicRowHeightExampleState extends State<DynamicRowHeightExample> {
 Here's a more advanced example that allows users to modify row heights at runtime:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class InteractiveRowHeightExample extends StatefulWidget {
@@ -15199,7 +15199,7 @@ cellColorCallback: (cellColorContext) {
 Here's a complete example demonstrating cell coloring in TrinaGrid:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class CellColorExample extends StatefulWidget {
@@ -15491,7 +15491,7 @@ This component-level callback is useful when you need to handle events specific 
 Here's a complete example demonstrating the use of `onLazyFetchCompleted`:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class LazyPaginationEventExample extends StatefulWidget {

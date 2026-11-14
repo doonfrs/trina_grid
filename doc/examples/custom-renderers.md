@@ -7,7 +7,7 @@ This page provides complete examples of using custom renderers in TrinaGrid.
 This example demonstrates a task management grid with various custom renderers:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class TaskManagementGrid extends StatefulWidget {

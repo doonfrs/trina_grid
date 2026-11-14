@@ -171,12 +171,14 @@ Then run:
 flutter pub get
 ```
 
+TrinaGrid builds on the standalone [`material_ui`](https://pub.dev/packages/material_ui) package, which replaces the Material library bundled with the Flutter SDK (deprecated in Flutter 3.50). Your app needs to import `package:material_ui/material_ui.dart` instead of `package:flutter/material.dart`; see [Themes](doc/features/themes.md#material-comes-from-the-material_ui-package).
+
 ---
 
 ## 🏁 Basic Usage
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 void main() {

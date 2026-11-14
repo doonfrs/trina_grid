@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:faker/faker.dart' as faker_package;
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 import '../../widget/trina_example_button.dart';

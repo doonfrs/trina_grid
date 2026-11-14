@@ -187,7 +187,7 @@ When creating custom footer widgets, you'll need to handle updates to the widget
 Here's a complete example demonstrating various types of column footers:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class ColumnFooterExample extends StatefulWidget {

@@ -130,7 +130,7 @@ Column resizing works normally within column groups:
 Here's a complete example demonstrating column groups:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class ColumnGroupExample extends StatefulWidget {

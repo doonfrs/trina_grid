@@ -1,13 +1,13 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 /// Regression tests for issue #423.
 ///
 /// The cell editors and the filter row are Material widgets, so they assert a
-/// [Material] ancestor. Apps built on the standalone material_ui package have
-/// none of the SDK type (their Material is a different class), so the grid
-/// must provide one itself when the host has none.
+/// [Material] ancestor. A host can have none, for example a grid placed
+/// outside a Scaffold, so the grid must provide one itself when it finds
+/// none.
 void main() {
   late TrinaGridStateManager stateManager;
 

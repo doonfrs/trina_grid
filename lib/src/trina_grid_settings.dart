@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 abstract class TrinaGridSettings {
   /// If there is a frozen column, the minimum width of the body
