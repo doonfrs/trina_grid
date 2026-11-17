@@ -3424,16 +3424,22 @@ class MockLinkedScrollControllerGroup extends _i1.Mock
           as double);
 
   @override
-  _i3.ScrollController addAndGet() =>
+  _i3.ScrollController addAndGet({double? initialScrollOffset}) =>
       (super.noSuchMethod(
-            Invocation.method(#addAndGet, []),
+            Invocation.method(#addAndGet, [], {
+              #initialScrollOffset: initialScrollOffset,
+            }),
             returnValue: _FakeScrollController_21(
               this,
-              Invocation.method(#addAndGet, []),
+              Invocation.method(#addAndGet, [], {
+                #initialScrollOffset: initialScrollOffset,
+              }),
             ),
             returnValueForMissingStub: _FakeScrollController_21(
               this,
-              Invocation.method(#addAndGet, []),
+              Invocation.method(#addAndGet, [], {
+                #initialScrollOffset: initialScrollOffset,
+              }),
             ),
           )
           as _i3.ScrollController);
