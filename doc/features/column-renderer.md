@@ -342,6 +342,7 @@ TrinaColumn(
 4. **Consistency**: Maintain a consistent look and feel across your grid
 5. **Accessibility**: Ensure your custom renderers maintain accessibility features
 6. **Cell vs. Column Renderers**: Use column renderers for consistent formatting across a column, and cell renderers for exceptions
+7. **Auto-sizing**: The `fitContent` auto-size mode and `autoFitColumn` measure the cell value as text, so they cannot see what a renderer draws. Give the column a `measureWidth` callback so these fit it to the renderer's real width. See [Column Resizing](column-resizing.md#4-fit-content-trinaautosizemodefitcontent).
 
 ## Comparison with Cell Renderer
 
