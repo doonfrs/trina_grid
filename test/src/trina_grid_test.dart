@@ -43,6 +43,34 @@ void main() {
     expect(stateManager.isRTL, true);
   });
 
+  testWidgets('Grid starts at the provided scroll offsets', (
+    WidgetTester tester,
+  ) async {
+    const verticalOffset = 240.0;
+    const horizontalOffset = 320.0;
+    final columns = ColumnHelper.textColumn('column', count: 10);
+    final rows = RowHelper.count(100, columns);
+    late final TrinaGridStateManager stateManager;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Material(
+          child: TrinaGrid(
+            columns: columns,
+            rows: rows,
+            initialVerticalScrollOffset: verticalOffset,
+            initialHorizontalScrollOffset: horizontalOffset,
+            onLoaded: (event) => stateManager = event.stateManager,
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(stateManager.scroll.bodyRowsVertical!.offset, verticalOffset);
+    expect(stateManager.scroll.bodyRowsHorizontal!.offset, horizontalOffset);
+  });
+
   testWidgets(
     'When Directionality is rtl, columns should be positioned according to their frozen state',
     (WidgetTester tester) async {

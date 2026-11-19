@@ -101,6 +101,8 @@ class TrinaGrid extends TrinaStatefulWidget {
     super.key,
     required this.columns,
     required this.rows,
+    this.initialVerticalScrollOffset,
+    this.initialHorizontalScrollOffset,
     this.rowsCacheExtent,
     this.rowWrapper,
     this.editCellRenderer,
@@ -198,6 +200,18 @@ class TrinaGrid extends TrinaStatefulWidget {
   /// ```
   /// {@endtemplate}
   final List<TrinaRow> rows;
+
+  /// The initial vertical scroll offset, in logical pixels.
+  ///
+  /// The offset is applied when the grid is first created and is clamped to
+  /// the available scroll extent. Defaults to `0.0`.
+  final double? initialVerticalScrollOffset;
+
+  /// The initial horizontal scroll offset, in logical pixels.
+  ///
+  /// The offset is applied when the grid is first created and is clamped to
+  /// the available scroll extent. Defaults to `0.0`.
+  final double? initialHorizontalScrollOffset;
 
   /// {@template trina_grid_property_columnGroups}
   /// [columnGroups] can be expressed in UI by grouping columns.
@@ -1068,7 +1082,12 @@ class TrinaGridState extends TrinaStateWithChange<TrinaGrid> {
             /// Body columns and rows.
             LayoutId(
               id: _StackName.bodyRows,
-              child: TrinaBodyRows(_stateManager),
+              child: TrinaBodyRows(
+                _stateManager,
+                initialVerticalScrollOffset: widget.initialVerticalScrollOffset,
+                initialHorizontalScrollOffset:
+                    widget.initialHorizontalScrollOffset,
+              ),
             ),
             LayoutId(
               id: _StackName.bodyColumns,

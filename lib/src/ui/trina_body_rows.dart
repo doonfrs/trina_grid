@@ -10,9 +10,17 @@ import 'miscellaneous/row_extent.dart';
 import 'ui.dart';
 
 class TrinaBodyRows extends TrinaStatefulWidget {
+  final double? initialVerticalScrollOffset;
+  final double? initialHorizontalScrollOffset;
+
   final TrinaGridStateManager stateManager;
 
-  const TrinaBodyRows(this.stateManager, {super.key});
+  const TrinaBodyRows(
+    this.stateManager, {
+    this.initialVerticalScrollOffset,
+    this.initialHorizontalScrollOffset,
+    super.key,
+  });
 
   @override
   TrinaBodyRowsState createState() => TrinaBodyRowsState();
@@ -57,10 +65,14 @@ class TrinaBodyRowsState extends TrinaStateWithChange<TrinaBodyRows> {
   void initState() {
     super.initState();
 
-    _horizontalScroll = stateManager.scroll.horizontal!.addAndGet();
+    _horizontalScroll = stateManager.scroll.horizontal!.addAndGet(
+      initialScrollOffset: widget.initialHorizontalScrollOffset,
+    );
     stateManager.scroll.setBodyRowsHorizontal(_horizontalScroll);
 
-    _verticalScroll = stateManager.scroll.vertical!.addAndGet();
+    _verticalScroll = stateManager.scroll.vertical!.addAndGet(
+      initialScrollOffset: widget.initialVerticalScrollOffset,
+    );
     stateManager.scroll.setBodyRowsVertical(_verticalScroll);
 
     // Listen to scroll changes for the fake scrollbars
