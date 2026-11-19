@@ -86,6 +86,38 @@ renderer needs. This matters when a renderer draws something derived from the
 cell rather than the cell itself, for example a code column that paints the
 code plus a looked-up name: the measuring only sees the code.
 
+To fit such a column to what its renderer actually draws, give it a
+`measureWidth` callback. It returns the width the widest cell needs, excluding
+the cell padding, and the grid uses that in place of measuring the values as
+text, for both `fitContent` and `autoFitColumn`. A column with `measureWidth`
+is fitted like any other, so it takes `minFitContentWidth` as its floor too.
+The title and filter field are still measured, and the column is never fitted
+narrower than they need.
+
+```dart
+TrinaColumn(
+  title: 'Customer',
+  field: 'code',
+  type: TrinaColumnType.text(),
+  // Paints "C-104 · Acme Corporation" for a cell holding "C-104".
+  renderer: (ctx) => Text('${ctx.cell.value} · ${names[ctx.cell.value]}'),
+  measureWidth: (ctx) {
+    double widest = 0;
+    for (final row in ctx.rows) {
+      final code = row.cells['code']!.value;
+      widest = math.max(widest, ctx.measureText('$code · ${names[code]}'));
+    }
+    return widest;
+  },
+)
+```
+
+`ctx.measureText` lays the text out with the grid's cell text style and the
+ambient text scale, and takes an optional `style` for text the renderer draws
+differently. `ctx.rows` holds the loaded rows, the same set the grid measures
+for other columns. The callback runs on every fit, so on large grids keep it
+cheap, for example by checking only the longest strings.
+
 Columns with `suppressedAutoSize: true` keep their explicit width and take no
 part in the sharing.
 
@@ -206,7 +238,9 @@ This calculates the optimal width based on the column's content and header text.
 The text is measured at the ambient text scale (`MediaQuery.textScalerOf`), the
 same scale the cells are drawn with, so the fit holds under desktop font scaling
 or accessibility font sizes. `TrinaAutoSizeMode.fitContent` measures the same
-way.
+way. For a column with a `renderer`, set `TrinaColumn.measureWidth` so the fit
+follows what the renderer draws (see
+[Fit content](#4-fit-content-trinaautosizemodefitcontent)).
 
 ## Example
 
