@@ -1,5 +1,9 @@
 # Changelog
 
+## [Unreleased]
+
+* Feature: `TrinaGrid.initialVerticalScrollOffset` and `initialHorizontalScrollOffset` open the grid at a given scroll position from the first frame, for example to restore where the user was when the grid is rebuilt (#278, #450). @Wdestroier
+
 ## [2.4.0] - 2026. 10. 31
 
 * Feature: Added multi-column sorting support with priority indicators. Enable via `TrinaGridConfiguration.enableMultiColumnSort` to allow Shift+Click and Ctrl+Click on column headers to build compound sort hierarchies. Column headers display numbered badges showing their priority when multiple columns are sorted. Supports programmatic multi-sorting via `sortAscending(column, append: true)`, `sortDescending(column, append: true)`, `clearSorting()`, and server-side multi-sorting through `request.sortedColumns` on `TrinaLazyPagination` and `TrinaInfinityScrollRows`. Columns that set `sort` in their constructors are ranked in column order, after any that set `sortPriority` themselves (#436, #441). @lschaffer @doonfrs
