@@ -448,6 +448,22 @@ TrinaGrid(
 )
 ```
 
+## Initial Scroll Position
+
+To open the grid at a given scroll position, pass `initialVerticalScrollOffset` and `initialHorizontalScrollOffset` (logical pixels). The offsets apply from the first frame, so there is no visible jump, which makes them a good fit for restoring the position when the grid is rebuilt:
+
+```dart
+TrinaGrid(
+  columns: columns,
+  rows: rows,
+  initialVerticalScrollOffset: savedVerticalOffset,
+  initialHorizontalScrollOffset: savedHorizontalOffset,
+  onLoaded: (event) => stateManager = event.stateManager,
+)
+```
+
+Save the current offsets with `stateManager.scroll.bodyRowsVertical?.offset` and `stateManager.scroll.bodyRowsHorizontal?.offset`. An offset past the end of the content settles back to the end. The offsets are only read when the grid is created; to scroll an existing grid, use the scroll controllers on `stateManager.scroll`.
+
 ## Best Practices
 
 1. **Desktop Applications**: For desktop applications, consider setting `isAlwaysShown: true` to make scrollbars always visible, improving usability.

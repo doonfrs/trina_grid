@@ -712,6 +712,8 @@ class TrinaColumnMeasureContext {
   /// The loaded rows, which on a paginated grid is the current page.
   final List<TrinaRow> rows;
 
+  /// The state manager of the grid, for example to read its configuration or
+  /// the style used to draw the cells.
   final TrinaGridStateManager stateManager;
 
   /// Returns the width of [text] laid out on one line with the grid's cell

@@ -203,14 +203,18 @@ class TrinaGrid extends TrinaStatefulWidget {
 
   /// The initial vertical scroll offset, in logical pixels.
   ///
-  /// The offset is applied when the grid is first created and is clamped to
-  /// the available scroll extent. Defaults to `0.0`.
+  /// The offset is applied when the grid is first created, so the first frame
+  /// already shows the rows at that position. Useful to restore the scroll
+  /// position when the grid is rebuilt. An offset past the end of the content
+  /// settles back to the end. Defaults to `0.0`.
   final double? initialVerticalScrollOffset;
 
   /// The initial horizontal scroll offset, in logical pixels.
   ///
-  /// The offset is applied when the grid is first created and is clamped to
-  /// the available scroll extent. Defaults to `0.0`.
+  /// The offset is applied when the grid is first created, so the first frame
+  /// already shows the columns at that position. Useful to restore the scroll
+  /// position when the grid is rebuilt. An offset past the end of the content
+  /// settles back to the end. Defaults to `0.0`.
   final double? initialHorizontalScrollOffset;
 
   /// {@template trina_grid_property_columnGroups}

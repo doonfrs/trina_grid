@@ -1,5 +1,10 @@
 # Changelog
 
+## [Unreleased]
+
+* Feature: `TrinaGrid.initialVerticalScrollOffset` and `initialHorizontalScrollOffset` open the grid at a given scroll position from the first frame, for example to restore where the user was when the grid is rebuilt (#278, #450). @Wdestroier
+* Feature: `TrinaColumn.measureWidth` lets a column with a `renderer` report the width its cells need, so `TrinaAutoSizeMode.fitContent` and `autoFitColumn` fit it to what is drawn instead of the raw value. The callback gets a `TrinaColumnMeasureContext` with the column, the loaded rows, the state manager and a `measureText` helper that uses the grid's cell text style. With it set, a renderer column takes `minFitContentWidth` as its floor like any other column. Opt-in: columns without it are unchanged (#451). @rimeljammal
+
 ## [2.4.0] - 2026. 10. 31
 
 * Feature: Added multi-column sorting support with priority indicators. Enable via `TrinaGridConfiguration.enableMultiColumnSort` to allow Shift+Click and Ctrl+Click on column headers to build compound sort hierarchies. Column headers display numbered badges showing their priority when multiple columns are sorted. Supports programmatic multi-sorting via `sortAscending(column, append: true)`, `sortDescending(column, append: true)`, `clearSorting()`, and server-side multi-sorting through `request.sortedColumns` on `TrinaLazyPagination` and `TrinaInfinityScrollRows`. Columns that set `sort` in their constructors are ranked in column order, after any that set `sortPriority` themselves (#436, #441). @lschaffer @doonfrs
