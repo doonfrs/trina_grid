@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/src/widgets/boolean_column_filter.dart';
 import 'package:trina_grid/src/widgets/multi_line_column_filter.dart';
 import 'package:trina_grid/src/widgets/multi_select_column_filter.dart';

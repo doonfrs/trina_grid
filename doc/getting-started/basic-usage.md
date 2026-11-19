@@ -7,7 +7,7 @@ This guide will walk you through creating a simple TrinaGrid implementation.
 Here's a complete example of a basic TrinaGrid implementation:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 void main() {

@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:trina_grid/src/helper/platform_helper.dart';
 import 'package:trina_grid/src/ui/cells/cell_text_style_resolver.dart';

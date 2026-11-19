@@ -6,7 +6,7 @@
 //   flutter test integration_test/issue_46_on_selected_test.dart -d windows
 
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:trina_grid/trina_grid.dart';

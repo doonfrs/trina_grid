@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A compact, read-only field that visually matches the text filter field
 /// of the filter row and anchors a dropdown menu.

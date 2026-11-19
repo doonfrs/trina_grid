@@ -8,7 +8,7 @@ import 'package:demo/screen/feature/percentage_type_column_screen.dart';
 import 'package:demo/screen/feature/rtl_scrollbar_screen.dart';
 import 'package:demo/screen/feature/custom_pagination_screen.dart';
 import 'package:demo/screen/feature/custom_type_column_screen.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import 'constants/trina_grid_example_colors.dart';
 import 'screen/empty_screen.dart';

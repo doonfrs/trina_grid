@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'dart:async';
 import 'package:trina_grid/src/widgets/trina_horizontal_scroll_bar.dart';
 import 'package:trina_grid/src/widgets/trina_vertical_scroll_bar.dart';

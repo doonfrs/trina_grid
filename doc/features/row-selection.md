@@ -131,7 +131,7 @@ When a row is selected, TrinaGrid provides visual feedback by highlighting the e
 Here's a complete example demonstrating row selection:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class RowSelectionExample extends StatefulWidget {

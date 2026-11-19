@@ -1,5 +1,9 @@
 # Changelog
 
+## [Unreleased]
+
+* Breaking: TrinaGrid now builds on the standalone `material_ui` and `cupertino_ui` packages instead of the Material and Cupertino libraries bundled with the Flutter SDK, which Flutter 3.50 deprecated. The bundled classes and the package classes are separate types, so the host app has to import `package:material_ui/material_ui.dart` too. In an app still on `package:flutter/material.dart` the grid does not see the app theme, and the filter row and the cell editors throw `No MaterialLocalizations found`. The Material types in the grid API are now the `material_ui` ones: `ThemeData`, `ColorScheme`, `TextTheme`, `TimeOfDay`, and the `PopupMenuEntry` items of a custom column menu (`TrinaColumnMenuDelegate.buildMenuItems`, `showColumnMenu`), so an app on the SDK library that passes or returns one of them no longer compiles. `material_ui` 1.11 needs Flutter 3.47 / Dart 3.13 or newer. Apps already on `material_ui` no longer need `MaterialUiCompatibilityBridge` or SDK-prefixed types for the grid. See the themes doc.
+
 ## [2.4.0] - 2026. 10. 31
 
 * Feature: Added multi-column sorting support with priority indicators. Enable via `TrinaGridConfiguration.enableMultiColumnSort` to allow Shift+Click and Ctrl+Click on column headers to build compound sort hierarchies. Column headers display numbered badges showing their priority when multiple columns are sorted. Supports programmatic multi-sorting via `sortAscending(column, append: true)`, `sortDescending(column, append: true)`, `clearSorting()`, and server-side multi-sorting through `request.sortedColumns` on `TrinaLazyPagination` and `TrinaInfinityScrollRows`. Columns that set `sort` in their constructors are ranked in column order, after any that set `sortPriority` themselves (#436, #441). @lschaffer @doonfrs

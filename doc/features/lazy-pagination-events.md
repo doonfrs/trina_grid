@@ -178,7 +178,7 @@ This component-level callback is useful when you need to handle events specific 
 Here's a complete example demonstrating the use of `onLazyFetchCompleted`:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class LazyPaginationEventExample extends StatefulWidget {

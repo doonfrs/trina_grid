@@ -117,7 +117,7 @@ print('Row 0 height: ${height}px');
 Here's a complete example demonstrating dynamic row heights:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class DynamicRowHeightExample extends StatefulWidget {

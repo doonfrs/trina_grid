@@ -317,7 +317,7 @@ List<TrinaRow> getAllGroupRows() {
 Here's a complete example demonstrating both types of row grouping:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class RowGroupExample extends StatefulWidget {

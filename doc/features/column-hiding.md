@@ -134,7 +134,7 @@ void saveColumnVisibility(List<TrinaColumn> columns, bool isHidden) {
 Here's a complete example demonstrating column hiding:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class ColumnHidingExample extends StatefulWidget {

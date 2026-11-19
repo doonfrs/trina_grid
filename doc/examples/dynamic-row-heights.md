@@ -7,7 +7,7 @@ This example demonstrates how to use TrinaGrid's dynamic row heights feature to 
 Here's a simple example showing how to create rows with custom heights:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class DynamicRowHeightExample extends StatefulWidget {
@@ -100,7 +100,7 @@ class _DynamicRowHeightExampleState extends State<DynamicRowHeightExample> {
 Here's a more advanced example that allows users to modify row heights at runtime:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class InteractiveRowHeightExample extends StatefulWidget {

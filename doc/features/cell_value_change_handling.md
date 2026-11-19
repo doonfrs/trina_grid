@@ -357,7 +357,7 @@ Fields that don't exist in the row's cells are silently skipped. Cells that fail
 Here's a complete example demonstrating value change and keyboard event handling:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class CellChangeHandlingExample extends StatefulWidget {

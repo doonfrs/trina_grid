@@ -1,6 +1,6 @@
 import 'package:trina_grid/src/ui/cells/cell_text_style_resolver.dart';
 import 'package:trina_grid/src/ui/cells/popup_cell.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:trina_grid/src/widgets/trina_popup.dart';
 
 /// Abstract state for popup cells that use a [TrinaPopup] to display the popup.
