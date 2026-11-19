@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 * Feature: `TrinaGrid.initialVerticalScrollOffset` and `initialHorizontalScrollOffset` open the grid at a given scroll position from the first frame, for example to restore where the user was when the grid is rebuilt (#278, #450). @Wdestroier
+* Feature: `TrinaColumn.measureWidth` lets a column with a `renderer` report the width its cells need, so `TrinaAutoSizeMode.fitContent` and `autoFitColumn` fit it to what is drawn instead of the raw value. The callback gets a `TrinaColumnMeasureContext` with the column, the loaded rows, the state manager and a `measureText` helper that uses the grid's cell text style. With it set, a renderer column takes `minFitContentWidth` as its floor like any other column. Opt-in: columns without it are unchanged (#451). @rimeljammal
 
 ## [2.4.0] - 2026. 10. 31
 
