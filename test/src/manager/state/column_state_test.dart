@@ -1850,6 +1850,68 @@ void main() {
     });
 
     testWidgets(
+      'When the column has measureWidth, it should be fitted to what the '
+      'callback measures rather than to its values as text',
+      (tester) async {
+        // The renderer draws a long label for a one-letter value.
+        const drawn = 'a label far longer than the cell value';
+        final drawnWidth = (TextPainter(
+          text: TextSpan(
+            text: drawn,
+            style: const TrinaGridStyleConfig().cellTextStyle,
+          ),
+          textDirection: TextDirection.ltr,
+        )..layout()).width;
+
+        final columns = ColumnHelper.textColumn('title');
+        final column = columns.first;
+        column.renderer = (ctx) => const Text(drawn);
+        column.measureWidth = (ctx) => ctx.measureText(drawn);
+
+        final rows = RowHelper.count(3, columns);
+        for (final row in rows) {
+          row.cells['title0']!.value = 'a';
+        }
+
+        late final BuildContext context;
+
+        TrinaGridStateManager stateManager = getStateManager(
+          columns: columns,
+          rows: rows,
+          gridFocusNode: null,
+          scroll: scroll,
+        );
+
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Material(
+              child: Builder(
+                builder: (builderContext) {
+                  context = builderContext;
+                  return Directionality(
+                    textDirection: TextDirection.ltr,
+                    child: TrinaBaseColumn(
+                      stateManager: stateManager,
+                      column: column,
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+
+        stateManager.autoFitColumn(context, column);
+
+        final padding =
+            (column.cellPadding ?? stateManager.style.defaultCellPadding)
+                .horizontal;
+        expect(column.width, greaterThanOrEqualTo(drawnWidth + padding));
+        expect(column.width, lessThan(drawnWidth + padding + 40));
+      },
+    );
+
+    testWidgets(
       'When the text is scaled, the fitted width should grow by the extra '
       'text width only',
       (tester) async {

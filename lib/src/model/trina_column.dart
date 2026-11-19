@@ -13,6 +13,9 @@ typedef TrinaColumnFooterRenderer =
 typedef TrinaColumnTitleRenderer =
     Widget Function(TrinaColumnTitleRendererContext rendererContext);
 
+typedef TrinaColumnMeasureWidth =
+    double Function(TrinaColumnMeasureContext measureContext);
+
 /// It dynamically determines whether a cell is in the edit state.
 ///
 /// Once a static `readOnly` value is set,
@@ -134,6 +137,39 @@ class TrinaColumn {
   /// Consider wrapping a RepaintBoundary widget
   /// if you are defining custom cells with high paint cost.
   TrinaColumnRenderer? renderer;
+
+  /// Returns the width the widest cell of this column needs, excluding the
+  /// cell padding and any icons the grid adds around the cell.
+  ///
+  /// [TrinaAutoSizeMode.fitContent] and [TrinaGridStateManager.autoFitColumn]
+  /// measure a column by laying out its values as text, which cannot see what
+  /// a [renderer] draws. Set this when the renderer draws something wider or
+  /// narrower than the value, such as a chip, an icon next to the text or a
+  /// looked-up name. With it set, a renderer column is fitted like any other,
+  /// including taking [TrinaGridColumnSizeConfig.minFitContentWidth] as its
+  /// floor instead of [minWidth].
+  ///
+  /// The result is still widened to fit the column title and, when shown, the
+  /// filter field.
+  ///
+  /// ```dart
+  /// TrinaColumn(
+  ///   title: 'Status',
+  ///   field: 'status',
+  ///   type: TrinaColumnType.text(),
+  ///   renderer: (ctx) => StatusChip(ctx.cell.value),
+  ///   // The chip adds an 18px icon, a 4px gap and 16px of padding.
+  ///   measureWidth: (ctx) {
+  ///     double widest = 0;
+  ///     for (final row in ctx.rows) {
+  ///       final text = row.cells[ctx.column.field]!.value.toString();
+  ///       widest = math.max(widest, ctx.measureText(text));
+  ///     }
+  ///     return widest + 18 + 4 + 16;
+  ///   },
+  /// )
+  /// ```
+  TrinaColumnMeasureWidth? measureWidth;
 
   /// A callback that returns a widget
   /// for expressing aggregate values at the bottom.
@@ -313,6 +349,7 @@ class TrinaColumn {
     TrinaColumnCheckReadOnly? checkReadOnly,
     this.width = TrinaGridSettings.columnWidth,
     this.minWidth = TrinaGridSettings.minColumnWidth,
+    this.measureWidth,
     this.titlePadding,
     this.filterPadding,
     this.titleSpan,
@@ -658,6 +695,28 @@ class TrinaColumnRendererContext {
     required this.cell,
     required this.stateManager,
   });
+}
+
+/// What [TrinaColumn.measureWidth] is given to work out a column's width.
+class TrinaColumnMeasureContext {
+  const TrinaColumnMeasureContext({
+    required this.column,
+    required this.rows,
+    required this.stateManager,
+    required this.measureText,
+  });
+
+  /// The column being measured.
+  final TrinaColumn column;
+
+  /// The loaded rows, which on a paginated grid is the current page.
+  final List<TrinaRow> rows;
+
+  final TrinaGridStateManager stateManager;
+
+  /// Returns the width of [text] laid out on one line with the grid's cell
+  /// text style, or [style] when given, and the ambient text scale.
+  final double Function(String text, {TextStyle? style}) measureText;
 }
 
 class TrinaColumnFooterRendererContext {

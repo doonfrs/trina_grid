@@ -112,9 +112,11 @@ mixin ColumnSizingState implements ITrinaGridState {
       getItemSize: (e) => e.width,
       // A column with a renderer draws something the measuring cannot see, so
       // it keeps its own minWidth as the floor: that is the width its author
-      // declared it needs. Only measurable columns get the override.
-      getItemMinSize: (e) =>
-          e.renderer == null ? (minFitContentWidth ?? e.minWidth) : e.minWidth,
+      // declared it needs. Only measurable columns get the override, and a
+      // renderer column becomes measurable once it supplies measureWidth.
+      getItemMinSize: (e) => (e.renderer == null || e.measureWidth != null)
+          ? (minFitContentWidth ?? e.minWidth)
+          : e.minWidth,
       setItemSize: (e, size) => e.width = size,
       mode: columnsAutoSizeMode,
       getItemPreferredSize: isFitContent ? _measureContentWidth : null,
@@ -129,12 +131,15 @@ mixin ColumnSizingState implements ITrinaGridState {
   /// icons drawn around each of them.
   ///
   /// Only the loaded rows are measured, so on a paginated grid this is the
-  /// current page. Widths from a [TrinaColumn.renderer] are not measured, the
-  /// same limitation [autoFitColumn] has, which is why such a column keeps its
-  /// own [TrinaColumn.minWidth] as its floor rather than the configured one.
+  /// current page. Widths from a [TrinaColumn.renderer] cannot be measured, so
+  /// such a column keeps its own [TrinaColumn.minWidth] as its floor rather
+  /// than the configured one, unless it supplies [TrinaColumn.measureWidth],
+  /// whose result is then used in place of the widest value.
   double _measureContentWidth(TrinaColumn column) {
     final titleWidth = _textWidth(column.title, style.columnTextStyle);
-    final valueWidth = _widestValueWidth(column);
+    final valueWidth = column.measureWidth != null
+        ? _callMeasureWidth(column)
+        : _widestValueWidth(column);
 
     // Mirrors autoFitColumn, minus the checkbox: that needs a BuildContext for
     // the tap target size, which the sizing pass does not have, so assume the
@@ -197,6 +202,25 @@ mixin ColumnSizingState implements ITrinaGridState {
         contentPadding +
         filterPadding +
         buttonsWidth;
+  }
+
+  /// Calls [TrinaColumn.measureWidth] for the fitContent pass, falling back to
+  /// the widest value as text when the callback returns something unusable.
+  double _callMeasureWidth(TrinaColumn column) {
+    final width = column.measureWidth!(
+      TrinaColumnMeasureContext(
+        column: column,
+        rows: refRows,
+        stateManager: this as TrinaGridStateManager,
+        measureText: (text, {TextStyle? style}) =>
+            _textWidth(text, style ?? this.style.cellTextStyle),
+      ),
+    );
+    assert(
+      width.isFinite && width >= 0,
+      'measureWidth must return a finite width >= 0, got $width',
+    );
+    return width.isFinite ? math.max(0, width) : _widestValueWidth(column);
   }
 
   /// Measures the widest displayed value in [column].

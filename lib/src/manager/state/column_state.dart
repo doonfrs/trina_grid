@@ -594,13 +594,9 @@ mixin ColumnState implements ITrinaGridState {
       style.columnTextStyle,
       textScaler,
     );
-    final maxValueTextWidth = _visualTextWidth(
-      maxValue,
-      style.cellTextStyle,
-      textScaler,
-    );
-
-    // todo : Handle (renderer) width
+    final maxValueTextWidth = column.measureWidth != null
+        ? _autoFitMeasureWidth(column, textScaler, fallback: maxValue)
+        : _visualTextWidth(maxValue, style.cellTextStyle, textScaler);
 
     final calculatedTileWidth =
         titleTextWidth -
@@ -636,6 +632,34 @@ mixin ColumnState implements ITrinaGridState {
       textScaler: textScaler,
     )..layout();
     return painter.width;
+  }
+
+  /// Calls [TrinaColumn.measureWidth] for [autoFitColumn], falling back to the
+  /// widest value as text when the callback returns something unusable.
+  double _autoFitMeasureWidth(
+    TrinaColumn column,
+    TextScaler textScaler, {
+    required String fallback,
+  }) {
+    final width = column.measureWidth!(
+      TrinaColumnMeasureContext(
+        column: column,
+        rows: refRows,
+        stateManager: this as TrinaGridStateManager,
+        measureText: (text, {TextStyle? style}) => _visualTextWidth(
+          text,
+          style ?? this.style.cellTextStyle,
+          textScaler,
+        ),
+      ),
+    );
+    assert(
+      width.isFinite && width >= 0,
+      'measureWidth must return a finite width >= 0, got $width',
+    );
+    return width.isFinite
+        ? math.max(0, width)
+        : _visualTextWidth(fallback, style.cellTextStyle, textScaler);
   }
 
   @override
